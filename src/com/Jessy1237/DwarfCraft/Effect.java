@@ -29,8 +29,10 @@ import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.PolarBear;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Shulker;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
@@ -571,6 +573,10 @@ public class Effect
                 return ( entity instanceof Endermite );
             case WITCH:
                 return ( entity instanceof Witch );
+            case POLAR_BEAR:
+                return (entity instanceof PolarBear);
+            case SHULKER:
+                return (entity instanceof Shulker);
             default:
                 return false;
         }
