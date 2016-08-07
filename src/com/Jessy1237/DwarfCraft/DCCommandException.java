@@ -27,8 +27,9 @@ public class DCCommandException extends Throwable
         NOGREETERMESSAGE("Could not find that greeter message. Add it to greetermessages.config"), 
         NPCIDINUSE("You can't use this ID for a trainer, it is already used."), 
         PARSEPLAYERFAIL("Could not locate the player you named"),  
-        NPCIDNOTFOUND("You must specifiy the exact ID for the trainer, the one provided was not found."), 
-        PARSERACEFAIL("Could not understand the race name you used."),;
+        NPCIDNOTFOUND("You must specify the exact ID for the trainer, the one provided was not found."), 
+        PARSERACEFAIL("Could not understand the race name you used."),
+        INVALIDENTITYTYPE("You must specify a valid EntityType.");
         
         String errorMsg;
 
