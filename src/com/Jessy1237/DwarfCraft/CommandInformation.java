@@ -42,20 +42,20 @@ public class CommandInformation
 
     public enum Usage
     {
-        DEBUG("/<command> [debug level]\nExample: /<command> 2 - sets the console debug printing threshold to 2"),
-        DCHELP("/<command> <command name> Displays general help information. Use /help <command> for command specific info."),
-        INFO("/<command> Displays general information about the DwarfCraft plugin."),
+        DEBUG("/dcdebug <debug level>\nExample: /dcdebug 2 - sets the console debug printing threshold to 2"),
+        DCHELP("/dchelp <command name> Displays general help information. Use /help <command> for command specific info."),
+        INFO("/dcinfo Displays general information about the DwarfCraft plugin."),
         RULES("/rules Displays server rules defined in the DwarfCraft messages config file."),
         TUTORIAL(" Displays a series of guide messages to instruct in the basics of DwarfCraft\n/tutorial <page number>\nExample: /tutorial 2 - Prints the second tutorial section"),
         DCCOMMANDS("/dccommands Displays all DwarfCraft commands"),
-        SKILLSHEET(" Displays a list of skills and levels for a Dwarf.\n/<command> <full/-f)> <Player Name or blank>\nExample: /skillsheet smartaleq - Prints smartaleq's skillsheet\nExample: /ss -f - Prints your complete skillsheet with level 0 Skills"),
-        SKILLINFO("Displays a description of a dwarf's skill and training costs\n/<command> <player name> [Skill ID or Skill Name]\nExample: /skillinfo 11 - Prints details about Excavation skill\nExample: /skillinfo Dirt_Digging - Prints details about Dirt Digging skill\nExample: /skill smartaleq 3 - Prints details about Smartaleq's Axe use skill"),
-        EFFECTINFO("Displays a description of a dwarf's effect information\n/<command> <player name> [EffectID]\nExample: /effect smartaleq 131 - Prints details about Smartaleq's effect 131"),
+        SKILLSHEET(" Displays a list of skills and levels for a Dwarf.\n/skillsheet <full/-f)> <Player Name or blank>\nExample: /skillsheet smartaleq - Prints smartaleq's skillsheet\nExample: /ss -f - Prints your complete skillsheet with level 0 Skills"),
+        SKILLINFO("Displays a description of a dwarf's skill and training costs\n/skillinfo <player name> [Skill ID or Skill Name]\nExample: /skillinfo 11 - Prints details about Excavation skill\nExample: /skillinfo Dirt_Digging - Prints details about Dirt Digging skill\nExample: /skill smartaleq 3 - Prints details about Smartaleq's Axe use skill"),
+        EFFECTINFO("Displays a description of a dwarf's effect information\n/effectinfo <player name> [EffectID]\nExample: /effectinfo smartaleq 131 - Prints details about Smartaleq's effect 131"),
         RACE("/race <Race name> <confirm>\nExample: /race - Displays the player's current race information.\nExample: /race elf - Displays information about the elf race.\nExample: /race elf confirm - Changes the player's race to elf and resets their skills.\nAdmin: /race <Player> <Racename> <confirm> - Alters another player's race, use confirm. \n Admin: /race <player> - shows a players race."),
-        SETSKILL("/<command> <player name> [Skill ID or Skill Name or All] [new skill level]"),
-        CREATEGREETER("/<command> <id> <DisplayName> <MessageId>"),
-        CREATETRAINER("/<command> <id> <DisplayName> <Skill ID or Skill Name> <Max Skill Level> <Min Skill Level> <EntityType>"),
-        LISTTRAINERS("/<command> [PageNumber]"),
+        SETSKILL("/setskill <player name> [Skill ID or Skill Name or All] [new skill level]"),
+        CREATEGREETER("/creategreeter <id> <DisplayName> <MessageId>"),
+        CREATETRAINER("/createtrainer <id> <DisplayName> <Skill ID or Skill Name> <Max Skill Level> <Min Skill Level> <EntityType>"),
+        LISTTRAINERS("/listtrainers [PageNumber]"),
         RACES("/races"),
         DMEM("/dmem");
         

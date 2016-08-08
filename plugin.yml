@@ -8,16 +8,16 @@ commands:
    dcdebug: 
       description: Sets the debug message threshold in console, from -10(everthing) to +10(critical only).
       usage: |
-           /<command> [debug level]
-           Example: /<command> 2 - sets the console debug printing threshold to 2
+           /dcdebug [debug level]
+           Example: /dcdebug 2 - sets the console debug printing threshold to 2
       aliases: []
    dchelp: 
       description: Displays general help information. Use /help <command> for command specific info.
-      usage: /<command> <command name> Displays general help information. Use /help <command> for command specific info.
+      usage: /dchelp <command name> Displays general help information. Use /help <command> for command specific info.
       aliases: []
    dcinfo: 
       description: Displays general information about the DwarfCraft plugin.
-      usage: /<command> Displays general information about the DwarfCraft plugin.
+      usage: /dcinfo Displays general information about the DwarfCraft plugin.
       aliases: []
    dcrules: 
       description: Displays server rules defined in the DwarfCraft messages config file.
@@ -38,7 +38,7 @@ commands:
       description: Displays a list of skills and levels for a Dwarf.
       usage: |
              Displays a list of skills and levels for a Dwarf.
-             /<command> <full/-f)> <Player Name or blank>
+             /skillsheet <full/-f)> <Player Name or blank>
              Example: /skillsheet smartaleq - Prints smartaleq's skillsheet
              Example: /ss -f - Prints your complete skillsheet with level 0 Skills
       aliases: [skills, ss]
@@ -46,7 +46,7 @@ commands:
       description: Displays a description of a dwarf's skill and training costs
       usage: |
              Displays a description of a dwarf's skill and training costs
-             /<command> <player name> [Skill ID or Skill Name]
+             /skillinfo <player name> [Skill ID or Skill Name]
              Example: /skillinfo 11 - Prints details about Excavation skill
              Example: /skillinfo Dirt_Digging - Prints details about Dirt Digging skill
              Example: /skill smartaleq 3 - Prints details about Smartaleq's Axe use skill
@@ -55,8 +55,8 @@ commands:
       description: 
       usage: |       
              Displays a description of a dwarf's effect information
-             /<command> <player name> [EffectID]
-             Example: /effect smartaleq 131 - Prints details about Smartaleq's effect 131
+             /effectinfo <player name> [EffectID]
+             Example: /effectinfo smartaleq 131 - Prints details about Smartaleq's effect 131
       aliases: [effect, ei]
    race: 
       description: Checks a players race information, or changes it.
@@ -70,19 +70,19 @@ commands:
    setskill: 
       description: Admin command to change a players skill level manually.
       usage: |
-             /<command> <player name> [Skill ID or Skill Name or All] [new skill level]
+             /setskill <player name> [Skill ID or Skill Name or All] [new skill level]
    creategreeter: 
       description: 
       usage: 
    createtrainer: 
       description: Creates a new trainer where you are standing.
       usage: |
-             /<command> <ID> <DisplayName> <Skill ID or Skill Name> <Max Skill Level> <Min Skill Level>
+             /createtrainer <ID> <DisplayName> <Skill ID or Skill Name> <Max Skill Level> <Min Skill Level>
       aliases: [ct]
    listtrainers: 
       description: Displays a list of trainers and greeters on the server.
       usage: |
-             /<command> [PageNumber]
+             /listtrainers [PageNumber]
       aliases: [listtrainer, lt]
    races:
       description:
