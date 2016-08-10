@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,6 +45,21 @@ public class DCPlayerListener implements Listener
     public DCPlayerListener( final DwarfCraft plugin )
     {
         this.plugin = plugin;
+    }
+
+    @EventHandler( priority = EventPriority.NORMAL )
+    public void onPlayerQuit( PlayerQuitEvent event )
+    {
+        Player player = event.getPlayer();
+        DCPlayer dcPlayer = plugin.getDataManager().find( player );
+        // Removes the DwarfCraft prefixes when the player quits
+        if ( plugin.isChatEnabled() )
+        {
+            if ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( dcPlayer ) ) )
+            {
+                plugin.getChat().setPlayerPrefix( player, plugin.getChat().getPlayerPrefix( player ).replaceAll( plugin.getUtil().getPlayerPrefix( dcPlayer ) + " ", "" ) );
+            }
+        }
     }
 
     /**

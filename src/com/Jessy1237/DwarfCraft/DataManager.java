@@ -335,10 +335,10 @@ public class DataManager
     }
 
     /**
-     * Finds a dwarf from the server's static list based on player's name
+     * Finds a DCPlayer from the server's static list based on player's name
      * 
      * @param player
-     * @return dwarf or null
+     * @return DCPlayer or null
      */
     public DCPlayer find( Player player )
     {
@@ -366,7 +366,7 @@ public class DataManager
             return dCPlayer;
         else
         {
-            // No dwarf or data found
+            // No DCPlayer or data found
             return null;
         }
     }

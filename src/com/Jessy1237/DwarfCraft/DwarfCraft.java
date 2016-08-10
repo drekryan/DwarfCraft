@@ -1,17 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.DespawnReason;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.trait.TraitInfo;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -44,6 +32,18 @@ import com.Jessy1237.DwarfCraft.listeners.DCVehicleListener;
 
 import de.diddiz.LogBlock.Consumer;
 import de.diddiz.LogBlock.LogBlock;
+
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.DespawnReason;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.trait.TraitInfo;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 
 /**
  * 
@@ -332,6 +332,18 @@ public class DwarfCraft extends JavaPlugin
     @Override
     public void onDisable()
     {
+        //Removes the DwarfCraft prefixes when the server shuts down for all online players.
+        for ( Player player : getServer().getOnlinePlayers() )
+        {
+            DCPlayer dcPlayer = getDataManager().find( player );
+            if ( isChatEnabled() )
+            {
+                if ( getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dcPlayer ) ) )
+                {
+                    getChat().setPlayerPrefix( player, getChat().getPlayerPrefix( player ).replaceAll( getUtil().getPlayerPrefix( dcPlayer ) + " ", "" ) );
+                }
+            }
+        }
     }
 
     /**
