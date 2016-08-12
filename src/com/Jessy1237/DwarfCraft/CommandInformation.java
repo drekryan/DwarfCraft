@@ -55,7 +55,7 @@ public class CommandInformation
         RACE("/race <Race name> <confirm>\nExample: /race - Displays the player's current race information.\nExample: /race elf - Displays information about the elf race.\nExample: /race elf confirm - Changes the player's race to elf and resets their skills.\nAdmin: /race <Player> <Racename> <confirm> - Alters another player's race, use confirm. \n Admin: /race <player> - shows a players race."),
         SETSKILL("/setskill <player name> [Skill ID or Skill Name or All] [new skill level]"),
         CREATEGREETER("/creategreeter <id> <DisplayName> <MessageId>"),
-        CREATETRAINER("/createtrainer <id> <DisplayName> <Skill ID or Skill Name> <Max Skill Level> <Min Skill Level> <EntityType>"),
+        CREATETRAINER("/createtrainer <id> <DisplayName> <Skill ID or Skill Name>\n <Max Skill Level> <Min Skill Level> <EntityType>"),
         LISTTRAINERS("/listtrainers [PageNumber]"),
         RACES("/races"),
         DMEM("/dmem"),
