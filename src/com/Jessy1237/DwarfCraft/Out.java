@@ -302,8 +302,8 @@ public class Out
         String prefix1 = "&6[&dSS&6] ";
 
         String prefix2 = "&6[&dSS&6] ";
-        message1 = ( "&6Printing Skill Sheet for &9" + ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) + " " + dCPlayer.getRace() + " &6Level is &3"
-                + dCPlayer.getDwarfLevel() );
+        message1 = ( "&6Skill Sheet for &9" + ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) + " &6[&9" + dCPlayer.getRace() + " &6- &6Lvl &3" + dCPlayer.getDwarfLevel()
+        + "&6]" );
         sendMessage( sender, message1, prefix1 );
 
         boolean odd = true;
@@ -324,7 +324,7 @@ public class Out
             if ( !odd )
             {
                 int interimLen = plugin.getUtil().msgLength( interim );
-                int numSpaces = ( ( 180 - interimLen ) / 4 ) - 1;
+                int numSpaces = ( ( 124 - interimLen ) / 4 ) - 1;
                 for ( int i = 0; i < numSpaces; i++ )
                     interim = interim.concat( " " );
                 interimLen = 180 - interimLen - numSpaces * 4;
