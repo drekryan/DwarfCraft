@@ -7,7 +7,7 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Race;
 
 /**
- * Original Authors: Jessy1237 & Curtis1509
+ * Original Authors: Jessy1237
  */
 
 public class CommandRaces extends Command

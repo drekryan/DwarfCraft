@@ -517,24 +517,6 @@ public class DataManager
         return null;
     }
 
-    public void removeTrainer( NPC npc )
-    {
-        DwarfTrainer trainer = getTrainer( npc );
-
-        plugin.despawnById( trainer.getUniqueId() );
-        plugin.getNPCRegistry().deregister( npc );
-        trainerList.remove( trainer );
-    }
-
-    public void removeTrainerByName( String name )
-    {
-        DwarfTrainer trainer = getTrainerByName( name );
-
-        plugin.despawnById( trainer.getUniqueId() );
-        plugin.getNPCRegistry().deregister( trainer.getEntity() );
-        trainerList.remove( trainer );
-    }
-
     public void removeVehicle( Vehicle v )
     {
         int id = -1;

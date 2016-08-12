@@ -25,7 +25,8 @@ public class CommandInformation
         CREATETRAINER("Creates a new trainer where you are standing."),
         LISTTRAINERS("Displays a list of trainers and greeters on the server."),
         RACES("Displays a list of the races with descriptions"),
-        DMEM("Displays a list of what type, and how many entites are loaded on the server.");
+        DMEM("Displays a list of what type, and how many entites are loaded on the server."),
+        RELOAD("Reloads the DwarfCraft plugin.");
         
         private String Desc;
 
@@ -57,7 +58,8 @@ public class CommandInformation
         CREATETRAINER("/createtrainer <id> <DisplayName> <Skill ID or Skill Name> <Max Skill Level> <Min Skill Level> <EntityType>"),
         LISTTRAINERS("/listtrainers [PageNumber]"),
         RACES("/races"),
-        DMEM("/dmem");
+        DMEM("/dmem"),
+        RELOAD("/dcreload");
         
         private String Usage;
 

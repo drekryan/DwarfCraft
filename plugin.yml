@@ -2,9 +2,14 @@ name: DwarfCraft
 description: A skills and progression plugin for character development in RPG worlds.
 author: Jessy1237
 main: com.Jessy1237.DwarfCraft.DwarfCraft
-version: 2.6.8.1
+version: 2.6.9
 depend: [Vault, Citizens]
 commands: 
+   dcreload: 
+      description: Reloads the DwarfCraft plugin.
+      usage: |
+           /dcreload
+      aliases: []
    dcdebug: 
       description: Sets the debug message threshold in console, from -10(everthing) to +10(critical only).
       usage: |

@@ -18,6 +18,7 @@ import com.Jessy1237.DwarfCraft.commands.CommandInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandListTrainers;
 import com.Jessy1237.DwarfCraft.commands.CommandRace;
 import com.Jessy1237.DwarfCraft.commands.CommandRaces;
+import com.Jessy1237.DwarfCraft.commands.CommandReload;
 import com.Jessy1237.DwarfCraft.commands.CommandRules;
 import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
@@ -38,8 +39,6 @@ import de.diddiz.LogBlock.LogBlock;
  */
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.DespawnReason;
-import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.milkbowl.vault.chat.Chat;
@@ -300,6 +299,13 @@ public class DwarfCraft extends JavaPlugin
                 cmd = new CommandRaces( this );
             }
         }
+        else if ( name.equalsIgnoreCase( "DCReload" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandReload( this );
+            }
+        }
         else
         {
             isCmd = false;
@@ -332,7 +338,8 @@ public class DwarfCraft extends JavaPlugin
     @Override
     public void onDisable()
     {
-        //Removes the DwarfCraft prefixes when the server shuts down for all online players.
+        // Removes the DwarfCraft prefixes when the server shuts down for all
+        // online players.
         for ( Player player : getServer().getOnlinePlayers() )
         {
             DCPlayer dcPlayer = getDataManager().find( player );
@@ -351,6 +358,11 @@ public class DwarfCraft extends JavaPlugin
      */
     @Override
     public void onEnable()
+    {
+        onEnable( false );
+    }
+
+    public void onEnable( boolean reload )
     {
         PluginManager pm = getServer().getPluginManager();
 
@@ -402,7 +414,8 @@ public class DwarfCraft extends JavaPlugin
         }
         System.out.println( "[DwarfCraft] Hooked into Citizens!" );
 
-        CitizensAPI.getTraitFactory().registerTrait( TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" ) );
+        if ( !reload )
+            CitizensAPI.getTraitFactory().registerTrait( TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" ) );
 
         npcr = CitizensAPI.getNPCRegistry();
         util = new Util( this );
@@ -441,12 +454,5 @@ public class DwarfCraft extends JavaPlugin
         }
 
         System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
-    }
-
-    public void despawnById( int ID )
-    {
-        NPC npc = getNPCRegistry().getById( ID );
-        npc.despawn( DespawnReason.REMOVAL );
-        getNPCRegistry().deregister( npc );
     }
 }
