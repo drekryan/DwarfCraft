@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.DCPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.events.DwarfCraftRaceChangeEvent;
 
 public class CommandRace extends Command
 {
@@ -120,8 +121,14 @@ public class CommandRace extends Command
                     {
                         if ( plugin.getPermission().has( ( Player ) sender, "dwarfcraft.norm.race." + newRace.toLowerCase() ) )
                         {
-                            plugin.getOut().changedRace( sender, dCPlayer, plugin.getConfigManager().getRace( newRace ).getName() );
-                            dCPlayer.changeRace( newRace );
+                            DwarfCraftRaceChangeEvent e = new DwarfCraftRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
+                            plugin.getServer().getPluginManager().callEvent( e );
+
+                            if ( !e.isCancelled() )
+                            {
+                                plugin.getOut().changedRace( sender, dCPlayer, plugin.getConfigManager().getRace( e.getRace().getName() ).getName() );
+                                dCPlayer.changeRace( e.getRace().getName() );
+                            }
                         }
                         else
                         {
@@ -130,8 +137,14 @@ public class CommandRace extends Command
                     }
                     else
                     {
-                        plugin.getOut().changedRace( dCPlayer.getPlayer(), dCPlayer, plugin.getConfigManager().getRace( newRace ).getName() );
-                        dCPlayer.changeRace( newRace );
+                        DwarfCraftRaceChangeEvent e = new DwarfCraftRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
+                        plugin.getServer().getPluginManager().callEvent( e );
+
+                        if ( !e.isCancelled() )
+                        {
+                            plugin.getOut().changedRace( dCPlayer.getPlayer(), dCPlayer, plugin.getConfigManager().getRace( e.getRace().getName() ).getName() );
+                            dCPlayer.changeRace( e.getRace().getName() );
+                        }
                     }
                 }
                 else
