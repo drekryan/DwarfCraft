@@ -62,7 +62,7 @@ commands:
              Displays a description of a dwarf's effect information
              /effectinfo <player name> [EffectID]
              Example: /effectinfo smartaleq 131 - Prints details about Smartaleq's effect 131
-      aliases: [effect, ei]
+      aliases: [ei]
    race: 
       description: Checks a players race information, or changes it.
       usage: |
