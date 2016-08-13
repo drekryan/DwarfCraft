@@ -1,5 +1,6 @@
 package com.Jessy1237.DwarfCraft;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -321,7 +322,7 @@ public class DwarfCraft extends JavaPlugin
             {
                 if ( hasNorm == false || hasOp == false )
                 {
-                    sender.sendMessage( "§4You do not have permission to do that." );
+                    sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to do that." );
                 }
                 return true;
             }
