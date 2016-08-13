@@ -81,6 +81,7 @@ public class DwarfCraft extends JavaPlugin
     private Util util;
     private Permission perms = null;
     private Chat chat = null;
+    private TraitInfo trainerTrait;
 
     public static int debugMessagesThreshold = 10;
 
@@ -151,6 +152,11 @@ public class DwarfCraft extends JavaPlugin
     public Chat getChat()
     {
         return chat;
+    }
+
+    public TraitInfo getTrainerTrait()
+    {
+        return trainerTrait;
     }
 
     private boolean checkPermission( CommandSender sender, String name, String type )
@@ -352,6 +358,8 @@ public class DwarfCraft extends JavaPlugin
                 }
             }
         }
+
+        CitizensAPI.getTraitFactory().deregisterTrait( trainerTrait );
     }
 
     /**
@@ -415,8 +423,14 @@ public class DwarfCraft extends JavaPlugin
         }
         System.out.println( "[DwarfCraft] Hooked into Citizens!" );
 
-        if ( !reload )
-            CitizensAPI.getTraitFactory().registerTrait( TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" ) );
+        System.out.println( "[DwarfCraft] Restarting citizens..." );
+        if ( reload )
+        {
+            pm.disablePlugin( CitizensAPI.getPlugin() );
+            pm.enablePlugin( pm.getPlugin( "Citizens") );
+        }
+        trainerTrait = TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" );
+        CitizensAPI.getTraitFactory().registerTrait( trainerTrait );
 
         npcr = CitizensAPI.getNPCRegistry();
         util = new Util( this );
