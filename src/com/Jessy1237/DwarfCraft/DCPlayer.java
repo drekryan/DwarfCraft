@@ -72,11 +72,11 @@ public class DCPlayer
             quartileNumber = 2;
         else if ( levelList[highSkills - 3 * quartileSize] <= skill.getLevel() )
             quartileNumber = 3;
-        if ( skill.getLevel() < 5 )
+        if ( skill.getLevel() < plugin.getConfigManager().getRaceLevelLimit() )
             quartileNumber = 1; // low skills train full speed
 
         // calculate quartile penalties for 2nd/3rd/4th quartile
-        double multiplier = Math.max( 1, Math.pow( 1.072, ( skill.getLevel() - 5 ) ) );
+        double multiplier = Math.max( 1, Math.pow( 1.072, ( skill.getLevel() - plugin.getConfigManager().getRaceLevelLimit() ) ) );
         if ( quartileNumber == 2 )
             multiplier *= ( 1 + 1 * dwarfLevel / ( 100 + 3 * dwarfLevel ) );
         if ( quartileNumber == 3 )
@@ -109,39 +109,39 @@ public class DCPlayer
     }
 
     /**
-     * Counts skills greater than level 5, used for training costs
+     * Counts skills greater than level the race level limit, used for training costs
      */
     private int countHighSkills()
     {
         int highCount = 0;
         for ( Skill s : getSkills().values() )
         {
-            if ( s.getLevel() > 5 )
+            if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
                 highCount++;
         }
         return highCount;
     }
 
     /**
-     * Calculates the dwarf's total level for display/e-peening. Value is the
-     * total of all skill level above 5, or the highest skill level when none
-     * are above 5.
+     * Calculates the dwarf's total level for display. Value is the
+     * total of all skill level above the race level limit, or the highest skill level when none
+     * are above the race level limit.
      * 
      * @return
      */
     public int getDwarfLevel()
     {
-        int playerLevel = 5;
+        int playerLevel = plugin.getConfigManager().getRaceLevelLimit();
         int highestSkill = 0;
         for ( Skill s : getSkills().values() )
         {
             if ( s.getLevel() > highestSkill )
                 highestSkill = s.getLevel();
 
-            if ( s.getLevel() > 5 )
-                playerLevel = playerLevel + s.getLevel() - 5;
+            if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
+                playerLevel = playerLevel + s.getLevel() - plugin.getConfigManager().getRaceLevelLimit();
         }
-        if ( playerLevel == 5 )
+        if ( playerLevel == plugin.getConfigManager().getRaceLevelLimit() )
             playerLevel = highestSkill;
         return playerLevel;
     }
