@@ -9,10 +9,9 @@ public final class Messages
 
     private static DwarfCraft plugin;
 
-    @SuppressWarnings( "static-access" )
     public Messages( DwarfCraft plugin )
     {
-        this.plugin = plugin;
+        Messages.plugin = plugin;
     }
 
     // String messages fixed for DwarfCraft, and backup messages when loading
@@ -66,14 +65,14 @@ public final class Messages
 
     // String messages loaded from messages.config
     public static String GeneralInfo = 
-            "&dWelcome to DwarfCraft. You are a dwarf with "
+            "&dWelcome to DwarfCraft. You are a player with "
                     + "a set of skills that let you do minecraft tasks better."
                     + " When you first start, things may be more difficult"
                     + " than you are used to, but as you level your skills up you "
                     + "will be much more productive. Each of "
                     + "the skills listed in your skillsheet(&4/skillsheet full&d) "
                     + "has multiple effects. You can find out more about "
-                    + "training a skill and its effects with &4/skill "
+                    + "training a skill and its effects with &4/skillinfo "
                     + "<skillname or id>&d."
                     + "         Original Authors: smartaleq, LexManos and RCarretta"
                     + " Authors: Jessy1237";

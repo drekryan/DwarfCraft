@@ -26,10 +26,11 @@ public class Out
         this.plugin = plugin;
     }
 
-    private String consoleLinePrinter(String line, String prefix )
+    private String consoleLinePrinter( String line, String prefix )
     {
-        if (plugin != null) {
-            plugin.getServer().getConsoleSender().sendMessage(prefix + line);
+        if ( plugin != null )
+        {
+            plugin.getServer().getConsoleSender().sendMessage( prefix + line );
         }
 
         return null;
@@ -63,12 +64,12 @@ public class Out
      * @param message
      * @param prefix
      */
-    private void messagePrinter(String message, String prefix )
+    private void messagePrinter( String message, String prefix )
     {
         String[] lines = message.split( "\\n" );
         String lastColor = "";
         for ( String line : lines )
-            lastColor = consoleLinePrinter(lastColor.concat( line ), prefix);
+            lastColor = consoleLinePrinter( lastColor.concat( line ), prefix );
     }
 
     /**
@@ -83,7 +84,7 @@ public class Out
         String[] lines = message.split( "\\n" );
         String lastColor = "";
         for ( String line : lines )
-            lastColor = playerLinePrinter(player, lastColor.concat( line ), prefix);
+            lastColor = playerLinePrinter( player, lastColor.concat( line ), prefix );
     }
 
     /**
@@ -103,7 +104,9 @@ public class Out
             if ( plugin.getUtil().msgLength( currentLine ) + plugin.getUtil().msgLength( word ) <= messageSectionLength )
             {
                 currentLine = currentLine.concat( word + " " );
-            } else {
+            }
+            else
+            {
                 player.sendMessage( prefix.concat( lastColor + currentLine ).trim() );
                 lineTotal++;
 
@@ -122,8 +125,9 @@ public class Out
     public boolean printSkillInfo( CommandSender sender, Skill skill, DCPlayer dCPlayer, int maxTrainLevel )
     {
         // general line
-        sendMessage( sender, String.format( ChatColor.GOLD + "Skill Info for " + ChatColor.AQUA + "%s " + ChatColor.GOLD + "[" +ChatColor.AQUA + "%d" + ChatColor.GOLD + "] " +
-                "|| Your level " + ChatColor.DARK_AQUA + "%d/%d", skill.getDisplayName(), skill.getId(), skill.getLevel(), maxTrainLevel ) );
+        sendMessage( sender,
+                String.format( ChatColor.GOLD + "Skill Info for " + ChatColor.AQUA + "%s " + ChatColor.GOLD + "[" + ChatColor.AQUA + "%d" + ChatColor.GOLD + "] " + "|| Your level " + ChatColor.DARK_AQUA + "%d/%d",
+                        skill.getDisplayName(), skill.getId(), skill.getLevel(), maxTrainLevel ) );
 
         // effects lines
         sendMessage( sender, "&6[&5EffectID&6]&f------&6[Effect]&f------" );
@@ -171,8 +175,8 @@ public class Out
         String message2 = "";
         String prefix = "&6[&dSS&6] ";
 
-        message1 = ( ChatColor.GOLD + "Skill Sheet for " + ChatColor.BLUE + ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) + " " + ChatColor.GOLD + "[" + ChatColor.BLUE +
-                dCPlayer.getRace() + " " + ChatColor.GOLD + "- Lvl " + ChatColor.DARK_AQUA + dCPlayer.getDwarfLevel() + ChatColor.GOLD + "]" );
+        message1 = ( ChatColor.GOLD + "Skill Sheet for " + ChatColor.BLUE + ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) + " " + ChatColor.GOLD + "[" + ChatColor.BLUE + dCPlayer.getRace() + " "
+                + ChatColor.GOLD + "- Lvl " + ChatColor.DARK_AQUA + dCPlayer.getDwarfLevel() + ChatColor.GOLD + "]" );
         sendMessage( sender, message1, prefix );
 
         boolean odd = true;
@@ -193,19 +197,19 @@ public class Out
             if ( !odd )
             {
                 int interimLen = plugin.getUtil().msgLength( interim );
-                int numSpaces = ( ( 124 - interimLen ) / 4 ) - 1;
+                int numSpaces = ( ( 116 - interimLen ) / 4 ) - 1;
                 for ( int i = 0; i < numSpaces; i++ )
                     interim = interim.concat( " " );
-                interimLen = 180 - interimLen - numSpaces * 4;
+                interimLen = 116 - interimLen - numSpaces * 4;
                 // 4 possible cases - need 4, 5, 6, or 7
                 if ( interimLen == 4 )
-                    interim = interim.concat( ChatColor.BLACK + " | " + ChatColor.AQUA );
+                    interim = interim.concat( "&0| &b" );
                 else if ( interimLen == 5 )
-                    interim = interim.concat( ChatColor.BLACK + " | " + ChatColor.AQUA );
+                    interim = interim.concat( "&0| &b" );
                 else if ( interimLen == 6 )
-                    interim = interim.concat( ChatColor.BLACK + " | " + ChatColor.AQUA );
+                    interim = interim.concat( "&0 | &b" );
                 else if ( interimLen == 7 )
-                    interim = interim.concat( ChatColor.BLACK + " | " + ChatColor.AQUA );
+                    interim = interim.concat( "&0  | &b" );
             }
 
             message2 = message2.concat( interim );
@@ -230,18 +234,19 @@ public class Out
     /**
      * Used to send messages to all players on a server
      */
-    public void sendBroadcast(String message)
+    public void sendBroadcast( String message )
     {
-        sendBroadcast(message, "");
+        sendBroadcast( message, "" );
     }
 
     /**
      * Used to send messages to all players on a server with a prefix
      */
-    protected void sendBroadcast(String message, String prefix )
+    protected void sendBroadcast( String message, String prefix )
     {
-        if (plugin != null) {
-            plugin.getServer().broadcastMessage(prefix + message);
+        if ( plugin != null )
+        {
+            plugin.getServer().broadcastMessage( prefix + message );
         }
     }
 
@@ -264,13 +269,13 @@ public class Out
         {
             message = parseColors( message );
             prefix = parseColors( prefix );
-            messagePrinter((Player)sender, message, prefix );
+            messagePrinter( ( Player ) sender, message, prefix );
         }
         else
         {
             message = stripColors( message );
             prefix = stripColors( prefix );
-            messagePrinter(message, prefix );
+            messagePrinter( message, prefix );
         }
     }
 
@@ -301,7 +306,7 @@ public class Out
 
     private String stripColors( String message )
     {
-        message = ChatColor.stripColor(message);
+        message = ChatColor.stripColor( message );
         return message;
     }
 
@@ -310,7 +315,7 @@ public class Out
      */
     String parseColors( String message )
     {
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return ChatColor.translateAlternateColorCodes( '&', message );
     }
 
     private String lastColor( String currentLine )
@@ -329,25 +334,25 @@ public class Out
 
     public void tutorial( CommandSender sender, int page )
     {
-        switch(page)
+        switch ( page )
         {
             case 1:
-                sendMessage( sender, Messages.Fixed.TUTORIAL1.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] " );
+                sendMessage( sender, Messages.Fixed.TUTORIAL1.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] &f" );
                 break;
             case 2:
-                sendMessage( sender, Messages.Fixed.TUTORIAL2.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] " );
+                sendMessage( sender, Messages.Fixed.TUTORIAL2.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] &f" );
                 break;
             case 3:
-                sendMessage( sender, Messages.Fixed.TUTORIAL3.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] " );
+                sendMessage( sender, Messages.Fixed.TUTORIAL3.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] &f" );
                 break;
             case 4:
-                sendMessage( sender, Messages.Fixed.TUTORIAL4.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] " );
+                sendMessage( sender, Messages.Fixed.TUTORIAL4.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] &f" );
                 break;
             case 5:
-                sendMessage( sender, Messages.Fixed.TUTORIAL5.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] " );
+                sendMessage( sender, Messages.Fixed.TUTORIAL5.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] &f" );
                 break;
             case 6:
-                sendMessage( sender, Messages.Fixed.TUTORIAL6.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] " );
+                sendMessage( sender, Messages.Fixed.TUTORIAL6.getMessage(), ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + "DC" + ChatColor.GOLD + "] &f" );
                 break;
         }
     }
@@ -364,7 +369,7 @@ public class Out
         try
         {
             if ( plugin.getConfigManager().sendGreeting )
-                sendBroadcast(ChatColor.WHITE + "Welcome, " + ChatColor.BLUE + dCPlayer.getRace() + " " + ChatColor.GOLD + dCPlayer.getPlayer().getName(), ChatColor.GOLD + "[DC]         " );
+                sendBroadcast( ChatColor.WHITE + "Welcome, " + ChatColor.BLUE + dCPlayer.getRace() + " " + ChatColor.GOLD + dCPlayer.getPlayer().getName(), ChatColor.GOLD + "[DC]         " );
         }
         catch ( Exception e )
         {
