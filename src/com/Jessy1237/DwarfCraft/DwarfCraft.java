@@ -14,7 +14,6 @@ import com.Jessy1237.DwarfCraft.commands.CommandDCCommands;
 import com.Jessy1237.DwarfCraft.commands.CommandDMem;
 import com.Jessy1237.DwarfCraft.commands.CommandDebug;
 import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandHelp;
 import com.Jessy1237.DwarfCraft.commands.CommandInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandListTrainers;
 import com.Jessy1237.DwarfCraft.commands.CommandRace;
@@ -194,14 +193,7 @@ public class DwarfCraft extends JavaPlugin
         boolean hasAll = checkPermission( sender, name, "all" );
         boolean isCmd = true;
 
-        if ( name.equalsIgnoreCase( "DCHelp" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandHelp( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "SkillSheet" ) )
+        if ( name.equalsIgnoreCase( "SkillSheet" ) )
         {
             if ( hasNorm || hasAll )
             {
@@ -436,7 +428,6 @@ public class DwarfCraft extends JavaPlugin
         util = new Util( this );
         cm = new ConfigManager( this, getDataFolder().getAbsolutePath(), "DwarfCraft.config" );
         dm = new DataManager( this, cm );
-        new Messages( this );
 
         dm.dbInitialize();
 

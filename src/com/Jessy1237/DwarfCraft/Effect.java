@@ -130,11 +130,17 @@ public class Effect
             output = "None";
         double effectAmountLow = getEffectAmount( 0, dCPlayer );
         double effectAmountHigh = getEffectAmount( 30, dCPlayer );
-        double elfAmount = getEffectAmount( -1, dCPlayer );
+        double minorAmount = getEffectAmount( -1, dCPlayer );
         String toolType = toolType();
-        description = String.format( "Effect Block Trigger: %s Block Output: %s . " + "Effect value ranges from %.2f - %.2f for levels 0 to 30. "
-                + "Elves have the effect %.2f , as if they were level %d . " + "Tools affected: %s. " + ( mRequireTool ? "Tool needed." : "Tool not needed." ), initiator, output, effectAmountLow,
-                effectAmountHigh, elfAmount, mNormalLevel, toolType );
+
+        description = Messages.describeGeneral;
+        description = description.replaceAll( "%initiator%", initiator );
+        description = description.replaceAll( "%output%", output );
+        description = description.replaceAll( "%effectamountlow%", String.format( "%.2f", effectAmountLow ) );
+        description = description.replaceAll( "%effectamounthigh%", String.format( "%.2f", effectAmountHigh ) );
+        description = description.replaceAll( "%minoramount%", String.format( "%.2f", minorAmount ) );
+        description = description.replaceAll( "%normallevel%", "" + mNormalLevel );
+        description = description.replaceAll( "%tooltype%", toolType );
 
         return description;
     }
@@ -156,181 +162,80 @@ public class Effect
         String output = plugin.getUtil().getCleanName( mOutput );
 
         double effectAmount = getEffectAmount( dCPlayer );
-        double elfAmount = getEffectAmount( mNormalLevel, null );
+        double minorAmount = getEffectAmount( mNormalLevel, null );
         boolean moreThanOne = ( effectAmount > 1 );
         String effectLevelColor = effectLevelColor( dCPlayer.getSkill( this ).getLevel() );
         String toolType = toolType();
 
-        switch ( mType )
+        if ( mType == EffectType.SMELT )
         {
-            case BLOCKDROP:
-                description = String.format( "&6Break a &2%s &6and %s%.2f &2%s&6 are created", initiator, effectLevelColor, effectAmount, output );
-                break;
-            case MOBDROP:
-                if ( mCreature != null )
-                {
-                    description = String.format( "&6%s drop about %s%.2f &2%s", plugin.getUtil().getCleanName( mCreature ), effectLevelColor, effectAmount, output );
-                    break;
-                }
-                description = String.format( "&6Enemies that drop &2%s &6leave about %s%.2f&6", output, effectLevelColor, effectAmount, output );
-                break;
-            case SWORDDURABILITY:
-                description = String.format( "&6Using &2%s &6removes about %s%.2f &6durability", toolType, effectLevelColor, effectAmount );
-                break;
-            case PVPDAMAGE:
-                description = String.format( "&6You do %s%d&6%% &6of normal &2%s &6damage when fighting players", effectLevelColor, ( int ) ( effectAmount * 100 ), toolType );
-                break;
-            case PVEDAMAGE:
-                description = String.format( "&6You do %s%d&6%% &6of normal &2%s &6damage when fighting mobs", effectLevelColor, ( int ) ( effectAmount * 100 ), toolType );
-                break;
-            case EXPLOSIONDAMAGE:
-                if ( moreThanOne )
-                {
-                    description = String.format( "&6You take %s%d%% more &6damage from explosions", effectLevelColor, ( int ) ( effectAmount * 100 - 100 ) );
-                    break;
-                }
-                else
-                {
-                    description = String.format( "&6You take %s%d%% less &6damage from explosions", effectLevelColor, ( int ) ( effectAmount * 100 - 100 ) );
-                    break;
-                }
-            case FIREDAMAGE:
-                if ( moreThanOne )
-                {
-                    description = String.format( "&6You take %s%d%% more &6damage from fire", effectLevelColor, ( int ) ( effectAmount * 100 - 100 ) );
-                    break;
-                }
-                else
-                {
-                    description = String.format( "&6You take %s%d%% less &6damage from fire", effectLevelColor, ( int ) ( effectAmount * 100 - 100 ) );
-                    break;
-                }
-            case FALLDAMAGE:
-                if ( moreThanOne )
-                {
-                    description = String.format( "&6You take %s%d%% more &6damage from falling", effectLevelColor, ( int ) ( effectAmount * 100 - 100 ) );
-                    break;
-                }
-                else
-                {
-                    description = String.format( "&6You take %s%d%% less &6damage from falling", effectLevelColor, ( int ) ( effectAmount * 100 - 100 ) );
-                    break;
-                }
-            case FALLTHRESHOLD:
-                description = String.format( "&6Fall damage less than %s%d &6does not affect you.", effectLevelColor, ( int ) effectAmount );
-                break;
-            case PLOWDURABILITY:
-                description = String.format( "&6Using &2%s &6removes about %s%.2f &6durability", toolType, effectLevelColor, effectAmount );
-                break;
-            case TOOLDURABILITY:
-                description = String.format( "&6Using &2%s &6removes about %s%.2f &6durability", toolType, effectLevelColor, effectAmount );
-                break;
-            case RODDURABILITY:
-                description = String.format( "&6Using a &2%s &6removes about %s%.2f &6durability", toolType, effectLevelColor, effectAmount );
-                break;
-            case EAT:
-                description = String.format( "&6You gain %s%.2f &6Hunger instead of &e%.2f&6 when you eat &2%s", effectLevelColor, effectAmount / 2.0,
-                        ( ( double ) Util.FoodLevel.getLvl( mInitiator.getTypeId() ) ) / 2.0, initiator );
-                break;
-            case CRAFT:
-                description = String.format( "&6You craft %s%.0f &2%s &6instead of &e%.0f", effectLevelColor, effectAmount, output, elfAmount );
-                break;
-            case PLOW:
-                description = String.format( "&6You gain %s%.2f &6seeds instead of &e%.2f &6when you plow grass", effectLevelColor, effectAmount, elfAmount );
-                break;
-            case FISH:
-                description = String.format( "&6You catch %s%.2f &6fish instead of &e%.2f &6when you fish", effectLevelColor, effectAmount, elfAmount );
-                break;
-            case BREW:
-                description = String.format( "&6You brew %s%.2f &6potion(s) instead of &e%.2f &6when you're brewing potions", effectLevelColor, effectAmount, elfAmount );
-                break;
-            case DIGTIME:
-                description = String.format( "&a%.0f%%&6 of the time &2%s &6break &2%s &6instantly ", effectAmount * 100, toolType, initiator );
-                break;
-            case BOWATTACK:
-                description = String.format( "&6Your Arrows (Fully Charge Bow) do %s%.0f &6hp damage (half hearts)", effectLevelColor, effectAmount + 2 );
-                break;
-            case VEHICLEDROP:
-                description = String.format( "&6When you break a boat &6approx. %s%.2f &2%s&6 are created", effectLevelColor, effectAmount, output );
-                break;
-            case VEHICLEMOVE:
-                description = String.format( "&6Your boat travels %s%d%% &6faster than normal", effectLevelColor, ( int ) ( effectAmount * 100 - 100 ) );
-                break;
-            case SMELT:
-                if ( mInitiator.getTypeId() == 265 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.IRON_ORE ) );
-                }
-                else if ( mInitiator.getTypeId() == 266 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.GOLD_ORE ) );
-                }
-                else if ( mInitiator.getTypeId() == 320 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.PORK ) );
-                }
-                else if ( mInitiator.getTypeId() == 350 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_FISH ) );
-                }
-                else if ( mInitiator.getTypeId() == 366 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_CHICKEN ) );
-                }
-                else if ( mInitiator.getTypeId() == 412 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RABBIT ) );
-                }
-                else if ( mInitiator.getTypeId() == 424 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.MUTTON ) );
-                }
-                else if ( mInitiator.getTypeId() == 364 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_BEEF ) );
-                }
-                else if ( mInitiator.getTypeId() == 20 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.SAND ) );
-                }
-                else if ( mInitiator.getTypeId() == 393 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.POTATO_ITEM ) );
-                }
-                else if ( mInitiator.getTypeId() == 263 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.LOG ) );
-                }
-                else if ( mInitiator.getTypeId() == 1 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.COBBLESTONE ) );
-                }
-                else if ( mInitiator.getTypeId() == 336 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY_BALL ) );
-                }
-                else if ( mInitiator.getTypeId() == 405 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.NETHERRACK ) );
-                }
-                else if ( mInitiator.getTypeId() == 172 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY ) );
-                }
-                else if ( mInitiator.getTypeId() == 351 )
-                {
-                    initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CACTUS ) );
-                }
-                description = String.format( "&6Smelt a &2%s &6and %s%.2f &2%s&6 are created as well", initiator, effectLevelColor, effectAmount, output );
-                break;
-            case SHEAR:
-                description = String.format( "&6Shear a %s and %s%.2f &6%s are dropped instead of &e%.2f", plugin.getUtil().getCleanName( mCreature ), effectLevelColor, effectAmount, output,
-                        elfAmount );
-                break;
-            case SPECIAL:
-            default:
-                description = "&6This Effect description is not yet implemented: " + mType.toString();
+            if ( mInitiator.getTypeId() == 265 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.IRON_ORE ) );
+            }
+            else if ( mInitiator.getTypeId() == 266 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.GOLD_ORE ) );
+            }
+            else if ( mInitiator.getTypeId() == 320 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.PORK ) );
+            }
+            else if ( mInitiator.getTypeId() == 350 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_FISH ) );
+            }
+            else if ( mInitiator.getTypeId() == 366 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_CHICKEN ) );
+            }
+            else if ( mInitiator.getTypeId() == 412 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RABBIT ) );
+            }
+            else if ( mInitiator.getTypeId() == 424 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.MUTTON ) );
+            }
+            else if ( mInitiator.getTypeId() == 364 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_BEEF ) );
+            }
+            else if ( mInitiator.getTypeId() == 20 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.SAND ) );
+            }
+            else if ( mInitiator.getTypeId() == 393 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.POTATO_ITEM ) );
+            }
+            else if ( mInitiator.getTypeId() == 263 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.LOG ) );
+            }
+            else if ( mInitiator.getTypeId() == 1 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.COBBLESTONE ) );
+            }
+            else if ( mInitiator.getTypeId() == 336 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY_BALL ) );
+            }
+            else if ( mInitiator.getTypeId() == 405 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.NETHERRACK ) );
+            }
+            else if ( mInitiator.getTypeId() == 172 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY ) );
+            }
+            else if ( mInitiator.getTypeId() == 351 )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CACTUS ) );
+            }
         }
+
+        description = plugin.getOut().parseEffectLevel( mType, initiator, output, effectAmount, minorAmount, moreThanOne, effectLevelColor, toolType, mCreature, dCPlayer, mInitiator );
 
         return description;
     }
@@ -338,11 +243,11 @@ public class Effect
     private String effectLevelColor( int skillLevel )
     {
         if ( skillLevel > mNormalLevel )
-            return "&a";
+            return Messages.effectLevelColorGreaterThanNormal;
         else if ( skillLevel == mNormalLevel )
-            return "&e";
+            return Messages.effectLevelColorEqualToNormal;
         else
-            return "&c";
+            return Messages.effectLevelColorLessThanNormal;
     }
 
     /**
@@ -367,16 +272,13 @@ public class Effect
         effectAmount = Math.max( effectAmount, mMin );
 
         if ( dCPlayer != null )
-            if ( mException && skillLevel <= mExceptionHigh && skillLevel >= mExceptionLow && !( skillLevel == plugin.getConfigManager().getRaceLevelLimit()
-                    && plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( plugin.getConfigManager().getAllSkills().get( mID / 10 ) ) ) )
+            if ( mException && skillLevel <= mExceptionHigh && skillLevel >= mExceptionLow && !( skillLevel == plugin.getConfigManager().getRaceLevelLimit() && plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( plugin.getConfigManager().getAllSkills().get( mID / 10 ) ) ) )
                 effectAmount = mExceptionValue;
 
         if ( DwarfCraft.debugMessagesThreshold < 1 )
         {
-            System.out.println( String.format(
-                    "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
-                            + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s",
-                    mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
+            System.out.println( String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f " + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease,
+                    mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
         }
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
     }
@@ -507,7 +409,7 @@ public class Effect
         if ( mCreature == null )
             return false;
 
-        switch ( mCreature )
+        switch( mCreature )
         {
             case CHICKEN:
                 return ( entity instanceof Chicken );
@@ -574,9 +476,9 @@ public class Effect
             case WITCH:
                 return ( entity instanceof Witch );
             case POLAR_BEAR:
-                return (entity instanceof PolarBear);
+                return ( entity instanceof PolarBear );
             case SHULKER:
-                return (entity instanceof Shulker);
+                return ( entity instanceof Shulker );
             default:
                 return false;
         }
@@ -623,8 +525,7 @@ public class Effect
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
 
         if ( DwarfCraft.debugMessagesThreshold < 2 )
-            System.out.println(
-                    String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, tool.getDurability(), base, wear ) );
+            System.out.println( String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, tool.getDurability(), base, wear ) );
 
         // Some code taken from net.minecraft.server.ItemStack line 165.
         // Checks to see if damage should be skipped.

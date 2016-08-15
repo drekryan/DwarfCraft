@@ -30,6 +30,7 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.DwarfTrainer;
 import com.Jessy1237.DwarfCraft.Effect;
 import com.Jessy1237.DwarfCraft.EffectType;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.Skill;
 import com.Jessy1237.DwarfCraft.TrainSkillSchedule;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
@@ -124,14 +125,14 @@ public class DCEntityListener implements Listener
                 {
                     if ( trainer.isWaiting() )
                     {
-                        plugin.getOut().sendMessage( dCPlayer.getPlayer(), "&6Please wait, Currently training a skill." );
+                        plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.trainerOccupied );
                     }
                     else
                     {
                         long currentTime = System.currentTimeMillis();
                         if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
                         {
-                            plugin.getOut().sendMessage( dCPlayer.getPlayer(), "&6Sorry, i need time to recuperate." );
+                            plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.trainerCooldown );
                             return true;
                         }
                         else

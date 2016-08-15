@@ -86,15 +86,16 @@ public final class ConfigManager
             }
             else
             {
-                //Runs the proceeding events after all the config files are read so that the skillArray is complete with effects
+                // Runs the proceeding events after all the config files are
+                // read so that the skillArray is complete with effects
                 DwarfCraftLoadSkillsEvent e = new DwarfCraftLoadSkillsEvent( ( HashMap<Integer, Skill> ) skillsArray.clone() );
                 plugin.getServer().getPluginManager().callEvent( e );
                 skillsArray = e.getSkills();
-                
+
                 DwarfCraftLoadRacesEvent event = new DwarfCraftLoadRacesEvent( ( ArrayList<Race> ) raceList.clone() );
                 plugin.getServer().getPluginManager().callEvent( event );
                 raceList = event.getRaces();
-                
+
             }
         }
         catch ( Exception e )
@@ -215,8 +216,8 @@ public final class ConfigManager
             readConfigFile();
             getDefaultValues();
 
-            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" },
-                    { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" } };
+            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" },
+                    { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" } };
             for ( String[] mfile : mfiles )
             {
                 file = new File( root, mfile[0] );
@@ -241,7 +242,7 @@ public final class ConfigManager
 
         byte[] buf = new byte[1024];
         int len;
-        while ( ( len = ins.read( buf ) ) > 0 )
+        while( ( len = ins.read( buf ) ) > 0 )
         {
             out.write( buf, 0, len );
         }
@@ -260,7 +261,7 @@ public final class ConfigManager
             FileReader fr = new FileReader( configDirectory + configMainFileName );
             BufferedReader br = new BufferedReader( fr );
             String line = br.readLine();
-            while ( line != null )
+            while( line != null )
             {
                 if ( line.length() == 0 )
                 {
@@ -361,7 +362,7 @@ public final class ConfigManager
             fr = new FileReader( configDirectory + configWorldFileName );
             BufferedReader br = new BufferedReader( fr );
             String line = br.readLine();
-            while ( line != null )
+            while( line != null )
             {
                 if ( line.length() == 0 )
                 {
@@ -406,7 +407,7 @@ public final class ConfigManager
         {
             CSVReader csv = new CSVReader( configDirectory + configEffectsFileName );
             Iterator<CSVRecord> records = csv.getRecords();
-            while ( records.hasNext() )
+            while( records.hasNext() )
             {
                 CSVRecord item = records.next();
                 Effect effect = new Effect( item, plugin );
@@ -443,7 +444,7 @@ public final class ConfigManager
             boolean desc = false;
             boolean skills = false;
             Race race = null;
-            while ( line != null )
+            while( line != null )
             {
                 if ( line.length() == 0 )
                 {
@@ -523,7 +524,7 @@ public final class ConfigManager
             FileReader fr = new FileReader( configDirectory + cfgGreeterFile );
             BufferedReader br = new BufferedReader( fr );
             String messageId = br.readLine();
-            while ( messageId != null )
+            while( messageId != null )
             {
                 messageId = messageId.trim();
                 String leftClick, rightClick;
@@ -552,33 +553,197 @@ public final class ConfigManager
 
     }
 
-    @SuppressWarnings( "resource" )
+    @SuppressWarnings( { "resource", "null" } )
     private boolean readMessagesFile()
     {
-        System.out.println( "[DwarfCraft] Reading general messages file: " + configDirectory + configMessagesFileName );
+        System.out.println( "[DwarfCraft] Reading messages file: " + configDirectory + configMessagesFileName );
+        
+        //Loads the messages class after the config is read but before all the messages are read.
+        new Messages( plugin );
         try
         {
             getDefaultValues();
             FileReader fr = new FileReader( configDirectory + configMessagesFileName );
             BufferedReader br = new BufferedReader( fr );
 
-            String line;
-            while ( ( line = br.readLine() ) != null )
+            String line = br.readLine();
+            while( line != null )
             {
                 if ( line.length() == 0 )
+                {
+                    line = br.readLine();
                     continue;
+                }
                 if ( line.charAt( 0 ) == '#' )
+                {
+                    line = br.readLine();
                     continue;
+                }
 
                 if ( line.indexOf( ":" ) <= 0 )
+                {
+                    line = br.readLine();
                     continue;
+                }
 
-                String name = line.substring( 0, line.indexOf( ":" ) );
-                String message = line.substring( name.length() + 1 );
+                String split[] = line.split( ":" );
+                if ( split.length != 2 ) {
+                    line = br.readLine();
+                    continue;
+                }
 
-                if ( name.equalsIgnoreCase( "Server Rules" ) )
-                    Messages.ServerRules = message;
+                String name = split[0];
+                String message = split[1];
 
+                if ( message != null || !message.trim().equals( "" ) || !message.equals( null ) )
+                {
+                    System.out.println( name + ", " + message );
+                    if ( name.equalsIgnoreCase( "Server Rules" ) )
+                        Messages.serverRules = message;
+                    if ( name.equalsIgnoreCase( "Server Rules prefix" ) )
+                        Messages.serverRulesPrefix = message;
+                    if ( name.equalsIgnoreCase( "Welcome prefix" ) )
+                        Messages.welcomePrefix = message;
+                    if ( name.equalsIgnoreCase( "Welcome" ) )
+                        Messages.welcome = message;
+                    if ( name.equalsIgnoreCase( "Tutorial prefix" ) )
+                        Messages.tutorialPrefix = message;
+                    if ( name.equalsIgnoreCase( "SkillSheet prefix" ) )
+                        Messages.skillSheetPrefix = message;
+                    if ( name.equalsIgnoreCase( "SkillSheet header" ) )
+                        Messages.skillSheetHeader = message;
+                    if ( name.equalsIgnoreCase( "SkillSheet skill line" ) )
+                        Messages.skillSheetSkillLine = message;
+                    if ( name.equalsIgnoreCase( "SkillSheet untrained skill header" ) )
+                        Messages.skillSheetUntrainedSkillHeader = message;
+                    if ( name.equalsIgnoreCase( "SkillSheet untrained skill line" ) )
+                        Messages.skillSheetUntrainedSkillLine = message;
+
+                    if ( name.equalsIgnoreCase( "SkillInfo header" ) )
+                        Messages.skillInfoHeader = message;
+                    if ( name.equalsIgnoreCase( "SkillInfo minor header" ) )
+                        Messages.skillInfoMinorHeader = message;
+                    if ( name.equalsIgnoreCase( "SkillInfo EffectID Prefix" ) )
+                        Messages.skillInfoEffectIDPrefix = message;
+                    if ( name.equalsIgnoreCase( "SkillInfo max skill level" ) )
+                        Messages.skillInfoMaxSkillLevel = message;
+                    if ( name.equalsIgnoreCase( "SkillInfo at trainer level" ) )
+                        Messages.skillInfoAtTrainerLevel = message;
+                    if ( name.equalsIgnoreCase( "SkillInfo train cost header" ) )
+                        Messages.skillInfoTrainCostHeader = message;
+                    if ( name.equalsIgnoreCase( "SkillInfo train cost" ) )
+                        Messages.skillInfoTrainCost = message;
+
+                    if ( name.equalsIgnoreCase( "EffectInfo prefix" ) )
+                        Messages.effectInfoPrefix = message;
+
+                    if ( name.equalsIgnoreCase( "Race check" ) )
+                        Messages.raceCheck = message;
+                    if ( name.equalsIgnoreCase( "Admin race check" ) )
+                        Messages.adminRaceCheck = message;
+                    if ( name.equalsIgnoreCase( "Already race" ) )
+                        Messages.alreadyRace = message;
+                    if ( name.equalsIgnoreCase( "Reset race" ) )
+                        Messages.resetRace = message;
+                    if ( name.equalsIgnoreCase( "Changed race" ) )
+                        Messages.changedRace = message;
+                    if ( name.equalsIgnoreCase( "Confirm race" ) )
+                        Messages.confirmRace = message;
+                    if ( name.equalsIgnoreCase( "Race does not exist" ) )
+                        Messages.raceDoesNotExist = message;
+
+                    if ( name.equalsIgnoreCase( "Choose a race" ) )
+                        Messages.chooseARace = message;
+                    if ( name.equalsIgnoreCase( "Train skill prefix" ) )
+                        Messages.trainSkillPrefix = message;
+                    if ( name.equalsIgnoreCase( "Race does not contain skill" ) )
+                        Messages.raceDoesNotContainSkill = message;
+                    if ( name.equalsIgnoreCase( "Race does not specialize" ) )
+                        Messages.raceDoesNotSpecialize = message;
+                    if ( name.equalsIgnoreCase( "Max skill level" ) )
+                        Messages.maxSkillLevel = message;
+                    if ( name.equalsIgnoreCase( "Trainer max level" ) )
+                        Messages.trainerMaxLevel = message;
+                    if ( name.equalsIgnoreCase( "Trainer level too high" ) )
+                        Messages.trainerLevelTooHigh = message;
+                    if ( name.equalsIgnoreCase( "No more item needed" ) )
+                        Messages.noMoreItemNeeded = message;
+                    if ( name.equalsIgnoreCase( "More item needed" ) )
+                        Messages.moreItemNeeded = message;
+                    if ( name.equalsIgnoreCase( "Training successful" ) )
+                        Messages.trainingSuccessful = message;
+                    if ( name.equalsIgnoreCase( "Trainer occupied" ) )
+                        Messages.trainerOccupied = message;
+                    if ( name.equalsIgnoreCase( "Trainer cooldown" ) )
+                        Messages.trainerCooldown = message;
+
+                    if ( name.equalsIgnoreCase( "Describe general" ) )
+                        Messages.describeGeneral = message;
+                    if ( name.equalsIgnoreCase( "Describe level blockdrop" ) )
+                        Messages.describeLevelBlockdrop = message;
+                    if ( name.equalsIgnoreCase( "Describe level mobdrop" ) )
+                        Messages.describeLevelMobdrop = message;
+                    if ( name.equalsIgnoreCase( "Describe level mobdrop no creature" ) )
+                        Messages.describeLevelMobdropNoCreature = message;
+                    if ( name.equalsIgnoreCase( "Describe level sword durability" ) )
+                        Messages.describeLevelSwordDurability = message;
+                    if ( name.equalsIgnoreCase( "Describe level pvp damage" ) )
+                        Messages.describeLevelPVPDamage = message;
+                    if ( name.equalsIgnoreCase( "Describe level pve damage" ) )
+                        Messages.describeLevelPVEDamage = message;
+                    if ( name.equalsIgnoreCase( "Describe level explosion damage more" ) )
+                        Messages.describeLevelExplosionDamageMore = message;
+                    if ( name.equalsIgnoreCase( "Describe level explosion damage less" ) )
+                        Messages.describeLevelExplosionDamageLess = message;
+                    if ( name.equalsIgnoreCase( "Describe level fire damage more" ) )
+                        Messages.describeLevelFireDamageMore = message;
+                    if ( name.equalsIgnoreCase( "Describe level fire damage less" ) )
+                        Messages.describeLevelFireDamageLess = message;
+                    if ( name.equalsIgnoreCase( "Describe level falling damage more" ) )
+                        Messages.describeLevelFallingDamageMore = message;
+                    if ( name.equalsIgnoreCase( "Describe level falling damage less" ) )
+                        Messages.describeLevelFallingDamageLess = message;
+                    if ( name.equalsIgnoreCase( "Describe level fall threshold" ) )
+                        Messages.describeLevelFallThreshold = message;
+                    if ( name.equalsIgnoreCase( "Describe level plow durability" ) )
+                        Messages.describeLevelPlowDurability = message;
+                    if ( name.equalsIgnoreCase( "Describe level tool durability" ) )
+                        Messages.describeLevelToolDurability = message;
+                    if ( name.equalsIgnoreCase( "Describe level rod durability" ) )
+                        Messages.describeLevelRodDurability = message;
+                    if ( name.equalsIgnoreCase( "Describe level eat" ) )
+                        Messages.describeLevelEat = message;
+                    if ( name.equalsIgnoreCase( "Describe level craft" ) )
+                        Messages.describeLevelCraft = message;
+                    if ( name.equalsIgnoreCase( "Describe level plow" ) )
+                        Messages.describeLevelPlow = message;
+                    if ( name.equalsIgnoreCase( "Describle level fish" ) )
+                        Messages.describeLevelFish = message;
+                    if ( name.equalsIgnoreCase( "Describe level brew" ) )
+                        Messages.describeLevelBrew = message;
+                    if ( name.equalsIgnoreCase( "Describe level dig time" ) )
+                        Messages.describeLevelDigTime = message;
+                    if ( name.equalsIgnoreCase( "Describe level bow attack" ) )
+                        Messages.describeLevelBowAttack = message;
+                    if ( name.equalsIgnoreCase( "Describe level vehicle drop" ) )
+                        Messages.describeLevelVehicleDrop = message;
+                    if ( name.equalsIgnoreCase( "Describe level vehicle move" ) )
+                        Messages.describeLevelVehicleMove = message;
+                    if ( name.equalsIgnoreCase( "Describe level smelt" ) )
+                        Messages.describeLevelSmelt = message;
+                    if ( name.equalsIgnoreCase( "Describe level shear" ) )
+                        Messages.describeLevelShear = message;
+                    if ( name.equalsIgnoreCase( "Effect level color greater than normal" ) )
+                        Messages.effectLevelColorGreaterThanNormal = message;
+                    if ( name.equalsIgnoreCase( "Effect level color equal to normal" ) )
+                        Messages.effectLevelColorEqualToNormal = message;
+                    if ( name.equalsIgnoreCase( "Effect level color less than normal" ) )
+                        Messages.effectLevelColorLessThanNormal = message;
+                }
+                else
+                {
+                    System.out.println( "Null Message: " + name + ", " + message );
+                }
                 line = br.readLine();
             }
 
@@ -594,8 +759,10 @@ public final class ConfigManager
         finally
         {
             // Default to enum values if not found
-            if ( Messages.ServerRules == null )
-                Messages.ServerRules = Messages.Fixed.SERVERRULESMESSAGE.getMessage();
+            /*
+            if ( Messages.serverRules == null )
+                Messages.serverRules = Messages.Fixed.SERVERRULESMESSAGE.getMessage();
+                */
         }
         return true;
     }
@@ -608,15 +775,13 @@ public final class ConfigManager
             CSVReader csv = new CSVReader( configDirectory + configSkillsFileName );
             configSkillsVersion = csv.getVersion();
             Iterator<CSVRecord> records = csv.getRecords();
-            while ( records.hasNext() )
+            while( records.hasNext() )
             {
                 CSVRecord item = records.next();
 
                 @SuppressWarnings( "deprecation" )
-                Skill skill = new Skill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<Effect>(),
-                        new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ),
-                        new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ),
-                        new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ),
+                Skill skill = new Skill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<Effect>(), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ),
+                        new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ),
                         Material.getMaterial( item.getInt( "Held" ) ) );
 
                 skillsArray.put( skill.getId(), skill );
@@ -646,7 +811,7 @@ public final class ConfigManager
             BufferedReader br = new BufferedReader( fr );
             String line = br.readLine();
 
-            while ( line != null )
+            while( line != null )
             {
                 if ( line.length() == 0 )
                 {

@@ -127,46 +127,46 @@ public final class DwarfTrainer
     {
         Skill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
-        String tag = String.format( "&6[Train &b%d&6] ", skill.getId() );
+        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
 
         if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
         {
-            plugin.getOut().sendMessage( player, "&cPlease choose a race!" );
+            plugin.getOut().sendMessage( player, Messages.chooseARace );
             setWait( false );
             return;
         }
 
         if ( skill == null )
         {
-            plugin.getOut().sendMessage( player, "&cYour race doesn't have this skill!", tag );
+            plugin.getOut().sendMessage( player, Messages.raceDoesNotContainSkill, tag );
             setWait( false );
             return;
         }
 
         if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
         {
-            plugin.getOut().sendMessage( player, "&cYour race doesn't specialize in this skill! Max level is (" + plugin.getConfigManager().getRaceLevelLimit() + ")!" );
+            plugin.getOut().sendMessage( player, Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
             setWait( false );
             return;
         }
 
         if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
         {
-            plugin.getOut().sendMessage( player, "&cYour skill is max level (" + plugin.getConfigManager().getMaxSkillLevel() + ")!", tag );
+            plugin.getOut().sendMessage( player, Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
             setWait( false );
             return;
         }
 
         if ( skill.getLevel() >= getMaxSkill() )
         {
-            plugin.getOut().sendMessage( player, "&cI can't teach you any more, find a higher level trainer", tag );
+            plugin.getOut().sendMessage( player, Messages.trainerMaxLevel, tag );
             setWait( false );
             return;
         }
 
         if ( skill.getLevel() < getMinSkill() )
         {
-            plugin.getOut().sendMessage( player, "&cI can't teach a low level like you, find a lower level trainer", tag );
+            plugin.getOut().sendMessage( player, Messages.trainerLevelTooHigh, tag );
             setWait( false );
             return;
         }
@@ -190,7 +190,7 @@ public final class DwarfTrainer
             }
             if ( costStack.getAmount() == 0 )
             {
-                plugin.getOut().sendMessage( player, String.format( "&aNo more &2%s &ais needed", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname", plugin.getUtil().getCleanName( costStack ) ), tag );
                 continue;
             }
             if ( !player.getInventory().contains( costStack.getTypeId() ) )
@@ -209,14 +209,14 @@ public final class DwarfTrainer
                     if ( !contains )
                     {
                         hasMats = false;
-                        plugin.getOut().sendMessage( player, String.format( "&cAn additional &2%d %s &cis required", costStack.getAmount(), plugin.getUtil().getCleanName( costStack ) ), tag );
+                        plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
                         continue;
                     }
                 }
                 else
                 {
                     hasMats = false;
-                    plugin.getOut().sendMessage( player, String.format( "&cAn additional &2%d %s &cis required", costStack.getAmount(), plugin.getUtil().getCleanName( costStack ) ), tag );
+                    plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
                     continue;
                 }
             }
@@ -225,8 +225,8 @@ public final class DwarfTrainer
             {
                 if ( invStack == null )
                     continue;
-                if ( ( invStack.getTypeId() == costStack.getTypeId() && ( invStack.getDurability() == costStack.getDurability()
-                        || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+                if ( ( invStack.getTypeId() == costStack.getTypeId()
+                        && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
                         || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
                 {
                     deposited = true;
@@ -276,11 +276,11 @@ public final class DwarfTrainer
             }
             if ( costStack.getAmount() == 0 )
             {
-                plugin.getOut().sendMessage( player, String.format( "&aNo more &2%s &ais needed", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname", plugin.getUtil().getCleanName( costStack ) ), tag );
             }
             else
             {
-                plugin.getOut().sendMessage( player, String.format( "&cAn additional &2%d %s &c is required", costStack.getAmount(), plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
                 hasMats = false;
                 deposited = true;
             }
@@ -321,7 +321,7 @@ public final class DwarfTrainer
                 }
                 else
                 {
-                    plugin.getOut().sendMessage( player, "&6Training Successful!", tag );
+                    plugin.getOut().sendMessage( player, Messages.trainingSuccessful, tag );
                 }
             }
 
