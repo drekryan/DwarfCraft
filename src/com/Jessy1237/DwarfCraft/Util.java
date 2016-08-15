@@ -109,12 +109,12 @@ public class Util
     {
         if ( item == null )
             return "NULL";
-        switch ( item.getType() )
+        switch( item.getType() )
         {
             case SAPLING:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Sapling";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Oak Sapling";
@@ -132,7 +132,7 @@ public class Util
                         return "Sapling";
                 }
             case SAND:
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Sand";
@@ -144,7 +144,7 @@ public class Util
             case RAW_FISH:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Raw Fish";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Raw Fish";
@@ -161,7 +161,7 @@ public class Util
             case LOG:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Log";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Oak Log";
@@ -177,7 +177,7 @@ public class Util
             case LOG_2:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Log";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Acacia Log";
@@ -189,7 +189,7 @@ public class Util
             case LEAVES:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Leaves";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Oak Leaves";
@@ -205,7 +205,7 @@ public class Util
             case LEAVES_2:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Leaves";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Acacia Leaves";
@@ -217,7 +217,7 @@ public class Util
             case WOOL:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Wool";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "White Wool";
@@ -257,7 +257,7 @@ public class Util
             case DOUBLE_STEP:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Slab";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 15:
                         return "Tile Quartz Double Slab";
@@ -287,7 +287,7 @@ public class Util
             case SUGAR_CANE_BLOCK:
                 return "Sugar Cane";
             case CROPS:
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 7:
                         return "Fully Grown Crops";
@@ -297,7 +297,7 @@ public class Util
             case COAL:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Coal";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 0:
                         return "Coal";
@@ -323,7 +323,7 @@ public class Util
             case INK_SACK:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Dye";
-                switch ( item.getData().getData() )
+                switch( item.getData().getData() )
                 {
                     case 15:
                         return "Bone Meal";
@@ -424,7 +424,7 @@ public class Util
         if ( mCreature == null )
             return "NULL";
 
-        switch ( mCreature )
+        switch( mCreature )
         {
             case MUSHROOM_COW:
                 return "Mooshroom";
@@ -466,35 +466,35 @@ public class Util
 
     public enum FoodLevel
     {
-        APPLE(260, 4, 2.4f),
-        BAKED_POTATO(393, 5, 7.2f),
-        BREAD(297, 5, 6f),
-        CAKE(92, 2, 2f),
-        CARROT(391, 3, 4.8f),
-        COOKED_CHICKEN(366, 6, 7.2f),
-        COOKED_FISH(350, 5, 6f),
-        COOKED_MUTTON(424, 6, 9.6f),
-        COOKED_PORKCHOP(320, 8, 12.8f),
-        COOKED_RABBIT(412, 5, 6f),
-        COOKIE(357, 2, 0.4f), 
-        GOLDEN_APPLE(322, 4, 9.6f),
-        GOLDEN_CARROT(396, 6, 14.4f),
-        MELON(360, 2, 1.2f), 
-        MUSHROOM_STEW(282, 6, 7.2f), 
-        POISONOUS_POTATO(394, 2, 1.2f), 
-        POTATO(392, 1, 0.6f), 
-        PUMPKIN_PIE(400, 8, 4.8f), 
-        RABBIT_STEW(413, 10, 12f), 
-        RAW_BEEF(363, 3, 1.8f), 
-        RAW_CHICKEN(365, 2, 1.2f), 
-        RAW_FISH(349, 2, 0.4f), 
-        RAW_MUTTON(423, 2, 1.2f), 
-        RAW_PORKCHOP(319, 3, 1.8f), 
-        RAW_RABBIT(411, 2, 1.8f), 
-        ROTTEN_FLESH(367, 4, 0.8f), 
-        SPIDER_EYE(375, 2, 3.2f), 
-        STEAK(364, 8, 12.8f);
-        
+        APPLE( 260, 4, 2.4f ),
+        BAKED_POTATO( 393, 5, 7.2f ),
+        BREAD( 297, 5, 6f ),
+        CAKE( 92, 2, 2f ),
+        CARROT( 391, 3, 4.8f ),
+        COOKED_CHICKEN( 366, 6, 7.2f ),
+        COOKED_FISH( 350, 5, 6f ),
+        COOKED_MUTTON( 424, 6, 9.6f ),
+        COOKED_PORKCHOP( 320, 8, 12.8f ),
+        COOKED_RABBIT( 412, 5, 6f ),
+        COOKIE( 357, 2, 0.4f ),
+        GOLDEN_APPLE( 322, 4, 9.6f ),
+        GOLDEN_CARROT( 396, 6, 14.4f ),
+        MELON( 360, 2, 1.2f ),
+        MUSHROOM_STEW( 282, 6, 7.2f ),
+        POISONOUS_POTATO( 394, 2, 1.2f ),
+        POTATO( 392, 1, 0.6f ),
+        PUMPKIN_PIE( 400, 8, 4.8f ),
+        RABBIT_STEW( 413, 10, 12f ),
+        RAW_BEEF( 363, 3, 1.8f ),
+        RAW_CHICKEN( 365, 2, 1.2f ),
+        RAW_FISH( 349, 2, 0.4f ),
+        RAW_MUTTON( 423, 2, 1.2f ),
+        RAW_PORKCHOP( 319, 3, 1.8f ),
+        RAW_RABBIT( 411, 2, 1.8f ),
+        ROTTEN_FLESH( 367, 4, 0.8f ),
+        SPIDER_EYE( 375, 2, 3.2f ),
+        STEAK( 364, 8, 12.8f );
+
         private int lvl;
         private int id;
         private float sat;
