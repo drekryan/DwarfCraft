@@ -53,8 +53,8 @@ public class CommandSkillInfo extends Command
 
                 DCPlayer dCPlayer = new DCPlayer( plugin, null );
                 Skill skill = new Skill( 0, null, 0, null, null, null, null, null );
-                desiredArguments.add( skill );
                 desiredArguments.add( dCPlayer );
+                desiredArguments.add( skill );
 
                 try
                 {
@@ -62,8 +62,8 @@ public class CommandSkillInfo extends Command
                     if ( args.length > outputList.size() )
                         throw new DCCommandException( plugin, Type.TOOMANYARGS );
 
-                    skill = ( Skill ) outputList.get( 0 );
-                    dCPlayer = ( DCPlayer ) outputList.get( 1 );
+                    skill = ( Skill ) outputList.get( 1 );
+                    dCPlayer = ( DCPlayer ) outputList.get( 0 );
                 }
                 catch ( DCCommandException dce )
                 {
