@@ -5,7 +5,7 @@
     <artifactId>DwarfCraft</artifactId>
     <name>DwarfCraft</name>
     <packaging>jar</packaging>
-    <version>2.6.9.1</version>
+    <version>3.0</version>
 
     <repositories>
         <repository>
