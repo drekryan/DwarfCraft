@@ -351,7 +351,9 @@ public class DwarfCraft extends JavaPlugin
             }
         }
 
-        CitizensAPI.getTraitFactory().deregisterTrait( trainerTrait );
+        if (trainerTrait != null) {
+            CitizensAPI.getTraitFactory().deregisterTrait(trainerTrait);
+        }
     }
 
     /**
@@ -370,7 +372,7 @@ public class DwarfCraft extends JavaPlugin
         if ( pm.getPlugin( "Vault" ) == null || pm.getPlugin( "Vault" ).isEnabled() == false )
         {
             System.out.println( "[DwarfCraft] Couldn't find Vault!" );
-            System.out.println( "[DwarfCraft] DwarfCraft now disabiling..." );
+            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
             pm.disablePlugin( this );
             return;
         }
@@ -409,7 +411,7 @@ public class DwarfCraft extends JavaPlugin
         if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
         {
             System.out.println( "[DwarfCraft] Couldn't find Citizens!" );
-            System.out.println( "[DwarfCraft] DwarfCraft now disabiling..." );
+            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
             pm.disablePlugin( this );
             return;
         }
