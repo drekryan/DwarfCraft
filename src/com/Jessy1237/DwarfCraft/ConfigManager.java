@@ -604,7 +604,6 @@ public final class ConfigManager
 
                 if ( message != null || !message.trim().equals( "" ) || !message.equals( null ) )
                 {
-                    System.out.println( name + ", " + message );
                     if ( name.equalsIgnoreCase( "Server Rules" ) )
                         Messages.serverRules = message;
                     if ( name.equalsIgnoreCase( "Server Rules prefix" ) )
