@@ -190,7 +190,7 @@ public final class DwarfTrainer
             }
             if ( costStack.getAmount() == 0 )
             {
-                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
                 continue;
             }
             if ( !player.getInventory().contains( costStack.getTypeId() ) )
@@ -276,7 +276,7 @@ public final class DwarfTrainer
             }
             if ( costStack.getAmount() == 0 )
             {
-                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
             }
             else
             {
