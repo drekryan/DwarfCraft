@@ -117,7 +117,7 @@ public class Out
     public boolean printSkillInfo( CommandSender sender, Skill skill, DCPlayer dCPlayer, int maxTrainLevel )
     {
         // general line
-        sendMessage( sender, Messages.skillInfoHeader.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ).replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skilllevel5", "" + skill.getLevel() )
+        sendMessage( sender, Messages.skillInfoHeader.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ).replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skilllevel%", "" + skill.getLevel() )
                 .replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) );
 
         // effects lines
