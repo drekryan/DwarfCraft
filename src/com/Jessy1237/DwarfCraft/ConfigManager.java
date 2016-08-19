@@ -443,6 +443,7 @@ public final class ConfigManager
             boolean name = false;
             boolean desc = false;
             boolean skills = false;
+            boolean prefix = false;
             Race race = null;
             while( line != null )
             {
@@ -487,7 +488,13 @@ public final class ConfigManager
                     desc = true;
                     line = br.readLine();
                 }
-                if ( name && desc && skills )
+                if( theline[0].equalsIgnoreCase( "Prefix Colour" )) {
+                	race.setPrefixColour( theline[1].trim() );
+                	
+                	prefix = true;
+                	line = br.readLine();
+                }
+                if ( name && desc && skills && prefix )
                 {
                     raceList.add( race );
                     name = false;
