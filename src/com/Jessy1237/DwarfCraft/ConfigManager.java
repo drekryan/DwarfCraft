@@ -136,7 +136,10 @@ public final class ConfigManager
 
     public ArrayList<Integer> getAllSkills( String Race )
     {
-        return getRace( Race ).getSkills();
+    	Race r = getRace( Race );
+    	if( r != null )
+    		return r.getSkills();
+        return null;
     }
 
     protected Skill getGenericSkill( int skillId )
