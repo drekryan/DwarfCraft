@@ -410,7 +410,7 @@ public class Util
     public String getPlayerPrefix( DCPlayer player )
     {
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
-        return plugin.getConfigManager().getPrefix().replace( "%racename%", race );
+        return plugin.getConfigManager().getRace( player.getRace() ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f";
     }
 
     public String getPlayerPrefix( String race )

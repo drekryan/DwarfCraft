@@ -521,7 +521,7 @@ public class Out
 
         out = out.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() );
         out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
-        out = out.replaceAll( "%playerlevel", "" + dCPlayer.getDwarfLevel() );
+        out = out.replaceAll( "%playerlevel%", "" + dCPlayer.getDwarfLevel() );
         out = out.replaceAll( "%initiator%", initiator );
         out = out.replaceAll( "%effectlevelcolor%", effectLevelColor );
         out = out.replaceAll( "%effectamount%", String.format( "%.2f", effectAmount ) );
