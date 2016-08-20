@@ -4,6 +4,7 @@ author: Jessy1237
 main: com.Jessy1237.DwarfCraft.DwarfCraft
 version: 3.1
 depend: [Vault, Citizens]
+softdepend: [LogBlock]
 commands: 
    dcreload: 
       description: Reloads the DwarfCraft plugin.
