@@ -8,8 +8,11 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+
+import net.citizensnpcs.api.npc.NPC;
 
 public class Util
 {
