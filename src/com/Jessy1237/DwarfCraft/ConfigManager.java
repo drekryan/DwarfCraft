@@ -137,7 +137,7 @@ public final class ConfigManager
     public ArrayList<Integer> getAllSkills( String Race )
     {
     	Race r = getRace( Race );
-    	if( r != null )
+		if ( r != null )
     		return r.getSkills();
         return null;
     }

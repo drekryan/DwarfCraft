@@ -350,11 +350,6 @@ public class DwarfCraft extends JavaPlugin
 				}
 			}
 		}
-
-		if ( trainerTrait != null )
-		{
-			CitizensAPI.getTraitFactory().deregisterTrait( trainerTrait );
-		}
 	}
 
 	/**
@@ -418,15 +413,6 @@ public class DwarfCraft extends JavaPlugin
 		}
 		System.out.println( "[DwarfCraft] Hooked into Citizens!" );
 
-		System.out.println( "[DwarfCraft] Restarting citizens..." );
-		if ( reload )
-		{
-			pm.disablePlugin( CitizensAPI.getPlugin() );
-			pm.enablePlugin( pm.getPlugin( "Citizens" ) );
-		}
-		trainerTrait = TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" );
-		CitizensAPI.getTraitFactory().registerTrait( trainerTrait );
-
 		npcr = CitizensAPI.getNPCRegistry();
 		util = new Util( this );
 		cm = new ConfigManager( this, getDataFolder().getAbsolutePath(), "DwarfCraft.config" );
@@ -444,6 +430,18 @@ public class DwarfCraft extends JavaPlugin
 			pm.disablePlugin( this );
 		}
 
+		// Creates the citizen trait for the DwarfTrainers
+		if ( !reload )
+		{
+			trainerTrait = TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" );
+			CitizensAPI.getTraitFactory().registerTrait( trainerTrait );
+		}
+		else
+		{
+			//Untested assumed to work
+			util.reloadTrainers();
+		}
+		
 		for ( Player player : getServer().getOnlinePlayers() )
 		{
 			DCPlayer dCPlayer = getDataManager().find( player );

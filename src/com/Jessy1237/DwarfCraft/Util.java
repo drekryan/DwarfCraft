@@ -570,4 +570,32 @@ public class Util
 
         return true;
     }
+	
+	public void reloadTrainers()
+	{
+		// Reloads the DwarfTrainer information without reloading citizens
+		for ( World w : plugin.getServer().getWorlds() )
+		{
+			if ( isWorldAllowed( w ) )
+			{
+				for ( Entity e : w.getEntities() )
+				{
+					if ( plugin.getNPCRegistry().isNPC( e ) )
+					{
+						NPC npc = plugin.getNPCRegistry().getNPC( e );
+
+						if ( npc.hasTrait( DwarfTrainerTrait.class ) )
+						{
+							DwarfTrainerTrait dtt = npc.getTrait( DwarfTrainerTrait.class );
+
+							// Reruns the code that registers the CitizensNPC
+							// into DwarfCraft
+							dtt.onSpawn();
+						}
+					}
+				}
+			}
+
+		}
+	}
 }
