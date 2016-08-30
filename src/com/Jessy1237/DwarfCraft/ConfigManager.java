@@ -42,6 +42,7 @@ public final class ConfigManager
     private String cfgGreeterFile;
     private String cfgRaceFile;
     private String cfgBlockGroupsFile;
+    private String cfgToolGroupsFile;
     private String dbpath;
     private Integer trainDelay;
     private Integer announcementInterval;
@@ -53,7 +54,8 @@ public final class ConfigManager
 
     private HashMap<Integer, Skill> skillsArray = new HashMap<Integer, Skill>();
     public ArrayList<World> worlds = new ArrayList<World>();
-    private HashMap<String, ArrayList<Integer>> blockgroups = new HashMap<String, ArrayList<Integer>>();
+    private HashMap<String, ArrayList<Integer>> blockGroups = new HashMap<String, ArrayList<Integer>>();
+    private HashMap<String, ArrayList<Integer>> toolGroups = new HashMap<String, ArrayList<Integer>>();
 
     private ArrayList<Race> raceList = new ArrayList<Race>();
     private String defaultRace;
@@ -79,7 +81,7 @@ public final class ConfigManager
 
         try
         {
-            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() )
+            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() || !readToolGroupsFile() )
             {
                 System.out.println( "[SEVERE] Failed to Enable DwarfCraft Skills and Effects)" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
@@ -186,6 +188,8 @@ public final class ConfigManager
             cfgRaceFile = "races.config";
         if ( cfgBlockGroupsFile == null )
             cfgBlockGroupsFile = "block-groups.config";
+        if ( cfgToolGroupsFile == null )
+            cfgToolGroupsFile = "block-groups.config";
         if ( defaultRace == null )
             defaultRace = "NULL";
         if ( trainDelay == null )
@@ -219,7 +223,7 @@ public final class ConfigManager
             readConfigFile();
             getDefaultValues();
 
-            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" } };
+            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { cfgToolGroupsFile, "tool-groups.config" } };
             for ( String[] mfile : mfiles )
             {
                 file = new File( root, mfile[0] );
@@ -811,7 +815,6 @@ public final class ConfigManager
         return false;
     }
 
-    @SuppressWarnings( "resource" )
     private boolean readBlockGroupsFile()
     {
         System.out.println( "[DwarfCraft] Reading Block Groups file: " + configDirectory + cfgBlockGroupsFile );
@@ -868,9 +871,80 @@ public final class ConfigManager
                     blocks.add( Integer.parseInt( ints[i].trim() ) );
                 }
 
-                blockgroups.put( split[0].trim(), blocks );
+                blockGroups.put( split[0].trim(), blocks );
                 line = br.readLine();
             }
+            br.close();
+            return true;
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean readToolGroupsFile()
+    {
+        System.out.println( "[DwarfCraft] Reading Tool Groups file: " + configDirectory + cfgToolGroupsFile );
+
+        try
+        {
+            FileReader fr = new FileReader( configDirectory + cfgToolGroupsFile );
+            BufferedReader br = new BufferedReader( fr );
+            String line = br.readLine();
+
+            while ( line != null )
+            {
+                if ( line.length() == 0 )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+                if ( line.charAt( 0 ) == '#' )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+                if ( line.indexOf( ':' ) <= 0 )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                String[] split = line.split( ":" );
+
+                if ( split.length > 2 || split.length == 0 || split == null )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                if ( split[0] == null || split[0] == "" )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                String[] ints = split[1].split( "," );
+                ArrayList<Integer> tools = new ArrayList<Integer>();
+
+                if ( ints.length == 0 || ints == null )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                for ( int i = 0; i < ints.length; i++ )
+                {
+                    tools.add( Integer.parseInt( ints[i].trim() ) );
+                }
+
+                blockGroups.put( split[0].trim(), tools );
+                line = br.readLine();
+            }
+            br.close();
             return true;
         }
         catch ( IOException e )
@@ -938,7 +1012,11 @@ public final class ConfigManager
 
     public HashMap<String, ArrayList<Integer>> getBlockGroups()
     {
-        return blockgroups;
+        return blockGroups;
     }
 
+    public HashMap<String, ArrayList<Integer>> getToolGroups()
+    {
+        return toolGroups;
+    }
 }
