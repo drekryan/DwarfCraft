@@ -61,8 +61,7 @@ public class DCInventoryListener implements Listener
                     item = effect.getOutput().getType();
                     int newAmount = plugin.getUtil().randomAmount( amount * effect.getEffectAmount( player ) );
 
-                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( player, effect, new ItemStack[] {},
-                            new ItemStack[] { new ItemStack( item, newAmount, effect.getOutput().getData().getData() ) }, null, null, null, null, null, event.getBlock(), null );
+                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( player, effect, new ItemStack[] {}, new ItemStack[] { new ItemStack( item, newAmount, effect.getOutput().getData().getData() ) }, null, null, null, null, null, event.getBlock(), null );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
@@ -160,9 +159,7 @@ public class DCInventoryListener implements Listener
                                 check = toCraft;
                                 modifier = ( float ) ( output.getAmount() + 1 ) / 1.0f;
                             }
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dCPlayer, e,
-                                    new ItemStack[] { check != null ? new ItemStack( output.getType(), 0, output.getData().getData() ) : toCraft }, new ItemStack[] { output }, null, null, null, null,
-                                    null, null, null );
+                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dCPlayer, e, new ItemStack[] { check != null ? new ItemStack( output.getType(), 0, output.getData().getData() ) : toCraft }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -295,9 +292,8 @@ public class DCInventoryListener implements Listener
                         if ( extract.getTypeId() != output.getTypeId() )
                             check = extract;
 
-                        DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dCPlayer, effect,
-                                new ItemStack[] { check != null ? new ItemStack( output.getType(), 0, output.getData().getData() ) : extract }, new ItemStack[] { output }, null, null, null, null,
-                                null, ( ( BlockState ) event.getInventory().getHolder() ).getBlock(), null );
+                        DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dCPlayer, effect, new ItemStack[] { check != null ? new ItemStack( output.getType(), 0, output.getData().getData() ) : extract }, new ItemStack[] { output }, null, null, null, null, null, ( ( BlockState ) event
+                                .getInventory().getHolder() ).getBlock(), null );
                         plugin.getServer().getPluginManager().callEvent( ev );
 
                         if ( ev.isCancelled() )
@@ -385,8 +381,7 @@ public class DCInventoryListener implements Listener
                             {
                                 int newAmount = ( int ) ( amount * effect.getEffectAmount( player ) );
 
-                                DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( player, effect, new ItemStack[] { item },
-                                        new ItemStack[] { new ItemStack( item.getType(), newAmount, item.getData().getData() ) }, null, null, null, null, null, block.getBlock(), null );
+                                DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( player, effect, new ItemStack[] { item }, new ItemStack[] { new ItemStack( item.getType(), newAmount, item.getData().getData() ) }, null, null, null, null, null, block.getBlock(), null );
                                 plugin.getServer().getPluginManager().callEvent( ev );
 
                                 if ( ev.isCancelled() )

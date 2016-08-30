@@ -70,7 +70,7 @@ public class DwarfCraftLoadRacesEvent extends Event
      */
     public void addSkill( Race race )
     {
-        
+
     }
 
     /**

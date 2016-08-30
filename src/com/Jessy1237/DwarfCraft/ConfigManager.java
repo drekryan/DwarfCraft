@@ -136,9 +136,9 @@ public final class ConfigManager
 
     public ArrayList<Integer> getAllSkills( String Race )
     {
-    	Race r = getRace( Race );
-		if ( r != null )
-    		return r.getSkills();
+        Race r = getRace( Race );
+        if ( r != null )
+            return r.getSkills();
         return null;
     }
 
@@ -219,8 +219,7 @@ public final class ConfigManager
             readConfigFile();
             getDefaultValues();
 
-            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" },
-                    { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" } };
+            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" } };
             for ( String[] mfile : mfiles )
             {
                 file = new File( root, mfile[0] );
@@ -245,7 +244,7 @@ public final class ConfigManager
 
         byte[] buf = new byte[1024];
         int len;
-        while( ( len = ins.read( buf ) ) > 0 )
+        while ( ( len = ins.read( buf ) ) > 0 )
         {
             out.write( buf, 0, len );
         }
@@ -264,7 +263,7 @@ public final class ConfigManager
             FileReader fr = new FileReader( configDirectory + configMainFileName );
             BufferedReader br = new BufferedReader( fr );
             String line = br.readLine();
-            while( line != null )
+            while ( line != null )
             {
                 if ( line.length() == 0 )
                 {
@@ -365,7 +364,7 @@ public final class ConfigManager
             fr = new FileReader( configDirectory + configWorldFileName );
             BufferedReader br = new BufferedReader( fr );
             String line = br.readLine();
-            while( line != null )
+            while ( line != null )
             {
                 if ( line.length() == 0 )
                 {
@@ -410,7 +409,7 @@ public final class ConfigManager
         {
             CSVReader csv = new CSVReader( configDirectory + configEffectsFileName );
             Iterator<CSVRecord> records = csv.getRecords();
-            while( records.hasNext() )
+            while ( records.hasNext() )
             {
                 CSVRecord item = records.next();
                 Effect effect = new Effect( item, plugin );
@@ -448,7 +447,7 @@ public final class ConfigManager
             boolean skills = false;
             boolean prefix = false;
             Race race = null;
-            while( line != null )
+            while ( line != null )
             {
                 if ( line.length() == 0 )
                 {
@@ -491,11 +490,12 @@ public final class ConfigManager
                     desc = true;
                     line = br.readLine();
                 }
-                if( theline[0].equalsIgnoreCase( "Prefix Colour" )) {
-                	race.setPrefixColour( theline[1].trim() );
-                	
-                	prefix = true;
-                	line = br.readLine();
+                if ( theline[0].equalsIgnoreCase( "Prefix Colour" ) )
+                {
+                    race.setPrefixColour( theline[1].trim() );
+
+                    prefix = true;
+                    line = br.readLine();
                 }
                 if ( name && desc && skills && prefix )
                 {
@@ -534,7 +534,7 @@ public final class ConfigManager
             FileReader fr = new FileReader( configDirectory + cfgGreeterFile );
             BufferedReader br = new BufferedReader( fr );
             String messageId = br.readLine();
-            while( messageId != null )
+            while ( messageId != null )
             {
                 messageId = messageId.trim();
                 String leftClick, rightClick;
@@ -567,8 +567,9 @@ public final class ConfigManager
     private boolean readMessagesFile()
     {
         System.out.println( "[DwarfCraft] Reading messages file: " + configDirectory + configMessagesFileName );
-        
-        //Loads the messages class after the config is read but before all the messages are read.
+
+        // Loads the messages class after the config is read but before all the
+        // messages are read.
         new Messages( plugin );
         try
         {
@@ -577,7 +578,7 @@ public final class ConfigManager
             BufferedReader br = new BufferedReader( fr );
 
             String line = br.readLine();
-            while( line != null )
+            while ( line != null )
             {
                 if ( line.length() == 0 )
                 {
@@ -597,7 +598,8 @@ public final class ConfigManager
                 }
 
                 String split[] = line.split( ":" );
-                if ( split.length != 2 ) {
+                if ( split.length != 2 )
+                {
                     line = br.readLine();
                     continue;
                 }
@@ -769,9 +771,9 @@ public final class ConfigManager
         {
             // Default to enum values if not found
             /*
-            if ( Messages.serverRules == null )
-                Messages.serverRules = Messages.Fixed.SERVERRULESMESSAGE.getMessage();
-                */
+             * if ( Messages.serverRules == null ) Messages.serverRules =
+             * Messages.Fixed.SERVERRULESMESSAGE.getMessage();
+             */
         }
         return true;
     }
@@ -784,14 +786,14 @@ public final class ConfigManager
             CSVReader csv = new CSVReader( configDirectory + configSkillsFileName );
             configSkillsVersion = csv.getVersion();
             Iterator<CSVRecord> records = csv.getRecords();
-            while( records.hasNext() )
+            while ( records.hasNext() )
             {
                 CSVRecord item = records.next();
 
                 @SuppressWarnings( "deprecation" )
-                Skill skill = new Skill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<Effect>(), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ),
-                        new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ),
-                        Material.getMaterial( item.getInt( "Held" ) ) );
+                Skill skill = new Skill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<Effect>(), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new TrainingItem( plugin.getUtil()
+                        .parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
+                                .getMaterial( item.getInt( "Held" ) ) );
 
                 skillsArray.put( skill.getId(), skill );
 
@@ -820,7 +822,7 @@ public final class ConfigManager
             BufferedReader br = new BufferedReader( fr );
             String line = br.readLine();
 
-            while( line != null )
+            while ( line != null )
             {
                 if ( line.length() == 0 )
                 {

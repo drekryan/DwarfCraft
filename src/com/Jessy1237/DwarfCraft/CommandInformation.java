@@ -71,6 +71,6 @@ public class CommandInformation
         public String getUsage()
         {
             return Usage;
-		}
-	}
+        }
+    }
 }

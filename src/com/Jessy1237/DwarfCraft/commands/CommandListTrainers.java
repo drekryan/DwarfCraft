@@ -80,8 +80,7 @@ public class CommandListTrainers extends Command
                     if ( skill.getId() == trainer.getSkillTrained() )
                         skillName = skill.getDisplayName();
                 }
-                sender.sendMessage( String.format( "Trainer ID: %s Name: %s Trains: %d %s (%d, %d, %d)", trainer.getUniqueId(), trainer.getName(), trainer.getMaxSkill(), skillName, loc.getBlockX(),
-                        loc.getBlockY(), loc.getBlockZ() ) );
+                sender.sendMessage( String.format( "Trainer ID: %s Name: %s Trains: %d %s (%d, %d, %d)", trainer.getUniqueId(), trainer.getName(), trainer.getMaxSkill(), skillName, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() ) );
             }
         }
         return true;

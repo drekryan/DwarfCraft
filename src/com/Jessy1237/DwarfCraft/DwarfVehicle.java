@@ -18,7 +18,7 @@ public class DwarfVehicle
     {
         if ( that instanceof Vehicle )
         {
-            Vehicle vec = (Vehicle) that;
+            Vehicle vec = ( Vehicle ) that;
             if ( vec.getEntityId() == vehicle.getEntityId() )
                 return true;
         }
@@ -30,11 +30,13 @@ public class DwarfVehicle
         return this.vehicle;
     }
 
-    public boolean changedSpeed() {
+    public boolean changedSpeed()
+    {
         return this.changedSpeed;
     }
-    
-    public void speedChanged() {
+
+    public void speedChanged()
+    {
         this.changedSpeed = true;
     }
 }

@@ -27,8 +27,7 @@ public class CommandDCCommands extends Command
         {
             System.out.println( "DC1: started command 'dchelp'" );
         }
-        sender.sendMessage( "DwarfCraft commands: dcdebug, dchelp, dcinfo, dcrules, tutorial, " + "dccommands, skillsheet, skillinfo, effectinfo, "
-                + "race, races, setskill, creategreeter, createtrainer, listtrainers, dmem," );
+        sender.sendMessage( "DwarfCraft commands: dcdebug, dchelp, dcinfo, dcrules, tutorial, " + "dccommands, skillsheet, skillinfo, effectinfo, " + "race, races, setskill, creategreeter, createtrainer, listtrainers, dmem," );
         return true;
     }
 }

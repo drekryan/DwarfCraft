@@ -66,400 +66,400 @@ import net.milkbowl.vault.permission.Permission;
 public class DwarfCraft extends JavaPlugin
 {
 
-	private final DCBlockListener blockListener = new DCBlockListener( this );
-	private final DCPlayerListener playerListener = new DCPlayerListener( this );
-	private final DCEntityListener entityListener = new DCEntityListener( this );
-	private final DCVehicleListener vehicleListener = new DCVehicleListener( this );
-	private final DCInventoryListener inventoryListener = new DCInventoryListener( this );
-	private final DCListener dcListener = new DCListener( this );
-	private NPCRegistry npcr;
-	private ConfigManager cm;
-	private DataManager dm;
-	private Out out;
-	private Consumer consumer = null;
-	private Util util;
-	private Permission perms = null;
-	private Chat chat = null;
-	private TraitInfo trainerTrait;
+    private final DCBlockListener blockListener = new DCBlockListener( this );
+    private final DCPlayerListener playerListener = new DCPlayerListener( this );
+    private final DCEntityListener entityListener = new DCEntityListener( this );
+    private final DCVehicleListener vehicleListener = new DCVehicleListener( this );
+    private final DCInventoryListener inventoryListener = new DCInventoryListener( this );
+    private final DCListener dcListener = new DCListener( this );
+    private NPCRegistry npcr;
+    private ConfigManager cm;
+    private DataManager dm;
+    private Out out;
+    private Consumer consumer = null;
+    private Util util;
+    private Permission perms = null;
+    private Chat chat = null;
+    private TraitInfo trainerTrait;
 
-	public static int debugMessagesThreshold = 10;
+    public static int debugMessagesThreshold = 10;
 
-	public NPCRegistry getNPCRegistry()
-	{
-		return npcr;
-	}
+    public NPCRegistry getNPCRegistry()
+    {
+        return npcr;
+    }
 
-	public ConfigManager getConfigManager()
-	{
-		return cm;
-	}
+    public ConfigManager getConfigManager()
+    {
+        return cm;
+    }
 
-	public DataManager getDataManager()
-	{
-		return dm;
-	}
+    public DataManager getDataManager()
+    {
+        return dm;
+    }
 
-	public Out getOut()
-	{
-		return out;
-	}
+    public Out getOut()
+    {
+        return out;
+    }
 
-	public Consumer getConsumer()
-	{
-		return consumer;
-	}
+    public Consumer getConsumer()
+    {
+        return consumer;
+    }
 
-	public Util getUtil()
-	{
-		return util;
-	}
+    public Util getUtil()
+    {
+        return util;
+    }
 
-	public DCEntityListener getDCEntityListener()
-	{
-		return entityListener;
-	}
+    public DCEntityListener getDCEntityListener()
+    {
+        return entityListener;
+    }
 
-	private boolean setupPermissions()
-	{
-		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration( Permission.class );
-		perms = rsp.getProvider();
-		return perms != null;
-	}
+    private boolean setupPermissions()
+    {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration( Permission.class );
+        perms = rsp.getProvider();
+        return perms != null;
+    }
 
-	private boolean isPermissionEnabled()
-	{
-		return perms != null;
-	}
+    private boolean isPermissionEnabled()
+    {
+        return perms != null;
+    }
 
-	public Permission getPermission()
-	{
-		return perms;
-	}
+    public Permission getPermission()
+    {
+        return perms;
+    }
 
-	private boolean setupChat()
-	{
-		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration( Chat.class );
-		chat = rsp.getProvider();
-		return chat != null;
-	}
+    private boolean setupChat()
+    {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration( Chat.class );
+        chat = rsp.getProvider();
+        return chat != null;
+    }
 
-	public boolean isChatEnabled()
-	{
-		return chat != null;
-	}
+    public boolean isChatEnabled()
+    {
+        return chat != null;
+    }
 
-	public Chat getChat()
-	{
-		return chat;
-	}
+    public Chat getChat()
+    {
+        return chat;
+    }
 
-	public TraitInfo getTrainerTrait()
-	{
-		return trainerTrait;
-	}
+    public TraitInfo getTrainerTrait()
+    {
+        return trainerTrait;
+    }
 
-	private boolean checkPermission( CommandSender sender, String name, String type )
-	{
+    private boolean checkPermission( CommandSender sender, String name, String type )
+    {
 
-		if ( perms == null )
-			return false;
+        if ( perms == null )
+            return false;
 
-		if ( sender instanceof Player )
-		{
-			if ( type.equals( "op" ) )
-			{
-				return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() );
-			}
-			else if ( type.equals( "norm" ) )
-			{
-				return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() );
-			}
-			else if ( type.equals( "all" ) )
-			{
-				return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() );
-			}
-		}
+        if ( sender instanceof Player )
+        {
+            if ( type.equals( "op" ) )
+            {
+                return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() );
+            }
+            else if ( type.equals( "norm" ) )
+            {
+                return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() );
+            }
+            else if ( type.equals( "all" ) )
+            {
+                return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() );
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
-	{
-		Command cmd = null;
-		String name = command.getName();
-		boolean hasNorm = checkPermission( sender, name, "norm" );
-		boolean hasOp = checkPermission( sender, name, "op" );
-		boolean hasAll = checkPermission( sender, name, "all" );
-		boolean isCmd = true;
+    @Override
+    public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
+    {
+        Command cmd = null;
+        String name = command.getName();
+        boolean hasNorm = checkPermission( sender, name, "norm" );
+        boolean hasOp = checkPermission( sender, name, "op" );
+        boolean hasAll = checkPermission( sender, name, "all" );
+        boolean isCmd = true;
 
-		if ( name.equalsIgnoreCase( "SkillSheet" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandSkillSheet( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "Tutorial" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandTutorial( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "DCInfo" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandInfo( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "DCRules" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandRules( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "DCCommands" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandDCCommands( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "SkillInfo" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandSkillInfo( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "Race" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandRace( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "EffectInfo" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandEffectInfo( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "DCDebug" ) )
-		{
-			if ( hasOp || hasAll )
-			{
-				cmd = new CommandDebug( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "ListTrainers" ) )
-		{
-			if ( hasOp || hasAll )
-			{
-				cmd = new CommandListTrainers( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "SetSkill" ) )
-		{
-			if ( hasOp || hasAll )
-			{
-				cmd = new CommandSetSkill( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "CreateGreeter" ) )
-		{
-			if ( hasOp || hasAll )
-			{
-				cmd = new CommandCreateGreeter( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "CreateTrainer" ) )
-		{
-			if ( hasOp || hasAll )
-			{
-				cmd = new CommandCreateTrainer( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "DMem" ) )
-		{
-			if ( hasOp || hasAll )
-			{
-				cmd = new CommandDMem( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "Races" ) )
-		{
-			if ( hasNorm || hasAll )
-			{
-				cmd = new CommandRaces( this );
-			}
-		}
-		else if ( name.equalsIgnoreCase( "DCReload" ) )
-		{
-			if ( hasOp || hasAll )
-			{
-				cmd = new CommandReload( this );
-			}
-		}
-		else
-		{
-			isCmd = false;
-		}
+        if ( name.equalsIgnoreCase( "SkillSheet" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandSkillSheet( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "Tutorial" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandTutorial( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "DCInfo" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandInfo( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "DCRules" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandRules( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "DCCommands" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandDCCommands( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "SkillInfo" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandSkillInfo( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "Race" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandRace( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "EffectInfo" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandEffectInfo( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "DCDebug" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandDebug( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "ListTrainers" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandListTrainers( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "SetSkill" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandSetSkill( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "CreateGreeter" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandCreateGreeter( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "CreateTrainer" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandCreateTrainer( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "DMem" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandDMem( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "Races" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                cmd = new CommandRaces( this );
+            }
+        }
+        else if ( name.equalsIgnoreCase( "DCReload" ) )
+        {
+            if ( hasOp || hasAll )
+            {
+                cmd = new CommandReload( this );
+            }
+        }
+        else
+        {
+            isCmd = false;
+        }
 
-		if ( cmd == null )
-		{
-			if ( isCmd == false )
-			{
-				return false;
-			}
-			else
-			{
-				if ( hasNorm == false || hasOp == false )
-				{
-					sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
-				}
-				return true;
-			}
-		}
-		else
-		{
-			return cmd.execute( sender, commandLabel, args );
-		}
-	}
+        if ( cmd == null )
+        {
+            if ( isCmd == false )
+            {
+                return false;
+            }
+            else
+            {
+                if ( hasNorm == false || hasOp == false )
+                {
+                    sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
+                }
+                return true;
+            }
+        }
+        else
+        {
+            return cmd.execute( sender, commandLabel, args );
+        }
+    }
 
-	/**
-	 * Called upon disabling the plugin.
-	 */
-	@Override
-	public void onDisable()
-	{
-		// Removes the DwarfCraft prefixes when the server shuts down for all
-		// online players.
-		for ( Player player : getServer().getOnlinePlayers() )
-		{
-			DCPlayer dcPlayer = getDataManager().find( player );
-			if ( isChatEnabled() )
-			{
-				if ( getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dcPlayer ) ) )
-				{
-					getChat().setPlayerPrefix( player, getChat().getPlayerPrefix( player ).replaceAll( getUtil().getPlayerPrefix( dcPlayer ) + " ", "" ) );
-				}
-			}
-		}
-	}
+    /**
+     * Called upon disabling the plugin.
+     */
+    @Override
+    public void onDisable()
+    {
+        // Removes the DwarfCraft prefixes when the server shuts down for all
+        // online players.
+        for ( Player player : getServer().getOnlinePlayers() )
+        {
+            DCPlayer dcPlayer = getDataManager().find( player );
+            if ( isChatEnabled() )
+            {
+                if ( getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dcPlayer ) ) )
+                {
+                    getChat().setPlayerPrefix( player, getChat().getPlayerPrefix( player ).replaceAll( getUtil().getPlayerPrefix( dcPlayer ) + " ", "" ) );
+                }
+            }
+        }
+    }
 
-	/**
-	 * Called upon enabling the plugin
-	 */
-	@Override
-	public void onEnable()
-	{
-		onEnable( false );
-	}
+    /**
+     * Called upon enabling the plugin
+     */
+    @Override
+    public void onEnable()
+    {
+        onEnable( false );
+    }
 
-	public void onEnable( boolean reload )
-	{
-		PluginManager pm = getServer().getPluginManager();
+    public void onEnable( boolean reload )
+    {
+        PluginManager pm = getServer().getPluginManager();
 
-		if ( pm.getPlugin( "Vault" ) == null || pm.getPlugin( "Vault" ).isEnabled() == false )
-		{
-			System.out.println( "[DwarfCraft] Couldn't find Vault!" );
-			System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
-			pm.disablePlugin( this );
-			return;
-		}
+        if ( pm.getPlugin( "Vault" ) == null || pm.getPlugin( "Vault" ).isEnabled() == false )
+        {
+            System.out.println( "[DwarfCraft] Couldn't find Vault!" );
+            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
+            pm.disablePlugin( this );
+            return;
+        }
 
-		try
-		{
-			setupPermissions();
-			setupChat();
-		}
-		catch ( Exception e )
-		{
-			System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
-			pm.disablePlugin( this );
-			return;
-		}
+        try
+        {
+            setupPermissions();
+            setupChat();
+        }
+        catch ( Exception e )
+        {
+            System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
+            pm.disablePlugin( this );
+            return;
+        }
 
-		if ( !isPermissionEnabled() )
-		{
-			System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
-			pm.disablePlugin( this );
-			return;
-		}
+        if ( !isPermissionEnabled() )
+        {
+            System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
+            pm.disablePlugin( this );
+            return;
+        }
 
-		pm.registerEvents( playerListener, this );
+        pm.registerEvents( playerListener, this );
 
-		pm.registerEvents( entityListener, this );
+        pm.registerEvents( entityListener, this );
 
-		pm.registerEvents( blockListener, this );
+        pm.registerEvents( blockListener, this );
 
-		pm.registerEvents( vehicleListener, this );
+        pm.registerEvents( vehicleListener, this );
 
-		pm.registerEvents( inventoryListener, this );
+        pm.registerEvents( inventoryListener, this );
 
-		pm.registerEvents( dcListener, this );
+        pm.registerEvents( dcListener, this );
 
-		if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
-		{
-			System.out.println( "[DwarfCraft] Couldn't find Citizens!" );
-			System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
-			pm.disablePlugin( this );
-			return;
-		}
-		System.out.println( "[DwarfCraft] Hooked into Citizens!" );
+        if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
+        {
+            System.out.println( "[DwarfCraft] Couldn't find Citizens!" );
+            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
+            pm.disablePlugin( this );
+            return;
+        }
+        System.out.println( "[DwarfCraft] Hooked into Citizens!" );
 
-		npcr = CitizensAPI.getNPCRegistry();
-		util = new Util( this );
-		cm = new ConfigManager( this, getDataFolder().getAbsolutePath(), "DwarfCraft.config" );
-		dm = new DataManager( this, cm );
+        npcr = CitizensAPI.getNPCRegistry();
+        util = new Util( this );
+        cm = new ConfigManager( this, getDataFolder().getAbsolutePath(), "DwarfCraft.config" );
+        dm = new DataManager( this, cm );
 
-		dm.dbInitialize();
+        dm.dbInitialize();
 
-		out = new Out( this );
+        out = new Out( this );
 
-		// readGreeterMessagesfile() depends on datamanager existing, so this
-		// has to go here
-		if ( !getConfigManager().readGreeterMessagesfile() )
-		{
-			System.out.println( "[SEVERE] Failed to read DwarfCraft Greeter Messages)" );
-			pm.disablePlugin( this );
-		}
+        // readGreeterMessagesfile() depends on datamanager existing, so this
+        // has to go here
+        if ( !getConfigManager().readGreeterMessagesfile() )
+        {
+            System.out.println( "[SEVERE] Failed to read DwarfCraft Greeter Messages)" );
+            pm.disablePlugin( this );
+        }
 
-		// Creates the citizen trait for the DwarfTrainers
-		if ( !reload )
-		{
-			trainerTrait = TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" );
-			CitizensAPI.getTraitFactory().registerTrait( trainerTrait );
-		}
-		else
-		{
-			//Untested assumed to work
-			util.reloadTrainers();
-		}
-		
-		for ( Player player : getServer().getOnlinePlayers() )
-		{
-			DCPlayer dCPlayer = getDataManager().find( player );
-			if ( dCPlayer == null )
-				dCPlayer = getDataManager().createDwarf( player );
-			getDataManager().checkDwarfData( dCPlayer );
-		}
+        // Creates the citizen trait for the DwarfTrainers
+        if ( !reload )
+        {
+            trainerTrait = TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" );
+            CitizensAPI.getTraitFactory().registerTrait( trainerTrait );
+        }
+        else
+        {
+            // Untested assumed to work
+            util.reloadTrainers();
+        }
 
-		if ( pm.getPlugin( "LogBlock" ) != null )
-		{
-			consumer = ( ( LogBlock ) pm.getPlugin( "LogBlock" ) ).getConsumer();
-			System.out.println( "[DwarfCraft] Hooked into LogBlock!" );
-		}
-		else
-		{
-			System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
-		}
+        for ( Player player : getServer().getOnlinePlayers() )
+        {
+            DCPlayer dCPlayer = getDataManager().find( player );
+            if ( dCPlayer == null )
+                dCPlayer = getDataManager().createDwarf( player );
+            getDataManager().checkDwarfData( dCPlayer );
+        }
 
-		System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
-	}
+        if ( pm.getPlugin( "LogBlock" ) != null )
+        {
+            consumer = ( ( LogBlock ) pm.getPlugin( "LogBlock" ) ).getConsumer();
+            System.out.println( "[DwarfCraft] Hooked into LogBlock!" );
+        }
+        else
+        {
+            System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
+        }
+
+        System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
+    }
 }

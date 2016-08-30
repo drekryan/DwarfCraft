@@ -153,8 +153,7 @@ public class Out
             {
                 int totalCost = t.getAmount();
                 int deposited = t.getAmount() - r.getAmount();
-                sendMessage( sender,
-                        Messages.skillInfoTrainCost.replaceAll( "%depositedamount%", "" + deposited ).replaceAll( "%totalcost%", "" + totalCost ).replaceAll( "%itemtype%", plugin.getUtil().getCleanName( r ) ) );
+                sendMessage( sender, Messages.skillInfoTrainCost.replaceAll( "%depositedamount%", "" + deposited ).replaceAll( "%totalcost%", "" + totalCost ).replaceAll( "%itemtype%", plugin.getUtil().getCleanName( r ) ) );
             }
 
         }
@@ -305,7 +304,7 @@ public class Out
 
     public void tutorial( CommandSender sender, int page )
     {
-        switch( page )
+        switch ( page )
         {
             case 1:
                 sendMessage( sender, Messages.Fixed.TUTORIAL1.getMessage(), Messages.tutorialPrefix );
@@ -409,12 +408,11 @@ public class Out
     }
 
     @SuppressWarnings( "deprecation" )
-    public String parseEffectLevel( EffectType type, String initiator, String output, double effectAmount, double minorAmount, boolean moreThanOne, String effectLevelColor, String toolType, EntityType creature,
-            DCPlayer dCPlayer, ItemStack mInitiator )
+    public String parseEffectLevel( EffectType type, String initiator, String output, double effectAmount, double minorAmount, boolean moreThanOne, String effectLevelColor, String toolType, EntityType creature, DCPlayer dCPlayer, ItemStack mInitiator )
     {
         String out = "";
 
-        switch( type )
+        switch ( type )
         {
             case BLOCKDROP:
                 out = Messages.describeLevelBlockdrop;

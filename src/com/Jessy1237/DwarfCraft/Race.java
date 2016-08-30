@@ -40,9 +40,10 @@ public class Race
     {
         return this.Desc;
     }
-    
-    public String getPrefixColour() {
-    	return prefixColour;
+
+    public String getPrefixColour()
+    {
+        return prefixColour;
     }
 
     public void setSkills( ArrayList<Integer> skills )
@@ -54,9 +55,9 @@ public class Race
     {
         this.Desc = Desc;
     }
-    
-    public void setPrefixColour( String prefixColour)
+
+    public void setPrefixColour( String prefixColour )
     {
-    	this.prefixColour = prefixColour;
+        this.prefixColour = prefixColour;
     }
 }

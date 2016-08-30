@@ -7,31 +7,31 @@ package com.Jessy1237.DwarfCraft;
 public enum EffectType
 {
     // IMPLEMENTATION PRIORITY ORDER
-    BLOCKDROP, 
-    MOBDROP, 
-    SWORDDURABILITY, 
-    PVPDAMAGE, 
-    PVEDAMAGE, 
-    EXPLOSIONDAMAGE, 
-    FIREDAMAGE, 
-    FALLDAMAGE, 
-    FALLTHRESHOLD, 
-    PLOWDURABILITY, 
-    TOOLDURABILITY, 
-    EAT, 
-    CRAFT, 
-    PLOW, 
-    DIGTIME, 
-    BOWATTACK, 
-    VEHICLEDROP, 
+    BLOCKDROP,
+    MOBDROP,
+    SWORDDURABILITY,
+    PVPDAMAGE,
+    PVEDAMAGE,
+    EXPLOSIONDAMAGE,
+    FIREDAMAGE,
+    FALLDAMAGE,
+    FALLTHRESHOLD,
+    PLOWDURABILITY,
+    TOOLDURABILITY,
+    EAT,
+    CRAFT,
+    PLOW,
+    DIGTIME,
+    BOWATTACK,
+    VEHICLEDROP,
     VEHICLEMOVE,
     SPECIAL,
     FISH,
     RODDURABILITY,
     SMELT,
     BREW,
-    SHEAR
-    ;
+    SHEAR;
+
     protected static EffectType getEffectType( String name )
     {
         for ( EffectType effectType : EffectType.values() )

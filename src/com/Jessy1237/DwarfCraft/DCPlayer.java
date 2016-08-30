@@ -85,8 +85,7 @@ public class DCPlayer
             multiplier *= ( 1 + 3 * dwarfLevel / ( 100 + 3 * dwarfLevel ) );
 
         // create output item stack of new items
-        int item1Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item1.Base * multiplier - .01 ), skill.Item1.Max ) ),
-                item2Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item2.Base * multiplier - .01 ), skill.Item2.Max ) ),
+        int item1Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item1.Base * multiplier - .01 ), skill.Item1.Max ) ), item2Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item2.Base * multiplier - .01 ), skill.Item2.Max ) ),
                 item3Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item3.Base * multiplier - .01 ), skill.Item3.Max ) );
 
         totalCostStack.add( 0, new ItemStack( skill.Item1.Item.getType(), item1Amount, skill.Item1.Item.getDurability() ) );
@@ -109,7 +108,8 @@ public class DCPlayer
     }
 
     /**
-     * Counts skills greater than level the race level limit, used for training costs
+     * Counts skills greater than level the race level limit, used for training
+     * costs
      */
     private int countHighSkills()
     {
@@ -123,9 +123,9 @@ public class DCPlayer
     }
 
     /**
-     * Calculates the dwarf's total level for display. Value is the
-     * total of all skill level above the race level limit, or the highest skill level when none
-     * are above the race level limit.
+     * Calculates the dwarf's total level for display. Value is the total of all
+     * skill level above the race level limit, or the highest skill level when
+     * none are above the race level limit.
      * 
      * @return
      */
@@ -295,8 +295,7 @@ public class DCPlayer
         // Resets the players prefix
         if ( plugin.isChatEnabled() )
             if ( plugin.getChat().getPlayerPrefix( getPlayer() ).contains( plugin.getUtil().getPlayerPrefix( oldRace ) ) )
-                plugin.getChat().setPlayerPrefix( getPlayer(),
-                        plugin.getChat().getPlayerPrefix( getPlayer() ).replace( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
+                plugin.getChat().setPlayerPrefix( getPlayer(), plugin.getChat().getPlayerPrefix( getPlayer() ).replace( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
 
         plugin.getDataManager().saveDwarfData( this, dCSkills );
     }

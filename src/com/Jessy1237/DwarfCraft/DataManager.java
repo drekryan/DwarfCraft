@@ -70,8 +70,8 @@ public class DataManager
             rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'skills';" );
             if ( !rs.next() )
             {
-                statement.executeUpdate( "CREATE TABLE 'skills' " + "  ( " + "    'player' INT, " + "    'id' int, " + "    'level' INT DEFAULT 0, " + "    'deposit1' INT DEFAULT 0, "
-                        + "    'deposit2' INT DEFAULT 0, " + "    'deposit3' INT DEFAULT 0, " + "    PRIMARY KEY ('player','id') " + "  );" );
+                statement.executeUpdate( "CREATE TABLE 'skills' " + "  ( " + "    'player' INT, " + "    'id' int, " + "    'level' INT DEFAULT 0, " + "    'deposit1' INT DEFAULT 0, " + "    'deposit2' INT DEFAULT 0, " + "    'deposit3' INT DEFAULT 0, " + "    PRIMARY KEY ('player','id') "
+                        + "  );" );
             }
             rs.close();
 
@@ -206,13 +206,10 @@ public class DataManager
                         }
                         else
                         {
-                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.fromName( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ),
-                                    rs.getString( "name" ) );
+                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.fromName( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
                         }
-                        npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ),
-                                rs.getFloat( "pitch" ) ) );
-                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ),
-                                rs.getBoolean( "isGreeter" ), rs.getString( "messageId" ) ) );
+                        npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
+                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ), rs.getBoolean( "isGreeter" ), rs.getString( "messageId" ) ) );
                         npc1.setProtected( true );
                     }
                 }
@@ -529,7 +526,7 @@ public class DataManager
                     System.out.println( "DC5:Removed DwarfVehicle from vehicleList" );
             }
         }
-        if(id != -1)
+        if ( id != -1 )
             vehicleMap.remove( id );
     }
 

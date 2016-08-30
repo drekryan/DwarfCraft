@@ -277,8 +277,8 @@ public class Effect
 
         if ( DwarfCraft.debugMessagesThreshold < 1 )
         {
-            System.out.println( String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f " + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease,
-                    mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
+            System.out.println( String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
+                    + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
         }
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
     }
@@ -409,7 +409,7 @@ public class Effect
         if ( mCreature == null )
             return false;
 
-        switch( mCreature )
+        switch ( mCreature )
         {
             case CHICKEN:
                 return ( entity instanceof Chicken );

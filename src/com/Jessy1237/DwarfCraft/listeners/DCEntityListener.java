@@ -58,9 +58,8 @@ public class DCEntityListener implements Listener
         if ( event.isCancelled() )
             return;
 
-        if ( ( event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.FALL
-                || event.getCause() == DamageCause.SUFFOCATION || event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK || event.getCause() == DamageCause.LAVA
-                || event.getCause() == DamageCause.DROWNING ) )
+        if ( ( event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.SUFFOCATION || event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK
+                || event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.DROWNING ) )
         {
 
             if ( DwarfCraft.debugMessagesThreshold < -1 && !event.isCancelled() )
@@ -258,8 +257,7 @@ public class DCEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        System.out.println( String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(),
-                                victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        System.out.println( String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
 
@@ -278,8 +276,7 @@ public class DCEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        System.out.println( String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(),
-                                ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        System.out.println( String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
             }
@@ -452,8 +449,7 @@ public class DCEntityListener implements Listener
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
                             {
-                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(),
-                                        output.getType().name() ) );
+                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
                             }
 
                             if ( changed == false )
@@ -483,8 +479,7 @@ public class DCEntityListener implements Listener
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
                             {
-                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(),
-                                        output.getType().name() ) );
+                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
                             }
 
                             boolean added = false;
@@ -514,8 +509,7 @@ public class DCEntityListener implements Listener
                         }
                         if ( changed )
                         {
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( killer, effect, normal, items.toArray( new ItemStack[items.size()] ).clone(), null, null, null, null, deadThing, null,
-                                    null );
+                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( killer, effect, normal, items.toArray( new ItemStack[items.size()] ).clone(), null, null, null, null, deadThing, null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )

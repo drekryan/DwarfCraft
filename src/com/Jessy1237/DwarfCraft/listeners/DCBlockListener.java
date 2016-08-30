@@ -58,9 +58,8 @@ public class DCBlockListener implements Listener
 
             // Code to prevent water from normally breaking crops
             // Added due to players being able to bypass DC skill restrictions
-            if ( event.getToBlock().getType() == Material.CROPS || event.getToBlock().getType() == Material.POTATO || event.getToBlock().getType() == Material.CARROT
-                    || event.getToBlock().getType() == Material.SUGAR_CANE_BLOCK || event.getToBlock().getType() == Material.CACTUS || event.getToBlock().getType() == Material.COCOA
-                    || event.getToBlock().getType() == Material.NETHER_WARTS && ( event.getBlock().getType() == Material.WATER || event.getBlock().getType() == Material.STATIONARY_WATER ) )
+            if ( event.getToBlock().getType() == Material.CROPS || event.getToBlock().getType() == Material.POTATO || event.getToBlock().getType() == Material.CARROT || event.getToBlock().getType() == Material.SUGAR_CANE_BLOCK || event.getToBlock().getType() == Material.CACTUS
+                    || event.getToBlock().getType() == Material.COCOA || event.getToBlock().getType() == Material.NETHER_WARTS && ( event.getBlock().getType() == Material.WATER || event.getBlock().getType() == Material.STATIONARY_WATER ) )
             {
                 event.getToBlock().setType( Material.AIR, true );
                 event.setCancelled( true );
@@ -203,9 +202,8 @@ public class DCBlockListener implements Listener
                             }
                         }
 
-                        if ( item.getTypeId() != 351 && item.getTypeId() == blockID && item.getTypeId() != 295 && blockID != 141 && item.getTypeId() != 391 && blockID != 142 && item.getTypeId() != 392
-                                && blockID != 115 && item.getTypeId() != 372 && blockID != 31 && blockID != 175 && blockID != 59 && blockID != 105 && item.getTypeId() != 362 && blockID != 104
-                                && item.getTypeId() != 361 && blockID != 127 )
+                        if ( item.getTypeId() != 351 && item.getTypeId() == blockID && item.getTypeId() != 295 && blockID != 141 && item.getTypeId() != 391 && blockID != 142 && item.getTypeId() != 392 && blockID != 115 && item.getTypeId() != 372 && blockID != 31 && blockID != 175 && blockID != 59
+                                && blockID != 105 && item.getTypeId() != 362 && blockID != 104 && item.getTypeId() != 361 && blockID != 127 )
                         {
                             item.setDurability( block.getData() );
                         }
@@ -345,8 +343,7 @@ public class DCBlockListener implements Listener
                         // Checks for Fortune tools and adds it to the
                         // Dwarfcraft drops
                         Material type = block.getType();
-                        if ( type == Material.DIAMOND_ORE || type == Material.COAL_ORE || type == Material.REDSTONE_ORE || type == Material.EMERALD_ORE || type == Material.QUARTZ_ORE
-                                || type == Material.GRASS || type == Material.STONE || type == Material.LAPIS_ORE || type == Material.GLOWSTONE )
+                        if ( type == Material.DIAMOND_ORE || type == Material.COAL_ORE || type == Material.REDSTONE_ORE || type == Material.EMERALD_ORE || type == Material.QUARTZ_ORE || type == Material.GRASS || type == Material.STONE || type == Material.LAPIS_ORE || type == Material.GLOWSTONE )
                         {
                             if ( tool.containsEnchantment( Enchantment.LOOT_BONUS_BLOCKS ) )
                             {

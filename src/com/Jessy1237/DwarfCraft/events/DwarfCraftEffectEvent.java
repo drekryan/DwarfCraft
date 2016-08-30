@@ -68,8 +68,7 @@ public class DwarfCraftEffectEvent extends Event implements Cancellable
      *            allowed the effect to fire. i.e. a sword when killing an
      *            entity.
      */
-    public DwarfCraftEffectEvent( DCPlayer player, Effect effect, ItemStack[] orig, final ItemStack[] altered, Integer origHunger, Integer newHunger, Double origDmg, Double newDmg, Entity entity,
-            Block block, ItemStack itemInHand )
+    public DwarfCraftEffectEvent( DCPlayer player, Effect effect, ItemStack[] orig, final ItemStack[] altered, Integer origHunger, Integer newHunger, Double origDmg, Double newDmg, Entity entity, Block block, ItemStack itemInHand )
     {
         this.player = player;
         this.effect = effect;

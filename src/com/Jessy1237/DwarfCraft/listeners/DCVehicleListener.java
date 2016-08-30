@@ -62,8 +62,7 @@ public class DCVehicleListener implements Listener
                     {
                         ItemStack drop = effect.getOutput( dcPlayer );
 
-                        DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null,
-                                event.getVehicle().getVehicle(), null, null );
+                        DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
                         plugin.getServer().getPluginManager().callEvent( ev );
 
                         if ( ev.isCancelled() )
@@ -156,7 +155,8 @@ public class DCVehicleListener implements Listener
             {
                 Boat boat = ( Boat ) event.getVehicle();
 
-                //The original boat speed and altered boat speed are assigned to the damage variables
+                // The original boat speed and altered boat speed are assigned
+                // to the damage variables
                 DwarfCraftEffectEvent e = new DwarfCraftEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
                 plugin.getServer().getPluginManager().callEvent( e );
                 if ( !e.isCancelled() )

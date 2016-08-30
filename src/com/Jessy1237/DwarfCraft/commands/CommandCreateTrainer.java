@@ -114,9 +114,9 @@ public class CommandCreateTrainer extends Command
                 }
                 else
                 {
-                    if(EntityType.fromName( type ) == null)
-                        throw new DCCommandException(plugin, Type.INVALIDENTITYTYPE);
-                        
+                    if ( EntityType.fromName( type ) == null )
+                        throw new DCCommandException( plugin, Type.INVALIDENTITYTYPE );
+
                     npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.fromName( type ), UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
                 }
                 npc.spawn( p.getLocation() );
