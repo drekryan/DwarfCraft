@@ -18,6 +18,7 @@ import com.Jessy1237.DwarfCraft.DCCommandException.Type;
 import com.Jessy1237.DwarfCraft.DCPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Skill;
+import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
 
 public class CommandSetSkill extends Command
 {
@@ -93,23 +94,46 @@ public class CommandSetSkill extends Command
                     int i = 0;
                     for ( Skill s : dCPlayer.getSkills().values() )
                     {
+                        int oldLevel = s.getLevel();
                         s.setLevel( level );
-                        s.setDeposit1( 0 );
-                        s.setDeposit2( 0 );
-                        s.setDeposit3( 0 );
-                        skills[i] = s;
-                        i++;
+
+                        DwarfCraftLevelUpEvent event = new DwarfCraftLevelUpEvent( dCPlayer, null, s );
+                        plugin.getServer().getPluginManager().callEvent( event );
+                        if ( !event.isCancelled() )
+                        {
+                            s.setDeposit1( 0 );
+                            s.setDeposit2( 0 );
+                            s.setDeposit3( 0 );
+                            skills[i] = s;
+                            i++;
+                        } else {
+                            s.setLevel( oldLevel );
+                        }
                     }
                     plugin.getOut().sendMessage( sender, "&aAdmin: &eset all skills for player &9" + name + "&e to &3" + level );
                     plugin.getDataManager().saveDwarfData( dCPlayer, skills );
                 }
                 else
                 {
+                    int oldLevel = skill.getLevel();
                     skill.setLevel( level );
-                    Skill[] skills = new Skill[1];
-                    skills[0] = skill;
-                    plugin.getOut().sendMessage( sender, "&aAdmin: &eset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level );
-                    plugin.getDataManager().saveDwarfData( dCPlayer, skills );
+
+                    DwarfCraftLevelUpEvent event = new DwarfCraftLevelUpEvent( dCPlayer, null, skill );
+                    plugin.getServer().getPluginManager().callEvent( event );
+                    if ( !event.isCancelled() )
+                    {
+                        skill.setDeposit1( 0 );
+                        skill.setDeposit2( 0 );
+                        skill.setDeposit3( 0 );
+                        Skill[] skills = new Skill[1];
+                        skills[0] = skill;
+                        plugin.getOut().sendMessage( sender, "&aAdmin: &eset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level );
+                        plugin.getDataManager().saveDwarfData( dCPlayer, skills );
+                    }
+                    else
+                    {
+                        skill.setLevel( oldLevel );
+                    }
                 }
             }
             catch ( DCCommandException e )
