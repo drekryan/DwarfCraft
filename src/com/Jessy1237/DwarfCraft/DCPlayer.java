@@ -19,6 +19,7 @@ public class DCPlayer
     private HashMap<Integer, Skill> skills;
     private Player player;
     private String race;
+    private boolean raceMaster;
 
     public void setPlayer( Player player )
     {
@@ -31,14 +32,16 @@ public class DCPlayer
         this.player = whoami;
         this.race = plugin.getConfigManager().getDefaultRace();
         this.skills = plugin.getConfigManager().getAllSkills();
+        this.raceMaster = false;
     }
 
-    public DCPlayer( final DwarfCraft plugin, Player whoami, String race )
+    public DCPlayer( final DwarfCraft plugin, Player whoami, String race, boolean raceMaster )
     {
         this.plugin = plugin;
         this.player = whoami;
         this.race = race;
         this.skills = plugin.getConfigManager().getAllSkills();
+        this.raceMaster = raceMaster;
     }
 
     protected List<List<ItemStack>> calculateTrainingCost( Skill skill )
@@ -308,5 +311,15 @@ public class DCPlayer
     public void setRace( String race )
     {
         this.race = race;
+    }
+    
+    public boolean isRaceMaster()
+    {
+        return raceMaster;
+    }
+    
+    public void setRaceMaster( boolean raceMaster )
+    {
+        this.raceMaster = raceMaster;
     }
 }

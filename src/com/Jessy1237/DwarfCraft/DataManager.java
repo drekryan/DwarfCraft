@@ -63,7 +63,7 @@ public class DataManager
             ResultSet rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'players';" );
             if ( !rs.next() )
             {
-                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race );" );
+                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race, raceMaster );" );
             }
             rs.close();
 
@@ -144,6 +144,7 @@ public class DataManager
                 statement.executeUpdate( "ALTER TABLE skills ADD COLUMN deposit3 NUMERIC DEFAULT 0;" );
             }
 
+            //Adds the uuid arg to the player table
             try
             {
                 rs = statement.executeQuery( "select uuid from players" );
@@ -172,15 +173,16 @@ public class DataManager
                     e1.printStackTrace();
                 }
                 statement.executeUpdate( "DROP TABLE players" );
-                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race );" );
+                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race, raceMaster );" );
                 for ( UUID uuid : dcplayers.keySet() )
                 {
                     if ( uuid != null )
                     {
-                        PreparedStatement prep = mDBCon.prepareStatement( "insert into players(id, uuid, race) values(?,?,?);" );
+                        PreparedStatement prep = mDBCon.prepareStatement( "insert into players(id, uuid, race, raceMaster) values(?,?,?);" );
                         prep.setInt( 1, ids.get( uuid ) );
                         prep.setString( 2, uuid.toString() );
                         prep.setString( 3, dcplayers.get( uuid ) );
+                        prep.setBoolean( 4, false );
                         prep.execute();
                         prep.close();
                     }
@@ -188,6 +190,52 @@ public class DataManager
                 System.out.println( "[DwarfCraft] Finished Converting the Players DB." );
             }
 
+            //Adds raceMaster arg to the player table
+            try
+            {
+                rs = statement.executeQuery( "select raceMaster from players" );
+            }
+            catch ( Exception e )
+            {
+                System.out.println( "[DwarfCraft] Converting Player DB (may lag a little wait for completion message)." );
+                mDBCon.setAutoCommit( false );
+                HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
+                HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
+
+                try
+                {
+                    PreparedStatement prep = mDBCon.prepareStatement( "SELECT * FROM players" );
+                    rs = prep.executeQuery();
+
+                    while ( rs.next() )
+                    {
+                        dcplayers.put( plugin.getServer().getOfflinePlayer( rs.getString( "name" ) ).getUniqueId(), rs.getString( "race" ) );
+                        ids.put( plugin.getServer().getOfflinePlayer( rs.getString( "name" ) ).getUniqueId(), rs.getInt( "id" ) );
+                    }
+
+                }
+                catch ( Exception e1 )
+                {
+                    e1.printStackTrace();
+                }
+                statement.executeUpdate( "DROP TABLE players" );
+                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race, raceMaster );" );
+                for ( UUID uuid : dcplayers.keySet() )
+                {
+                    if ( uuid != null )
+                    {
+                        PreparedStatement prep = mDBCon.prepareStatement( "insert into players(id, uuid, race, raceMaster) values(?,?,?);" );
+                        prep.setInt( 1, ids.get( uuid ) );
+                        prep.setString( 2, uuid.toString() );
+                        prep.setString( 3, dcplayers.get( uuid ) );
+                        prep.setBoolean( 4, false );
+                        prep.execute();
+                        prep.close();
+                    }
+                }
+                System.out.println( "[DwarfCraft] Finished Converting the Players DB." );
+            }
+            
             try
             {
                 rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'trainers';" );
@@ -407,6 +455,7 @@ public class DataManager
                 return false;
 
             player.setRace( rs.getString( "race" ) );
+            player.setRaceMaster( rs.getBoolean( "raceMaster" ) );
 
             int id = rs.getInt( "id" );
             rs.close();
@@ -559,6 +608,12 @@ public class DataManager
         {
             PreparedStatement prep = mDBCon.prepareStatement( "UPDATE players SET race=? WHERE uuid=?;" );
             prep.setString( 1, dCPlayer.getRace() );
+            prep.setString( 2, dCPlayer.getPlayer().getUniqueId().toString() );
+            prep.execute();
+            prep.close();
+            
+            prep = mDBCon.prepareStatement( "UPDATE players SET raceMaster=? WHERE uuid=?;" );
+            prep.setBoolean( 1, dCPlayer.isRaceMaster() );
             prep.setString( 2, dCPlayer.getPlayer().getUniqueId().toString() );
             prep.execute();
             prep.close();
