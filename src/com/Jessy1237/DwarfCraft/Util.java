@@ -318,11 +318,11 @@ public class Util
             case POTATO_ITEM:
                 return "Potato";
             case POTATO:
-                return "Potato_Crop";
+                return "Potato Crop";
             case CARROT_ITEM:
                 return "Carrot";
             case CARROT:
-                return "Carrot_Crop";
+                return "Carrot Crop";
             case INK_SACK:
                 if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
                     return "Dye";
@@ -364,7 +364,7 @@ public class Util
                         return String.format( "Unknown Dye(%d)", item.getData().getData() );
                 }
             default:
-                return cleanEnumString( item.getType().toString() );
+                return cleanEnumString( item.getType().toString().replaceAll( "_", " " ) );
         }
     }
 
