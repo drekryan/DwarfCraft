@@ -342,11 +342,13 @@ public class DwarfCraft extends JavaPlugin
         for ( Player player : getServer().getOnlinePlayers() )
         {
             DCPlayer dcPlayer = getDataManager().find( player );
-            if ( isChatEnabled() )
+            if ( isChatEnabled() && dcPlayer != null )
             {
-                if ( getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dcPlayer ) ) )
+                while ( getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dcPlayer ) ) )
                 {
-                    getChat().setPlayerPrefix( player, getChat().getPlayerPrefix( player ).replaceAll( getUtil().getPlayerPrefix( dcPlayer ) + " ", "" ) );
+                    String prefix = getChat().getPlayerPrefix( player );
+                    prefix = prefix.replace( getUtil().getPlayerPrefix( dcPlayer ) + " ", "" );
+                    getChat().setPlayerPrefix( player, prefix );
                 }
             }
         }
@@ -448,6 +450,34 @@ public class DwarfCraft extends JavaPlugin
             if ( dCPlayer == null )
                 dCPlayer = getDataManager().createDwarf( player );
             getDataManager().checkDwarfData( dCPlayer );
+            
+            if ( isChatEnabled() )
+            {
+                if ( getConfigManager().prefix )
+                {
+                    
+                    while ( getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dCPlayer ) ) )
+                    {
+                        String prefix = getChat().getPlayerPrefix( player );
+                        prefix = prefix.replace( getUtil().getPlayerPrefix( dCPlayer ) + " ", "" );
+                        getChat().setPlayerPrefix( player, prefix );
+                    }
+                    
+                    if ( !getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dCPlayer ) ) )
+                    {
+                        getChat().setPlayerPrefix( player, getUtil().getPlayerPrefix( dCPlayer ) + " " + getChat().getPlayerPrefix( player ) );
+                    }
+                }
+                else
+                {
+                    while ( getChat().getPlayerPrefix( player ).contains( getUtil().getPlayerPrefix( dCPlayer ) ) )
+                    {
+                        String prefix = getChat().getPlayerPrefix( player );
+                        prefix = prefix.replace( getUtil().getPlayerPrefix( dCPlayer ) + " ", "" );
+                        getChat().setPlayerPrefix( player, prefix );
+                    }
+                }
+            }
         }
 
         if ( pm.getPlugin( "LogBlock" ) != null )

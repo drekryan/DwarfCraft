@@ -55,9 +55,11 @@ public class DCPlayerListener implements Listener
         // Removes the DwarfCraft prefixes when the player quits
         if ( plugin.isChatEnabled() )
         {
-            if ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( dcPlayer ) ) )
+            while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( dcPlayer ) ) )
             {
-                plugin.getChat().setPlayerPrefix( player, plugin.getChat().getPlayerPrefix( player ).replaceAll( plugin.getUtil().getPlayerPrefix( dcPlayer ) + " ", "" ) );
+                String prefix = plugin.getChat().getPlayerPrefix( player );
+                prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( dcPlayer ) + " ", "" );
+                plugin.getChat().setPlayerPrefix( player, prefix );
             }
         }
     }
@@ -84,6 +86,14 @@ public class DCPlayerListener implements Listener
         {
             if ( plugin.getConfigManager().prefix )
             {
+                
+                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                {
+                    String prefix = plugin.getChat().getPlayerPrefix( player );
+                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                    plugin.getChat().setPlayerPrefix( player, prefix );
+                }
+                
                 if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
                 {
                     plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
@@ -91,9 +101,11 @@ public class DCPlayerListener implements Listener
             }
             else
             {
-                if ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
                 {
-                    plugin.getChat().setPlayerPrefix( player, plugin.getChat().getPlayerPrefix( player ).replaceAll( plugin.getUtil().getPlayerPrefix( data ) + " ", "" ) );
+                    String prefix = plugin.getChat().getPlayerPrefix( player );
+                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                    plugin.getChat().setPlayerPrefix( player, prefix );
                 }
             }
         }
