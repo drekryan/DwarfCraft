@@ -209,8 +209,8 @@ public class DataManager
 
                     while ( rs.next() )
                     {
-                        dcplayers.put( plugin.getServer().getOfflinePlayer( rs.getString( "name" ) ).getUniqueId(), rs.getString( "race" ) );
-                        ids.put( plugin.getServer().getOfflinePlayer( rs.getString( "name" ) ).getUniqueId(), rs.getInt( "id" ) );
+                        dcplayers.put( UUID.fromString( rs.getString( "uuid" ) ), rs.getString( "race" ) );
+                        ids.put( UUID.fromString( rs.getString( "uuid" ) ), rs.getInt( "id" ) );
                     }
 
                 }
@@ -224,7 +224,7 @@ public class DataManager
                 {
                     if ( uuid != null )
                     {
-                        PreparedStatement prep = mDBCon.prepareStatement( "insert into players(id, uuid, race, raceMaster) values(?,?,?);" );
+                        PreparedStatement prep = mDBCon.prepareStatement( "insert into players(id, uuid, race, raceMaster) values(?,?,?,?);" );
                         prep.setInt( 1, ids.get( uuid ) );
                         prep.setString( 2, uuid.toString() );
                         prep.setString( 3, dcplayers.get( uuid ) );
