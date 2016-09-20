@@ -393,7 +393,7 @@ public class DataManager
             {
                 if ( d.getPlayer() != null )
                 {
-                    if ( d.getPlayer().getName().equalsIgnoreCase( player.getName() ) )
+                    if ( d.getPlayer().getUniqueId().equals( player.getUniqueId() ) )
                     {
                         d.setPlayer( player );
                         return d;
@@ -422,7 +422,7 @@ public class DataManager
         {
             PreparedStatement prep = mDBCon.prepareStatement( "insert into players(uuid, race) values(?,?);" );
             prep.setString( 1, dCPlayer.getPlayer().getUniqueId().toString() );
-            prep.setString( 2, plugin.getConfigManager().getDefaultRace() );
+            prep.setString( 2, plugin.getConfigManager().getDefaultRace().trim() );
             prep.execute();
             prep.close();
         }

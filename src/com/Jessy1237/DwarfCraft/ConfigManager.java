@@ -464,7 +464,7 @@ public final class ConfigManager
                     continue;
                 }
                 String[] theline = line.split( ":" );
-                if ( theline.length > 2 )
+                if ( theline.length != 2 )
                 {
                     line = br.readLine();
                     continue;

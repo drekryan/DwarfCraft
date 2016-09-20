@@ -39,7 +39,7 @@ public class Out
     public boolean effectInfo( CommandSender sender, DCPlayer dCPlayer, Effect effect )
     {
         String prefix = Messages.effectInfoPrefix;
-        prefix = prefix.replaceAll( "%effectid", "" + effect.getId() );
+        prefix = prefix.replaceAll( "%effectid%", "" + effect.getId() );
         sendMessage( sender, effect.describeLevel( dCPlayer ), prefix );
         sendMessage( sender, effect.describeGeneral( dCPlayer ), prefix );
         return true;

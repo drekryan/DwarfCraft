@@ -30,7 +30,7 @@ public class DCPlayer
     {
         this.plugin = plugin;
         this.player = whoami;
-        this.race = plugin.getConfigManager().getDefaultRace();
+        this.race = plugin.getConfigManager().getDefaultRace().trim();
         this.skills = plugin.getConfigManager().getAllSkills();
         this.raceMaster = false;
     }
@@ -39,7 +39,7 @@ public class DCPlayer
     {
         this.plugin = plugin;
         this.player = whoami;
-        this.race = race;
+        this.race = race.trim();
         this.skills = plugin.getConfigManager().getAllSkills();
         this.raceMaster = raceMaster;
     }
@@ -298,19 +298,19 @@ public class DCPlayer
         // Resets the players prefix
         if ( plugin.isChatEnabled() )
             if ( plugin.getChat().getPlayerPrefix( getPlayer() ).contains( plugin.getUtil().getPlayerPrefix( oldRace ) ) )
-                plugin.getChat().setPlayerPrefix( getPlayer(), plugin.getChat().getPlayerPrefix( getPlayer() ).replace( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
+                plugin.getChat().setPlayerPrefix( getPlayer(), plugin.getChat().getPlayerPrefix( getPlayer() ).replaceAll( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
 
         plugin.getDataManager().saveDwarfData( this, dCSkills );
     }
 
     public String getRace()
     {
-        return race;
+        return race.trim();
     }
 
     public void setRace( String race )
     {
-        this.race = race;
+        this.race = race.trim();
     }
     
     public boolean isRaceMaster()

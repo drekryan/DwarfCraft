@@ -58,7 +58,7 @@ public final class Messages
     public static String skillSheetSkillLine = "&6[&3%skilllevel%&6] &b%skillname%";
     public static String skillSheetUntrainedSkillHeader = "&6Untrained Skills%colon%";
     public static String skillSheetUntrainedSkillLine = "|&7%skillname%&6| ";
-    public static String skillInfoHeader = "&6  Skillinfo for &b%playername%&6 [&b%skillid%&6] || Your level &3%skilllevel%/%maxskilllevel%";
+    public static String skillInfoHeader = "&6Skillinfo for &b%playername%&6 || &b%skillname%&6 [&b%skillid%&6] || Your level &3%skilllevel%/%maxskilllevel%";
     public static String skillInfoMinorHeader = "&6[&5EffectID&6]&f------&6[Effect]&f------";
     public static String skillInfoEffectIDPrefix = "&6[&5%effectid%&6] ";
     public static String skillInfoMaxSkillLevel = "&6---This skill is maximum level, no training available---";
@@ -90,8 +90,8 @@ public final class Messages
     public static String describeLevelMobdrop = "&6%creaturename% drop about %effectlevelcolor%%effectamount% &2%output%";
     public static String describeLevelMobdropNoCreature = "&6Enemies that drop &2%output% &6leave about %effectlevelcolor%%effectamount%&6";
     public static String describeLevelSwordDurability = "&6Using &2%tooltype% &6removes about %effectlevelcolor%%effectamount% &6durability";
-    public static String describeLevelPVPDamage = "&6You do %effectlevelcolor%%effectdamage%&6%% &6of normal &2%tooltype% &6damage when fighting players";
-    public static String describeLevelPVEDamage = "&6You do %effectlevelcolor%%effectdamage%&6%% &6of normal &2%tooltype% &6damage when fighting mobs";
+    public static String describeLevelPVPDamage = "&6You do %effectlevelcolor%%effectdamage%&6% &6of normal &2%tooltype% &6damage when fighting players";
+    public static String describeLevelPVEDamage = "&6You do %effectlevelcolor%%effectdamage%&6% &6of normal &2%tooltype% &6damage when fighting mobs";
     public static String describeLevelExplosionDamageMore = "&6You take %effectlevelcolor%%effecttakedamage%% more &6damage from explosions";
     public static String describeLevelExplosionDamageLess = "&6You take %effectlevelcolor%%effecttakedamage%% less &6damage from explosions";
     public static String describeLevelFireDamageMore = "&6You take %effectlevelcolor%%effecttakedamage%% more &6damage from fire";
