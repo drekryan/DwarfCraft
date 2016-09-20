@@ -103,7 +103,7 @@ public final class Messages
     public static String describeLevelToolDurability = "&6Using &2%tooltype% &6removes about %effectlevelcolor%%effectamount% &6durability";
     public static String describeLevelRodDurability = "&6Using &2%tooltype% &6removes about %effectlevelcolor%%effectamount% &6durability";
     public static String describeLevelEat = "&6You gain %effectlevelcolor%%effectamountfood% &6Hunger instead of &e%originalfoodlevel%&6 when you eat &2%initiator%";
-    public static String describeLevelCraft = "&6You craft %effectlevelcolor%%.0%effectamount% &2%%output% &6instead of &e%minoramount%";
+    public static String describeLevelCraft = "&6You craft %effectlevelcolor%%.0%effectamount% &2%output% &6instead of &e%minoramount%";
     public static String describeLevelPlow = "&6You gain %effectlevelcolor%%effectamount% &6seeds instead of &e%minoramount% &6when you plow grass";
     public static String describeLevelFish = "&6You catch %effectlevelcolor%%effectamount% &6fish instead of &e%minoramount% &6when you fish";
     public static String describeLevelBrew = "&6You brew %effectlevelcolor%%effectamount% &6potion(s) instead of &e%minoramount% &6when you're brewing potions";

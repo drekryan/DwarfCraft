@@ -540,7 +540,8 @@ public class Out
         }
         out = out.replaceAll( "%effectamountdig%", String.format( "%.0f", +( effectAmount * 100 ) ) );
         out = out.replaceAll( "%effectbowdamage%", String.format( "%.0f", ( effectAmount + 2 ) ) );
-        out = out.replaceAll( "%originalfoodlevel%", String.format( "%.2f", ( ( double ) Util.FoodLevel.getLvl( mInitiator.getTypeId() ) ) / 2.0 ) );
+        if ( mInitiator != null )
+            out = out.replaceAll( "%originalfoodlevel%", String.format( "%.2f", ( ( double ) Util.FoodLevel.getLvl( mInitiator.getTypeId() ) ) / 2.0 ) );
         out = out.replaceAll( "%colon%", ":" );
 
         return out;
