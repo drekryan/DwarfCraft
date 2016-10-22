@@ -117,7 +117,7 @@ public class Out
     public boolean printSkillInfo( CommandSender sender, Skill skill, DCPlayer dCPlayer, int maxTrainLevel )
     {
         // general line
-        sendMessage( sender, Messages.skillInfoHeader.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ).replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skilllevel%", "" + skill.getLevel() )
+        sendMessage( sender, Messages.skillInfoHeader.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ).replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() )
                 .replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) );
 
         // effects lines
@@ -330,8 +330,7 @@ public class Out
     /**
      * Sends a welcome message based on race of player joining. Broadcasts to
      * the whole server
-     * 
-     * @param server
+     *
      * @param dCPlayer
      */
     public void welcome( DCPlayer dCPlayer )

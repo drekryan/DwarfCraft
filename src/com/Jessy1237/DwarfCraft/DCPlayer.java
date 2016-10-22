@@ -62,7 +62,7 @@ public class DCPlayer
             System.out.println( "DC0: starting skill ordering for quartiles" );
         for ( Skill s : getSkills().values() )
         {
-            if ( s.getLevel() > 5 )
+            if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
             {
                 levelList[i] = s.getLevel();
                 i++;
