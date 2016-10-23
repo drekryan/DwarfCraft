@@ -244,17 +244,17 @@ public class DCPlayer
      */
     public int level()
     {
-        int playerLevel = 5;
+        int playerLevel = plugin.getConfigManager().getRaceLevelLimit();
         int highestSkill = 0;
         for ( Skill s : getSkills().values() )
         {
             if ( s.getLevel() > highestSkill )
                 highestSkill = s.getLevel();
-            if ( s.getLevel() > 5 )
-                playerLevel += s.getLevel() - 5;
+            if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
+                playerLevel += s.getLevel() - plugin.getConfigManager().getRaceLevelLimit();
             ;
         }
-        if ( playerLevel == 5 )
+        if ( playerLevel == plugin.getConfigManager().getRaceLevelLimit() )
             playerLevel = highestSkill;
         return playerLevel;
     }
@@ -317,7 +317,7 @@ public class DCPlayer
     {
         return raceMaster;
     }
-    
+
     public void setRaceMaster( boolean raceMaster )
     {
         this.raceMaster = raceMaster;
