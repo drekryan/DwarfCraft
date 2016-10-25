@@ -42,56 +42,60 @@ public class DCVehicleListener implements Listener
     @EventHandler( priority = EventPriority.HIGHEST )
     public void onVehicleDestroy( VehicleDestroyEvent event )
     {
-        if ( !plugin.getUtil().isWorldAllowed( event.getAttacker().getWorld() ) )
-            return;
-
-        boolean dropChange = false;
-
-        if ( event.getVehicle() instanceof Boat && event.getAttacker() instanceof Player )
+        if ( event.getAttacker() != null )
         {
 
-            Player player = ( Player ) event.getAttacker();
-            DCPlayer dcPlayer = plugin.getDataManager().find( player );
-            Location loc = event.getVehicle().getLocation();
+            if ( !plugin.getUtil().isWorldAllowed( event.getAttacker().getWorld() ) )
+                return;
 
-            for ( Skill skill : dcPlayer.getSkills().values() )
+            boolean dropChange = false;
+
+            if ( event.getVehicle() instanceof Boat && event.getAttacker() instanceof Player )
             {
-                for ( Effect effect : skill.getEffects() )
+
+                Player player = ( Player ) event.getAttacker();
+                DCPlayer dcPlayer = plugin.getDataManager().find( player );
+                Location loc = event.getVehicle().getLocation();
+
+                for ( Skill skill : dcPlayer.getSkills().values() )
                 {
-                    if ( effect.getEffectType() == EffectType.VEHICLEDROP )
+                    for ( Effect effect : skill.getEffects() )
                     {
-                        ItemStack drop = effect.getOutput( dcPlayer );
-
-                        DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
-                        plugin.getServer().getPluginManager().callEvent( ev );
-
-                        if ( ev.isCancelled() )
-                            return;
-
-                        if ( DwarfCraft.debugMessagesThreshold < 6 )
-                            System.out.println( "Debug: dropped " + drop.toString() );
-
-                        for ( ItemStack i : ev.getAlteredItems() )
+                        if ( effect.getEffectType() == EffectType.VEHICLEDROP )
                         {
-                            if ( i != null )
+                            ItemStack drop = effect.getOutput( dcPlayer );
+
+                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
+                            plugin.getServer().getPluginManager().callEvent( ev );
+
+                            if ( ev.isCancelled() )
+                                return;
+
+                            if ( DwarfCraft.debugMessagesThreshold < 6 )
+                                System.out.println( "Debug: dropped " + drop.toString() );
+
+                            for ( ItemStack i : ev.getAlteredItems() )
                             {
-                                if ( i.getAmount() > 0 )
+                                if ( i != null )
                                 {
-                                    loc.getWorld().dropItemNaturally( loc, i );
+                                    if ( i.getAmount() > 0 )
+                                    {
+                                        loc.getWorld().dropItemNaturally( loc, i );
+                                    }
                                 }
                             }
-                        }
 
-                        dropChange = true;
+                            dropChange = true;
+                        }
                     }
                 }
             }
-        }
 
-        if ( dropChange )
-        {
-            event.getVehicle().remove();
-            event.setCancelled( true );
+            if ( dropChange )
+            {
+                event.getVehicle().remove();
+                event.setCancelled( true );
+            }
         }
     }
 
