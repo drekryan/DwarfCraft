@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -296,7 +295,7 @@ public class DCEntityListener implements Listener
 
         Arrow arrow = ( Arrow ) event.getDamager();
         ProjectileSource attacker = arrow.getShooter();
-        if ( event.getEntity() instanceof EnderCrystal )
+        if ( !( event.getEntity() instanceof LivingEntity ) )
         {
             return;
         }
@@ -350,13 +349,6 @@ public class DCEntityListener implements Listener
     {
         if ( !plugin.getUtil().isWorldAllowed( event.getEntity().getWorld() ) )
             return;
-
-        if ( ( plugin.getDataManager().isTrainer( event.getEntity() ) ) && event.getEntity() instanceof HumanEntity )
-        {
-            event.setDamage( 0 );
-            event.setCancelled( true );
-            return;
-        }
 
         if ( ( event.getEntity() instanceof Player ) )
         {
