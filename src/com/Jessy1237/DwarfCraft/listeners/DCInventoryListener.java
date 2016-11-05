@@ -368,6 +368,13 @@ public class DCInventoryListener implements Listener
             final int amount = item.getAmount();
             BrewingStand block = ( BrewingStand ) event.getInventory().getHolder();
             BrewerInventory inv = check( block.getLocation() );
+            
+            //This means brewing has not taken place yet but a player has clicked the result slots of the stand
+            if( inv == null )
+                return;
+            
+            System.out.println( event.getSlot() );
+            
             ItemStack[] stack = inv.getContents();
             if ( stack != null )
             {
@@ -387,6 +394,13 @@ public class DCInventoryListener implements Listener
                                 if ( ev.isCancelled() )
                                     return;
 
+                                int ing = -1, fuel = -1;
+                                
+                                if( inv.getIngredient() != null )
+                                    ing = inv.getIngredient().getTypeId();
+                                if( inv.getFuel() != null)
+                                    fuel = inv.getFuel().getTypeId();
+                                    
                                 for ( ItemStack item1 : ev.getAlteredItems() )
                                 {
                                     if ( item1 != null )
@@ -399,7 +413,7 @@ public class DCInventoryListener implements Listener
                                                 if ( it != null )
                                                 {
                                                     int i = 1;
-                                                    if ( inv.getItem( 3 ).getTypeId() != it.getTypeId() )
+                                                    if ( it.getTypeId() != ing  && it.getTypeId() != fuel )
                                                     {
                                                         while ( i != item1.getAmount() )
                                                         {
