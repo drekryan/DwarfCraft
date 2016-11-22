@@ -14,17 +14,23 @@ import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Donkey;
+import org.bukkit.entity.ElderGuardian;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Endermite;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Evoker;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Husk;
 import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.Llama;
 import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.Mule;
 import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
@@ -35,15 +41,20 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Shulker;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Spider;
 import org.bukkit.entity.Squid;
+import org.bukkit.entity.Stray;
+import org.bukkit.entity.Vex;
 import org.bukkit.entity.Villager;
+import org.bukkit.entity.Vindicator;
 import org.bukkit.entity.Witch;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
+import org.bukkit.entity.ZombieVillager;
 import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
@@ -479,6 +490,29 @@ public class Effect
                 return ( entity instanceof PolarBear );
             case SHULKER:
                 return ( entity instanceof Shulker );
+            case DONKEY:
+                return ( entity instanceof Donkey );
+            case MULE:
+                return ( entity instanceof Mule );
+            case LLAMA:
+                return ( entity instanceof Llama );
+            case HUSK:
+                return ( entity instanceof Husk );
+            case SKELETON_HORSE:
+                return ( entity instanceof SkeletonHorse );
+            case ELDER_GUARDIAN:
+                return ( entity instanceof ElderGuardian );
+            case EVOKER:
+                return ( entity instanceof Evoker );
+            case STRAY:
+                return ( entity instanceof Stray );
+            case ZOMBIE_VILLAGER:
+                return ( entity instanceof ZombieVillager );
+            case VEX:
+                return ( entity instanceof Vex );
+            case VINDICATOR:
+                return ( entity instanceof Vindicator );
+
             default:
                 return false;
         }

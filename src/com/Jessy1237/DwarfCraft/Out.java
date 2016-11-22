@@ -236,7 +236,7 @@ public class Out
     {
         if ( plugin != null )
         {
-            plugin.getServer().broadcastMessage( prefix + message );
+            plugin.getServer().broadcastMessage( parseColors( prefix + message ) );
         }
     }
 
