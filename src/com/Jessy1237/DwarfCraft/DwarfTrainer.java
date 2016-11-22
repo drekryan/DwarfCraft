@@ -180,8 +180,6 @@ public final class DwarfTrainer
 
         final PlayerInventory oldInv = player.getInventory();
 
-        int cost1 = 0, cost2 = 0, cost3 = 0;
-
         for ( ItemStack costStack : trainingCostsToLevel )
         {
             if ( costStack == null )
@@ -233,19 +231,6 @@ public final class DwarfTrainer
                     int cost = costStack.getAmount();
                     int delta;
 
-                    if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
-                    {
-                        cost1 = costStack.getAmount();
-                    }
-                    if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
-                    {
-                        cost2 = costStack.getAmount();
-                    }
-                    if ( costStack.getType().equals( skill.Item3.Item.getType() ) )
-                    {
-                        cost3 = costStack.getAmount();
-                    }
-
                     if ( cost - inv >= 0 )
                     {
                         costStack.setAmount( cost - inv );
@@ -291,9 +276,9 @@ public final class DwarfTrainer
         if ( hasMats )
         {
             skill.setLevel( skill.getLevel() + 1 );
-            skill.setDeposit1( skill.getDeposit1() - cost1 );
-            skill.setDeposit2( skill.getDeposit2() - cost2 );
-            skill.setDeposit3( skill.getDeposit3() - cost3 );
+            skill.setDeposit1( 0 );
+            skill.setDeposit2( 0 );
+            skill.setDeposit3( 0 );
 
             e = new DwarfCraftLevelUpEvent( dCPlayer, this, skill );
 
