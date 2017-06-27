@@ -25,12 +25,10 @@ import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DataManager;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Effect;
 import com.Jessy1237.DwarfCraft.EffectType;
@@ -47,23 +45,6 @@ public class DCPlayerListener implements Listener
         this.plugin = plugin;
     }
 
-    @EventHandler( priority = EventPriority.NORMAL )
-    public void onPlayerQuit( PlayerQuitEvent event )
-    {
-        Player player = event.getPlayer();
-        DCPlayer dcPlayer = plugin.getDataManager().find( player );
-        // Removes the DwarfCraft prefixes when the player quits
-        if ( plugin.isChatEnabled() )
-        {
-            while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( dcPlayer ) ) )
-            {
-                String prefix = plugin.getChat().getPlayerPrefix( player );
-                prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( dcPlayer ) + " ", "" );
-                plugin.getChat().setPlayerPrefix( player, prefix );
-            }
-        }
-    }
-
     /**
      * When a player joins the server this initialized their data from the
      * database or creates new info for them.
@@ -73,47 +54,12 @@ public class DCPlayerListener implements Listener
     @EventHandler( priority = EventPriority.NORMAL )
     public void onPlayerJoin( PlayerJoinEvent event )
     {
-        DataManager dm = plugin.getDataManager();
-        Player player = event.getPlayer();
-        DCPlayer data = dm.find( player );
-
-        if ( data == null )
-            data = dm.createDwarf( player );
-        if ( !dm.checkDwarfData( data ) )
-            dm.createDwarfData( data );
-
-        if ( plugin.isChatEnabled() )
-        {
-            if ( plugin.getConfigManager().prefix )
-            {
-                
-                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    String prefix = plugin.getChat().getPlayerPrefix( player );
-                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
-                    plugin.getChat().setPlayerPrefix( player, prefix );
-                }
-                
-                if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
-                }
-            }
-            else
-            {
-                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    String prefix = plugin.getChat().getPlayerPrefix( player );
-                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
-                    plugin.getChat().setPlayerPrefix( player, prefix );
-                }
-            }
-        }
+        plugin.getUtil().setPlayerPrefix( event.getPlayer() );
 
         if ( !plugin.getConfigManager().sendGreeting )
             return;
 
-        plugin.getOut().welcome( data );
+        plugin.getOut().welcome( plugin.getDataManager().find( event.getPlayer() ) );
     }
 
     /**

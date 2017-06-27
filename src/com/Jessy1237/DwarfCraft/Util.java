@@ -7,9 +7,11 @@ package com.Jessy1237.DwarfCraft;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.citizensnpcs.api.npc.NPC;
@@ -413,13 +415,90 @@ public class Util
     public String getPlayerPrefix( DCPlayer player )
     {
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
-        return plugin.getConfigManager().getRace( race ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f";
+        return plugin.getOut().parseColors( plugin.getConfigManager().getRace( race ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f" );
     }
 
     public String getPlayerPrefix( String race )
     {
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
+        return plugin.getOut().parseColors( plugin.getConfigManager().getRace( raceStr ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f" );
+    }
+    
+    public String getPlayerPrefixOldColours( String race )
+    {
+        String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         return plugin.getConfigManager().getRace( raceStr ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f";
+    }
+    
+    public void removePlayerPrefixes()
+    {
+     // Removes the DwarfCraft prefixes when the server shuts down for all
+        // players with the old colours method and new colours method.
+        for ( OfflinePlayer op : plugin.getServer().getOfflinePlayers() )
+        {
+            if ( plugin.isChatEnabled() )
+            {
+                for ( World w : plugin.getServer().getWorlds() )
+                {
+                    for ( Race race : plugin.getConfigManager().getRaceList() )
+                    {
+                        String raceStr = race.getName();
+                        while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefix( raceStr ) ) )
+                        {
+                            String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+                            prefix = prefix.replace( getPlayerPrefix( raceStr ) + " ", "" );
+                            plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
+                        }
+
+                        while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefixOldColours( raceStr ) ) )
+                        {
+                            String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+                            prefix = prefix.replace( getPlayerPrefixOldColours( raceStr ) + " ", "" );
+                            plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public void setPlayerPrefix( Player player )
+    {
+        DataManager dm = plugin.getDataManager();
+        DCPlayer data = dm.find( player );
+
+        if ( data == null )
+            data = dm.createDwarf( player );
+        if ( !dm.checkDwarfData( data ) )
+            dm.createDwarfData( data );
+
+        if ( plugin.isChatEnabled() )
+        {
+            if ( plugin.getConfigManager().prefix )
+            {
+                
+                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                {
+                    String prefix = plugin.getChat().getPlayerPrefix( player );
+                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                    plugin.getChat().setPlayerPrefix( player, prefix );
+                }
+                
+                if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                {
+                    plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
+                }
+            }
+            else
+            {
+                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                {
+                    String prefix = plugin.getChat().getPlayerPrefix( player );
+                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                    plugin.getChat().setPlayerPrefix( player, prefix );
+                }
+            }
+        }
     }
 
     public String getCleanName( EntityType mCreature )
