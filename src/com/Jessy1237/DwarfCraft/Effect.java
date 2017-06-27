@@ -27,12 +27,14 @@ import org.bukkit.entity.Giant;
 import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Husk;
+import org.bukkit.entity.Illusioner;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Mule;
 import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.PolarBear;
@@ -512,7 +514,10 @@ public class Effect
                 return ( entity instanceof Vex );
             case VINDICATOR:
                 return ( entity instanceof Vindicator );
-
+            case ILLUSIONER:
+                return ( entity instanceof Illusioner );
+            case PARROT:
+                return ( entity instanceof Parrot );
             default:
                 return false;
         }
