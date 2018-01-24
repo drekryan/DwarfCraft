@@ -45,23 +45,14 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
 /**
- * 
- * DwarfCraft is a RPG-like plugin for minecraft (via Spigot) that allows
- * players to improve their characters. Players may pay materials to a trainer
- * to improve a skill level, which will provide benefits such as increased
- * weapon damage, decreased tool durability drop, increased drops from blocks or
- * mobs, etc.
- * 
- * Data used for this plugin comes from two places: On each load, a list of
- * skills and effects is pulled from flatfiles. Dwarf's skill levels (currently
- * supports only sqlite)
+ * DwarfCraft is a RPG-like plugin for minecraft (via Spigot) that allows players to improve their characters. Players may pay materials to a trainer to improve a skill level, which will provide
+ * benefits such as increased weapon damage, decreased tool durability drop, increased drops from blocks or mobs, etc. Data used for this plugin comes from two places: On each load, a list of skills
+ * and effects is pulled from flatfiles. Dwarf's skill levels (currently supports only sqlite)
  * 
  * @OriganlAuthor smartaleq
  * @OriginalAuthor RCarretta
  * @OriginalAuthor LexManos
- * 
  * @CurrentAuthor Jessy1237
- * 
  */
 public class DwarfCraft extends JavaPlugin
 {
@@ -337,7 +328,8 @@ public class DwarfCraft extends JavaPlugin
     @Override
     public void onDisable()
     {
-        getUtil().removePlayerPrefixes();
+        if ( getUtil() != null )
+            getUtil().removePlayerPrefixes();
     }
 
     /**
@@ -431,7 +423,7 @@ public class DwarfCraft extends JavaPlugin
         }
 
         getUtil().removePlayerPrefixes();
-        
+
         for ( Player player : getServer().getOnlinePlayers() )
         {
             getUtil().setPlayerPrefix( player );
