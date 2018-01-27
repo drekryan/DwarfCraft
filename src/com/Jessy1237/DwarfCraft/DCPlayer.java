@@ -44,7 +44,7 @@ public class DCPlayer
         this.raceMaster = raceMaster;
     }
 
-    protected List<List<ItemStack>> calculateTrainingCost( Skill skill )
+    public List<List<ItemStack>> calculateTrainingCost( Skill skill )
     {
         int highSkills = countHighSkills();
         int dwarfLevel = getDwarfLevel();

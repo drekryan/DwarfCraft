@@ -110,6 +110,11 @@ public class DwarfCraft extends JavaPlugin
         return entityListener;
     }
 
+    public DCInventoryListener getDCInventoryListener()
+    {
+        return inventoryListener;
+    }
+
     private boolean setupPermissions()
     {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration( Permission.class );

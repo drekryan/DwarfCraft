@@ -9,8 +9,7 @@ import java.util.List;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -119,60 +118,54 @@ public final class DwarfTrainer
         {
             plugin.getOut().sendMessage( player, msg.getRightClickMessage() );
         }
+
         return;
     }
 
     @SuppressWarnings( { "unused", "deprecation" } )
-    public void trainSkill( DCPlayer dCPlayer )
-    {
-        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+    public void trainSkill(DCPlayer dCPlayer, ItemStack clickedItemStack) {
+        Skill skill = dCPlayer.getSkill(getSkillTrained());
         Player player = dCPlayer.getPlayer();
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+        String tag = Messages.trainSkillPrefix.replaceAll("%skillid%", "" + skill.getId());
 
-        if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
-        {
-            plugin.getOut().sendMessage( player, Messages.chooseARace );
-            setWait( false );
+        if (dCPlayer.getRace().equalsIgnoreCase("NULL")) {
+            plugin.getOut().sendMessage(player, Messages.chooseARace);
+            setWait(false);
             return;
         }
 
-        if ( skill == null )
-        {
-            plugin.getOut().sendMessage( player, Messages.raceDoesNotContainSkill, tag );
-            setWait( false );
+        if (skill == null) {
+            plugin.getOut().sendMessage(player, Messages.raceDoesNotContainSkill, tag);
+            setWait(false);
             return;
         }
 
-        if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
-        {
-            plugin.getOut().sendMessage( player, Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
-            setWait( false );
+        if (skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills(dCPlayer.getRace()).contains(skill.getId())) {
+            plugin.getOut().sendMessage(player, Messages.raceDoesNotSpecialize.replaceAll("%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit()), tag);
+            setWait(false);
             return;
         }
 
-        if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
-        {
-            plugin.getOut().sendMessage( player, Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
-            setWait( false );
+        if (skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel()) {
+            plugin.getOut().sendMessage(player, Messages.maxSkillLevel.replaceAll("%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel()), tag);
+            setWait(false);
             return;
         }
 
-        if ( skill.getLevel() >= getMaxSkill() )
-        {
-            plugin.getOut().sendMessage( player, Messages.trainerMaxLevel, tag );
-            setWait( false );
+        if (skill.getLevel() >= getMaxSkill()) {
+            plugin.getOut().sendMessage(player, Messages.trainerMaxLevel, tag);
+            setWait(false);
             return;
         }
 
-        if ( skill.getLevel() < getMinSkill() )
-        {
-            plugin.getOut().sendMessage( player, Messages.trainerLevelTooHigh, tag );
-            setWait( false );
+        if (skill.getLevel() < getMinSkill()) {
+            plugin.getOut().sendMessage(player, Messages.trainerLevelTooHigh, tag);
+            setWait(false);
             return;
         }
 
-        List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
-        List<ItemStack> trainingCostsToLevel = costs.get( 0 );
+        List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost(skill);
+        List<ItemStack> trainingCostsToLevel = costs.get(0);
         // List<ItemStack> totalCostsToLevel = costs.get(1);
 
         boolean hasMats = true;
@@ -180,140 +173,169 @@ public final class DwarfTrainer
 
         final PlayerInventory oldInv = player.getInventory();
 
-        for ( ItemStack costStack : trainingCostsToLevel )
-        {
-            if ( costStack == null )
-            {
-                continue;
-            }
-            if ( costStack.getAmount() == 0 )
-            {
-                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
-                continue;
-            }
-            if ( !player.getInventory().contains( costStack.getTypeId() ) )
-            {
-                if ( plugin.getUtil().checkEquivalentBuildBlocks( costStack.getTypeId(), -1 ) != null )
-                {
-                    ArrayList<Integer> i = plugin.getUtil().checkEquivalentBuildBlocks( costStack.getTypeId(), -1 );
-                    boolean contains = false;
-                    for ( int id : i )
-                    {
-                        if ( player.getInventory().contains( id ) )
-                        {
-                            contains = true;
+        for(ItemStack costStack : trainingCostsToLevel) {
+            if (clickedItemStack.getType().equals(costStack.getType())) {
+                if (player.getInventory().containsAtLeast(costStack, costStack.getAmount())) {
+                    int leftToRemove = costStack.getAmount();
+                    List<ItemStack> stacksToRemove = new ArrayList<>();
+
+                    while (leftToRemove > 0) {
+                        if (leftToRemove >= costStack.getMaxStackSize()) {
+                            stacksToRemove.add(new ItemStack(costStack.getType(), costStack.getMaxStackSize()));
+                            leftToRemove -= costStack.getMaxStackSize();
+                        } else {
+                            stacksToRemove.add(new ItemStack(costStack.getType(), leftToRemove));
+                            leftToRemove = 0;
                         }
                     }
-                    if ( !contains )
-                    {
-                        hasMats = false;
-                        plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
-                        continue;
-                    }
-                }
-                else
-                {
-                    hasMats = false;
-                    plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
-                    continue;
+
+                    player.getInventory().removeItem(stacksToRemove.toArray(new ItemStack[stacksToRemove.size()]));
+                    player.updateInventory();
+                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f);
+                    player.sendMessage(ChatColor.GREEN + "Removed " + costStack.getAmount() + "x " + costStack.getType());
+
+                    this.setLastTrain(System.currentTimeMillis());
+                } else {
+                    player.sendMessage(ChatColor.GOLD + "" + costStack.getAmount() + "x " + costStack.getType());
+                    player.sendMessage(ChatColor.RED + "ERROR! You dont have enough to train!");
                 }
             }
-
-            for ( ItemStack invStack : player.getInventory().getContents() )
-            {
-                if ( invStack == null )
-                    continue;
-                if ( ( invStack.getTypeId() == costStack.getTypeId() && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
-                        || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
-                {
-                    deposited = true;
-                    int inv = invStack.getAmount();
-                    int cost = costStack.getAmount();
-                    int delta;
-
-                    if ( cost - inv >= 0 )
-                    {
-                        costStack.setAmount( cost - inv );
-                        player.getInventory().removeItem( invStack );
-                        delta = inv;
-                    }
-                    else
-                    {
-                        costStack.setAmount( 0 );
-                        invStack.setAmount( inv - cost );
-                        delta = cost;
-                    }
-
-                    if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
-                    {
-                        skill.setDeposit1( skill.getDeposit1() + delta );
-                    }
-                    else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
-                    {
-                        skill.setDeposit2( skill.getDeposit2() + delta );
-                    }
-                    else
-                    {
-                        skill.setDeposit3( skill.getDeposit3() + delta );
-                    }
-                }
-            }
-            if ( costStack.getAmount() == 0 )
-            {
-                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
-            }
-            else
-            {
-                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
-                hasMats = false;
-                deposited = true;
-            }
-
         }
 
-        DwarfCraftLevelUpEvent e = null;
-        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
-        if ( hasMats )
-        {
-            skill.setLevel( skill.getLevel() + 1 );
-            skill.setDeposit1( 0 );
-            skill.setDeposit2( 0 );
-            skill.setDeposit3( 0 );
-
-            e = new DwarfCraftLevelUpEvent( dCPlayer, this, skill );
-
-            plugin.getServer().getPluginManager().callEvent( e );
-        }
-        if ( deposited || hasMats )
-        {
-
-            if ( e != null )
-            {
-                if ( e.isCancelled() )
-                {
-                    skill.setLevel( skill.getLevel() - 1 );
-                    skill.setDeposit1( dep1 );
-                    skill.setDeposit2( dep2 );
-                    skill.setDeposit3( dep3 );
-
-                    player.getInventory().setContents( oldInv.getContents() );
-                    player.getInventory().setExtraContents( oldInv.getExtraContents() );
-
-                    setWait( false );
-
-                    return;
-                }
-                else
-                {
-                    plugin.getOut().sendMessage( player, Messages.trainingSuccessful, tag );
-                }
-            }
-
-            Skill[] dCSkills = new Skill[1];
-            dCSkills[0] = skill;
-            plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
-        }
-
+//        for ( ItemStack costStack : trainingCostsToLevel )
+//        {
+//            if ( costStack == null )
+//            {
+//                continue;
+//            }
+//            if ( costStack.getAmount() == 0 )
+//            {
+//                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+//                continue;
+//            }
+//            if ( !player.getInventory().contains( costStack.getTypeId() ) )
+//            {
+//                if ( plugin.getUtil().checkEquivalentBuildBlocks( costStack.getTypeId(), -1 ) != null )
+//                {
+//                    ArrayList<Integer> i = plugin.getUtil().checkEquivalentBuildBlocks( costStack.getTypeId(), -1 );
+//                    boolean contains = false;
+//                    for ( int id : i )
+//                    {
+//                        if ( player.getInventory().contains( id ) )
+//                        {
+//                            contains = true;
+//                        }
+//                    }
+//                    if ( !contains )
+//                    {
+//                        hasMats = false;
+//                        plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+//                        continue;
+//                    }
+//                }
+//                else
+//                {
+//                    hasMats = false;
+//                    plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+//                    continue;
+//                }
+//            }
+//
+//            for ( ItemStack invStack : player.getInventory().getContents() )
+//            {
+//                if ( invStack == null )
+//                    continue;
+//                if ( ( invStack.getTypeId() == costStack.getTypeId() && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+//                        || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
+//                {
+//                    deposited = true;
+//                    int inv = invStack.getAmount();
+//                    int cost = costStack.getAmount();
+//                    int delta;
+//
+//                    if ( cost - inv >= 0 )
+//                    {
+//                        costStack.setAmount( cost - inv );
+//                        player.getInventory().removeItem( invStack );
+//                        delta = inv;
+//                    }
+//                    else
+//                    {
+//                        costStack.setAmount( 0 );
+//                        invStack.setAmount( inv - cost );
+//                        delta = cost;
+//                    }
+//
+//                    if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
+//                    {
+//                        skill.setDeposit1( skill.getDeposit1() + delta );
+//                    }
+//                    else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
+//                    {
+//                        skill.setDeposit2( skill.getDeposit2() + delta );
+//                    }
+//                    else
+//                    {
+//                        skill.setDeposit3( skill.getDeposit3() + delta );
+//                    }
+//                }
+//            }
+//            if ( costStack.getAmount() == 0 )
+//            {
+//                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+//            }
+//            else
+//            {
+//                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+//                hasMats = false;
+//                deposited = true;
+//            }
+//
+//        }
+//
+//        DwarfCraftLevelUpEvent e = null;
+//        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+//        if ( hasMats )
+//        {
+//            skill.setLevel( skill.getLevel() + 1 );
+//            skill.setDeposit1( 0 );
+//            skill.setDeposit2( 0 );
+//            skill.setDeposit3( 0 );
+//
+//            e = new DwarfCraftLevelUpEvent( dCPlayer, this, skill );
+//
+//            plugin.getServer().getPluginManager().callEvent( e );
+//        }
+//        if ( deposited || hasMats )
+//        {
+//
+//            if ( e != null )
+//            {
+//                if ( e.isCancelled() )
+//                {
+//                    skill.setLevel( skill.getLevel() - 1 );
+//                    skill.setDeposit1( dep1 );
+//                    skill.setDeposit2( dep2 );
+//                    skill.setDeposit3( dep3 );
+//
+//                    player.getInventory().setContents( oldInv.getContents() );
+//                    player.getInventory().setExtraContents( oldInv.getExtraContents() );
+//
+//                    setWait( false );
+//
+//                    return;
+//                }
+//                else
+//                {
+//                    plugin.getOut().sendMessage( player, Messages.trainingSuccessful, tag );
+//                }
+//            }
+//
+//            Skill[] dCSkills = new Skill[1];
+//            dCSkills[0] = skill;
+//            plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
+//        }
+//
         setWait( false );
     }
 
