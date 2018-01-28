@@ -142,6 +142,7 @@ public final class DwarfTrainer
         for ( ItemStack costStack : trainingCostsToLevel )
         {
             final int origCost = costStack.getAmount();
+            int amountTaken = 0;
             if ( clickedItemStack.getType().equals( costStack.getType() ) )
             {
                 if ( containsEnough( costStack, player ) )
@@ -159,11 +160,13 @@ public final class DwarfTrainer
 
                             if ( cost - inv >= 0 )
                             {
+                                amountTaken += inv;
                                 costStack.setAmount( cost - inv );
                                 player.getInventory().removeItem( invStack );
                             }
                             else
                             {
+                                amountTaken += cost;
                                 invStack.setAmount( inv - cost );
                             }
                         }
@@ -171,7 +174,7 @@ public final class DwarfTrainer
 
                     //For now the method will only take the required amount otherwise it won't take any items
                     //TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
-                    trainerGUI.updateItem(costStack, origCost);
+                    trainerGUI.updateItem(costStack, origCost - amountTaken);
                     player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
                     player.sendMessage( ChatColor.GREEN + "Removed " + costStack.getAmount() + "x " + costStack.getType() );
 
