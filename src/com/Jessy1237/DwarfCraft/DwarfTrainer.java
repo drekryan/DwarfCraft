@@ -125,7 +125,7 @@ public final class DwarfTrainer
     }
 
     @SuppressWarnings( { "unused", "deprecation" } )
-    public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack )
+    public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         Skill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
@@ -141,6 +141,7 @@ public final class DwarfTrainer
 
         for ( ItemStack costStack : trainingCostsToLevel )
         {
+            final int origCost = costStack.getAmount();
             if ( clickedItemStack.getType().equals( costStack.getType() ) )
             {
                 if ( containsEnough( costStack, player ) )
@@ -168,9 +169,24 @@ public final class DwarfTrainer
                         }
                     }
 
-                    player.updateInventory();
+                    //For now the method will only take the required amount otherwise it won't take any items
+                    //TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
+                    trainerGUI.updateItem(costStack, origCost);
                     player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
                     player.sendMessage( ChatColor.GREEN + "Removed " + costStack.getAmount() + "x " + costStack.getType() );
+
+                    if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
+                    {
+                        skill.setDeposit1( origCost );
+                    }
+                    else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
+                    {
+                        skill.setDeposit2( origCost );
+                    }
+                    else if ( costStack.getType().equals( skill.Item3.Item.getType() ) )
+                    {
+                        skill.setDeposit3( origCost );
+                    }
 
                     this.setLastTrain( System.currentTimeMillis() );
                 }

@@ -75,6 +75,21 @@ public class TrainerGUI
         return inventory;
     }
 
+    public void updateItem( ItemStack item, int amount )
+    {
+        for ( ItemStack invStack : inventory.getContents() )
+        {
+            if ( invStack.getType().equals( item.getType() ) )
+            {
+                ArrayList<String> lore = new ArrayList<>();
+                lore.add( ChatColor.RED + ( amount != 0 ? "" + amount + " needed to level" : "No more is required" ) );
+                invStack.getItemMeta().setLore( lore );
+                player.getPlayer().updateInventory();
+                return;
+            }
+        }
+    }
+
     /**
      * Adds an Item as a clickable option to the GUI
      * 

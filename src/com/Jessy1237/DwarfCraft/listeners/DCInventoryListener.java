@@ -386,7 +386,7 @@ public class DCInventoryListener implements Listener
                     return;
                 }
 
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( trainerGUI.getTrainer(), trainerGUI.getDCPlayer(), event.getCurrentItem() ), 2 );
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( trainerGUI.getTrainer(), trainerGUI.getDCPlayer(), event.getCurrentItem(), trainerGUI ), 2 );
             }
 
             event.setCancelled( true );
