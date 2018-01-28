@@ -37,7 +37,6 @@ public class DCInventoryListener implements Listener
 
     private DwarfCraft plugin;
     private HashMap<Location, BrewerInventory> stands = new HashMap<Location, BrewerInventory>();
-
     public HashMap<Player, TrainerGUI> trainerGUIs = new HashMap<Player, TrainerGUI>();
 
     public DCInventoryListener( final DwarfCraft plugin )

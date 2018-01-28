@@ -168,13 +168,14 @@ public final class DwarfTrainer
                             {
                                 amountTaken += cost;
                                 invStack.setAmount( inv - cost );
+                                costStack.setAmount(0);
                             }
                         }
                     }
 
-                    //For now the method will only take the required amount otherwise it won't take any items
-                    //TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
-                    trainerGUI.updateItem(costStack, origCost - amountTaken);
+                    // For now the method will only take the required amount otherwise it won't take any items
+                    // TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
+                    trainerGUI.updateItem( costStack, origCost - amountTaken );
                     player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
                     player.sendMessage( ChatColor.GREEN + "Removed " + costStack.getAmount() + "x " + costStack.getType() );
 
@@ -246,6 +247,9 @@ public final class DwarfTrainer
         int amountHas = 0;
         for ( ItemStack item : player.getInventory().getContents() )
         {
+            if ( item == null )
+                continue;
+
             if ( item.getType().equals( costStack.getType() ) )
                 amountHas += item.getAmount();
 
@@ -261,6 +265,9 @@ public final class DwarfTrainer
             {
                 for ( ItemStack item : player.getInventory().getContents() )
                 {
+                    if(item == null)
+                        continue;
+                    
                     if ( item.getTypeId() == id )
                         amountHas += item.getAmount();
 
