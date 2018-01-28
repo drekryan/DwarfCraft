@@ -350,9 +350,9 @@ public class DCInventoryListener implements Listener
 
         if ( trainerGUI == null )
             return;
-        
+
         trainerGUI.getTrainer().setWait( false );
-        
+
         trainerGUIs.remove( ( Player ) event.getPlayer() );
     }
 
@@ -364,6 +364,8 @@ public class DCInventoryListener implements Listener
             return;
 
         TrainerGUI trainerGUI = trainerGUIs.get( ( Player ) event.getWhoClicked() );
+        if ( trainerGUI == null )
+            return;
 
         // Handle Trainer GUI
         if ( trainerGUI.getInventory().equals( event.getInventory() ) )

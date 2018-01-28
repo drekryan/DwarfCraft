@@ -124,12 +124,12 @@ public final class DwarfTrainer
         return;
     }
 
-    @SuppressWarnings( { "unused" } )
+    @SuppressWarnings( { "unused", "deprecation" } )
     public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack )
     {
         Skill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
-
+        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
         // List<ItemStack> totalCostsToLevel = costs.get(1);
@@ -143,26 +143,31 @@ public final class DwarfTrainer
         {
             if ( clickedItemStack.getType().equals( costStack.getType() ) )
             {
-                if ( player.getInventory().containsAtLeast( costStack, costStack.getAmount() ) )
+                if ( containsEnough( costStack, player ) )
                 {
-                    int leftToRemove = costStack.getAmount();
-                    List<ItemStack> stacksToRemove = new ArrayList<>();
 
-                    while ( leftToRemove > 0 )
+                    for ( ItemStack invStack : player.getInventory().getContents() )
                     {
-                        if ( leftToRemove >= costStack.getMaxStackSize() )
+                        if ( invStack == null )
+                            continue;
+                        if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+                                || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
                         {
-                            stacksToRemove.add( new ItemStack( costStack.getType(), costStack.getMaxStackSize() ) );
-                            leftToRemove -= costStack.getMaxStackSize();
-                        }
-                        else
-                        {
-                            stacksToRemove.add( new ItemStack( costStack.getType(), leftToRemove ) );
-                            leftToRemove = 0;
+                            int inv = invStack.getAmount();
+                            int cost = costStack.getAmount();
+
+                            if ( cost - inv >= 0 )
+                            {
+                                costStack.setAmount( cost - inv );
+                                player.getInventory().removeItem( invStack );
+                            }
+                            else
+                            {
+                                invStack.setAmount( inv - cost );
+                            }
                         }
                     }
 
-                    player.getInventory().removeItem( stacksToRemove.toArray( new ItemStack[stacksToRemove.size()] ) );
                     player.updateInventory();
                     player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
                     player.sendMessage( ChatColor.GREEN + "Removed " + costStack.getAmount() + "x " + costStack.getType() );
@@ -171,8 +176,7 @@ public final class DwarfTrainer
                 }
                 else
                 {
-                    player.sendMessage( ChatColor.GOLD + "" + costStack.getAmount() + "x " + costStack.getType() );
-                    player.sendMessage( ChatColor.RED + "ERROR! You dont have enough to train!" );
+                    plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
                 }
             }
         }
@@ -201,5 +205,51 @@ public final class DwarfTrainer
     public String getType()
     {
         return mEntity.getEntity().getType().toString();
+    }
+
+    /**
+     * Checks if the player's inventory contains enough of the required item or any equivalent item to train
+     * 
+     * @param costStack The cost stack to check against
+     * @param player The player who is trying to skill up
+     * @return true if the player contains enough of the item or its equivalents otherwise false
+     */
+
+    @SuppressWarnings( "deprecation" )
+    private boolean containsEnough( ItemStack costStack, Player player )
+    {
+
+        if ( player.getInventory().containsAtLeast( costStack, costStack.getAmount() ) )
+        {
+            return true;
+        }
+
+        int amountHas = 0;
+        for ( ItemStack item : player.getInventory().getContents() )
+        {
+            if ( item.getType().equals( costStack.getType() ) )
+                amountHas += item.getAmount();
+
+            if ( amountHas >= costStack.getAmount() )
+                return true;
+        }
+
+        ArrayList<Integer> equivs = plugin.getUtil().checkEquivalentBuildBlocks( costStack.getTypeId(), -1 );
+
+        if ( equivs != null )
+        {
+            for ( int id : equivs )
+            {
+                for ( ItemStack item : player.getInventory().getContents() )
+                {
+                    if ( item.getTypeId() == id )
+                        amountHas += item.getAmount();
+
+                    if ( amountHas >= costStack.getAmount() )
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 }
