@@ -79,11 +79,16 @@ public class TrainerGUI
     {
         for ( ItemStack invStack : inventory.getContents() )
         {
+            if ( invStack == null )
+                continue;
+
             if ( invStack.getType().equals( item.getType() ) )
             {
                 ArrayList<String> lore = new ArrayList<>();
                 lore.add( ChatColor.RED + ( amount != 0 ? "" + amount + " needed to level" : "No more is required" ) );
-                invStack.getItemMeta().setLore( lore );
+                ItemMeta meta = invStack.getItemMeta();
+                meta.setLore( lore );
+                invStack.setItemMeta( meta );
                 player.getPlayer().updateInventory();
                 return;
             }

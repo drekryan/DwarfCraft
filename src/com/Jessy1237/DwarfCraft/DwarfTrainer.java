@@ -192,6 +192,9 @@ public final class DwarfTrainer
                         skill.setDeposit3( origCost );
                     }
 
+                    Skill[] dCSkills = new Skill[1];
+                    dCSkills[0] = skill;
+                    plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
                     this.setLastTrain( System.currentTimeMillis() );
                 }
                 else
