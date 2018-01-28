@@ -1,15 +1,8 @@
 package com.Jessy1237.DwarfCraft.listeners;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.*;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -26,11 +19,18 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.ProjectileSource;
 
+import com.Jessy1237.DwarfCraft.DCPlayer;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.Effect;
+import com.Jessy1237.DwarfCraft.EffectType;
+import com.Jessy1237.DwarfCraft.InitTrainerGUISchedule;
+import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.Skill;
+import com.Jessy1237.DwarfCraft.TrainerGUI;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
@@ -134,72 +134,56 @@ public class DCEntityListener implements Listener
                         }
                         else
                         {
-                            Skill skill = dCPlayer.getSkill(trainer.getSkillTrained());
-                            List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost(skill);
-                            List<ItemStack> trainingCostsToLevel = costs.get(0);
+                            trainer.setWait( true );
+                            Skill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
 
-                            Inventory inv = Bukkit.createInventory(dCPlayer.getPlayer(), 18, ChatColor.DARK_PURPLE + "Training: " + ChatColor.DARK_RED + skill.getDisplayName());
-                            DCInventoryListener inventoryListener = this.plugin.getDCInventoryListener();
-                            inventoryListener.trainerGui = new TrainerGUI(trainer, dCPlayer, inv);
-
-                            inventoryListener.trainerGui.getInventory().clear();
-                            dCPlayer.getPlayer().updateInventory();
-
-                            int guiIndex = 0;
-                            for (ItemStack costStack : trainingCostsToLevel) {
-                                ItemMeta meta = costStack.getItemMeta();
-                                ArrayList<String> lore = new ArrayList<>();
-
-                                lore.add(ChatColor.RED + "" + costStack.getAmount() + " needed to level");
-
-                                meta.setLore(lore);
-                                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                                meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-                                meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                                meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-                                meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-
-                                costStack.setItemMeta(meta);
-                                costStack.setAmount(1);
-
-                                inventoryListener.trainerGui.getInventory().setItem(guiIndex, costStack);
-                                guiIndex++;
+                            if ( skill == null )
+                            {
+                                plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, Messages.trainSkillPrefix.replaceAll( "%skillid%", "" ) );
+                                trainer.setWait( false );
+                                return true;
                             }
 
-                            ItemStack guiItem;
-                            ItemMeta guiItemMeta;
-                            for (int i = 0; i < 9; i++) {
-                                guiItem = new ItemStack(Material.BARRIER);
-
-                                guiItemMeta = guiItem.getItemMeta();
-                                guiItemMeta.setDisplayName("Cancel");
-                                guiItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                                guiItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                                guiItemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-                                guiItemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                                guiItemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-                                guiItemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-
-                                guiItem.setItemMeta(guiItemMeta);
-                                inventoryListener.trainerGui.getInventory().setItem(10 + (i - 1), guiItem);
+                            String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+                            if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                            {
+                                plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
+                                trainer.setWait( false );
+                                return true;
                             }
 
+                            if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
+                            {
+                                plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
+                                trainer.setWait( false );
+                                return true;
+                            }
 
-                            guiItem = new ItemStack(Material.INK_SACK, 1, (short)0, (byte)0xA);
-                            guiItemMeta = guiItem.getItemMeta();
-                            guiItemMeta.setDisplayName("Train Skill");
-                            guiItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                            guiItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                            guiItemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-                            guiItemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                            guiItemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-                            guiItemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+                            if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
+                            {
+                                plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                                trainer.setWait( false );
+                                return true;
+                            }
 
-                            guiItem.setItemMeta(guiItemMeta);
-                            inventoryListener.trainerGui.getInventory().setItem(13, guiItem);
+                            if ( skill.getLevel() >= trainer.getMaxSkill() )
+                            {
+                                plugin.getOut().sendMessage( event.getClicker(), Messages.trainerMaxLevel, tag );
+                                trainer.setWait( false );
+                                return true;
+                            }
 
-                            inventoryListener.trainerGui.openGui();
+                            if ( skill.getLevel() < trainer.getMinSkill() )
+                            {
+                                plugin.getOut().sendMessage( event.getClicker(), Messages.trainerLevelTooHigh, tag );
+                                trainer.setWait( false );
+                                return true;
+                            }
+
+                            Inventory inv = plugin.getServer().createInventory( dCPlayer.getPlayer(), 18, ChatColor.DARK_PURPLE + "Training: " + ChatColor.DARK_RED + skill.getDisplayName() );
+                            TrainerGUI trainerGUI = new TrainerGUI( trainer, dCPlayer, inv );
+                            plugin.getDCInventoryListener().trainerGUIs.put( event.getClicker(), trainerGUI );
+                            plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 2 );
                         }
                     }
                 }

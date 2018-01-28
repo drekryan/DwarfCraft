@@ -3,9 +3,8 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.Jessy1237.DwarfCraft.*;
-import com.Jessy1237.DwarfCraft.Effect;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.entity.HumanEntity;
@@ -16,10 +15,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
+import com.Jessy1237.DwarfCraft.DCPlayer;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Effect;
+import com.Jessy1237.DwarfCraft.EffectType;
+import com.Jessy1237.DwarfCraft.Skill;
+import com.Jessy1237.DwarfCraft.TrainSkillSchedule;
+import com.Jessy1237.DwarfCraft.TrainerGUI;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
 public class DCInventoryListener implements Listener
@@ -28,7 +38,8 @@ public class DCInventoryListener implements Listener
     private DwarfCraft plugin;
     private HashMap<Location, BrewerInventory> stands = new HashMap<Location, BrewerInventory>();
 
-    public TrainerGUI trainerGui;
+    public HashMap<Player, TrainerGUI> trainerGUIs = new HashMap<Player, TrainerGUI>();
+
     public DCInventoryListener( final DwarfCraft plugin )
     {
         this.plugin = plugin;
@@ -317,6 +328,7 @@ public class DCInventoryListener implements Listener
         }
     }
 
+    @SuppressWarnings( "unlikely-arg-type" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onBrewEvent( BrewEvent event )
     {
@@ -331,6 +343,19 @@ public class DCInventoryListener implements Listener
         }
     }
 
+    @EventHandler( priority = EventPriority.NORMAL )
+    public void onInventoryCloseEvent( InventoryCloseEvent event )
+    {
+        TrainerGUI trainerGUI = trainerGUIs.get( ( Player ) event.getPlayer() );
+
+        if ( trainerGUI == null )
+            return;
+        
+        trainerGUI.getTrainer().setWait( false );
+        
+        trainerGUIs.remove( ( Player ) event.getPlayer() );
+    }
+
     @SuppressWarnings( { "deprecation", "incomplete-switch" } )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onInventoryClickEvent( InventoryClickEvent event )
@@ -338,26 +363,31 @@ public class DCInventoryListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getWhoClicked().getWorld() ) )
             return;
 
-        //Handle Trainer GUI
-        if (trainerGui.getInventory().equals(event.getInventory())) {
-            Player player = (Player) event.getWhoClicked();
+        TrainerGUI trainerGUI = trainerGUIs.get( ( Player ) event.getWhoClicked() );
 
-            if (event.isLeftClick() && event.getRawSlot() <= 9) {
-                if (event.getCurrentItem() == null)
+        // Handle Trainer GUI
+        if ( trainerGUI.getInventory().equals( event.getInventory() ) )
+        {
+            Player player = ( Player ) event.getWhoClicked();
+
+            if ( event.isLeftClick() && event.getRawSlot() <= 9 )
+            {
+                if ( event.getCurrentItem() == null )
                     return;
 
-                if (event.getCurrentItem().getType().equals(Material.AIR))
+                if ( event.getCurrentItem().getType().equals( Material.AIR ) )
                     return;
 
-                if (trainerGui.getTrainer() == null || trainerGui.getDcPlayer().getPlayer() == null) {
+                if ( trainerGUI.getTrainer() == null || trainerGUI.getDCPlayer().getPlayer() == null )
+                {
                     player.closeInventory();
                     return;
                 }
 
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( trainerGui.getTrainer(), trainerGui.getDcPlayer(), event.getCurrentItem() ), 2 );
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( trainerGUI.getTrainer(), trainerGUI.getDCPlayer(), event.getCurrentItem() ), 2 );
             }
 
-            event.setCancelled(true);
+            event.setCancelled( true );
         }
 
         if ( event.getInventory() != null && event.getSlotType() == SlotType.RESULT )
@@ -384,13 +414,13 @@ public class DCInventoryListener implements Listener
             final int amount = item.getAmount();
             BrewingStand block = ( BrewingStand ) event.getInventory().getHolder();
             BrewerInventory inv = check( block.getLocation() );
-            
-            //This means brewing has not taken place yet but a player has clicked the result slots of the stand
-            if( inv == null )
+
+            // This means brewing has not taken place yet but a player has clicked the result slots of the stand
+            if ( inv == null )
                 return;
-            
+
             System.out.println( event.getSlot() );
-            
+
             ItemStack[] stack = inv.getContents();
             if ( stack != null )
             {
@@ -411,12 +441,12 @@ public class DCInventoryListener implements Listener
                                     return;
 
                                 int ing = -1, fuel = -1;
-                                
-                                if( inv.getIngredient() != null )
+
+                                if ( inv.getIngredient() != null )
                                     ing = inv.getIngredient().getTypeId();
-                                if( inv.getFuel() != null)
+                                if ( inv.getFuel() != null )
                                     fuel = inv.getFuel().getTypeId();
-                                    
+
                                 for ( ItemStack item1 : ev.getAlteredItems() )
                                 {
                                     if ( item1 != null )
@@ -429,7 +459,7 @@ public class DCInventoryListener implements Listener
                                                 if ( it != null )
                                                 {
                                                     int i = 1;
-                                                    if ( it.getTypeId() != ing  && it.getTypeId() != fuel )
+                                                    if ( it.getTypeId() != ing && it.getTypeId() != fuel )
                                                     {
                                                         while ( i != item1.getAmount() )
                                                         {

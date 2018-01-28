@@ -83,6 +83,7 @@ public class DwarfCraftLoadSkillsEvent extends Event
      *            A skill to be removed from the skills HashMap
      * 
      */
+    @SuppressWarnings( "unlikely-arg-type" )
     public void removeSkill( Skill skill )
     {
         skills.remove( skill );

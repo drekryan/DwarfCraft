@@ -274,6 +274,7 @@ public class Effect
         return getEffectAmount( dCPlayer.getSkillLevel( this.mID / 10 ), dCPlayer );
     }
 
+    @SuppressWarnings( "unlikely-arg-type" )
     public double getEffectAmount( int skillLevel, DCPlayer dCPlayer )
     {
         double effectAmount = mBase;

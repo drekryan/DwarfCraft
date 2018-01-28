@@ -253,7 +253,7 @@ public class Out
      * 
      * @return
      */
-    protected void sendMessage( CommandSender sender, String message, String prefix )
+    public void sendMessage( CommandSender sender, String message, String prefix )
     {
         if ( sender instanceof Player )
         {
