@@ -21,7 +21,9 @@ public class TrainSkillSchedule implements Runnable
     @Override
     public void run()
     {
-        trainer.trainSkill( dcplayer, clickedItem, trainerGUI );
+        // TODO:Add gui functionality for button to train the skill only one level and another button as previously worked with leveling up and depositing leftovers. Already have functionality to
+        // deposit one item type at a time.
+        trainer.depositSkill( dcplayer, clickedItem, trainerGUI );
     }
 
 }

@@ -124,8 +124,8 @@ public final class DwarfTrainer
         return;
     }
 
-    @SuppressWarnings( { "unused", "deprecation" } )
-    public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    @SuppressWarnings( { "unused" } )
+    public void depositSkill( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         Skill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
@@ -142,42 +142,19 @@ public final class DwarfTrainer
         for ( ItemStack costStack : trainingCostsToLevel )
         {
             final int origCost = costStack.getAmount();
-            int amountTaken = 0;
             if ( clickedItemStack.getType().equals( costStack.getType() ) )
             {
-                //Checks if the trainer has already accepted the required item
+                // Checks if the trainer has already accepted the required item
                 if ( costStack.getAmount() == 0 )
                 {
                     plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
                     continue;
                 }
-                
+
                 if ( containsEnough( costStack, player ) )
                 {
-                    for ( ItemStack invStack : player.getInventory().getContents() )
-                    {
-                        if ( invStack == null )
-                            continue;
-                        if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
-                                || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
-                        {
-                            int inv = invStack.getAmount();
-                            int cost = costStack.getAmount();
 
-                            if ( cost - inv >= 0 )
-                            {
-                                amountTaken += inv;
-                                costStack.setAmount( cost - inv );
-                                player.getInventory().removeItem( invStack );
-                            }
-                            else
-                            {
-                                amountTaken += cost;
-                                invStack.setAmount( inv - cost );
-                                costStack.setAmount( 0 );
-                            }
-                        }
-                    }
+                    int amountTaken = removeItem( player, costStack );
 
                     // For now the method will only take the required amount otherwise it won't take any items
                     // TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
@@ -286,5 +263,44 @@ public final class DwarfTrainer
             }
         }
         return false;
+    }
+
+    /**
+     * Cycles through he players inventory and removes the same or equivalent item to the costStack and removes that amount.
+     * 
+     * @param player The player to check the inventory
+     * @param costStack The item to check against and remove
+     * @return The amount of removed from the players inventory
+     */
+    @SuppressWarnings( "deprecation" )
+    private int removeItem( Player player, ItemStack costStack )
+    {
+        int amountTaken = 0;
+        for ( ItemStack invStack : player.getInventory().getContents() )
+        {
+            if ( invStack == null )
+                continue;
+            if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+                    || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
+            {
+                int inv = invStack.getAmount();
+                int cost = costStack.getAmount();
+
+                if ( cost - inv >= 0 )
+                {
+                    amountTaken += inv;
+                    costStack.setAmount( cost - inv );
+                    player.getInventory().removeItem( invStack );
+                }
+                else
+                {
+                    amountTaken += cost;
+                    invStack.setAmount( inv - cost );
+                    costStack.setAmount( 0 );
+                }
+            }
+        }
+
+        return amountTaken;
     }
 }
