@@ -145,9 +145,15 @@ public final class DwarfTrainer
             int amountTaken = 0;
             if ( clickedItemStack.getType().equals( costStack.getType() ) )
             {
+                //Checks if the trainer has already accepted the required item
+                if ( costStack.getAmount() == 0 )
+                {
+                    plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                    continue;
+                }
+                
                 if ( containsEnough( costStack, player ) )
                 {
-
                     for ( ItemStack invStack : player.getInventory().getContents() )
                     {
                         if ( invStack == null )
@@ -168,7 +174,7 @@ public final class DwarfTrainer
                             {
                                 amountTaken += cost;
                                 invStack.setAmount( inv - cost );
-                                costStack.setAmount(0);
+                                costStack.setAmount( 0 );
                             }
                         }
                     }
@@ -268,9 +274,9 @@ public final class DwarfTrainer
             {
                 for ( ItemStack item : player.getInventory().getContents() )
                 {
-                    if(item == null)
+                    if ( item == null )
                         continue;
-                    
+
                     if ( item.getTypeId() == id )
                         amountHas += item.getAmount();
 
