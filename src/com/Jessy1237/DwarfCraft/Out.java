@@ -80,8 +80,7 @@ public class Out
     }
 
     /**
-     * Used to parse and send multiple line messages Sends actual output
-     * commands
+     * Used to parse and send multiple line messages Sends actual output commands
      */
     private String playerLinePrinter( Player player, String message, String prefix )
     {
@@ -99,7 +98,7 @@ public class Out
             }
             else
             {
-                player.sendMessage( prefix.concat( lastColor + currentLine ).trim() );
+                player.sendMessage( parseColors( prefix.concat( lastColor + currentLine ).trim() ) );
                 lineTotal++;
 
                 if ( lineTotal >= maxLines )
@@ -110,7 +109,7 @@ public class Out
             }
         }
 
-        player.sendMessage( prefix.concat( lastColor + currentLine ).trim() );
+        player.sendMessage( parseColors( prefix.concat( lastColor + currentLine ).trim() ) );
         return lastColor = lastColor( lastColor + currentLine );
     }
 
@@ -166,7 +165,7 @@ public class Out
         String message2 = "";
         String prefix = Messages.skillSheetPrefix;
 
-        message1 = parseSkillSheet( Messages.skillSheetHeader, dCPlayer, sender, displayName, null );
+        message1 = parseSkillSheet( Messages.skillSheetHeader, dCPlayer, displayName, null );
         sendMessage( sender, message1, prefix );
 
         boolean odd = true;
@@ -175,14 +174,14 @@ public class Out
         {
             if ( s.getLevel() == 0 )
             {
-                untrainedSkills = untrainedSkills.concat( parseSkillSheet( Messages.skillSheetUntrainedSkillLine, dCPlayer, sender, displayName, s ) );
+                untrainedSkills = untrainedSkills.concat( parseSkillSheet( Messages.skillSheetUntrainedSkillLine, dCPlayer, displayName, s ) );
                 continue;
             }
             odd = !odd;
             // the goal here is for every skill sheet line to be 60 characters
             // long.
             // each skill should take 30 characters - no more, no less
-            String interim = parseSkillSheet( Messages.skillSheetSkillLine, dCPlayer, sender, displayName, s );
+            String interim = parseSkillSheet( Messages.skillSheetSkillLine, dCPlayer, displayName, s );
 
             if ( !odd )
             {
@@ -257,8 +256,6 @@ public class Out
     {
         if ( sender instanceof Player )
         {
-            message = parseColors( message );
-            prefix = parseColors( prefix );
             messagePrinter( ( Player ) sender, message, prefix );
         }
         else
@@ -283,7 +280,7 @@ public class Out
     /**
      * Finds &0-F in a string and replaces it with the color symbol
      */
-    String parseColors( String message )
+    public String parseColors( String message )
     {
         return ChatColor.translateAlternateColorCodes( '&', message );
     }
@@ -291,9 +288,9 @@ public class Out
     private String lastColor( String currentLine )
     {
         String lastColor = "";
-        int lastIndex = currentLine.lastIndexOf( "§" );
+        int lastIndex = currentLine.lastIndexOf( "&" );
         if ( lastIndex == currentLine.length() )
-            return "§";
+            return "";
         if ( lastIndex != -1 )
         {
             lastColor = currentLine.substring( lastIndex, lastIndex + 2 );
@@ -328,8 +325,7 @@ public class Out
     }
 
     /**
-     * Sends a welcome message based on race of player joining. Broadcasts to
-     * the whole server
+     * Sends a welcome message based on race of player joining. Broadcasts to the whole server
      *
      * @param dCPlayer
      */
@@ -393,7 +389,7 @@ public class Out
         return out;
     }
 
-    public String parseSkillSheet( String message, DCPlayer dCPlayer, CommandSender sender, String displayName, Skill skill )
+    public String parseSkillSheet( String message, DCPlayer dCPlayer, String displayName, Skill skill )
     {
         String out = message.replace( "%playername%", ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) );
         out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
