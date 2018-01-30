@@ -12,12 +12,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class TrainerGUI
 {
+    private DwarfCraft plugin;
     private DwarfTrainer trainer;
     private DCPlayer player;
     private Inventory inventory;
 
-    public TrainerGUI( DwarfTrainer trainer, DCPlayer player, Inventory inventory )
+    public TrainerGUI( DwarfCraft plugin, DwarfTrainer trainer, DCPlayer player, Inventory inventory )
     {
+        this.plugin = plugin;
         this.trainer = trainer;
         this.player = player;
         this.inventory = inventory;
@@ -35,7 +37,7 @@ public class TrainerGUI
         for ( ItemStack costStack : trainingCostsToLevel )
         {
             ArrayList<String> lore = new ArrayList<>();
-            lore.add( ChatColor.RED + "" + costStack.getAmount() + " needed to level" );
+            lore.add( ChatColor.RED + "" + ( costStack.getAmount() != 0 ? "" + costStack.getAmount() + " needed to level" : "No more is required" ) );
             costStack.setAmount( 1 );
             addItem( null, lore, guiIndex, costStack );
             guiIndex++;
@@ -48,8 +50,14 @@ public class TrainerGUI
             addItem( "Cancel", null, 10 + ( i - 1 ), guiItem );
         }
 
+        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 12 );
+        addItem( "Deposit All", null, 12, guiItem );
+
         guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 10 );
         addItem( "Train Skill", null, 13, guiItem );
+
+        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 2 );
+        addItem( "Train & Deposit Skill", null, 14, guiItem );
     }
 
     public void openGUI()
@@ -79,15 +87,35 @@ public class TrainerGUI
     {
         for ( ItemStack invStack : inventory.getContents() )
         {
+            if ( invStack == null )
+                continue;
+
             if ( invStack.getType().equals( item.getType() ) )
             {
                 ArrayList<String> lore = new ArrayList<>();
                 lore.add( ChatColor.RED + ( amount != 0 ? "" + amount + " needed to level" : "No more is required" ) );
-                invStack.getItemMeta().setLore( lore );
+                ItemMeta meta = invStack.getItemMeta();
+                meta.setLore( lore );
+                invStack.setItemMeta( meta );
                 player.getPlayer().updateInventory();
                 return;
             }
         }
+    }
+
+    /**
+     * Updates the title of the inventory by reopening it with a new title. Inadvertently also updates the item requirements.
+     */
+    public void updateTitle()
+    {
+        Skill skill = player.getSkill( trainer.getSkillTrained() );
+        player.getPlayer().closeInventory();
+        inventory = plugin.getServer().createInventory( player.getPlayer(), 18, plugin.getOut()
+                .parseColors( Messages.trainerGUITitle.replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() ).replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) ) );
+        init();
+        player.getPlayer().updateInventory();
+        openGUI();
+        plugin.getDCInventoryListener().trainerGUIs.put( player.getPlayer(), this );
     }
 
     /**

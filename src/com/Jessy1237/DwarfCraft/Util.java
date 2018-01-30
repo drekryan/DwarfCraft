@@ -110,6 +110,12 @@ public class Util
     }
 
     @SuppressWarnings( "deprecation" )
+    /**
+     * Gets the official clean name of the item as spigot names are a bit iffy.
+     * 
+     * @param item The item to get the clean name of
+     * @return A clean name for the item if the item exists othewise returns 'NULL'
+     */
     public String getCleanName( ItemStack item )
     {
         if ( item == null )
@@ -373,6 +379,13 @@ public class Util
     // Checks the itemID to see if it is a tool. Excludes fishing rod and,
     // flint
     // and steel.
+
+    /**
+     * Checks the itemID to see if it is a tool. Excludes fishing rod and, flint and steel.
+     * 
+     * @param ID The itemID to be checked
+     * @return True if the itemID is a tool otherwise false
+     */
     public boolean isTool( int ID )
     {
         if ( ( ID >= 256 && ID <= 258 ) || ( ID >= 267 && ID <= 279 ) || ( ID >= 283 && ID <= 286 ) || ( ID >= 290 && ID <= 294 ) || ID == 359 )
@@ -382,8 +395,14 @@ public class Util
         return false;
     }
 
-    // Checks the EquivalentBlock Groups of the ID and the compareID, returns
-    // the group of blocks that are equivalent if the compareID = -1
+    /**
+     * Checks the supplied itemID and sees if it is equivalent to the comparable itemID. The equivalent blocks are set in a config file as a list.
+     * 
+     * @param ID The main itemID to obtain the list of comparable IDs
+     * @param compareID The itemID to check if it is in the list of comparableIDS
+     * @return A list of all the equivalent itemIDs if the comparableID is equivalent to the itemID. If the compareID is -1 then the list of equivalent itemIDs to the main ID is returned. Otherwise
+     *         null is returned
+     */
     public ArrayList<Integer> checkEquivalentBuildBlocks( int ID, int compareID )
     {
         if ( !plugin.getConfigManager().buildingblocks )
@@ -423,16 +442,16 @@ public class Util
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         return plugin.getOut().parseColors( plugin.getConfigManager().getRace( raceStr ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f" );
     }
-    
+
     public String getPlayerPrefixOldColours( String race )
     {
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         return plugin.getConfigManager().getRace( raceStr ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f";
     }
-    
+
     public void removePlayerPrefixes()
     {
-     // Removes the DwarfCraft prefixes when the server shuts down for all
+        // Removes the DwarfCraft prefixes when the server shuts down for all
         // players with the old colours method and new colours method.
         for ( OfflinePlayer op : plugin.getServer().getOfflinePlayers() )
         {
@@ -461,7 +480,7 @@ public class Util
             }
         }
     }
-    
+
     public void setPlayerPrefix( Player player )
     {
         DataManager dm = plugin.getDataManager();
@@ -476,14 +495,14 @@ public class Util
         {
             if ( plugin.getConfigManager().prefix )
             {
-                
+
                 while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
                 {
                     String prefix = plugin.getChat().getPlayerPrefix( player );
                     prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
                     plugin.getChat().setPlayerPrefix( player, prefix );
                 }
-                
+
                 if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
                 {
                     plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
@@ -501,6 +520,11 @@ public class Util
         }
     }
 
+    /**
+     * Gets the clean name of the Entity.
+     * @param mCreature The creature to get the clean name of
+     * @return The clean name of the entity if the entity exists otherwise returns 'NULL'
+     */
     public String getCleanName( EntityType mCreature )
     {
         if ( mCreature == null )

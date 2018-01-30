@@ -7,7 +7,6 @@ package com.Jessy1237.DwarfCraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -16,6 +15,9 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import com.Jessy1237.DwarfCraft.events.DwarfCraftDepositEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
@@ -124,81 +126,152 @@ public final class DwarfTrainer
         return;
     }
 
-    @SuppressWarnings( { "unused", "deprecation" } )
-    public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositOne( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
         Player player = dCPlayer.getPlayer();
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        // List<ItemStack> totalCostsToLevel = costs.get(1);
+        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
 
-        boolean hasMats = true;
         boolean deposited = false;
-
         final PlayerInventory oldInv = player.getInventory();
 
         for ( ItemStack costStack : trainingCostsToLevel )
         {
-            final int origCost = costStack.getAmount();
-            int amountTaken = 0;
             if ( clickedItemStack.getType().equals( costStack.getType() ) )
             {
-                if ( containsEnough( costStack, player ) )
+                deposited = depositItem( costStack, dCPlayer, trainerGUI, skill, tag )[1];
+            }
+        }
+
+        DwarfCraftDepositEvent e = new DwarfCraftDepositEvent( dCPlayer, this, skill );
+        plugin.getServer().getPluginManager().callEvent( e );
+
+        if ( e.isCancelled() )
+        {
+            skill.setDeposit1( dep1 );
+            skill.setDeposit2( dep2 );
+            skill.setDeposit3( dep3 );
+
+            player.getInventory().setContents( oldInv.getContents() );
+            player.getInventory().setExtraContents( oldInv.getExtraContents() );
+
+            return;
+        }
+
+        if ( deposited )
+        {
+            plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
+            Skill[] dCSkills = new Skill[1];
+            dCSkills[0] = skill;
+            plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
+            player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
+        }
+    }
+
+    public void depositAll( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    {
+        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        Player player = dCPlayer.getPlayer();
+        List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
+        List<ItemStack> trainingCostsToLevel = costs.get( 0 );
+        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+
+        final PlayerInventory oldInv = player.getInventory();
+        boolean deposited = false;
+
+        for ( ItemStack costStack : trainingCostsToLevel )
+        {
+            deposited = depositItem( costStack, dCPlayer, trainerGUI, skill, tag )[1];
+        }
+
+        DwarfCraftDepositEvent e = new DwarfCraftDepositEvent( dCPlayer, this, skill );
+        plugin.getServer().getPluginManager().callEvent( e );
+
+        if ( e.isCancelled() )
+        {
+            skill.setDeposit1( dep1 );
+            skill.setDeposit2( dep2 );
+            skill.setDeposit3( dep3 );
+
+            player.getInventory().setContents( oldInv.getContents() );
+            player.getInventory().setExtraContents( oldInv.getExtraContents() );
+
+            return;
+        }
+
+        if ( deposited )
+        {
+            plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
+            Skill[] dCSkills = new Skill[1];
+            dCSkills[0] = skill;
+            plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
+            player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
+        }
+    }
+
+    public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    {
+        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        Player player = dCPlayer.getPlayer();
+        List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
+        List<ItemStack> trainingCostsToLevel = costs.get( 0 );
+        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+
+        final PlayerInventory oldInv = player.getInventory();
+        boolean hasMatsOrDeposits[] = { true, false };
+
+        for ( ItemStack costStack : trainingCostsToLevel )
+        {
+            hasMatsOrDeposits = depositItem( costStack, dCPlayer, trainerGUI, skill, tag );
+        }
+
+        DwarfCraftLevelUpEvent e = null;
+        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        if ( hasMatsOrDeposits[0] )
+        {
+            skill.setLevel( skill.getLevel() + 1 );
+            skill.setDeposit1( 0 );
+            skill.setDeposit2( 0 );
+            skill.setDeposit3( 0 );
+
+            e = new DwarfCraftLevelUpEvent( dCPlayer, this, skill );
+
+            plugin.getServer().getPluginManager().callEvent( e );
+        }
+        if ( hasMatsOrDeposits[1] || hasMatsOrDeposits[0] )
+        {
+
+            if ( e != null )
+            {
+                if ( e.isCancelled() )
                 {
+                    skill.setLevel( skill.getLevel() - 1 );
+                    skill.setDeposit1( dep1 );
+                    skill.setDeposit2( dep2 );
+                    skill.setDeposit3( dep3 );
 
-                    for ( ItemStack invStack : player.getInventory().getContents() )
-                    {
-                        if ( invStack == null )
-                            continue;
-                        if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
-                                || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
-                        {
-                            int inv = invStack.getAmount();
-                            int cost = costStack.getAmount();
+                    player.getInventory().setContents( oldInv.getContents() );
+                    player.getInventory().setExtraContents( oldInv.getExtraContents() );
 
-                            if ( cost - inv >= 0 )
-                            {
-                                amountTaken += inv;
-                                costStack.setAmount( cost - inv );
-                                player.getInventory().removeItem( invStack );
-                            }
-                            else
-                            {
-                                amountTaken += cost;
-                                invStack.setAmount( inv - cost );
-                            }
-                        }
-                    }
-
-                    //For now the method will only take the required amount otherwise it won't take any items
-                    //TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
-                    trainerGUI.updateItem(costStack, origCost - amountTaken);
-                    player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
-                    player.sendMessage( ChatColor.GREEN + "Removed " + costStack.getAmount() + "x " + costStack.getType() );
-
-                    if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
-                    {
-                        skill.setDeposit1( origCost );
-                    }
-                    else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
-                    {
-                        skill.setDeposit2( origCost );
-                    }
-                    else if ( costStack.getType().equals( skill.Item3.Item.getType() ) )
-                    {
-                        skill.setDeposit3( origCost );
-                    }
-
-                    this.setLastTrain( System.currentTimeMillis() );
+                    return;
                 }
                 else
                 {
-                    plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                    plugin.getOut().sendMessage( player, Messages.trainingSuccessful, tag );
                 }
             }
+
+            Skill[] dCSkills = new Skill[1];
+            dCSkills[0] = skill;
+            plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
+            trainerGUI.updateTitle();
+            player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
+
     }
 
     public boolean isWaiting()
@@ -227,15 +300,14 @@ public final class DwarfTrainer
     }
 
     /**
-     * Checks if the player's inventory contains enough of the required item or any equivalent item to train
+     * Checks if the player's inventory contains the required item or any equivalent item to train
      * 
      * @param costStack The cost stack to check against
      * @param player The player who is trying to skill up
      * @return true if the player contains enough of the item or its equivalents otherwise false
      */
-
     @SuppressWarnings( "deprecation" )
-    private boolean containsEnough( ItemStack costStack, Player player )
+    private boolean containsItem( ItemStack costStack, Player player )
     {
 
         if ( player.getInventory().containsAtLeast( costStack, costStack.getAmount() ) )
@@ -243,13 +315,12 @@ public final class DwarfTrainer
             return true;
         }
 
-        int amountHas = 0;
         for ( ItemStack item : player.getInventory().getContents() )
         {
-            if ( item.getType().equals( costStack.getType() ) )
-                amountHas += item.getAmount();
+            if ( item == null )
+                continue;
 
-            if ( amountHas >= costStack.getAmount() )
+            if ( item.getType().equals( costStack.getType() ) )
                 return true;
         }
 
@@ -261,14 +332,123 @@ public final class DwarfTrainer
             {
                 for ( ItemStack item : player.getInventory().getContents() )
                 {
-                    if ( item.getTypeId() == id )
-                        amountHas += item.getAmount();
+                    if ( item == null )
+                        continue;
 
-                    if ( amountHas >= costStack.getAmount() )
+                    if ( item.getTypeId() == id )
                         return true;
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * Cycles through he players inventory and removes the same or equivalent item to the costStack and removes that amount.
+     * 
+     * @param player The player to check the inventory
+     * @param costStack The item to check against and remove
+     * @return The amount of removed from the players inventory
+     */
+    @SuppressWarnings( "deprecation" )
+    private int removeItem( Player player, ItemStack costStack, String tag )
+    {
+        int amountTaken = 0;
+        for ( ItemStack invStack : player.getInventory().getContents() )
+        {
+            if ( invStack == null )
+                continue;
+            if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+                    || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
+            {
+                int inv = invStack.getAmount();
+                int cost = costStack.getAmount();
+
+                if ( cost - inv >= 0 )
+                {
+                    amountTaken += inv;
+                    costStack.setAmount( cost - inv );
+                    player.getInventory().removeItem( invStack );
+                }
+                else
+                {
+                    amountTaken += cost;
+                    invStack.setAmount( inv - cost );
+                    costStack.setAmount( 0 );
+                }
+            }
+        }
+
+        return amountTaken;
+    }
+
+    /**
+     * Removes the required amount of the item and deposits into the trainer
+     * 
+     * @param costStack The item type and amount to be removed
+     * @param dCPlayer The player that is depositing
+     * @param trainerGUI The gui that flagged this deposit event
+     * @param skill The skill that is being deposited into
+     * @return True for [0] if the player had enough of the required item otherwise [0] false and True for [1] if any items were deposited into the skill otherwise false for [1]
+     */
+    private boolean[] depositItem( ItemStack costStack, DCPlayer dCPlayer, TrainerGUI trainerGUI, Skill skill, String tag )
+    {
+        boolean[] hasMatsOrDeposits = { true, false };
+        final int origCost = costStack.getAmount();
+        Player player = dCPlayer.getPlayer();
+
+        // Checks if the trainer has already accepted the required item
+        if ( costStack.getAmount() == 0 )
+        {
+            plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+        }
+        else
+        {
+            if ( containsItem( costStack, player ) )
+            {
+
+                int amountTaken = removeItem( player, costStack, tag );
+
+                // Settings true for items being deposited
+                if ( amountTaken > 0 )
+                    hasMatsOrDeposits[1] = true;
+
+                // For now the method will only take the required amount otherwise it won't take any items
+                // TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
+                trainerGUI.updateItem( costStack, origCost - amountTaken );
+
+                if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
+                {
+                    skill.setDeposit1( skill.getDeposit1() + amountTaken );
+                }
+                else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
+                {
+                    skill.setDeposit2( skill.getDeposit1() + amountTaken );
+                }
+                else if ( costStack.getType().equals( skill.Item3.Item.getType() ) )
+                {
+                    skill.setDeposit3( skill.getDeposit1() + amountTaken );
+                }
+            }
+            else
+            {
+                hasMatsOrDeposits[0] = false;
+                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                return hasMatsOrDeposits;
+            }
+
+            if ( costStack.getAmount() == 0 )
+            {
+                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+            }
+            else
+            {
+                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                hasMatsOrDeposits[0] = false;
+                hasMatsOrDeposits[1] = true;
+            }
+        }
+
+        return hasMatsOrDeposits;
     }
 }
