@@ -27,6 +27,7 @@ import com.Jessy1237.DwarfCraft.DCPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Effect;
 import com.Jessy1237.DwarfCraft.EffectType;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.Skill;
 import com.Jessy1237.DwarfCraft.TrainSkillSchedule;
 import com.Jessy1237.DwarfCraft.TrainerGUI;
@@ -363,32 +364,41 @@ public class DCInventoryListener implements Listener
             return;
 
         TrainerGUI trainerGUI = trainerGUIs.get( ( Player ) event.getWhoClicked() );
-        if ( trainerGUI == null )
-            return;
-
-        // Handle Trainer GUI
-        if ( trainerGUI.getInventory().equals( event.getInventory() ) )
+        if ( trainerGUI != null )
         {
-            Player player = ( Player ) event.getWhoClicked();
-
-            if ( event.isLeftClick() && event.getRawSlot() <= 9 )
+            // Handle Trainer GUI
+            if ( trainerGUI.getInventory().equals( event.getInventory() ) )
             {
-                if ( event.getCurrentItem() == null )
-                    return;
+                Player player = ( Player ) event.getWhoClicked();
 
-                if ( event.getCurrentItem().getType().equals( Material.AIR ) )
-                    return;
-
-                if ( trainerGUI.getTrainer() == null || trainerGUI.getDCPlayer().getPlayer() == null )
+                if ( event.isLeftClick() && event.getRawSlot() <= 17 )
                 {
-                    player.closeInventory();
-                    return;
+                    if ( event.getCurrentItem() == null )
+                        return;
+
+                    if ( event.getCurrentItem().getType().equals( Material.AIR ) )
+                        return;
+
+                    if ( trainerGUI.getTrainer() == null || trainerGUI.getDCPlayer().getPlayer() == null )
+                    {
+                        player.closeInventory();
+                        return;
+                    }
+
+                    long currentTime = System.currentTimeMillis();
+                    if ( ( currentTime - trainerGUI.getTrainer().getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
+                    {
+                        plugin.getOut().sendMessage( event.getWhoClicked(), Messages.trainerCooldown );
+                    }
+                    else
+                    {
+                        trainerGUI.getTrainer().setWait( true );
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainerGUI.getTrainer(), trainerGUI.getDCPlayer(), event.getCurrentItem(), trainerGUI ), 2 );
+                    }
                 }
 
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( trainerGUI.getTrainer(), trainerGUI.getDCPlayer(), event.getCurrentItem(), trainerGUI ), 2 );
+                event.setCancelled( true );
             }
-
-            event.setCancelled( true );
         }
 
         if ( event.getInventory() != null && event.getSlotType() == SlotType.RESULT )

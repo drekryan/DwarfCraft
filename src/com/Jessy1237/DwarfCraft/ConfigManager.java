@@ -687,6 +687,10 @@ public final class ConfigManager
                         Messages.moreItemNeeded = message;
                     if ( name.equalsIgnoreCase( "Training successful" ) )
                         Messages.trainingSuccessful = message;
+                    if ( name.equalsIgnoreCase( "Deposit successful" ) )
+                        Messages.depositSuccessful = message;
+                    if ( name.equalsIgnoreCase( "Trainer GUI Title" ) )
+                        Messages.trainerGUITitle = message;
                     if ( name.equalsIgnoreCase( "Trainer occupied" ) )
                         Messages.trainerOccupied = message;
                     if ( name.equalsIgnoreCase( "Trainer cooldown" ) )
@@ -775,8 +779,7 @@ public final class ConfigManager
         {
             // Default to enum values if not found
             /*
-             * if ( Messages.serverRules == null ) Messages.serverRules =
-             * Messages.Fixed.SERVERRULESMESSAGE.getMessage();
+             * if ( Messages.serverRules == null ) Messages.serverRules = Messages.Fixed.SERVERRULESMESSAGE.getMessage();
              */
         }
         return true;

@@ -3,7 +3,6 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -126,66 +125,52 @@ public class DCEntityListener implements Listener
                     }
                     else
                     {
-                        long currentTime = System.currentTimeMillis();
-                        if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
+                        Skill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+
+                        if ( skill == null )
                         {
-                            plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.trainerCooldown );
+                            plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, Messages.trainSkillPrefix.replaceAll( "%skillid%", "" ) );
                             return true;
                         }
-                        else
+
+                        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+                        if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
                         {
-                            trainer.setWait( true );
-                            Skill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
-
-                            if ( skill == null )
-                            {
-                                plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, Messages.trainSkillPrefix.replaceAll( "%skillid%", "" ) );
-                                trainer.setWait( false );
-                                return true;
-                            }
-
-                            String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
-                            if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
-                            {
-                                plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
-                                trainer.setWait( false );
-                                return true;
-                            }
-
-                            if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
-                            {
-                                plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
-                                trainer.setWait( false );
-                                return true;
-                            }
-
-                            if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
-                            {
-                                plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
-                                trainer.setWait( false );
-                                return true;
-                            }
-
-                            if ( skill.getLevel() >= trainer.getMaxSkill() )
-                            {
-                                plugin.getOut().sendMessage( event.getClicker(), Messages.trainerMaxLevel, tag );
-                                trainer.setWait( false );
-                                return true;
-                            }
-
-                            if ( skill.getLevel() < trainer.getMinSkill() )
-                            {
-                                plugin.getOut().sendMessage( event.getClicker(), Messages.trainerLevelTooHigh, tag );
-                                trainer.setWait( false );
-                                return true;
-                            }
-
-                            Inventory inv = plugin.getServer().createInventory( dCPlayer.getPlayer(), 18, ChatColor.DARK_PURPLE + "Training: " + ChatColor.DARK_RED + skill.getDisplayName() );
-                            TrainerGUI trainerGUI = new TrainerGUI( trainer, dCPlayer, inv );
-                            plugin.getDCInventoryListener().trainerGUIs.put( event.getClicker(), trainerGUI );
-                            plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 2 );
+                            plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
+                            return true;
                         }
+
+                        if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
+                        {
+                            plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
+                            return true;
+                        }
+
+                        if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
+                        {
+                            plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                            return true;
+                        }
+
+                        if ( skill.getLevel() >= trainer.getMaxSkill() )
+                        {
+                            plugin.getOut().sendMessage( event.getClicker(), Messages.trainerMaxLevel, tag );
+                            return true;
+                        }
+
+                        if ( skill.getLevel() < trainer.getMinSkill() )
+                        {
+                            plugin.getOut().sendMessage( event.getClicker(), Messages.trainerLevelTooHigh, tag );
+                            return true;
+                        }
+
+                        Inventory inv = plugin.getServer().createInventory( event.getClicker(), 18, plugin.getOut().parseColors( Messages.trainerGUITitle.replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() )
+                                .replaceAll( "%skilllevel%", "" + skill.getLevel() ).replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) ) );
+                        TrainerGUI trainerGUI = new TrainerGUI( plugin, trainer, dCPlayer, inv );
+                        plugin.getDCInventoryListener().trainerGUIs.put( event.getClicker(), trainerGUI );
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 1 );
                     }
+
                 }
                 return true;
             }

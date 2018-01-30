@@ -83,7 +83,9 @@ public final class Messages
     public static String noMoreItemNeeded = "&aNo more &2%itemname% &ais needed";
     public static String moreItemNeeded = "&cAn additional &2%costamount% %itemname% &cis required";
     public static String trainingSuccessful = "&6Training Successful!";
-    public static String trainerOccupied = "&6Please wait, Currently training a skill.";
+    public static String depositSuccessful = "&6Deposit Successful!";
+    public static String trainerGUITitle = "&6Training: &b%skillname%&6 [&b%skillid%&6] || &3%skilllevel%/%maxskilllevel%";
+    public static String trainerOccupied = "&6Please wait. I am talking to someone else.";
     public static String trainerCooldown = "&6Sorry, i need time to recuperate.";
     public static String describeGeneral = "Effect Block Trigger: %initiator% Block Output: %output%. Effect value ranges from %effectamountlow% - %effectamounthigh% for levels 0 to 30. Non specialists have the effect %minoramount% , as if they were level %normallevel%. Tools affected: %tooltype%.";
     public static String describeLevelBlockdrop = "&6Break a &2%initiator% &6and %effectlevelcolor%%effectamount% &2%output%&6 are created";
