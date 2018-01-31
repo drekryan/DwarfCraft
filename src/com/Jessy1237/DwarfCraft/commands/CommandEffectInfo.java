@@ -7,16 +7,12 @@ package com.Jessy1237.DwarfCraft.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.Effect;
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
 
 public class CommandEffectInfo extends Command
 {
@@ -50,15 +46,15 @@ public class CommandEffectInfo extends Command
                 List<Object> desiredArguments = new ArrayList<Object>();
                 List<Object> outputList = null;
 
-                DCPlayer dCPlayer = new DCPlayer( plugin, null );
-                Effect effect = new Effect( null, plugin );
+                DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
+                DwarfEffect effect = new DwarfEffect( null, plugin );
                 desiredArguments.add( dCPlayer );
                 desiredArguments.add( effect );
                 try
                 {
                     outputList = parser.parse( desiredArguments, false );
-                    effect = ( Effect ) outputList.get( 1 );
-                    dCPlayer = ( DCPlayer ) outputList.get( 0 );
+                    effect = ( DwarfEffect ) outputList.get( 1 );
+                    dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
                 }
                 catch ( DCCommandException dce )
                 {
@@ -67,8 +63,8 @@ public class CommandEffectInfo extends Command
                         desiredArguments.remove( 0 );
                         desiredArguments.add( dCPlayer );
                         outputList = parser.parse( desiredArguments, true );
-                        effect = ( Effect ) outputList.get( 0 );
-                        dCPlayer = ( DCPlayer ) outputList.get( 1 );
+                        effect = ( DwarfEffect ) outputList.get( 0 );
+                        dCPlayer = ( DwarfPlayer ) outputList.get( 1 );
                     }
                     else
                         throw dce;

@@ -76,7 +76,7 @@ public class DwarfTrainerTrait extends Trait
     {
         if ( event.getNPC().hasTrait( DwarfTrainerTrait.class ) && event.getNPC().getId() == getNPC().getId() )
         {
-            plugin.getDCEntityListener().onNPCLeftClickEvent( event );
+            plugin.getDwarfEntityListener().onNPCLeftClickEvent( event );
         }
     }
 
@@ -85,7 +85,7 @@ public class DwarfTrainerTrait extends Trait
     {
         if ( event.getNPC().hasTrait( DwarfTrainerTrait.class ) && event.getNPC().getId() == getNPC().getId() )
         {
-            plugin.getDCEntityListener().onNPCRightClickEvent( event );
+            plugin.getDwarfEntityListener().onNPCRightClickEvent( event );
         }
     }
 

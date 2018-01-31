@@ -2,15 +2,14 @@ package com.Jessy1237.DwarfCraft.events;
 
 import java.util.ArrayList;
 
+import com.Jessy1237.DwarfCraft.DwarfRace;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import com.Jessy1237.DwarfCraft.Race;
 
 public class DwarfCraftLoadRacesEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
-    private ArrayList<Race> races = new ArrayList<Race>();
+    private ArrayList<DwarfRace> races = new ArrayList<DwarfRace>();
 
     @Override
     public HandlerList getHandlers()
@@ -32,7 +31,7 @@ public class DwarfCraftLoadRacesEvent extends Event
      *            The races that are going to be loaded into the DwarfCraft
      *            memory
      */
-    public DwarfCraftLoadRacesEvent( ArrayList<Race> races )
+    public DwarfCraftLoadRacesEvent( ArrayList<DwarfRace> races )
     {
         this.races = races;
     }
@@ -40,12 +39,12 @@ public class DwarfCraftLoadRacesEvent extends Event
     /**
      * Gets the races ArrayList
      * 
-     * @return DCPlayer
+     * @return DwarfPlayer
      */
     @SuppressWarnings( "unchecked" )
-    public ArrayList<Race> getRaces()
+    public ArrayList<DwarfRace> getRaces()
     {
-        return ( ArrayList<Race> ) races.clone();
+        return ( ArrayList<DwarfRace> ) races.clone();
     }
 
     /**
@@ -55,7 +54,7 @@ public class DwarfCraftLoadRacesEvent extends Event
      *            The races ArrayList to be loaded into the DwarfCraft memory
      * 
      */
-    public void setRaces( ArrayList<Race> races )
+    public void setRaces( ArrayList<DwarfRace> races )
     {
         this.races = races;
     }
@@ -68,7 +67,7 @@ public class DwarfCraftLoadRacesEvent extends Event
      *            A race to be added to the races ArrayList
      * 
      */
-    public void addSkill( Race race )
+    public void addSkill( DwarfRace race )
     {
 
     }
@@ -81,7 +80,7 @@ public class DwarfCraftLoadRacesEvent extends Event
      *            A race to be removed from the races ArrayList
      * 
      */
-    public void removeSkill( Race race )
+    public void removeSkill( DwarfRace race )
     {
         races.remove( race );
     }

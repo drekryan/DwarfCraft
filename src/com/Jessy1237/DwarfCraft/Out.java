@@ -36,7 +36,7 @@ public class Out
         return null;
     }
 
-    public boolean effectInfo( CommandSender sender, DCPlayer dCPlayer, Effect effect )
+    public boolean effectInfo( CommandSender sender, DwarfPlayer dCPlayer, DwarfEffect effect )
     {
         String prefix = Messages.effectInfoPrefix;
         prefix = prefix.replaceAll( "%effectid%", "" + effect.getId() );
@@ -113,7 +113,7 @@ public class Out
         return lastColor = lastColor( lastColor + currentLine );
     }
 
-    public boolean printSkillInfo( CommandSender sender, Skill skill, DCPlayer dCPlayer, int maxTrainLevel )
+    public boolean printSkillInfo( CommandSender sender, DwarfSkill skill, DwarfPlayer dCPlayer, int maxTrainLevel )
     {
         // general line
         sendMessage( sender, Messages.skillInfoHeader.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ).replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() )
@@ -121,7 +121,7 @@ public class Out
 
         // effects lines
         sendMessage( sender, Messages.skillInfoMinorHeader );
-        for ( Effect effect : skill.getEffects() )
+        for ( DwarfEffect effect : skill.getEffects() )
         {
             if ( effect != null )
                 sendMessage( sender, effect.describeLevel( dCPlayer ), Messages.skillInfoEffectIDPrefix.replaceAll( "%effectid%", "" + effect.getId() ) );
@@ -159,7 +159,7 @@ public class Out
         return true;
     }
 
-    public void printSkillSheet( DCPlayer dCPlayer, CommandSender sender, String displayName, boolean printFull )
+    public void printSkillSheet( DwarfPlayer dCPlayer, CommandSender sender, String displayName, boolean printFull )
     {
         String message1;
         String message2 = "";
@@ -170,7 +170,7 @@ public class Out
 
         boolean odd = true;
         String untrainedSkills = Messages.skillSheetUntrainedSkillHeader;
-        for ( Skill s : dCPlayer.getSkills().values() )
+        for ( DwarfSkill s : dCPlayer.getSkills().values() )
         {
             if ( s.getLevel() == 0 )
             {
@@ -266,7 +266,7 @@ public class Out
         }
     }
 
-    protected void sendMessage( DCPlayer dCPlayer, String message )
+    protected void sendMessage( DwarfPlayer dCPlayer, String message )
     {
         sendMessage( dCPlayer.getPlayer(), message );
     }
@@ -329,7 +329,7 @@ public class Out
      *
      * @param dCPlayer
      */
-    public void welcome( DCPlayer dCPlayer )
+    public void welcome( DwarfPlayer dCPlayer )
     {
         try
         {
@@ -352,32 +352,32 @@ public class Out
         sendMessage( sender, parseRace( Messages.adminRaceCheck, plugin.getDataManager().find( player ), null ) );
     }
 
-    public void alreadyRace( CommandSender sender, DCPlayer dCPlayer, String newRace )
+    public void alreadyRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
     {
         sendMessage( sender, parseRace( Messages.alreadyRace, dCPlayer, newRace ) );
     }
 
-    public void resetRace( CommandSender sender, DCPlayer dCPlayer, String newRace )
+    public void resetRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
     {
         sendMessage( sender, parseRace( Messages.resetRace, dCPlayer, newRace ) );
     }
 
-    public void changedRace( CommandSender sender, DCPlayer dCPlayer, String newRace )
+    public void changedRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
     {
         sendMessage( sender, parseRace( Messages.changedRace, dCPlayer, newRace ) );
     }
 
-    public void confirmRace( CommandSender sender, DCPlayer dCPlayer, String newRace )
+    public void confirmRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
     {
         sendMessage( sender, parseRace( Messages.confirmRace, dCPlayer, newRace ) );
     }
 
-    public void dExistRace( CommandSender sender, DCPlayer dCPlayer, String newRace )
+    public void dExistRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
     {
         sendMessage( sender, parseRace( Messages.raceDoesNotExist, dCPlayer, newRace ) );
     }
 
-    public String parseRace( String message, DCPlayer dCPlayer, String newRace )
+    public String parseRace( String message, DwarfPlayer dCPlayer, String newRace )
     {
         String out = message;
 
@@ -389,7 +389,7 @@ public class Out
         return out;
     }
 
-    public String parseSkillSheet( String message, DCPlayer dCPlayer, String displayName, Skill skill )
+    public String parseSkillSheet( String message, DwarfPlayer dCPlayer, String displayName, DwarfSkill skill )
     {
         String out = message.replace( "%playername%", ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) );
         out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
@@ -403,7 +403,7 @@ public class Out
     }
 
     @SuppressWarnings( "deprecation" )
-    public String parseEffectLevel( EffectType type, String initiator, String output, double effectAmount, double minorAmount, boolean moreThanOne, String effectLevelColor, String toolType, EntityType creature, DCPlayer dCPlayer, ItemStack mInitiator )
+    public String parseEffectLevel( EffectType type, String initiator, String output, double effectAmount, double minorAmount, boolean moreThanOne, String effectLevelColor, String toolType, EntityType creature, DwarfPlayer dCPlayer, ItemStack mInitiator )
     {
         String out = "";
 

@@ -7,17 +7,13 @@ package com.Jessy1237.DwarfCraft.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.Skill;
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
 
 public class CommandSetSkill extends Command
@@ -52,8 +48,8 @@ public class CommandSetSkill extends Command
                 List<Object> desiredArguments = new ArrayList<Object>();
                 List<Object> outputList = null;
 
-                DCPlayer dCPlayer = new DCPlayer( plugin, null );
-                Skill skill = new Skill( 0, null, 0, null, null, null, null, null );
+                DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
+                DwarfSkill skill = new DwarfSkill( 0, null, 0, null, null, null, null, null );
                 int level = 0;
                 String name;
                 desiredArguments.add( dCPlayer );
@@ -63,8 +59,8 @@ public class CommandSetSkill extends Command
                 try
                 {
                     outputList = parser.parse( desiredArguments, false );
-                    dCPlayer = ( DCPlayer ) outputList.get( 0 );
-                    skill = ( Skill ) outputList.get( 1 );
+                    dCPlayer = (DwarfPlayer) outputList.get( 0 );
+                    skill = (DwarfSkill) outputList.get( 1 );
                     level = ( Integer ) outputList.get( 2 );
                     name = dCPlayer.getPlayer().getName();
                 }
@@ -77,8 +73,8 @@ public class CommandSetSkill extends Command
                             desiredArguments.remove( 0 );
                             desiredArguments.add( dCPlayer );
                             outputList = parser.parse( desiredArguments, true );
-                            dCPlayer = ( DCPlayer ) outputList.get( 2 );
-                            skill = ( Skill ) outputList.get( 0 );
+                            dCPlayer = (DwarfPlayer) outputList.get( 2 );
+                            skill = (DwarfSkill) outputList.get( 0 );
                             level = ( Integer ) outputList.get( 1 );
                             name = ( ( Player ) sender ).getName();
                         }
@@ -90,9 +86,9 @@ public class CommandSetSkill extends Command
                 }
                 if ( skill == null )
                 {
-                    Skill[] skills = new Skill[dCPlayer.getSkills().values().size()];
+                    DwarfSkill[] skills = new DwarfSkill[dCPlayer.getSkills().values().size()];
                     int i = 0;
-                    for ( Skill s : dCPlayer.getSkills().values() )
+                    for ( DwarfSkill s : dCPlayer.getSkills().values() )
                     {
                         int oldLevel = s.getLevel();
                         s.setLevel( level );
@@ -125,7 +121,7 @@ public class CommandSetSkill extends Command
                         skill.setDeposit1( 0 );
                         skill.setDeposit2( 0 );
                         skill.setDeposit3( 0 );
-                        Skill[] skills = new Skill[1];
+                        DwarfSkill[] skills = new DwarfSkill[1];
                         skills[0] = skill;
                         plugin.getOut().sendMessage( sender, "&aAdmin: &eset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level );
                         plugin.getDataManager().saveDwarfData( dCPlayer, skills );

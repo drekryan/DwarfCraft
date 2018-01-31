@@ -7,6 +7,7 @@ package com.Jessy1237.DwarfCraft;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -126,9 +127,9 @@ public final class DwarfTrainer
         return;
     }
 
-    public void depositOne( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositOne(DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
-        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
@@ -164,16 +165,16 @@ public final class DwarfTrainer
         if ( deposited )
         {
             plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
-            Skill[] dCSkills = new Skill[1];
+            DwarfSkill[] dCSkills = new DwarfSkill[1];
             dCSkills[0] = skill;
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
     }
 
-    public void depositAll( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositAll(DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
-        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
@@ -206,16 +207,16 @@ public final class DwarfTrainer
         if ( deposited )
         {
             plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
-            Skill[] dCSkills = new Skill[1];
+            DwarfSkill[] dCSkills = new DwarfSkill[1];
             dCSkills[0] = skill;
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
     }
 
-    public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void trainSkill(DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
-        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
@@ -265,7 +266,7 @@ public final class DwarfTrainer
                 }
             }
 
-            Skill[] dCSkills = new Skill[1];
+            DwarfSkill[] dCSkills = new DwarfSkill[1];
             dCSkills[0] = skill;
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             trainerGUI.updateTitle();
@@ -387,11 +388,11 @@ public final class DwarfTrainer
      * 
      * @param costStack The item type and amount to be removed
      * @param dCPlayer The player that is depositing
-     * @param trainerGUI The gui that flagged this deposit event
+     * @param trainerGUI The guis that flagged this deposit event
      * @param skill The skill that is being deposited into
      * @return True for [0] if the player had enough of the required item otherwise [0] false and True for [1] if any items were deposited into the skill otherwise false for [1]
      */
-    private boolean[] depositItem( ItemStack costStack, DCPlayer dCPlayer, TrainerGUI trainerGUI, Skill skill, String tag )
+    private boolean[] depositItem(ItemStack costStack, DwarfPlayer dCPlayer, TrainerGUI trainerGUI, DwarfSkill skill, String tag )
     {
         boolean[] hasMatsOrDeposits = { true, false };
         final int origCost = costStack.getAmount();

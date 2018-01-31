@@ -1,5 +1,6 @@
 package com.Jessy1237.DwarfCraft.events;
 
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
@@ -7,16 +8,15 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.Effect;
+import com.Jessy1237.DwarfCraft.DwarfEffect;
 
 public class DwarfCraftEffectEvent extends Event implements Cancellable
 {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
-    private DCPlayer player;
-    private Effect effect;
+    private DwarfPlayer player;
+    private DwarfEffect effect;
     private ItemStack[] orig;
     private ItemStack[] altered;
     private Integer origHunger;
@@ -28,7 +28,7 @@ public class DwarfCraftEffectEvent extends Event implements Cancellable
     private ItemStack itemInHand;
 
     /**
-     * The event for when an Effect is fired. This event is fired after the
+     * The event for when an DwarfEffect is fired. This event is fired after the
      * effect is fired but before any of the stats are applied to the
      * player/game.
      * 
@@ -68,7 +68,7 @@ public class DwarfCraftEffectEvent extends Event implements Cancellable
      *            allowed the effect to fire. i.e. a sword when killing an
      *            entity.
      */
-    public DwarfCraftEffectEvent( DCPlayer player, Effect effect, ItemStack[] orig, final ItemStack[] altered, Integer origHunger, Integer newHunger, Double origDmg, Double newDmg, Entity entity, Block block, ItemStack itemInHand )
+    public DwarfCraftEffectEvent( DwarfPlayer player, DwarfEffect effect, ItemStack[] orig, final ItemStack[] altered, Integer origHunger, Integer newHunger, Double origDmg, Double newDmg, Entity entity, Block block, ItemStack itemInHand )
     {
         this.player = player;
         this.effect = effect;
@@ -105,21 +105,21 @@ public class DwarfCraftEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the DCPlayer that leveled up a skill.
+     * Gets the DwarfPlayer that leveled up a skill.
      * 
-     * @return DCPlayer
+     * @return DwarfPlayer
      */
-    public DCPlayer getDCPlayer()
+    public DwarfPlayer getDCPlayer()
     {
         return player;
     }
 
     /**
-     * Gets the Effect that was fired.
+     * Gets the DwarfEffect that was fired.
      * 
-     * @return Effect
+     * @return DwarfEffect
      */
-    public Effect getEffect()
+    public DwarfEffect getEffect()
     {
         return effect;
     }

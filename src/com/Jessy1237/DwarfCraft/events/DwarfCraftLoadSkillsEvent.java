@@ -2,15 +2,14 @@ package com.Jessy1237.DwarfCraft.events;
 
 import java.util.HashMap;
 
+import com.Jessy1237.DwarfCraft.DwarfSkill;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import com.Jessy1237.DwarfCraft.Skill;
 
 public class DwarfCraftLoadSkillsEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
-    private HashMap<Integer, Skill> skills = new HashMap<Integer, Skill>();
+    private HashMap<Integer, DwarfSkill> skills = new HashMap<Integer, DwarfSkill>();
 
     @Override
     public HandlerList getHandlers()
@@ -32,21 +31,21 @@ public class DwarfCraftLoadSkillsEvent extends Event
      *            the skills that were loaded by DwarfCraft from the csv file.
      *            The key is the skill ID, the value is the skill.
      */
-    public DwarfCraftLoadSkillsEvent( HashMap<Integer, Skill> skills )
+    public DwarfCraftLoadSkillsEvent( HashMap<Integer, DwarfSkill> skills )
     {
         this.skills = skills;
     }
 
     /**
      * Gets the skills HashMap, the key is the skillID and the value is the
-     * Skill
+     * DwarfSkill
      * 
-     * @return DCPlayer
+     * @return DwarfPlayer
      */
     @SuppressWarnings( "unchecked" )
-    public HashMap<Integer, Skill> getSkills()
+    public HashMap<Integer, DwarfSkill> getSkills()
     {
-        return ( HashMap<Integer, Skill> ) skills.clone();
+        return ( HashMap<Integer, DwarfSkill> ) skills.clone();
     }
 
     /**
@@ -54,29 +53,29 @@ public class DwarfCraftLoadSkillsEvent extends Event
      * 
      * @param skills
      *            The skills HashMap, The key is the skillID, the value is the
-     *            Skill.
+     *            DwarfSkill.
      * 
      */
-    public void setSkills( HashMap<Integer, Skill> skills )
+    public void setSkills( HashMap<Integer, DwarfSkill> skills )
     {
         this.skills = skills;
     }
 
     /**
-     * Adds a skill to the Skill HashMap that is stored in the DwarfCraft
+     * Adds a skill to the DwarfSkill HashMap that is stored in the DwarfCraft
      * memory.
      * 
      * @param skill
      *            A skill to be added to the skills HashMap
      * 
      */
-    public void addSkill( Skill skill )
+    public void addSkill( DwarfSkill skill )
     {
         skills.put( skill.getId(), skill );
     }
 
     /**
-     * Removes a skill from the Skill HashMap that is stored in the DwarfCraft
+     * Removes a skill from the DwarfSkill HashMap that is stored in the DwarfCraft
      * memory.
      * 
      * @param skill
@@ -84,7 +83,7 @@ public class DwarfCraftLoadSkillsEvent extends Event
      * 
      */
     @SuppressWarnings( "unlikely-arg-type" )
-    public void removeSkill( Skill skill )
+    public void removeSkill( DwarfSkill skill )
     {
         skills.remove( skill );
     }

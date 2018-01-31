@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.Jessy1237.DwarfCraft.*;
 import net.citizensnpcs.api.npc.AbstractNPC;
 
 import org.bukkit.command.Command;
@@ -15,13 +16,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.DwarfTrainerTrait;
-import com.Jessy1237.DwarfCraft.Skill;
+import com.Jessy1237.DwarfCraft.DwarfSkill;
 
 public class CommandCreateTrainer extends Command
 {
@@ -58,7 +54,7 @@ public class CommandCreateTrainer extends Command
 
                 String uniqueId = "UniqueIdAdd";
                 String name = "Name";
-                Skill skill = new Skill( 0, null, 0, null, null, null, null, null );
+                DwarfSkill skill = new DwarfSkill( 0, null, 0, null, null, null, null, null );
                 Integer maxSkill = 1;
                 Integer minSkill = 1;
                 String type = "Type";
@@ -75,7 +71,7 @@ public class CommandCreateTrainer extends Command
                     outputList = parser.parse( desiredArguments, false );
                     uniqueId = ( String ) outputList.get( 0 );
                     name = ( String ) outputList.get( 1 );
-                    skill = ( Skill ) outputList.get( 2 );
+                    skill = (DwarfSkill) outputList.get( 2 );
                     maxSkill = ( Integer ) outputList.get( 3 );
                     minSkill = ( Integer ) outputList.get( 4 );
                     type = ( String ) outputList.get( 5 );
@@ -87,7 +83,7 @@ public class CommandCreateTrainer extends Command
                         outputList = parser.parse( desiredArguments, true );
                         uniqueId = ( String ) outputList.get( 0 );
                         name = ( String ) outputList.get( 1 );
-                        skill = ( Skill ) outputList.get( 2 );
+                        skill = (DwarfSkill) outputList.get( 2 );
                         maxSkill = ( Integer ) outputList.get( 3 );
                         minSkill = ( Integer ) outputList.get( 4 );
                         type = ( String ) outputList.get( 5 );

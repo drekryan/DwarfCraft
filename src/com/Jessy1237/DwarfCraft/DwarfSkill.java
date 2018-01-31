@@ -8,13 +8,13 @@ import java.util.List;
 
 import org.bukkit.Material;
 
-public class Skill implements Cloneable
+public class DwarfSkill implements Cloneable
 {
 
     private final int mID;
     private final String mName;
     private int mLevel;
-    private final List<Effect> mEffects;
+    private final List<DwarfEffect> mEffects;
     private final Material mHeldItem;
     public final TrainingItem Item1;
     public final TrainingItem Item2;
@@ -23,7 +23,7 @@ public class Skill implements Cloneable
     private int deposit2;
     private int deposit3;
 
-    public Skill( int id, String displayName, int level, List<Effect> effects, TrainingItem item1, TrainingItem item2, TrainingItem item3, Material trainerHeldMaterial )
+    public DwarfSkill(int id, String displayName, int level, List<DwarfEffect> effects, TrainingItem item1, TrainingItem item2, TrainingItem item3, Material trainerHeldMaterial )
     {
         mID = id;
         mName = displayName;
@@ -45,10 +45,10 @@ public class Skill implements Cloneable
      * modified.
      */
     @Override
-    public Skill clone()
+    public DwarfSkill clone()
     {
 
-        Skill newSkill = new Skill( mID, mName, mLevel, mEffects, Item1, Item2, Item3, mHeldItem );
+        DwarfSkill newSkill = new DwarfSkill( mID, mName, mLevel, mEffects, Item1, Item2, Item3, mHeldItem );
         return newSkill;
     }
 
@@ -57,7 +57,7 @@ public class Skill implements Cloneable
         return mName;
     }
 
-    public List<Effect> getEffects()
+    public List<DwarfEffect> getEffects()
     {
         return mEffects;
     }

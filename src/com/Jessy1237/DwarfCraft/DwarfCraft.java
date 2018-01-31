@@ -24,12 +24,12 @@ import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillSheet;
 import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
-import com.Jessy1237.DwarfCraft.listeners.DCBlockListener;
-import com.Jessy1237.DwarfCraft.listeners.DCEntityListener;
-import com.Jessy1237.DwarfCraft.listeners.DCInventoryListener;
-import com.Jessy1237.DwarfCraft.listeners.DCListener;
-import com.Jessy1237.DwarfCraft.listeners.DCPlayerListener;
-import com.Jessy1237.DwarfCraft.listeners.DCVehicleListener;
+import com.Jessy1237.DwarfCraft.listeners.DwarfBlockListener;
+import com.Jessy1237.DwarfCraft.listeners.DwarfEntityListener;
+import com.Jessy1237.DwarfCraft.listeners.DwarfInventoryListener;
+import com.Jessy1237.DwarfCraft.listeners.DwarfListener;
+import com.Jessy1237.DwarfCraft.listeners.DwarfPlayerListener;
+import com.Jessy1237.DwarfCraft.listeners.DwarfVehicleListener;
 
 import de.diddiz.LogBlock.Consumer;
 import de.diddiz.LogBlock.LogBlock;
@@ -57,12 +57,12 @@ import net.milkbowl.vault.permission.Permission;
 public class DwarfCraft extends JavaPlugin
 {
 
-    private final DCBlockListener blockListener = new DCBlockListener( this );
-    private final DCPlayerListener playerListener = new DCPlayerListener( this );
-    private final DCEntityListener entityListener = new DCEntityListener( this );
-    private final DCVehicleListener vehicleListener = new DCVehicleListener( this );
-    private final DCInventoryListener inventoryListener = new DCInventoryListener( this );
-    private final DCListener dcListener = new DCListener( this );
+    private final DwarfBlockListener blockListener = new DwarfBlockListener( this );
+    private final DwarfPlayerListener playerListener = new DwarfPlayerListener( this );
+    private final DwarfEntityListener entityListener = new DwarfEntityListener( this );
+    private final DwarfVehicleListener vehicleListener = new DwarfVehicleListener( this );
+    private final DwarfInventoryListener inventoryListener = new DwarfInventoryListener( this );
+    private final DwarfListener dwarfListener = new DwarfListener( this );
     private NPCRegistry npcr;
     private ConfigManager cm;
     private DataManager dm;
@@ -105,12 +105,12 @@ public class DwarfCraft extends JavaPlugin
         return util;
     }
 
-    public DCEntityListener getDCEntityListener()
+    public DwarfEntityListener getDwarfEntityListener()
     {
         return entityListener;
     }
 
-    public DCInventoryListener getDCInventoryListener()
+    public DwarfInventoryListener getDwarfInventoryListener()
     {
         return inventoryListener;
     }
@@ -387,7 +387,7 @@ public class DwarfCraft extends JavaPlugin
 
         pm.registerEvents( inventoryListener, this );
 
-        pm.registerEvents( dcListener, this );
+        pm.registerEvents(dwarfListener, this );
 
         if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
         {
