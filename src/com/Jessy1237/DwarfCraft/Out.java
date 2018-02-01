@@ -12,6 +12,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+
 public class Out
 {
     /*
@@ -403,7 +408,7 @@ public class Out
     }
 
     @SuppressWarnings( "deprecation" )
-    public String parseEffectLevel( EffectType type, String initiator, String output, double effectAmount, double minorAmount, boolean moreThanOne, String effectLevelColor, String toolType, EntityType creature, DwarfPlayer dCPlayer, ItemStack mInitiator )
+    public String parseEffectLevel( DwarfEffectType type, String initiator, String output, double effectAmount, double minorAmount, boolean moreThanOne, String effectLevelColor, String toolType, EntityType creature, DwarfPlayer dCPlayer, ItemStack mInitiator )
     {
         String out = "";
 
@@ -525,7 +530,7 @@ public class Out
         out = out.replaceAll( "%effecttakedamage%", "" + ( int ) ( effectAmount * 100 ) );
         out = out.replaceAll( "%effectamountint%", "" + ( int ) effectAmount );
         out = out.replaceAll( "%effectamountfood%", String.format( "%.2f", ( effectAmount / 2.0 ) ) );
-        if ( type == EffectType.CRAFT )
+        if ( type == DwarfEffectType.CRAFT )
         {
             out = out.replaceAll( "%minoramount%", String.format( "%.0f", minorAmount ) );
         }

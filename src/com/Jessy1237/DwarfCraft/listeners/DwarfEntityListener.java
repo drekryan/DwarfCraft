@@ -21,9 +21,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.guis.InitTrainerGUISchedule;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.schedules.InitTrainerGUISchedule;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
@@ -247,14 +251,14 @@ public class DwarfEntityListener implements Listener
             {
                 if ( tool != null && tool.getType().getMaxDurability() > 0 )
                 {
-                    if ( e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool( tool ) )
+                    if ( e.getEffectType() == DwarfEffectType.SWORDDURABILITY && e.checkTool( tool ) )
                         e.damageTool( attacker, 1, tool );
 
-                    if ( e.getEffectType() == EffectType.TOOLDURABILITY && e.checkTool( tool ) )
+                    if ( e.getEffectType() == DwarfEffectType.TOOLDURABILITY && e.checkTool( tool ) )
                         e.damageTool( attacker, 2, tool );
                 }
 
-                if ( e.getEffectType() == EffectType.PVEDAMAGE && !isPVP && e.checkTool( tool ) )
+                if ( e.getEffectType() == DwarfEffectType.PVEDAMAGE && !isPVP && e.checkTool( tool ) )
                 {
                     if ( hp <= 0 )
                     {
@@ -283,7 +287,7 @@ public class DwarfEntityListener implements Listener
                     }
                 }
 
-                if ( e.getEffectType() == EffectType.PVPDAMAGE && isPVP && e.checkTool( tool ) )
+                if ( e.getEffectType() == DwarfEffectType.PVPDAMAGE && isPVP && e.checkTool( tool ) )
                 {
                     damage = plugin.getUtil().randomAmount( ( e.getEffectAmount( attacker ) ) * damage );
 
@@ -343,7 +347,7 @@ public class DwarfEntityListener implements Listener
             {
                 for ( DwarfEffect effect : skill.getEffects() )
                 {
-                    if ( effect.getEffectType() == EffectType.BOWATTACK )
+                    if ( effect.getEffectType() == DwarfEffectType.BOWATTACK )
                     {
                         damage = effect.getEffectAmount( attackDwarf );
 
@@ -382,18 +386,18 @@ public class DwarfEntityListener implements Listener
             {
                 for ( DwarfEffect e : s.getEffects() )
                 {
-                    if ( e.getEffectType() == EffectType.FALLDAMAGE && event.getCause() == DamageCause.FALL )
+                    if ( e.getEffectType() == DwarfEffectType.FALLDAMAGE && event.getCause() == DamageCause.FALL )
                         damage = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) * damage );
-                    else if ( e.getEffectType() == EffectType.FIREDAMAGE && event.getCause() == DamageCause.FIRE )
+                    else if ( e.getEffectType() == DwarfEffectType.FIREDAMAGE && event.getCause() == DamageCause.FIRE )
                         damage = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) * damage );
-                    else if ( e.getEffectType() == EffectType.FIREDAMAGE && event.getCause() == DamageCause.FIRE_TICK )
+                    else if ( e.getEffectType() == DwarfEffectType.FIREDAMAGE && event.getCause() == DamageCause.FIRE_TICK )
                         damage = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) * damage );
-                    else if ( e.getEffectType() == EffectType.EXPLOSIONDAMAGE && event.getCause() == DamageCause.ENTITY_EXPLOSION )
+                    else if ( e.getEffectType() == DwarfEffectType.EXPLOSIONDAMAGE && event.getCause() == DamageCause.ENTITY_EXPLOSION )
                         damage = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) * damage );
-                    else if ( e.getEffectType() == EffectType.EXPLOSIONDAMAGE && event.getCause() == DamageCause.BLOCK_EXPLOSION )
+                    else if ( e.getEffectType() == DwarfEffectType.EXPLOSIONDAMAGE && event.getCause() == DamageCause.BLOCK_EXPLOSION )
                         damage = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) * damage );
 
-                    if ( e.getEffectType() == EffectType.FALLTHRESHOLD && event.getCause() == DamageCause.FALL )
+                    if ( e.getEffectType() == DwarfEffectType.FALLTHRESHOLD && event.getCause() == DamageCause.FALL )
                     {
                         if ( event.getDamage() <= e.getEffectAmount( dCPlayer ) )
                         {
@@ -453,7 +457,7 @@ public class DwarfEntityListener implements Listener
             {
                 for ( DwarfEffect effect : skill.getEffects() )
                 {
-                    if ( effect.getEffectType() == EffectType.MOBDROP )
+                    if ( effect.getEffectType() == DwarfEffectType.MOBDROP )
                     {
                         if ( effect.checkMob( deadThing ) )
                         {

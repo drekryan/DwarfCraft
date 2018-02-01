@@ -13,7 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
 public class CommandSkillInfo extends Command
 {

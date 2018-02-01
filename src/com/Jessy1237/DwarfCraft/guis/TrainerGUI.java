@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.Jessy1237.DwarfCraft.*;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

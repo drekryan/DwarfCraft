@@ -1,10 +1,10 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-import com.Jessy1237.DwarfCraft.DwarfRace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.model.DwarfRace;
 
 /**
  * Original Authors: Jessy1237

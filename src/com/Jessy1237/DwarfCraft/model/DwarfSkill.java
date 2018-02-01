@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -16,14 +16,14 @@ public class DwarfSkill implements Cloneable
     private int mLevel;
     private final List<DwarfEffect> mEffects;
     private final Material mHeldItem;
-    public final TrainingItem Item1;
-    public final TrainingItem Item2;
-    public final TrainingItem Item3;
+    public final DwarfTrainingItem Item1;
+    public final DwarfTrainingItem Item2;
+    public final DwarfTrainingItem Item3;
     private int deposit1;
     private int deposit2;
     private int deposit3;
 
-    public DwarfSkill(int id, String displayName, int level, List<DwarfEffect> effects, TrainingItem item1, TrainingItem item2, TrainingItem item3, Material trainerHeldMaterial )
+    public DwarfSkill(int id, String displayName, int level, List<DwarfEffect> effects, DwarfTrainingItem item1, DwarfTrainingItem item2, DwarfTrainingItem item3, Material trainerHeldMaterial )
     {
         mID = id;
         mName = displayName;

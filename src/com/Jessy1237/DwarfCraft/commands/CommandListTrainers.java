@@ -6,16 +6,18 @@ package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.Collection;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.DwarfSkill;
 import com.Jessy1237.DwarfCraft.guis.ListTrainersGUI;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.DwarfTrainer;
+
 import org.bukkit.entity.Player;
 
 public class CommandListTrainers extends Command

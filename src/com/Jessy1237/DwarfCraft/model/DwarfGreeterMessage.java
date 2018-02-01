@@ -1,15 +1,15 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-public class GreeterMessage
+public class DwarfGreeterMessage
 {
     private final String leftClick;
     private final String rightClick;
 
-    GreeterMessage( String newLeftClick, String newRightClick )
+    public DwarfGreeterMessage( String newLeftClick, String newRightClick )
     {
         this.leftClick = newLeftClick;
         this.rightClick = newRightClick;

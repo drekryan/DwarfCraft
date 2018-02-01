@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -6,14 +6,14 @@ package com.Jessy1237.DwarfCraft;
 
 import org.bukkit.inventory.ItemStack;
 
-public class TrainingItem
+public class DwarfTrainingItem
 {
 
     public final ItemStack Item;
     public final double Base;
     public final int Max;
 
-    public TrainingItem( ItemStack item, double base, int max )
+    public DwarfTrainingItem( ItemStack item, double base, int max )
     {
         Item = item;
         Base = base;

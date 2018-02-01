@@ -2,9 +2,10 @@ package com.Jessy1237.DwarfCraft.events;
 
 import java.util.HashMap;
 
-import com.Jessy1237.DwarfCraft.DwarfSkill;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
 public class DwarfCraftLoadSkillsEvent extends Event
 {

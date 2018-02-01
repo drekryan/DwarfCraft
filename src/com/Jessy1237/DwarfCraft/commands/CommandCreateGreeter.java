@@ -20,7 +20,7 @@ import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.CommandParser;
 import com.Jessy1237.DwarfCraft.DCCommandException;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.DwarfTrainerTrait;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainerTrait;
 
 public class CommandCreateGreeter extends Command
 {

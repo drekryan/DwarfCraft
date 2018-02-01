@@ -12,7 +12,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
 public class CommandEffectInfo extends Command
 {

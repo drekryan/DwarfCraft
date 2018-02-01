@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -7,7 +7,6 @@ package com.Jessy1237.DwarfCraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -17,8 +16,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftDepositEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
@@ -104,7 +106,7 @@ public final class DwarfTrainer
 
     public void printLeftClick( Player player )
     {
-        GreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
+        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
         if ( msg != null )
         {
             plugin.getOut().sendMessage( player, msg.getLeftClickMessage() );
@@ -118,7 +120,7 @@ public final class DwarfTrainer
 
     public void printRightClick( Player player )
     {
-        GreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
+        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
         if ( msg != null )
         {
             plugin.getOut().sendMessage( player, msg.getRightClickMessage() );
@@ -127,7 +129,7 @@ public final class DwarfTrainer
         return;
     }
 
-    public void depositOne(DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositOne( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
@@ -172,7 +174,7 @@ public final class DwarfTrainer
         }
     }
 
-    public void depositAll(DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositAll( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
@@ -214,7 +216,7 @@ public final class DwarfTrainer
         }
     }
 
-    public void trainSkill(DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void trainSkill( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
@@ -392,7 +394,7 @@ public final class DwarfTrainer
      * @param skill The skill that is being deposited into
      * @return True for [0] if the player had enough of the required item otherwise [0] false and True for [1] if any items were deposited into the skill otherwise false for [1]
      */
-    private boolean[] depositItem(ItemStack costStack, DwarfPlayer dCPlayer, TrainerGUI trainerGUI, DwarfSkill skill, String tag )
+    private boolean[] depositItem( ItemStack costStack, DwarfPlayer dCPlayer, TrainerGUI trainerGUI, DwarfSkill skill, String tag )
     {
         boolean[] hasMatsOrDeposits = { true, false };
         final int origCost = costStack.getAmount();

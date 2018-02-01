@@ -1,13 +1,13 @@
 package com.Jessy1237.DwarfCraft.listeners;
 
-import com.Jessy1237.DwarfCraft.DwarfSkill;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
 public class DwarfListener implements Listener
 {

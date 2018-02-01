@@ -2,9 +2,10 @@ package com.Jessy1237.DwarfCraft.events;
 
 import java.util.ArrayList;
 
-import com.Jessy1237.DwarfCraft.DwarfRace;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import com.Jessy1237.DwarfCraft.model.DwarfRace;
 
 public class DwarfCraftLoadRacesEvent extends Event
 {

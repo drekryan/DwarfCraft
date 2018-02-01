@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -11,6 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
+
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 public class DwarfTrainerTrait extends Trait
 {

@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 import org.bukkit.entity.Vehicle;
 

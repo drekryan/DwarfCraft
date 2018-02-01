@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -12,6 +12,8 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 public class DwarfPlayer
 {
@@ -155,7 +157,7 @@ public class DwarfPlayer
      * @param effectId
      * @return
      */
-    protected DwarfEffect getEffect(int effectId )
+    public DwarfEffect getEffect(int effectId )
     {
         DwarfSkill skill = getSkill( effectId / 10 );
         for ( DwarfEffect effect : skill.getEffects() )
@@ -206,7 +208,7 @@ public class DwarfPlayer
      * @param skillName
      * @return DwarfSkill or null if none found
      */
-    protected DwarfSkill getSkill(String skillName )
+    public DwarfSkill getSkill(String skillName )
     {
         try
         {
@@ -263,7 +265,7 @@ public class DwarfPlayer
      * @param skills
      *            the skills to set
      */
-    protected void setSkills( HashMap<Integer, DwarfSkill> skills )
+    public void setSkills( HashMap<Integer, DwarfSkill> skills )
     {
         this.skills = skills;
     }

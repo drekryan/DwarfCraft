@@ -24,6 +24,11 @@ import org.jbls.LexManos.CSV.CSVRecord;
 
 import com.Jessy1237.DwarfCraft.events.DwarfCraftLoadRacesEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftLoadSkillsEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfGreeterMessage;
+import com.Jessy1237.DwarfCraft.model.DwarfRace;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainingItem;
 
 public final class ConfigManager
 {
@@ -144,7 +149,7 @@ public final class ConfigManager
         return null;
     }
 
-    protected DwarfSkill getGenericSkill(int skillId )
+    public DwarfSkill getGenericSkill(int skillId )
     {
 
         for ( DwarfSkill s : skillsArray.values() )
@@ -555,7 +560,7 @@ public final class ConfigManager
                 leftClick = br.readLine().trim();
                 rightClick = br.readLine().trim();
 
-                plugin.getDataManager().insertGreeterMessage( messageId, new GreeterMessage( leftClick, rightClick ) );
+                plugin.getDataManager().insertGreeterMessage( messageId, new DwarfGreeterMessage( leftClick, rightClick ) );
                 messageId = br.readLine();
             }
         }
@@ -798,8 +803,8 @@ public final class ConfigManager
                 CSVRecord item = records.next();
 
                 @SuppressWarnings( "deprecation" )
-                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<DwarfEffect>(), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new TrainingItem( plugin.getUtil()
-                        .parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
+                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<DwarfEffect>(), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new DwarfTrainingItem( plugin.getUtil()
+                        .parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
                                 .getMaterial( item.getInt( "Held" ) ) );
 
                 skillsArray.put( skill.getId(), skill );

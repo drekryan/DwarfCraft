@@ -1,7 +1,8 @@
 package com.Jessy1237.DwarfCraft.guis;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;

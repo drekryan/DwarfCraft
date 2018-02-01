@@ -1,10 +1,11 @@
 package com.Jessy1237.DwarfCraft.events;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.DwarfRace;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfRace;
 
 public class DwarfCraftRaceChangeEvent extends Event implements Cancellable
 {

@@ -18,8 +18,12 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.DwarfSkill;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfVehicle;
 
 public class DwarfVehicleListener implements Listener
 {
@@ -57,7 +61,7 @@ public class DwarfVehicleListener implements Listener
                 {
                     for ( DwarfEffect effect : skill.getEffects() )
                     {
-                        if ( effect.getEffectType() == EffectType.VEHICLEDROP )
+                        if ( effect.getEffectType() == DwarfEffectType.VEHICLEDROP )
                         {
                             ItemStack drop = effect.getOutput(dwarfPlayer);
 
@@ -140,7 +144,7 @@ public class DwarfVehicleListener implements Listener
         {
             for ( DwarfEffect e : s.getEffects() )
             {
-                if ( e.getEffectType() == EffectType.VEHICLEMOVE )
+                if ( e.getEffectType() == DwarfEffectType.VEHICLEMOVE )
                 {
                     effect = e;
                     effectAmount = e.getEffectAmount( dCPlayer );

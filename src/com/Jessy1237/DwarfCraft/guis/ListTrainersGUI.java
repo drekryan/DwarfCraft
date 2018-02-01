@@ -1,15 +1,16 @@
 package com.Jessy1237.DwarfCraft.guis;
 
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.DwarfSkill;
-import com.Jessy1237.DwarfCraft.DwarfTrainer;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
 
 public class ListTrainersGUI extends DwarfGUI {
 
@@ -22,6 +23,7 @@ public class ListTrainersGUI extends DwarfGUI {
         super(plugin, dwarfPlayer);
     }
 
+    @SuppressWarnings( "deprecation" )
     @Override
     public void init() {
         Collection<DwarfTrainer> col = plugin.getDataManager().trainerList.values();

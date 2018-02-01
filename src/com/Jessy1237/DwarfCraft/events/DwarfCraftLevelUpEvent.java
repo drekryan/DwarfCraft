@@ -1,12 +1,12 @@
 package com.Jessy1237.DwarfCraft.events;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.DwarfSkill;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.Jessy1237.DwarfCraft.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
 
 public class DwarfCraftLevelUpEvent extends Event implements Cancellable
 {

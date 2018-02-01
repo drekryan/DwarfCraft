@@ -1,4 +1,6 @@
-package com.Jessy1237.DwarfCraft.guis;
+package com.Jessy1237.DwarfCraft.schedules;
+
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 public class InitTrainerGUISchedule implements Runnable
 {

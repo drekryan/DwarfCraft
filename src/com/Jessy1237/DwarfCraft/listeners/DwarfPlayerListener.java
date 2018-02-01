@@ -29,8 +29,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
 public class DwarfPlayerListener implements Listener
 {
@@ -91,7 +94,7 @@ public class DwarfPlayerListener implements Listener
                 {
                     for ( DwarfEffect effect : s.getEffects() )
                     {
-                        if ( effect.getEffectType() == EffectType.PLOWDURABILITY && effect.checkTool( item ) )
+                        if ( effect.getEffectType() == DwarfEffectType.PLOWDURABILITY && effect.checkTool( item ) )
                         {
                             effect.damageTool(dwarfPlayer, 1, item );
                             // block.setTypeId(60);
@@ -111,7 +114,7 @@ public class DwarfPlayerListener implements Listener
             {
                 for ( DwarfEffect e : s.getEffects() )
                 {
-                    if ( e.getEffectType() == EffectType.EAT && e.checkInitiator( block.getTypeId(), block.getData() ) )
+                    if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( block.getTypeId(), block.getData() ) )
                     {
 
                         int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount(dwarfPlayer) ) );
@@ -164,7 +167,7 @@ public class DwarfPlayerListener implements Listener
         {
             for ( DwarfEffect e : s.getEffects() )
             {
-                if ( e.getEffectType() == EffectType.EAT && e.checkInitiator( item ) )
+                if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( item ) )
                 {
                     int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount(dwarfPlayer) ) );
 
@@ -197,7 +200,7 @@ public class DwarfPlayerListener implements Listener
         {
             for ( DwarfEffect e : s.getEffects() )
             {
-                if ( e.getEffectType() == EffectType.SHEAR )
+                if ( e.getEffectType() == DwarfEffectType.SHEAR )
                 {
                     if ( entity.getType() == EntityType.SHEEP && e.checkMob( entity ) )
                     {
@@ -315,7 +318,7 @@ public class DwarfPlayerListener implements Listener
                 {
                     for ( DwarfEffect effect : skill.getEffects() )
                     {
-                        if ( effect.getEffectType() == EffectType.FISH )
+                        if ( effect.getEffectType() == DwarfEffectType.FISH )
                         {
                             ItemStack drop = effect.getOutput( player, meta );
 
@@ -346,7 +349,7 @@ public class DwarfPlayerListener implements Listener
                     {
                         for ( DwarfEffect e : s.getEffects() )
                         {
-                            if ( e.getEffectType() == EffectType.RODDURABILITY && e.checkTool( tool ) )
+                            if ( e.getEffectType() == DwarfEffectType.RODDURABILITY && e.checkTool( tool ) )
                                 e.damageTool( player, 1, tool );
                         }
                     }

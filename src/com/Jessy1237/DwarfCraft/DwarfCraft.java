@@ -30,6 +30,7 @@ import com.Jessy1237.DwarfCraft.listeners.DwarfInventoryListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfPlayerListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfVehicleListener;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainerTrait;
 
 import de.diddiz.LogBlock.Consumer;
 import de.diddiz.LogBlock.LogBlock;

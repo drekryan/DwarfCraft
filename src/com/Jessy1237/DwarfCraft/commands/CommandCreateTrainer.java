@@ -17,7 +17,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainerTrait;
 
 public class CommandCreateTrainer extends Command
 {

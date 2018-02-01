@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -60,6 +60,8 @@ import org.bukkit.entity.ZombieVillager;
 import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
 @SuppressWarnings( "deprecation" )
@@ -77,7 +79,7 @@ public class DwarfEffect
     private double mExceptionHigh;
     private double mExceptionValue;
     private int mNormalLevel;
-    private EffectType mType;
+    private DwarfEffectType mType;
     private ItemStack mInitiator;
     private ItemStack mOutput;
     private boolean mRequireTool;
@@ -101,8 +103,8 @@ public class DwarfEffect
         mExceptionHigh = record.getInt( "ExceptionHigh" );
         mExceptionValue = record.getDouble( "ExceptionValue" );
         mNormalLevel = record.getInt( "NormalLevel" );
-        mType = EffectType.getEffectType( record.getString( "Type" ) );
-        if ( mType != EffectType.MOBDROP && mType != EffectType.SHEAR )
+        mType = DwarfEffectType.getEffectType( record.getString( "Type" ) );
+        if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR )
         {
             mInitiator = plugin.getUtil().parseItem( record.getString( "OriginID" ) );
         }
@@ -132,7 +134,7 @@ public class DwarfEffect
      * 
      * @return
      */
-    protected String describeGeneral( DwarfPlayer dCPlayer )
+    public String describeGeneral( DwarfPlayer dCPlayer )
     {
         String description;
         String initiator = plugin.getUtil().getCleanName( mInitiator );
@@ -164,7 +166,7 @@ public class DwarfEffect
      * @param dCPlayer
      * @return
      */
-    protected String describeLevel( DwarfPlayer dCPlayer )
+    public String describeLevel( DwarfPlayer dCPlayer )
     {
         if ( dCPlayer == null )
             return "Failed"; // TODO add failure code
@@ -180,7 +182,7 @@ public class DwarfEffect
         String effectLevelColor = effectLevelColor( dCPlayer.getSkill( this ).getLevel() );
         String toolType = toolType();
 
-        if ( mType == EffectType.SMELT )
+        if ( mType == DwarfEffectType.SMELT )
         {
             if ( mInitiator.getTypeId() == 265 )
             {
@@ -297,7 +299,7 @@ public class DwarfEffect
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
     }
 
-    public EffectType getEffectType()
+    public DwarfEffectType getEffectType()
     {
         return mType;
     }

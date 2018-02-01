@@ -23,8 +23,13 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.*;
 import org.bukkit.material.MaterialData;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.schedules.TrainSkillSchedule;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
 public class DwarfInventoryListener implements Listener
@@ -56,7 +61,7 @@ public class DwarfInventoryListener implements Listener
         {
             for ( DwarfEffect effect : s.getEffects() )
             {
-                if ( effect.getEffectType() == EffectType.SMELT && effect.checkInitiator( new ItemStack( item ) ) )
+                if ( effect.getEffectType() == DwarfEffectType.SMELT && effect.checkInitiator( new ItemStack( item ) ) )
                 {
                     item = effect.getOutput().getType();
                     int newAmount = plugin.getUtil().randomAmount( amount * effect.getEffectAmount( player ) );
@@ -137,7 +142,7 @@ public class DwarfInventoryListener implements Listener
                 {
                     for ( DwarfEffect e : s.getEffects() )
                     {
-                        if ( e.getEffectType() == EffectType.CRAFT && e.checkInitiator( toCraft.getTypeId(), ( byte ) toCraft.getData().getData() ) )
+                        if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getTypeId(), ( byte ) toCraft.getData().getData() ) )
                         {
                             // Shift Click HotFix, checks inv for result item
                             // before and then compares to after to modify the
@@ -201,7 +206,7 @@ public class DwarfInventoryListener implements Listener
                     {
                         for ( DwarfEffect e : s.getEffects() )
                         {
-                            if ( e.getEffectType() == EffectType.CRAFT && e.checkInitiator( toCraft.getTypeId(), ( byte ) toCraft.getData().getData() ) )
+                            if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getTypeId(), ( byte ) toCraft.getData().getData() ) )
                             {
 
                                 final ItemStack output = e.getOutput( dCPlayer, ( byte ) toCraft.getData().getData() );
@@ -271,7 +276,7 @@ public class DwarfInventoryListener implements Listener
             {
                 for ( DwarfEffect effect : s.getEffects() )
                 {
-                    if ( effect.getEffectType() == EffectType.SMELT && effect.checkInitiator( extract ) )
+                    if ( effect.getEffectType() == DwarfEffectType.SMELT && effect.checkInitiator( extract ) )
                     {
 
                         int held = 0;
@@ -448,7 +453,7 @@ public class DwarfInventoryListener implements Listener
                     {
                         for ( DwarfEffect effect : s.getEffects() )
                         {
-                            if ( effect.getEffectType() == EffectType.BREW && effect.checkInitiator( item ) )
+                            if ( effect.getEffectType() == DwarfEffectType.BREW && effect.checkInitiator( item ) )
                             {
                                 int newAmount = ( int ) ( amount * effect.getEffectAmount( player ) );
 

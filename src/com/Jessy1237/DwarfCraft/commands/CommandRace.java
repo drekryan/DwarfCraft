@@ -10,9 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftRaceChangeEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
 public class CommandRace extends Command
 {

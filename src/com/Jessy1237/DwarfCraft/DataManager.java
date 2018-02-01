@@ -24,6 +24,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
+import com.Jessy1237.DwarfCraft.model.DwarfGreeterMessage;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainerTrait;
+import com.Jessy1237.DwarfCraft.model.DwarfVehicle;
+
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
@@ -33,7 +40,7 @@ public class DataManager
     private List<DwarfPlayer> dwarves = new ArrayList<DwarfPlayer>();
     public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<Integer, DwarfVehicle>();
     public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<Integer, DwarfTrainer>();
-    private HashMap<String, GreeterMessage> greeterMessageList = new HashMap<String, GreeterMessage>();
+    private HashMap<String, DwarfGreeterMessage> greeterMessageList = new HashMap<String, DwarfGreeterMessage>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
@@ -409,7 +416,7 @@ public class DataManager
         }
     }
 
-    protected GreeterMessage getGreeterMessage( String messageId )
+    public DwarfGreeterMessage getGreeterMessage( String messageId )
     {
         return greeterMessageList.get( messageId );
     }
@@ -456,7 +463,7 @@ public class DataManager
         return null;
     }
 
-    protected void insertGreeterMessage( String messageId, GreeterMessage greeterMessage )
+    protected void insertGreeterMessage( String messageId, DwarfGreeterMessage greeterMessage )
     {
         try
         {

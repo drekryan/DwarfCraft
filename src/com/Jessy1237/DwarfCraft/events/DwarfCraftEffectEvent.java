@@ -1,6 +1,5 @@
 package com.Jessy1237.DwarfCraft.events;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
@@ -8,7 +7,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
 public class DwarfCraftEffectEvent extends Event implements Cancellable
 {

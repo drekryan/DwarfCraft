@@ -1,10 +1,10 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-public enum EffectType
+public enum DwarfEffectType
 {
     // IMPLEMENTATION PRIORITY ORDER
     BLOCKDROP,
@@ -32,9 +32,9 @@ public enum EffectType
     BREW,
     SHEAR;
 
-    protected static EffectType getEffectType( String name )
+    protected static DwarfEffectType getEffectType( String name )
     {
-        for ( EffectType effectType : EffectType.values() )
+        for ( DwarfEffectType effectType : DwarfEffectType.values() )
         {
             if ( effectType.toString().equalsIgnoreCase( name ) )
                 return effectType;

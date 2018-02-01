@@ -32,8 +32,11 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
 public class DwarfBlockListener implements Listener
 {
@@ -139,7 +142,7 @@ public class DwarfBlockListener implements Listener
         {
             for ( DwarfEffect effect : s.getEffects() )
             {
-                if ( effect.getEffectType() == EffectType.BLOCKDROP && effect.checkInitiator( blockID, meta ) )
+                if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && effect.checkInitiator( blockID, meta ) )
                 {
 
                     // Crops special line:
@@ -436,10 +439,10 @@ public class DwarfBlockListener implements Listener
             {
                 for ( DwarfEffect e : s.getEffects() )
                 {
-                    if ( e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool( tool ) )
+                    if ( e.getEffectType() == DwarfEffectType.SWORDDURABILITY && e.checkTool( tool ) )
                         e.damageTool( player, 2, tool, !blockDropChange );
 
-                    if ( e.getEffectType() == EffectType.TOOLDURABILITY && e.checkTool( tool ) )
+                    if ( e.getEffectType() == DwarfEffectType.TOOLDURABILITY && e.checkTool( tool ) )
                         e.damageTool( player, 1, tool, !blockDropChange );
                 }
             }
@@ -483,7 +486,7 @@ public class DwarfBlockListener implements Listener
         {
             for ( DwarfEffect e : s.getEffects() )
             {
-                if ( e.getEffectType() == EffectType.DIGTIME && e.checkInitiator( materialId, data ) && e.checkTool( tool ) )
+                if ( e.getEffectType() == DwarfEffectType.DIGTIME && e.checkInitiator( materialId, data ) && e.checkTool( tool ) )
                 {
                     if ( DwarfCraft.debugMessagesThreshold < 2 )
                         System.out.println( "DC2: started instamine check" );
@@ -553,7 +556,7 @@ public class DwarfBlockListener implements Listener
                                 {
                                     for ( DwarfEffect e : s.getEffects() )
                                     {
-                                        if ( e.getEffectType() == EffectType.BLOCKDROP && e.checkInitiator( new ItemStack( Material.CACTUS ) ) )
+                                        if ( e.getEffectType() == DwarfEffectType.BLOCKDROP && e.checkInitiator( new ItemStack( Material.CACTUS ) ) )
                                         {
                                             int amount = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) );
                                             if ( amount != 0 )
@@ -633,7 +636,7 @@ public class DwarfBlockListener implements Listener
                             {
                                 for ( DwarfEffect e : s.getEffects() )
                                 {
-                                    if ( e.getEffectType() == EffectType.BLOCKDROP && e.checkInitiator( new ItemStack( Material.SUGAR_CANE_BLOCK ) ) )
+                                    if ( e.getEffectType() == DwarfEffectType.BLOCKDROP && e.checkInitiator( new ItemStack( Material.SUGAR_CANE_BLOCK ) ) )
                                     {
                                         int amount = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) );
                                         if ( amount != 0 )

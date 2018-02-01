@@ -1,6 +1,12 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.schedules;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
