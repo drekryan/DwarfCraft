@@ -44,6 +44,7 @@ public final class ConfigManager
     private int configEffectsVersion;
     private String configMessagesFileName;
     private String configWorldFileName;
+    private String configAliasesFileName;
     private String cfgGreeterFile;
     private String cfgRaceFile;
     private String cfgBlockGroupsFile;
@@ -61,6 +62,7 @@ public final class ConfigManager
     public ArrayList<World> worlds = new ArrayList<World>();
     private HashMap<String, ArrayList<Integer>> blockGroups = new HashMap<String, ArrayList<Integer>>();
     private HashMap<String, ArrayList<Integer>> toolGroups = new HashMap<String, ArrayList<Integer>>();
+    private final HashMap<String, String> aliases = new HashMap<String, String>();
 
     private ArrayList<DwarfRace> raceList = new ArrayList<DwarfRace>();
     private String defaultRace;
@@ -86,7 +88,7 @@ public final class ConfigManager
 
         try
         {
-            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() || !readToolGroupsFile() )
+            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() || !readToolGroupsFile() || !readAliasesFile() )
             {
                 System.out.println( "[SEVERE] Failed to Enable DwarfCraft Skills and Effects)" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
@@ -126,7 +128,7 @@ public final class ConfigManager
         return newSkillsArray;
     }
 
-    public DwarfRace getRace(String Race )
+    public DwarfRace getRace( String Race )
     {
         for ( DwarfRace r : raceList )
         {
@@ -149,7 +151,7 @@ public final class ConfigManager
         return null;
     }
 
-    public DwarfSkill getGenericSkill(int skillId )
+    public DwarfSkill getGenericSkill( int skillId )
     {
 
         for ( DwarfSkill s : skillsArray.values() )
@@ -195,6 +197,8 @@ public final class ConfigManager
             cfgBlockGroupsFile = "block-groups.config";
         if ( cfgToolGroupsFile == null )
             cfgToolGroupsFile = "block-groups.config";
+        if ( configAliasesFileName == null )
+            configAliasesFileName = "aliases.config";
         if ( defaultRace == null )
             defaultRace = "NULL";
         if ( trainDelay == null )
@@ -228,7 +232,7 @@ public final class ConfigManager
             readConfigFile();
             getDefaultValues();
 
-            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { cfgToolGroupsFile, "tool-groups.config" } };
+            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { cfgToolGroupsFile, "tool-groups.config" }, { configAliasesFileName, "aliases.config" } };
             for ( String[] mfile : mfiles )
             {
                 file = new File( root, mfile[0] );
@@ -304,6 +308,8 @@ public final class ConfigManager
                     cfgRaceFile = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Database File Name" ) )
                     dbpath = theline[1].trim();
+                if ( theline[0].equalsIgnoreCase( "Aliases File Name" ) )
+                    configAliasesFileName = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Debug Level" ) )
                     DwarfCraft.debugMessagesThreshold = Integer.parseInt( theline[1].trim() );
                 if ( theline[0].equalsIgnoreCase( "Send Login Greet" ) )
@@ -803,8 +809,8 @@ public final class ConfigManager
                 CSVRecord item = records.next();
 
                 @SuppressWarnings( "deprecation" )
-                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<DwarfEffect>(), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new DwarfTrainingItem( plugin.getUtil()
-                        .parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
+                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<DwarfEffect>(), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new DwarfTrainingItem( plugin
+                        .getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
                                 .getMaterial( item.getInt( "Held" ) ) );
 
                 skillsArray.put( skill.getId(), skill );
@@ -929,7 +935,7 @@ public final class ConfigManager
                     continue;
                 }
 
-                if ( split[0] == null || split[0] == "" )
+                if ( split[0] == null || split[0].trim() == "" )
                 {
                     line = br.readLine();
                     continue;
@@ -963,6 +969,92 @@ public final class ConfigManager
         return false;
     }
 
+    public boolean readAliasesFile()
+    {
+        System.out.println( "[DwarfCraft] Reading Aliases file: " + configDirectory + configAliasesFileName );
+
+        try
+        {
+            FileReader fr = new FileReader( configDirectory + configAliasesFileName );
+            BufferedReader br = new BufferedReader( fr );
+            String line = br.readLine();
+
+            while ( line != null )
+            {
+                if ( line.length() == 0 )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+                if ( line.charAt( 0 ) == '#' )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+                if ( line.indexOf( ':' ) <= 0 )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                String[] split = line.split( ":" );
+
+                if ( split.length < 2 || split.length == 0 || split == null )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                if ( split[0] == null || split[0].trim() == "" )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                String[] aliases = split[1].split( "," );
+
+                if ( aliases.length == 0 || aliases == null )
+                {
+                    line = br.readLine();
+                    continue;
+                }
+
+                for ( int i = 0; i < aliases.length; i++ )
+                {
+                    this.aliases.put( aliases[i], split[0] );
+                }
+
+                line = br.readLine();
+            }
+            br.close();
+            return true;
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
+
+    /**
+     * Gets the alias of a shortened command name
+     * 
+     * @param name The command name to check
+     * @return The alias if it exists otherwise returns the original name
+     */
+    public String getAlias( String name )
+    {
+        String alias = aliases.get( name.toLowerCase() );
+        if ( alias == null )
+        {
+            alias = name;
+        }
+
+        return alias;
+    }
+    
     public String getDefaultRace()
     {
         return defaultRace;

@@ -189,6 +189,40 @@ public class DwarfCraft extends JavaPlugin
         boolean hasOp = checkPermission( sender, name, "op" );
         boolean hasAll = checkPermission( sender, name, "all" );
         boolean isCmd = true;
+        String[] cArgs = new String[0];
+
+        if ( name.equalsIgnoreCase( "DwarfCraft" ) )
+        {
+            if ( hasNorm || hasAll )
+            {
+                if ( args.length == 0 )
+                {
+                    cmd = new CommandDCCommands( this );
+                }
+                else
+                {
+                    // Converts the variables to work with the old command method
+                    name = getConfigManager().getAlias( args[0] );
+                    cArgs = new String[args.length - 1];
+                    for ( int i = 1; i < args.length; i++ )
+                    {
+                        cArgs[i - 1] = args[i];
+                    }
+                    hasNorm = checkPermission( sender, name, "norm" );
+                    hasOp = checkPermission( sender, name, "op" );
+                    hasAll = checkPermission( sender, name, "all" );
+                }
+            }
+            else
+            {
+                sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
 
         if ( name.equalsIgnoreCase( "SkillSheet" ) )
         {
@@ -204,25 +238,18 @@ public class DwarfCraft extends JavaPlugin
                 cmd = new CommandTutorial( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "DCInfo" ) )
+        else if ( name.equalsIgnoreCase( "Info" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandInfo( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "DCRules" ) )
+        else if ( name.equalsIgnoreCase( "Rules" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandRules( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "DCCommands" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandDCCommands( this );
             }
         }
         else if ( name.equalsIgnoreCase( "SkillInfo" ) )
@@ -246,7 +273,7 @@ public class DwarfCraft extends JavaPlugin
                 cmd = new CommandEffectInfo( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "DCDebug" ) )
+        else if ( name.equalsIgnoreCase( "Debug" ) )
         {
             if ( hasOp || hasAll )
             {
@@ -295,7 +322,7 @@ public class DwarfCraft extends JavaPlugin
                 cmd = new CommandRaces( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "DCReload" ) )
+        else if ( name.equalsIgnoreCase( "Reload" ) )
         {
             if ( hasOp || hasAll )
             {
@@ -311,7 +338,8 @@ public class DwarfCraft extends JavaPlugin
         {
             if ( isCmd == false )
             {
-                return false;
+                cmd = new CommandDCCommands( this );
+                return cmd.execute( sender, commandLabel, cArgs );
             }
             else
             {
@@ -324,7 +352,7 @@ public class DwarfCraft extends JavaPlugin
         }
         else
         {
-            return cmd.execute( sender, commandLabel, args );
+            return cmd.execute( sender, commandLabel, cArgs );
         }
     }
 
