@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -8,22 +8,22 @@ import java.util.List;
 
 import org.bukkit.Material;
 
-public class Skill implements Cloneable
+public class DwarfSkill implements Cloneable
 {
 
     private final int mID;
     private final String mName;
     private int mLevel;
-    private final List<Effect> mEffects;
+    private final List<DwarfEffect> mEffects;
     private final Material mHeldItem;
-    public final TrainingItem Item1;
-    public final TrainingItem Item2;
-    public final TrainingItem Item3;
+    public final DwarfTrainingItem Item1;
+    public final DwarfTrainingItem Item2;
+    public final DwarfTrainingItem Item3;
     private int deposit1;
     private int deposit2;
     private int deposit3;
 
-    public Skill( int id, String displayName, int level, List<Effect> effects, TrainingItem item1, TrainingItem item2, TrainingItem item3, Material trainerHeldMaterial )
+    public DwarfSkill( int id, String displayName, int level, List<DwarfEffect> effects, DwarfTrainingItem item1, DwarfTrainingItem item2, DwarfTrainingItem item3, Material trainerHeldMaterial )
     {
         mID = id;
         mName = displayName;
@@ -38,17 +38,14 @@ public class Skill implements Cloneable
     }
 
     /**
-     * My attempt at making a cloneable class.
-     * 
-     * Known issue: it does not clone the effects table or itemStack table. This
-     * is not a problem because effects are 100% final, and ItemStack is never
+     * My attempt at making a cloneable class. Known issue: it does not clone the effects table or itemStack table. This is not a problem because effects are 100% final, and ItemStack is never
      * modified.
      */
     @Override
-    public Skill clone()
+    public DwarfSkill clone()
     {
 
-        Skill newSkill = new Skill( mID, mName, mLevel, mEffects, Item1, Item2, Item3, mHeldItem );
+        DwarfSkill newSkill = new DwarfSkill( mID, mName, mLevel, mEffects, Item1, Item2, Item3, mHeldItem );
         return newSkill;
     }
 
@@ -57,7 +54,7 @@ public class Skill implements Cloneable
         return mName;
     }
 
-    public List<Effect> getEffects()
+    public List<DwarfEffect> getEffects()
     {
         return mEffects;
     }

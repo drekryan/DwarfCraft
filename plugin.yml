@@ -85,7 +85,7 @@ commands:
       description: Displays a list of trainers and greeters on the server.
       usage: |
              /listtrainers [PageNumber]
-      aliases: [listtrainer, lt]
+      aliases: [lt]
    races:
       description:
       usage:

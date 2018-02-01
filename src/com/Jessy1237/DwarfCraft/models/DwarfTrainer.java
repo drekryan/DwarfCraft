@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -16,8 +16,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.Jessy1237.DwarfCraft.events.DwarfCraftDepositEvent;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.events.DwarfDepositEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
@@ -103,7 +106,7 @@ public final class DwarfTrainer
 
     public void printLeftClick( Player player )
     {
-        GreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
+        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
         if ( msg != null )
         {
             plugin.getOut().sendMessage( player, msg.getLeftClickMessage() );
@@ -117,7 +120,7 @@ public final class DwarfTrainer
 
     public void printRightClick( Player player )
     {
-        GreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
+        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
         if ( msg != null )
         {
             plugin.getOut().sendMessage( player, msg.getRightClickMessage() );
@@ -126,9 +129,9 @@ public final class DwarfTrainer
         return;
     }
 
-    public void depositOne( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositOne( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
-        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
@@ -146,7 +149,7 @@ public final class DwarfTrainer
             }
         }
 
-        DwarfCraftDepositEvent e = new DwarfCraftDepositEvent( dCPlayer, this, skill );
+        DwarfDepositEvent e = new DwarfDepositEvent( dCPlayer, this, skill );
         plugin.getServer().getPluginManager().callEvent( e );
 
         if ( e.isCancelled() )
@@ -164,16 +167,16 @@ public final class DwarfTrainer
         if ( deposited )
         {
             plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
-            Skill[] dCSkills = new Skill[1];
+            DwarfSkill[] dCSkills = new DwarfSkill[1];
             dCSkills[0] = skill;
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
     }
 
-    public void depositAll( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositAll( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
-        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
@@ -188,7 +191,7 @@ public final class DwarfTrainer
             deposited = depositItem( costStack, dCPlayer, trainerGUI, skill, tag )[1];
         }
 
-        DwarfCraftDepositEvent e = new DwarfCraftDepositEvent( dCPlayer, this, skill );
+        DwarfDepositEvent e = new DwarfDepositEvent( dCPlayer, this, skill );
         plugin.getServer().getPluginManager().callEvent( e );
 
         if ( e.isCancelled() )
@@ -206,16 +209,16 @@ public final class DwarfTrainer
         if ( deposited )
         {
             plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
-            Skill[] dCSkills = new Skill[1];
+            DwarfSkill[] dCSkills = new DwarfSkill[1];
             dCSkills[0] = skill;
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
     }
 
-    public void trainSkill( DCPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void trainSkill( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
-        Skill skill = dCPlayer.getSkill( getSkillTrained() );
+        DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
@@ -229,7 +232,7 @@ public final class DwarfTrainer
             hasMatsOrDeposits = depositItem( costStack, dCPlayer, trainerGUI, skill, tag );
         }
 
-        DwarfCraftLevelUpEvent e = null;
+        DwarfLevelUpEvent e = null;
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
         if ( hasMatsOrDeposits[0] )
         {
@@ -238,7 +241,7 @@ public final class DwarfTrainer
             skill.setDeposit2( 0 );
             skill.setDeposit3( 0 );
 
-            e = new DwarfCraftLevelUpEvent( dCPlayer, this, skill );
+            e = new DwarfLevelUpEvent( dCPlayer, this, skill );
 
             plugin.getServer().getPluginManager().callEvent( e );
         }
@@ -265,7 +268,7 @@ public final class DwarfTrainer
                 }
             }
 
-            Skill[] dCSkills = new Skill[1];
+            DwarfSkill[] dCSkills = new DwarfSkill[1];
             dCSkills[0] = skill;
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             trainerGUI.updateTitle();
@@ -284,11 +287,21 @@ public final class DwarfTrainer
         return this.lastTrain;
     }
 
+    /**
+     * Sets whether the player has to wait for the trainer to not be busy. A trainer is busy when another player is already talking to the trainer (i.e. has an inventory open)
+     * 
+     * @param wait True if the trainer will make the player wait
+     */
     public void setWait( boolean wait )
     {
         this.wait = wait;
     }
 
+    /**
+     * Sets the last the time the trainer has leveled someone's skill up. This is allows for a cooldown between leveling players to allow the server to catchup.
+     * 
+     * @param lastTrain The time in milliseconds
+     */
     public void setLastTrain( long lastTrain )
     {
         this.lastTrain = lastTrain;
@@ -387,11 +400,11 @@ public final class DwarfTrainer
      * 
      * @param costStack The item type and amount to be removed
      * @param dCPlayer The player that is depositing
-     * @param trainerGUI The gui that flagged this deposit event
+     * @param trainerGUI The guis that flagged this deposit event
      * @param skill The skill that is being deposited into
      * @return True for [0] if the player had enough of the required item otherwise [0] false and True for [1] if any items were deposited into the skill otherwise false for [1]
      */
-    private boolean[] depositItem( ItemStack costStack, DCPlayer dCPlayer, TrainerGUI trainerGUI, Skill skill, String tag )
+    private boolean[] depositItem( ItemStack costStack, DwarfPlayer dCPlayer, TrainerGUI trainerGUI, DwarfSkill skill, String tag )
     {
         boolean[] hasMatsOrDeposits = { true, false };
         final int origCost = costStack.getAmount();

@@ -4,6 +4,7 @@ package com.Jessy1237.DwarfCraft.listeners;
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
@@ -17,19 +18,18 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.DwarfVehicle;
-import com.Jessy1237.DwarfCraft.Effect;
-import com.Jessy1237.DwarfCraft.EffectType;
-import com.Jessy1237.DwarfCraft.Skill;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfVehicle;
 
-public class DCVehicleListener implements Listener
+public class DwarfVehicleListener implements Listener
 {
     private final DwarfCraft plugin;
 
-    public DCVehicleListener( final DwarfCraft plugin )
+    public DwarfVehicleListener( final DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
@@ -54,18 +54,18 @@ public class DCVehicleListener implements Listener
             {
 
                 Player player = ( Player ) event.getAttacker();
-                DCPlayer dcPlayer = plugin.getDataManager().find( player );
+                DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
                 Location loc = event.getVehicle().getLocation();
 
-                for ( Skill skill : dcPlayer.getSkills().values() )
+                for ( DwarfSkill skill : dwarfPlayer.getSkills().values() )
                 {
-                    for ( Effect effect : skill.getEffects() )
+                    for ( DwarfEffect effect : skill.getEffects() )
                     {
-                        if ( effect.getEffectType() == EffectType.VEHICLEDROP )
+                        if ( effect.getEffectType() == DwarfEffectType.VEHICLEDROP )
                         {
-                            ItemStack drop = effect.getOutput( dcPlayer );
+                            ItemStack drop = effect.getOutput( dwarfPlayer );
 
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -137,14 +137,14 @@ public class DCVehicleListener implements Listener
         if ( !( event.getVehicle().getPassenger() instanceof Player ) )
             return;
 
-        DCPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getVehicle().getPassenger() );
+        DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getVehicle().getPassenger() );
         double effectAmount = 1.0;
-        Effect effect = null;
-        for ( Skill s : dCPlayer.getSkills().values() )
+        DwarfEffect effect = null;
+        for ( DwarfSkill s : dCPlayer.getSkills().values() )
         {
-            for ( Effect e : s.getEffects() )
+            for ( DwarfEffect e : s.getEffects() )
             {
-                if ( e.getEffectType() == EffectType.VEHICLEMOVE )
+                if ( e.getEffectType() == DwarfEffectType.VEHICLEMOVE )
                 {
                     effect = e;
                     effectAmount = e.getEffectAmount( dCPlayer );
@@ -161,7 +161,7 @@ public class DCVehicleListener implements Listener
 
                 // The original boat speed and altered boat speed are assigned
                 // to the damage variables
-                DwarfCraftEffectEvent e = new DwarfCraftEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
+                DwarfEffectEvent e = new DwarfEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
                 plugin.getServer().getPluginManager().callEvent( e );
                 if ( !e.isCancelled() )
                 {

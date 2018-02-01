@@ -7,16 +7,13 @@ package com.Jessy1237.DwarfCraft.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
-import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
 public class CommandSkillSheet extends Command
 {
@@ -46,7 +43,7 @@ public class CommandSkillSheet extends Command
             else
             {
                 if ( args.length == 0 )
-                    throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
+                    throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
             }
 
             CommandParser parser = new CommandParser( plugin, sender, args );
@@ -59,7 +56,7 @@ public class CommandSkillSheet extends Command
                 desiredArguments.add( args[0] );
             }
 
-            DCPlayer dCPlayer = new DCPlayer( plugin, null );
+            DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
             desiredArguments.add( dCPlayer );
             String displayName = null;
 
@@ -67,22 +64,22 @@ public class CommandSkillSheet extends Command
             {
                 outputList = parser.parse( desiredArguments, false );
                 if ( outputList.get( 0 ) instanceof String )
-                    dCPlayer = ( DCPlayer ) outputList.get( 1 );
+                    dCPlayer = ( DwarfPlayer ) outputList.get( 1 );
                 else
-                    dCPlayer = ( DCPlayer ) outputList.get( 0 );
+                    dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
                 if ( dCPlayer.getPlayer() == null )
                     displayName = ( printFull ? args[1] : args[0] );
                 else
                     displayName = dCPlayer.getPlayer().getDisplayName();
             }
-            catch ( DCCommandException dce )
+            catch ( CommandException dce )
             {
                 if ( dce.getType() == Type.PARSEDWARFFAIL )
                 {
                     if ( sender instanceof Player )
                         dCPlayer = plugin.getDataManager().find( ( Player ) sender );
                     else
-                        throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
+                        throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                 }
                 else
                     throw dce;
@@ -90,7 +87,7 @@ public class CommandSkillSheet extends Command
             plugin.getOut().printSkillSheet( dCPlayer, sender, displayName, printFull );
             return true;
         }
-        catch ( DCCommandException e )
+        catch ( CommandException e )
         {
             e.describe( sender );
             sender.sendMessage( CommandInformation.Usage.SKILLSHEET.getUsage() );

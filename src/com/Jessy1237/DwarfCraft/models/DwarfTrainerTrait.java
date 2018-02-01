@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -11,6 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
+
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 public class DwarfTrainerTrait extends Trait
 {
@@ -76,7 +78,7 @@ public class DwarfTrainerTrait extends Trait
     {
         if ( event.getNPC().hasTrait( DwarfTrainerTrait.class ) && event.getNPC().getId() == getNPC().getId() )
         {
-            plugin.getDCEntityListener().onNPCLeftClickEvent( event );
+            plugin.getDwarfEntityListener().onNPCLeftClickEvent( event );
         }
     }
 
@@ -85,7 +87,7 @@ public class DwarfTrainerTrait extends Trait
     {
         if ( event.getNPC().hasTrait( DwarfTrainerTrait.class ) && event.getNPC().getId() == getNPC().getId() )
         {
-            plugin.getDCEntityListener().onNPCRightClickEvent( event );
+            plugin.getDwarfEntityListener().onNPCRightClickEvent( event );
         }
     }
 

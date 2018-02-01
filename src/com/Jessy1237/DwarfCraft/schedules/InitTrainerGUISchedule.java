@@ -1,4 +1,6 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.schedules;
+
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 public class InitTrainerGUISchedule implements Runnable
 {
@@ -13,7 +15,7 @@ public class InitTrainerGUISchedule implements Runnable
     public void run()
     {
         trainerGUI.init();
-        trainerGUI.getDCPlayer().getPlayer().updateInventory();
+        trainerGUI.getDwarfPlayer().getPlayer().updateInventory();
         trainerGUI.openGUI();
     }
 }

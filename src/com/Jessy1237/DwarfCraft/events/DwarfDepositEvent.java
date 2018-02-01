@@ -4,18 +4,18 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfTrainer;
-import com.Jessy1237.DwarfCraft.Skill;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
 
-public class DwarfCraftDepositEvent extends Event implements Cancellable
+public class DwarfDepositEvent extends Event implements Cancellable
 {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
-    private DCPlayer player;
+    private DwarfPlayer player;
     private DwarfTrainer trainer;
-    private Skill skill;
+    private DwarfSkill skill;
 
     @Override
     public HandlerList getHandlers()
@@ -39,17 +39,13 @@ public class DwarfCraftDepositEvent extends Event implements Cancellable
     }
 
     /**
-     * The event for when a DCPlayer deposits into their skill. This event is fired
-     * after the skill is levelled but before the data is saved.
+     * The event for when a DwarfPlayer deposits into their skill. This event is fired after the skill is levelled but before the data is saved.
      * 
-     * @param player
-     *            the player that levelled up a skill
-     * @param trainer
-     *            the trainer that was used to level up the skill
-     * @param skill
-     *            the skill that was levelled up
+     * @param player the player that levelled up a skill
+     * @param trainer the trainer that was used to level up the skill
+     * @param skill the skill that was levelled up
      */
-    public DwarfCraftDepositEvent( DCPlayer player, DwarfTrainer trainer, Skill skill )
+    public DwarfDepositEvent( DwarfPlayer player, DwarfTrainer trainer, DwarfSkill skill )
     {
         this.player = player;
         this.trainer = trainer;
@@ -57,11 +53,11 @@ public class DwarfCraftDepositEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the DCPlayer that levelled up a skill.
+     * Gets the DwarfPlayer that levelled up a skill.
      * 
-     * @return DCPlayer
+     * @return DwarfPlayer
      */
-    public DCPlayer getDCPlayer()
+    public DwarfPlayer getDwarfPlayer()
     {
         return player;
     }
@@ -79,9 +75,9 @@ public class DwarfCraftDepositEvent extends Event implements Cancellable
     /**
      * Gets the skill that was deposited into.
      * 
-     * @return Skill
+     * @return DwarfSkill
      */
-    public Skill getSkill()
+    public DwarfSkill getSkill()
     {
         return skill;
     }

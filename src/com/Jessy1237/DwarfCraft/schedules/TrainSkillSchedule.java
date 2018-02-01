@@ -1,4 +1,11 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.schedules;
+
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -8,11 +15,11 @@ public class TrainSkillSchedule implements Runnable
 
     private DwarfCraft plugin;
     private final DwarfTrainer trainer;
-    private final DCPlayer dCPlayer;
+    private final DwarfPlayer dCPlayer;
     private final ItemStack clickedItem;
     private final TrainerGUI trainerGUI;
 
-    public TrainSkillSchedule( DwarfCraft plugin, DwarfTrainer trainer, DCPlayer dCPlayer, ItemStack clickedItem, TrainerGUI trainerGUI )
+    public TrainSkillSchedule( DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dCPlayer, ItemStack clickedItem, TrainerGUI trainerGUI )
     {
         this.plugin = plugin;
         this.trainer = trainer;
@@ -25,7 +32,7 @@ public class TrainSkillSchedule implements Runnable
     public void run()
     {
 
-        Skill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+        DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
         String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
 
         if ( clickedItem.getType().equals( Material.INK_SACK ) )

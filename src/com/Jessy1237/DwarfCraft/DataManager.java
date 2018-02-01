@@ -24,16 +24,23 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
+import com.Jessy1237.DwarfCraft.model.DwarfGreeterMessage;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainerTrait;
+import com.Jessy1237.DwarfCraft.model.DwarfVehicle;
+
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
 public class DataManager
 {
 
-    private List<DCPlayer> dwarves = new ArrayList<DCPlayer>();
+    private List<DwarfPlayer> dwarves = new ArrayList<DwarfPlayer>();
     public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<Integer, DwarfVehicle>();
     public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<Integer, DwarfTrainer>();
-    private HashMap<String, GreeterMessage> greeterMessageList = new HashMap<String, GreeterMessage>();
+    private HashMap<String, DwarfGreeterMessage> greeterMessageList = new HashMap<String, DwarfGreeterMessage>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
@@ -98,13 +105,13 @@ public class DataManager
         return false;
     }
 
-    public DCPlayer createDwarf( Player player )
+    public DwarfPlayer createDwarf( Player player )
     {
-        DCPlayer newDwarf = new DCPlayer( plugin, player );
+        DwarfPlayer newDwarf = new DwarfPlayer( plugin, player );
         newDwarf.setRace( plugin.getConfigManager().getDefaultRace() );
         newDwarf.setSkills( plugin.getConfigManager().getAllSkills() );
 
-        for ( Skill skill : newDwarf.getSkills().values() )
+        for ( DwarfSkill skill : newDwarf.getSkills().values() )
         {
             skill.setLevel( 0 );
             skill.setDeposit1( 0 );
@@ -296,14 +303,14 @@ public class DataManager
     }
 
     /**
-     * Finds a DCPlayer from the server's static list based on player's name
+     * Finds a DwarfPlayer from the server's static list based on player's name
      * 
      * @param player
-     * @return DCPlayer or null
+     * @return DwarfPlayer or null
      */
-    public DCPlayer find( Player player )
+    public DwarfPlayer find( Player player )
     {
-        for ( DCPlayer d : dwarves )
+        for ( DwarfPlayer d : dwarves )
         {
             if ( d != null )
             {
@@ -320,19 +327,19 @@ public class DataManager
         return null;
     }
 
-    protected DCPlayer findOffline( UUID uuid )
+    protected DwarfPlayer findOffline( UUID uuid )
     {
-        DCPlayer dCPlayer = createDwarf( null );
+        DwarfPlayer dCPlayer = createDwarf( null );
         if ( checkDwarfData( dCPlayer, uuid ) )
             return dCPlayer;
         else
         {
-            // No DCPlayer or data found
+            // No DwarfPlayer or data found
             return null;
         }
     }
 
-    public void createDwarfData( DCPlayer dCPlayer )
+    public void createDwarfData( DwarfPlayer dCPlayer )
     {
         try
         {
@@ -348,7 +355,7 @@ public class DataManager
         }
     }
 
-    public boolean checkDwarfData( DCPlayer player )
+    public boolean checkDwarfData( DwarfPlayer player )
     {
         return checkDwarfData( player, player.getPlayer().getUniqueId() );
     }
@@ -359,7 +366,7 @@ public class DataManager
      * @param player
      * @param name
      */
-    private boolean checkDwarfData( DCPlayer player, UUID uuid )
+    private boolean checkDwarfData( DwarfPlayer player, UUID uuid )
     {
         try
         {
@@ -385,7 +392,7 @@ public class DataManager
             {
                 int skillID = rs.getInt( "id" );
                 int level = rs.getInt( "level" );
-                Skill skill = player.getSkill( skillID );
+                DwarfSkill skill = player.getSkill( skillID );
                 if ( skill != null )
                 {
                     skill.setLevel( level );
@@ -409,7 +416,7 @@ public class DataManager
         }
     }
 
-    protected GreeterMessage getGreeterMessage( String messageId )
+    public DwarfGreeterMessage getGreeterMessage( String messageId )
     {
         return greeterMessageList.get( messageId );
     }
@@ -456,7 +463,7 @@ public class DataManager
         return null;
     }
 
-    protected void insertGreeterMessage( String messageId, GreeterMessage greeterMessage )
+    protected void insertGreeterMessage( String messageId, DwarfGreeterMessage greeterMessage )
     {
         try
         {
@@ -519,26 +526,26 @@ public class DataManager
         return -1;
     }
 
-    public boolean saveDwarfData( DCPlayer dCPlayer, Skill[] skills )
+    public boolean saveDwarfData( DwarfPlayer dwarfPlayer, DwarfSkill[] skills )
     {
         try
         {
             PreparedStatement prep = mDBCon.prepareStatement( "UPDATE players SET race=? WHERE uuid=?;" );
-            prep.setString( 1, dCPlayer.getRace() );
-            prep.setString( 2, dCPlayer.getPlayer().getUniqueId().toString() );
+            prep.setString( 1, dwarfPlayer.getRace() );
+            prep.setString( 2, dwarfPlayer.getPlayer().getUniqueId().toString() );
             prep.execute();
             prep.close();
 
             prep = mDBCon.prepareStatement( "UPDATE players SET raceMaster=? WHERE uuid=?;" );
-            prep.setBoolean( 1, dCPlayer.isRaceMaster() );
-            prep.setString( 2, dCPlayer.getPlayer().getUniqueId().toString() );
+            prep.setBoolean( 1, dwarfPlayer.isRaceMaster() );
+            prep.setString( 2, dwarfPlayer.getPlayer().getUniqueId().toString() );
             prep.execute();
             prep.close();
 
             prep = mDBCon.prepareStatement( "REPLACE INTO skills(player, id, level, " + "deposit1, deposit2, deposit3) " + "values(?,?,?,?,?,?);" );
 
-            int id = getPlayerID( dCPlayer.getPlayer().getUniqueId() );
-            for ( Skill skill : skills )
+            int id = getPlayerID( dwarfPlayer.getPlayer().getUniqueId() );
+            for ( DwarfSkill skill : skills )
             {
                 prep.setInt( 1, id );
                 prep.setInt( 2, skill.getId() );

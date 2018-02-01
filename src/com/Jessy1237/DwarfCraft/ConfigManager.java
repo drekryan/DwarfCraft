@@ -22,8 +22,13 @@ import org.bukkit.World;
 import org.jbls.LexManos.CSV.CSVReader;
 import org.jbls.LexManos.CSV.CSVRecord;
 
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLoadRacesEvent;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLoadSkillsEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLoadRacesEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLoadSkillsEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfGreeterMessage;
+import com.Jessy1237.DwarfCraft.model.DwarfRace;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.model.DwarfTrainingItem;
 
 public final class ConfigManager
 {
@@ -52,12 +57,12 @@ public final class ConfigManager
     private String vanillaRace;
     private String prefixStr;
 
-    private HashMap<Integer, Skill> skillsArray = new HashMap<Integer, Skill>();
+    private HashMap<Integer, DwarfSkill> skillsArray = new HashMap<Integer, DwarfSkill>();
     public ArrayList<World> worlds = new ArrayList<World>();
     private HashMap<String, ArrayList<Integer>> blockGroups = new HashMap<String, ArrayList<Integer>>();
     private HashMap<String, ArrayList<Integer>> toolGroups = new HashMap<String, ArrayList<Integer>>();
 
-    private ArrayList<Race> raceList = new ArrayList<Race>();
+    private ArrayList<DwarfRace> raceList = new ArrayList<DwarfRace>();
     private String defaultRace;
 
     public boolean sendGreeting = false;
@@ -90,11 +95,11 @@ public final class ConfigManager
             {
                 // Runs the proceeding events after all the config files are
                 // read so that the skillArray is complete with effects
-                DwarfCraftLoadSkillsEvent e = new DwarfCraftLoadSkillsEvent( ( HashMap<Integer, Skill> ) skillsArray.clone() );
+                DwarfLoadSkillsEvent e = new DwarfLoadSkillsEvent( ( HashMap<Integer, DwarfSkill> ) skillsArray.clone() );
                 plugin.getServer().getPluginManager().callEvent( e );
                 skillsArray = e.getSkills();
 
-                DwarfCraftLoadRacesEvent event = new DwarfCraftLoadRacesEvent( ( ArrayList<Race> ) raceList.clone() );
+                DwarfLoadRacesEvent event = new DwarfLoadRacesEvent( ( ArrayList<DwarfRace> ) raceList.clone() );
                 plugin.getServer().getPluginManager().callEvent( event );
                 raceList = event.getRaces();
 
@@ -109,10 +114,10 @@ public final class ConfigManager
 
     }
 
-    public HashMap<Integer, Skill> getAllSkills()
+    public HashMap<Integer, DwarfSkill> getAllSkills()
     {
-        HashMap<Integer, Skill> newSkillsArray = new HashMap<Integer, Skill>();
-        for ( Skill s : skillsArray.values() )
+        HashMap<Integer, DwarfSkill> newSkillsArray = new HashMap<Integer, DwarfSkill>();
+        for ( DwarfSkill s : skillsArray.values() )
         {
             if ( newSkillsArray.containsKey( s.getId() ) )
                 continue;
@@ -121,9 +126,9 @@ public final class ConfigManager
         return newSkillsArray;
     }
 
-    public Race getRace( String Race )
+    public DwarfRace getRace(String Race )
     {
-        for ( Race r : raceList )
+        for ( DwarfRace r : raceList )
         {
             if ( r != null )
             {
@@ -138,16 +143,16 @@ public final class ConfigManager
 
     public ArrayList<Integer> getAllSkills( String Race )
     {
-        Race r = getRace( Race );
+        DwarfRace r = getRace( Race );
         if ( r != null )
             return r.getSkills();
         return null;
     }
 
-    protected Skill getGenericSkill( int skillId )
+    public DwarfSkill getGenericSkill(int skillId )
     {
 
-        for ( Skill s : skillsArray.values() )
+        for ( DwarfSkill s : skillsArray.values() )
         {
             if ( s.getId() == skillId )
                 return s.clone();
@@ -341,7 +346,7 @@ public final class ConfigManager
             {
                 if ( getRace( vanillaRace ) == null )
                 {
-                    raceList.add( new Race( vanillaRace, new ArrayList<Integer>(), "The all round balanced race (vanilla)." ) );
+                    raceList.add( new DwarfRace( vanillaRace, new ArrayList<Integer>(), "The all round balanced race (vanilla)." ) );
                     System.out.println( "[DwarfCraft] Loaded vanilla race: " + vanillaRace );
                 }
             }
@@ -416,8 +421,8 @@ public final class ConfigManager
             while ( records.hasNext() )
             {
                 CSVRecord item = records.next();
-                Effect effect = new Effect( item, plugin );
-                Skill skill = skillsArray.get( effect.getId() / 10 );
+                DwarfEffect effect = new DwarfEffect( item, plugin );
+                DwarfSkill skill = skillsArray.get( effect.getId() / 10 );
                 if ( skill != null )
                 {
                     skill.getEffects().add( effect );
@@ -450,7 +455,7 @@ public final class ConfigManager
             boolean desc = false;
             boolean skills = false;
             boolean prefix = false;
-            Race race = null;
+            DwarfRace race = null;
             while ( line != null )
             {
                 if ( line.length() == 0 )
@@ -471,7 +476,7 @@ public final class ConfigManager
                 }
                 if ( theline[0].equalsIgnoreCase( "Name" ) )
                 {
-                    race = new Race( theline[1].trim() );
+                    race = new DwarfRace( theline[1].trim() );
                     name = true;
                     line = br.readLine();
                 }
@@ -555,7 +560,7 @@ public final class ConfigManager
                 leftClick = br.readLine().trim();
                 rightClick = br.readLine().trim();
 
-                plugin.getDataManager().insertGreeterMessage( messageId, new GreeterMessage( leftClick, rightClick ) );
+                plugin.getDataManager().insertGreeterMessage( messageId, new DwarfGreeterMessage( leftClick, rightClick ) );
                 messageId = br.readLine();
             }
         }
@@ -798,8 +803,8 @@ public final class ConfigManager
                 CSVRecord item = records.next();
 
                 @SuppressWarnings( "deprecation" )
-                Skill skill = new Skill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<Effect>(), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new TrainingItem( plugin.getUtil()
-                        .parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new TrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
+                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<DwarfEffect>(), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new DwarfTrainingItem( plugin.getUtil()
+                        .parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
                                 .getMaterial( item.getInt( "Held" ) ) );
 
                 skillsArray.put( skill.getId(), skill );
@@ -963,14 +968,14 @@ public final class ConfigManager
         return defaultRace;
     }
 
-    public ArrayList<Race> getRaceList()
+    public ArrayList<DwarfRace> getRaceList()
     {
         return raceList;
     }
 
     public boolean checkRace( String name )
     {
-        for ( Race r : raceList )
+        for ( DwarfRace r : raceList )
         {
             if ( r != null )
             {

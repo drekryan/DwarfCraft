@@ -10,14 +10,17 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.DCCommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.model.DwarfEffect;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
 public final class CommandParser
 {
     private final DwarfCraft plugin;
     private CommandSender sender;
     private String[] input;
-    private DCPlayer target = null;
+    private DwarfPlayer target = null;
 
     public CommandParser( final DwarfCraft plugin, CommandSender sender, String[] args )
     {
@@ -26,7 +29,7 @@ public final class CommandParser
         this.input = args;
     }
 
-    public List<Object> parse( List<Object> desiredArguments, boolean ignoreSize ) throws DCCommandException
+    public List<Object> parse( List<Object> desiredArguments, boolean ignoreSize ) throws CommandException
     {
         List<Object> output = new ArrayList<Object>();
         int arrayIterator = 0;
@@ -34,13 +37,13 @@ public final class CommandParser
         {
             for ( Object o : desiredArguments )
             {
-                if ( o instanceof DCPlayer )
+                if ( o instanceof DwarfPlayer )
                     output.add( parseDwarf( arrayIterator ) );
                 else if ( o instanceof Player )
                     output.add( parsePlayer( arrayIterator ) );
-                else if ( o instanceof Skill )
+                else if ( o instanceof DwarfSkill )
                     output.add( parseSkill( arrayIterator ) );
-                else if ( o instanceof Effect )
+                else if ( o instanceof DwarfEffect )
                     output.add( parseEffect( arrayIterator ) );
                 else if ( o instanceof Boolean )
                     output.add( parseConfirm( arrayIterator ) );
@@ -65,12 +68,12 @@ public final class CommandParser
         }
         catch ( ArrayIndexOutOfBoundsException e )
         {
-            throw new DCCommandException( plugin, Type.TOOFEWARGS );
+            throw new CommandException( plugin, Type.TOOFEWARGS );
         }
         if ( input.length > output.size() && !ignoreSize )
-            throw new DCCommandException( plugin, Type.TOOMANYARGS );
+            throw new CommandException( plugin, Type.TOOMANYARGS );
         if ( input.length < output.size() && !ignoreSize )
-            throw new DCCommandException( plugin, Type.TOOFEWARGS );
+            throw new CommandException( plugin, Type.TOOFEWARGS );
         return output;
     }
 
@@ -89,10 +92,10 @@ public final class CommandParser
     }
 
     @SuppressWarnings( "deprecation" )
-    private DCPlayer parseDwarf( int argNumber ) throws DCCommandException
+    private DwarfPlayer parseDwarf( int argNumber ) throws CommandException
     {
         Player player;
-        DCPlayer dCPlayer = null;
+        DwarfPlayer dCPlayer = null;
         try
         {
             String dwarf = input[argNumber];
@@ -106,7 +109,7 @@ public final class CommandParser
             }
             if ( dCPlayer == null )
             {
-                throw new DCCommandException( plugin, Type.PARSEDWARFFAIL );
+                throw new CommandException( plugin, Type.PARSEDWARFFAIL );
             }
             this.target = dCPlayer;
             return dCPlayer;
@@ -123,15 +126,15 @@ public final class CommandParser
                 return target;
             }
             else
-                throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
+                throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
         }
 
     }
 
-    private Effect parseEffect( int argNumber ) throws DCCommandException
+    private DwarfEffect parseEffect( int argNumber ) throws CommandException
     {
         String inputString = input[argNumber];
-        Effect effect;
+        DwarfEffect effect;
         int effectId;
 
         try
@@ -141,26 +144,26 @@ public final class CommandParser
         }
         catch ( NullPointerException npe )
         {
-            throw new DCCommandException( plugin, Type.EMPTYPLAYER );
+            throw new CommandException( plugin, Type.EMPTYPLAYER );
         }
         catch ( NumberFormatException nfe )
         {
-            throw new DCCommandException( plugin, Type.PARSEEFFECTFAIL );
+            throw new CommandException( plugin, Type.PARSEEFFECTFAIL );
         }
         if ( effect == null )
-            throw new DCCommandException( plugin, Type.PARSEEFFECTFAIL );
+            throw new CommandException( plugin, Type.PARSEEFFECTFAIL );
         return effect;
     }
 
-    private String parseGreeterMessage( int arrayIterator ) throws DCCommandException
+    private String parseGreeterMessage( int arrayIterator ) throws CommandException
     {
         if ( plugin.getDataManager().getGreeterMessage( input[arrayIterator] ) == null )
-            throw new DCCommandException( plugin, Type.NOGREETERMESSAGE );
+            throw new CommandException( plugin, Type.NOGREETERMESSAGE );
         String greeterMessage = input[arrayIterator];
         return greeterMessage;
     }
 
-    private Object parseInteger( int argNumber ) throws DCCommandException
+    private Object parseInteger( int argNumber ) throws CommandException
     {
         int i;
         try
@@ -169,7 +172,7 @@ public final class CommandParser
         }
         catch ( NumberFormatException nfe )
         {
-            throw new DCCommandException( plugin, Type.PARSEINTFAIL );
+            throw new CommandException( plugin, Type.PARSEINTFAIL );
         }
         return i;
     }
@@ -186,17 +189,17 @@ public final class CommandParser
         return type;
     }
 
-    private Object parsePlayer( int arrayIterator ) throws DCCommandException
+    private Object parsePlayer( int arrayIterator ) throws CommandException
     {
         Player player = sender.getServer().getPlayer( input[arrayIterator] );
         if ( player == null )
-            throw new DCCommandException( plugin, Type.PARSEPLAYERFAIL );
+            throw new CommandException( plugin, Type.PARSEPLAYERFAIL );
         return null;
     }
 
-    private Skill parseSkill( int argNumber ) throws DCCommandException
+    private DwarfSkill parseSkill( int argNumber ) throws CommandException
     {
-        Skill skill = null;
+        DwarfSkill skill = null;
         String inputString = input[argNumber];
         if ( inputString.equalsIgnoreCase( "all" ) )
             return null;
@@ -214,15 +217,15 @@ public final class CommandParser
             catch ( NumberFormatException nfe )
             {
                 if ( inputString.length() < 8 )
-                    throw new DCCommandException( plugin, Type.PARSESKILLFAIL );
+                    throw new CommandException( plugin, Type.PARSESKILLFAIL );
                 for ( int i : plugin.getConfigManager().getAllSkills( target.getRace() ) )
                 {
-                    Skill s = plugin.getConfigManager().getGenericSkill( i );
+                    DwarfSkill s = plugin.getConfigManager().getGenericSkill( i );
                     if ( s.getDisplayName().regionMatches( 0, inputString, 0, 8 ) )
                         return s;
                 }
             }
-            throw new DCCommandException( plugin, Type.PARSESKILLFAIL );
+            throw new CommandException( plugin, Type.PARSESKILLFAIL );
         }
         try
         {
@@ -238,14 +241,14 @@ public final class CommandParser
         }
         catch ( NullPointerException npe )
         {
-            throw new DCCommandException( plugin, Type.EMPTYPLAYER );
+            throw new CommandException( plugin, Type.EMPTYPLAYER );
         }
         if ( skill == null )
-            throw new DCCommandException( plugin, Type.PARSESKILLFAIL );
+            throw new CommandException( plugin, Type.PARSESKILLFAIL );
         return skill;
     }
 
-    private int parseSkillLevel( int argNumber ) throws DCCommandException
+    private int parseSkillLevel( int argNumber ) throws CommandException
     {
         String inputString = input[argNumber];
         int level;
@@ -255,22 +258,22 @@ public final class CommandParser
         }
         catch ( NumberFormatException nfe )
         {
-            throw new DCCommandException( plugin, Type.PARSELEVELFAIL );
+            throw new CommandException( plugin, Type.PARSELEVELFAIL );
         }
         if ( level > 30 || level < -1 )
         {
-            throw new DCCommandException( plugin, Type.LEVELOUTOFBOUNDS );
+            throw new CommandException( plugin, Type.LEVELOUTOFBOUNDS );
         }
         return level;
     }
 
-    private Object parseUniqueId( int arrayIterator, boolean add ) throws DCCommandException
+    private Object parseUniqueId( int arrayIterator, boolean add ) throws CommandException
     {
         String uniqueId = input[arrayIterator];
         if ( plugin.getDataManager().getTrainer( uniqueId ) != null && add )
-            throw new DCCommandException( plugin, Type.NPCIDINUSE );
+            throw new CommandException( plugin, Type.NPCIDINUSE );
         if ( plugin.getDataManager().getTrainer( uniqueId ) == null && !add )
-            throw new DCCommandException( plugin, Type.NPCIDNOTFOUND );
+            throw new CommandException( plugin, Type.NPCIDNOTFOUND );
         return uniqueId;
     }
 }

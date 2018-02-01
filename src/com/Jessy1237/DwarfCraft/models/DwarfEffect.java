@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -60,10 +60,12 @@ import org.bukkit.entity.ZombieVillager;
 import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 
 @SuppressWarnings( "deprecation" )
-public class Effect
+public class DwarfEffect
 {
     private DwarfCraft plugin;
     private int mID;
@@ -77,7 +79,7 @@ public class Effect
     private double mExceptionHigh;
     private double mExceptionValue;
     private int mNormalLevel;
-    private EffectType mType;
+    private DwarfEffectType mType;
     private ItemStack mInitiator;
     private ItemStack mOutput;
     private boolean mRequireTool;
@@ -86,7 +88,7 @@ public class Effect
 
     private EntityType mCreature;
 
-    public Effect( CSVRecord record, DwarfCraft plugin )
+    public DwarfEffect( CSVRecord record, DwarfCraft plugin )
     {
         if ( record == null )
             return;
@@ -101,8 +103,8 @@ public class Effect
         mExceptionHigh = record.getInt( "ExceptionHigh" );
         mExceptionValue = record.getDouble( "ExceptionValue" );
         mNormalLevel = record.getInt( "NormalLevel" );
-        mType = EffectType.getEffectType( record.getString( "Type" ) );
-        if ( mType != EffectType.MOBDROP && mType != EffectType.SHEAR )
+        mType = DwarfEffectType.getEffectType( record.getString( "Type" ) );
+        if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR )
         {
             mInitiator = plugin.getUtil().parseItem( record.getString( "OriginID" ) );
         }
@@ -132,7 +134,7 @@ public class Effect
      * 
      * @return
      */
-    protected String describeGeneral( DCPlayer dCPlayer )
+    public String describeGeneral( DwarfPlayer dCPlayer )
     {
         String description;
         String initiator = plugin.getUtil().getCleanName( mInitiator );
@@ -164,7 +166,7 @@ public class Effect
      * @param dCPlayer
      * @return
      */
-    protected String describeLevel( DCPlayer dCPlayer )
+    public String describeLevel( DwarfPlayer dCPlayer )
     {
         if ( dCPlayer == null )
             return "Failed"; // TODO add failure code
@@ -180,7 +182,7 @@ public class Effect
         String effectLevelColor = effectLevelColor( dCPlayer.getSkill( this ).getLevel() );
         String toolType = toolType();
 
-        if ( mType == EffectType.SMELT )
+        if ( mType == DwarfEffectType.SMELT )
         {
             if ( mInitiator.getTypeId() == 265 )
             {
@@ -269,13 +271,13 @@ public class Effect
      * @param dCPlayer
      * @return
      */
-    public double getEffectAmount( DCPlayer dCPlayer )
+    public double getEffectAmount( DwarfPlayer dCPlayer )
     {
         return getEffectAmount( dCPlayer.getSkillLevel( this.mID / 10 ), dCPlayer );
     }
 
     @SuppressWarnings( "unlikely-arg-type" )
-    public double getEffectAmount( int skillLevel, DCPlayer dCPlayer )
+    public double getEffectAmount( int skillLevel, DwarfPlayer dCPlayer )
     {
         double effectAmount = mBase;
         if ( skillLevel == -1 )
@@ -297,7 +299,7 @@ public class Effect
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
     }
 
-    public EffectType getEffectType()
+    public DwarfEffectType getEffectType()
     {
         return mType;
     }
@@ -327,17 +329,17 @@ public class Effect
         return mOutput;
     }
 
-    public ItemStack getOutput( DCPlayer player )
+    public ItemStack getOutput( DwarfPlayer player )
     {
         return getOutput( player, ( byte ) 0, -1 );
     }
 
-    public ItemStack getOutput( DCPlayer player, Byte oldData )
+    public ItemStack getOutput( DwarfPlayer player, Byte oldData )
     {
         return getOutput( player, oldData, -1 );
     }
 
-    public ItemStack getOutput( DCPlayer player, Byte oldData, int oldID )
+    public ItemStack getOutput( DwarfPlayer player, Byte oldData, int oldID )
     {
         Byte data = ( mOutput.getData() == null ? null : mOutput.getData().getData() );
 
@@ -555,12 +557,12 @@ public class Effect
         return Integer.toString( mID );
     }
 
-    public void damageTool( DCPlayer player, int base, ItemStack tool )
+    public void damageTool( DwarfPlayer player, int base, ItemStack tool )
     {
         damageTool( player, base, tool, true );
     }
 
-    public void damageTool( DCPlayer player, int base, ItemStack tool, boolean negate )
+    public void damageTool( DwarfPlayer player, int base, ItemStack tool, boolean negate )
     {
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
 
@@ -586,7 +588,7 @@ public class Effect
                     // it
                     // internally.
 
-        DwarfCraftEffectEvent e = new DwarfCraftEffectEvent( player, this, null, null, null, null, ( double ) base, ( double ) wear, null, null, tool );
+        DwarfEffectEvent e = new DwarfEffectEvent( player, this, null, null, null, null, ( double ) base, ( double ) wear, null, null, tool );
         plugin.getServer().getPluginManager().callEvent( e );
 
         if ( e.isCancelled() )

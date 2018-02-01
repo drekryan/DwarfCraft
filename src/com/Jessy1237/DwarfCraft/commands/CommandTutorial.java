@@ -12,8 +12,8 @@ import org.bukkit.command.CommandSender;
 
 import com.Jessy1237.DwarfCraft.CommandInformation.Usage;
 import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
-import com.Jessy1237.DwarfCraft.DCCommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandException;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 public class CommandTutorial extends Command
@@ -46,7 +46,7 @@ public class CommandTutorial extends Command
                 outputList = parser.parse( desiredArguments, false );
                 page = ( Integer ) outputList.get( 0 );
             }
-            catch ( DCCommandException e )
+            catch ( CommandException e )
             {
                 if ( e.getType() == Type.TOOFEWARGS )
                     page = 1;
@@ -55,12 +55,12 @@ public class CommandTutorial extends Command
             }
 
             if ( page < 0 || page > 6 )
-                throw new DCCommandException( plugin, Type.PAGENUMBERNOTFOUND );
+                throw new CommandException( plugin, Type.PAGENUMBERNOTFOUND );
             plugin.getOut().tutorial( sender, page );
             return true;
 
         }
-        catch ( DCCommandException e )
+        catch ( CommandException e )
         {
             e.describe( sender );
             sender.sendMessage( Usage.TUTORIAL.getUsage() );

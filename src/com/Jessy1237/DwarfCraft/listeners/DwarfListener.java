@@ -4,26 +4,26 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.Skill;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
-public class DCListener implements Listener
+public class DwarfListener implements Listener
 {
 
     private final DwarfCraft plugin;
 
-    public DCListener( final DwarfCraft plugin )
+    public DwarfListener( final DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
 
     @EventHandler( priority = EventPriority.NORMAL, ignoreCancelled = true )
-    public void onDwarfCraftLevelUp( DwarfCraftLevelUpEvent event )
+    public void onDwarfCraftLevelUp( DwarfLevelUpEvent event )
     {
-        DCPlayer player = event.getDCPlayer();
-        Skill skill = event.getSkill();
+        DwarfPlayer player = event.getDwarfPlayer();
+        DwarfSkill skill = event.getSkill();
 
         if ( skill.getLevel() % plugin.getConfigManager().getAnnouncementInterval() == 0 && plugin.getConfigManager().announce )
         {

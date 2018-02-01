@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.model;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -13,10 +13,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class DCPlayer
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+
+public class DwarfPlayer
 {
     private final DwarfCraft plugin;
-    private HashMap<Integer, Skill> skills;
+    private HashMap<Integer, DwarfSkill> skills;
     private Player player;
     private String race;
     private boolean raceMaster;
@@ -26,25 +28,25 @@ public class DCPlayer
         this.player = player;
     }
 
-    public DCPlayer( final DwarfCraft plugin, Player whoami )
+    public DwarfPlayer( final DwarfCraft plugin, Player player )
     {
         this.plugin = plugin;
-        this.player = whoami;
+        this.player = player;
         this.race = plugin.getConfigManager().getDefaultRace().trim();
         this.skills = plugin.getConfigManager().getAllSkills();
         this.raceMaster = false;
     }
 
-    public DCPlayer( final DwarfCraft plugin, Player whoami, String race, boolean raceMaster )
+    public DwarfPlayer( final DwarfCraft plugin, Player player, String race, boolean raceMaster )
     {
         this.plugin = plugin;
-        this.player = whoami;
+        this.player = player;
         this.race = race.trim();
         this.skills = plugin.getConfigManager().getAllSkills();
         this.raceMaster = raceMaster;
     }
 
-    public List<List<ItemStack>> calculateTrainingCost( Skill skill )
+    public List<List<ItemStack>> calculateTrainingCost( DwarfSkill skill )
     {
         int highSkills = countHighSkills();
         int dwarfLevel = getDwarfLevel();
@@ -60,7 +62,7 @@ public class DCPlayer
         // the skill is (what quartile)
         if ( DwarfCraft.debugMessagesThreshold < 0 )
             System.out.println( "DC0: starting skill ordering for quartiles" );
-        for ( Skill s : getSkills().values() )
+        for ( DwarfSkill s : getSkills().values() )
         {
             if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
             {
@@ -111,13 +113,12 @@ public class DCPlayer
     }
 
     /**
-     * Counts skills greater than level the race level limit, used for training
-     * costs
+     * Counts skills greater than level the race level limit, used for training costs
      */
     private int countHighSkills()
     {
         int highCount = 0;
-        for ( Skill s : getSkills().values() )
+        for ( DwarfSkill s : getSkills().values() )
         {
             if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
                 highCount++;
@@ -126,9 +127,7 @@ public class DCPlayer
     }
 
     /**
-     * Calculates the dwarf's total level for display. Value is the total of all
-     * skill level above the race level limit, or the highest skill level when
-     * none are above the race level limit.
+     * Calculates the dwarf's total level for display. Value is the total of all skill level above the race level limit, or the highest skill level when none are above the race level limit.
      * 
      * @return
      */
@@ -136,7 +135,7 @@ public class DCPlayer
     {
         int playerLevel = plugin.getConfigManager().getRaceLevelLimit();
         int highestSkill = 0;
-        for ( Skill s : getSkills().values() )
+        for ( DwarfSkill s : getSkills().values() )
         {
             if ( s.getLevel() > highestSkill )
                 highestSkill = s.getLevel();
@@ -155,10 +154,10 @@ public class DCPlayer
      * @param effectId
      * @return
      */
-    protected Effect getEffect( int effectId )
+    public DwarfEffect getEffect( int effectId )
     {
-        Skill skill = getSkill( effectId / 10 );
-        for ( Effect effect : skill.getEffects() )
+        DwarfSkill skill = getSkill( effectId / 10 );
+        for ( DwarfEffect effect : skill.getEffects() )
         {
             if ( effect.getId() == effectId )
                 return effect;
@@ -174,13 +173,12 @@ public class DCPlayer
     /**
      * Gets a dwarf's skill from an effect
      * 
-     * @param effect
-     *            (does not have to be this dwarf's effect, only used for ID#)
-     * @return Skill or null if none found
+     * @param effect (does not have to be this dwarf's effect, only used for ID#)
+     * @return DwarfSkill or null if none found
      */
-    protected Skill getSkill( Effect effect )
+    protected DwarfSkill getSkill( DwarfEffect effect )
     {
-        for ( Skill skill : skills.values() )
+        for ( DwarfSkill skill : skills.values() )
         {
             if ( skill.getId() == effect.getId() / 10 )
                 return skill;
@@ -192,11 +190,11 @@ public class DCPlayer
      * Gets a dwarf's skill by id
      * 
      * @param skillId
-     * @return Skill or null if none found
+     * @return DwarfSkill or null if none found
      */
-    public Skill getSkill( int skillId )
+    public DwarfSkill getSkill( int skillId )
     {
-        Skill skill = skills.get( skillId );
+        DwarfSkill skill = skills.get( skillId );
         return skill;
     }
 
@@ -204,9 +202,9 @@ public class DCPlayer
      * Gets a dwarf's skill by name or id number(as String)
      * 
      * @param skillName
-     * @return Skill or null if none found
+     * @return DwarfSkill or null if none found
      */
-    protected Skill getSkill( String skillName )
+    public DwarfSkill getSkill( String skillName )
     {
         try
         {
@@ -214,7 +212,7 @@ public class DCPlayer
         }
         catch ( NumberFormatException n )
         {
-            for ( Skill skill : getSkills().values() )
+            for ( DwarfSkill skill : getSkills().values() )
             {
                 if ( skill.getDisplayName() == null )
                     continue;
@@ -232,7 +230,7 @@ public class DCPlayer
         return null;
     }
 
-    public HashMap<Integer, Skill> getSkills()
+    public HashMap<Integer, DwarfSkill> getSkills()
     {
         return skills;
     }
@@ -246,7 +244,7 @@ public class DCPlayer
     {
         int playerLevel = plugin.getConfigManager().getRaceLevelLimit();
         int highestSkill = 0;
-        for ( Skill s : getSkills().values() )
+        for ( DwarfSkill s : getSkills().values() )
         {
             if ( s.getLevel() > highestSkill )
                 highestSkill = s.getLevel();
@@ -260,17 +258,16 @@ public class DCPlayer
     }
 
     /**
-     * @param skills
-     *            the skills to set
+     * @param skills the skills to set
      */
-    protected void setSkills( HashMap<Integer, Skill> skills )
+    public void setSkills( HashMap<Integer, DwarfSkill> skills )
     {
         this.skills = skills;
     }
 
     public int getSkillLevel( int id )
     {
-        for ( Skill s : getSkills().values() )
+        for ( DwarfSkill s : getSkills().values() )
             if ( s.getId() == id )
                 return s.getLevel();
         return 0;
@@ -281,11 +278,11 @@ public class DCPlayer
         final String oldRace = this.race;
         this.race = race;
         skills = plugin.getConfigManager().getAllSkills();
-        Skill[] dCSkills = new Skill[skills.size()];
+        DwarfSkill[] dCSkills = new DwarfSkill[skills.size()];
 
         // Resets the players skills
         int I = 0;
-        for ( Skill skill : skills.values() )
+        for ( DwarfSkill skill : skills.values() )
         {
             skill.setLevel( 0 );
             skill.setDeposit1( 0 );
@@ -312,7 +309,7 @@ public class DCPlayer
     {
         this.race = race.trim();
     }
-    
+
     public boolean isRaceMaster()
     {
         return raceMaster;

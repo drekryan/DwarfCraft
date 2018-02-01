@@ -4,14 +4,15 @@ package com.Jessy1237.DwarfCraft.commands;
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.DCPlayer;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftRaceChangeEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfRaceChangeEvent;
+import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
 public class CommandRace extends Command
 {
@@ -19,7 +20,7 @@ public class CommandRace extends Command
 
     public CommandRace( final DwarfCraft plugin )
     {
-        super( "Race" );
+        super( "DwarfRace" );
         this.plugin = plugin;
     }
 
@@ -58,7 +59,7 @@ public class CommandRace extends Command
             String newRace = args[1];
             String name = args[0];
             Player p = plugin.getServer().getPlayer( args[0] );
-            DCPlayer dCPlayer = null;
+            DwarfPlayer dCPlayer = null;
             if ( p == null )
             {
                 plugin.getOut().sendMessage( sender, "Not a valid Player Name." );
@@ -91,7 +92,7 @@ public class CommandRace extends Command
         else
         {
             String newRace = args[0];
-            DCPlayer dCPlayer = plugin.getDataManager().find( ( Player ) sender );
+            DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) sender );
             boolean confirmed = false;
             if ( args[1] != null )
             {
@@ -105,7 +106,7 @@ public class CommandRace extends Command
         return true;
     }
 
-    private void race( String newRace, boolean confirm, DCPlayer dCPlayer, CommandSender sender )
+    private void race( String newRace, boolean confirm, DwarfPlayer dCPlayer, CommandSender sender )
     {
         if ( dCPlayer.getRace() == newRace )
         {
@@ -121,7 +122,7 @@ public class CommandRace extends Command
                     {
                         if ( plugin.getPermission().has( ( Player ) sender, "dwarfcraft.norm.race." + newRace.toLowerCase() ) )
                         {
-                            DwarfCraftRaceChangeEvent e = new DwarfCraftRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
+                            DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
                             plugin.getServer().getPluginManager().callEvent( e );
 
                             if ( !e.isCancelled() )
@@ -132,12 +133,12 @@ public class CommandRace extends Command
                         }
                         else
                         {
-                            sender.sendMessage( "§4You do not have permission to do that." );
+                            sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
                         }
                     }
                     else
                     {
-                        DwarfCraftRaceChangeEvent e = new DwarfCraftRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
+                        DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
                         plugin.getServer().getPluginManager().callEvent( e );
 
                         if ( !e.isCancelled() )
