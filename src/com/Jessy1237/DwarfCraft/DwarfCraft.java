@@ -1,7 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-import java.util.HashMap;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -66,7 +64,6 @@ public class DwarfCraft extends JavaPlugin
     private final DwarfVehicleListener vehicleListener = new DwarfVehicleListener( this );
     private final DwarfInventoryListener inventoryListener = new DwarfInventoryListener( this );
     private final DwarfListener dwarfListener = new DwarfListener( this );
-    private final HashMap<String, String> aliases = new HashMap<String, String>();
     private NPCRegistry npcr;
     private ConfigManager cm;
     private DataManager dm;
@@ -183,36 +180,6 @@ public class DwarfCraft extends JavaPlugin
         return true;
     }
 
-    /**
-     * Sets the commmand aliases
-     */
-    private void initAliases()
-    {
-        aliases.put( "ct", "CreateTrainer" );
-        aliases.put( "cg", "CreateGreeter" );
-        aliases.put( "ei", "EffectInfo" );
-        aliases.put( "si", "SkillInfo" );
-        aliases.put( "ss", "SkillSheet" );
-        aliases.put( "lt", "ListTrainers" );
-    }
-
-    /**
-     * Gets the alias of a shortened command name
-     * 
-     * @param name The command name to check
-     * @return The alias if it exists otherwise returns the original name
-     */
-    private String getAlias( String name )
-    {
-        String alias = aliases.get( name.toLowerCase() );
-        if ( alias == null )
-        {
-            alias = name;
-        }
-
-        return alias;
-    }
-
     @Override
     public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
     {
@@ -235,7 +202,7 @@ public class DwarfCraft extends JavaPlugin
                 else
                 {
                     // Converts the variables to work with the old command method
-                    name = getAlias( args[0] );
+                    name = getConfigManager().getAlias( args[0] );
                     cArgs = new String[args.length - 1];
                     for ( int i = 1; i < args.length; i++ )
                     {
@@ -505,8 +472,6 @@ public class DwarfCraft extends JavaPlugin
         {
             System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
         }
-
-        initAliases();
 
         System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
     }
