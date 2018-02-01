@@ -18,8 +18,8 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftDepositEvent;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfDepositEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
@@ -149,7 +149,7 @@ public final class DwarfTrainer
             }
         }
 
-        DwarfCraftDepositEvent e = new DwarfCraftDepositEvent( dCPlayer, this, skill );
+        DwarfDepositEvent e = new DwarfDepositEvent( dCPlayer, this, skill );
         plugin.getServer().getPluginManager().callEvent( e );
 
         if ( e.isCancelled() )
@@ -191,7 +191,7 @@ public final class DwarfTrainer
             deposited = depositItem( costStack, dCPlayer, trainerGUI, skill, tag )[1];
         }
 
-        DwarfCraftDepositEvent e = new DwarfCraftDepositEvent( dCPlayer, this, skill );
+        DwarfDepositEvent e = new DwarfDepositEvent( dCPlayer, this, skill );
         plugin.getServer().getPluginManager().callEvent( e );
 
         if ( e.isCancelled() )
@@ -232,7 +232,7 @@ public final class DwarfTrainer
             hasMatsOrDeposits = depositItem( costStack, dCPlayer, trainerGUI, skill, tag );
         }
 
-        DwarfCraftLevelUpEvent e = null;
+        DwarfLevelUpEvent e = null;
         final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
         if ( hasMatsOrDeposits[0] )
         {
@@ -241,7 +241,7 @@ public final class DwarfTrainer
             skill.setDeposit2( 0 );
             skill.setDeposit3( 0 );
 
-            e = new DwarfCraftLevelUpEvent( dCPlayer, this, skill );
+            e = new DwarfLevelUpEvent( dCPlayer, this, skill );
 
             plugin.getServer().getPluginManager().callEvent( e );
         }

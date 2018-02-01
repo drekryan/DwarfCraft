@@ -18,7 +18,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.model.DwarfEffect;
 import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
@@ -65,7 +65,7 @@ public class DwarfVehicleListener implements Listener
                         {
                             ItemStack drop = effect.getOutput(dwarfPlayer);
 
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -161,7 +161,7 @@ public class DwarfVehicleListener implements Listener
 
                 // The original boat speed and altered boat speed are assigned
                 // to the damage variables
-                DwarfCraftEffectEvent e = new DwarfCraftEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
+                DwarfEffectEvent e = new DwarfEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
                 plugin.getServer().getPluginManager().callEvent( e );
                 if ( !e.isCancelled() )
                 {

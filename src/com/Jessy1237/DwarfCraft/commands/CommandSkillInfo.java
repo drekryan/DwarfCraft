@@ -12,7 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.DCCommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
@@ -57,12 +57,12 @@ public class CommandSkillInfo extends Command
                 {
                     outputList = parser.parse( desiredArguments, false );
                     if ( args.length > outputList.size() )
-                        throw new DCCommandException( plugin, Type.TOOMANYARGS );
+                        throw new CommandException( plugin, Type.TOOMANYARGS );
 
                     skill = (DwarfSkill) outputList.get( 1 );
                     dwarfPlayer = (DwarfPlayer) outputList.get( 0 );
                 }
-                catch ( DCCommandException dce )
+                catch ( CommandException dce )
                 {
                     if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS )
                     {
@@ -70,7 +70,7 @@ public class CommandSkillInfo extends Command
                         outputList = parser.parse( desiredArguments, true );
                         skill = (DwarfSkill) outputList.get( 0 );
                         if ( !( sender instanceof Player ) )
-                            throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
+                            throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                         dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );
                     }
                     else
@@ -80,7 +80,7 @@ public class CommandSkillInfo extends Command
                 return true;
 
             }
-            catch ( DCCommandException e )
+            catch ( CommandException e )
             {
                 e.describe( sender );
                 sender.sendMessage( CommandInformation.Usage.SKILLINFO.getUsage() );

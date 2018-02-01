@@ -22,8 +22,8 @@ import org.bukkit.World;
 import org.jbls.LexManos.CSV.CSVReader;
 import org.jbls.LexManos.CSV.CSVRecord;
 
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLoadRacesEvent;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLoadSkillsEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLoadRacesEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLoadSkillsEvent;
 import com.Jessy1237.DwarfCraft.model.DwarfEffect;
 import com.Jessy1237.DwarfCraft.model.DwarfGreeterMessage;
 import com.Jessy1237.DwarfCraft.model.DwarfRace;
@@ -95,11 +95,11 @@ public final class ConfigManager
             {
                 // Runs the proceeding events after all the config files are
                 // read so that the skillArray is complete with effects
-                DwarfCraftLoadSkillsEvent e = new DwarfCraftLoadSkillsEvent( ( HashMap<Integer, DwarfSkill> ) skillsArray.clone() );
+                DwarfLoadSkillsEvent e = new DwarfLoadSkillsEvent( ( HashMap<Integer, DwarfSkill> ) skillsArray.clone() );
                 plugin.getServer().getPluginManager().callEvent( e );
                 skillsArray = e.getSkills();
 
-                DwarfCraftLoadRacesEvent event = new DwarfCraftLoadRacesEvent( ( ArrayList<DwarfRace> ) raceList.clone() );
+                DwarfLoadRacesEvent event = new DwarfLoadRacesEvent( ( ArrayList<DwarfRace> ) raceList.clone() );
                 plugin.getServer().getPluginManager().callEvent( event );
                 raceList = event.getRaces();
 

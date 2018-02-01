@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.model.DwarfTrainerTrait;
 
@@ -88,7 +88,7 @@ public class CommandCreateGreeter extends Command
                 npc.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( uniqueId ), null, null, null, true, greeterMessage ) );
                 npc.setProtected( true );
             }
-            catch ( DCCommandException e )
+            catch ( CommandException e )
             {
                 e.describe( sender );
                 sender.sendMessage( CommandInformation.Usage.CREATEGREETER.getUsage() );

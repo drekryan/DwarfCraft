@@ -6,7 +6,7 @@ package com.Jessy1237.DwarfCraft;
 
 import org.bukkit.command.CommandSender;
 
-public class DCCommandException extends Throwable
+public class CommandException extends Throwable
 {
 
     public enum Type
@@ -43,12 +43,12 @@ public class DCCommandException extends Throwable
     private final DwarfCraft plugin;
     private static final long serialVersionUID = 7319961775971310701L;
 
-    protected DCCommandException( final DwarfCraft plugin )
+    protected CommandException(final DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
 
-    public DCCommandException( final DwarfCraft plugin, Type type )
+    public CommandException(final DwarfCraft plugin, Type type )
     {
         this.plugin = plugin;
         this.type = type;

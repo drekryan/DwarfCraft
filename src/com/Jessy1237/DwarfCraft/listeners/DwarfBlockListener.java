@@ -32,7 +32,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.model.DwarfEffect;
 import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
@@ -387,7 +387,7 @@ public class DwarfBlockListener implements Listener
                                 }
                             }
                         }
-                        DwarfCraftEffectEvent e;
+                        DwarfEffectEvent e;
                         ItemStack[] altered = new ItemStack[2];
 
                         if ( item.getAmount() > 0 )
@@ -398,7 +398,7 @@ public class DwarfBlockListener implements Listener
                         ItemStack[] orig = new ItemStack[block.getDrops().size()];
                         block.getDrops().toArray( orig );
 
-                        e = new DwarfCraftEffectEvent( player, effect, orig, altered, null, null, null, null, null, block, null );
+                        e = new DwarfEffectEvent( player, effect, orig, altered, null, null, null, null, null, block, null );
                         plugin.getServer().getPluginManager().callEvent( e );
 
                         if ( e.isCancelled() )
@@ -497,7 +497,7 @@ public class DwarfBlockListener implements Listener
                     if ( DwarfCraft.debugMessagesThreshold < 3 )
                         System.out.println( "DC3: Insta-mine occured. Block: " + materialId );
 
-                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dCPlayer, e, null, null, null, null, null, null, null, event.getBlock(), null );
+                    DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, null, null, null, null, null, null, null, event.getBlock(), null );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
@@ -562,14 +562,14 @@ public class DwarfBlockListener implements Listener
                                             if ( amount != 0 )
                                             {
 
-                                                DwarfCraftEffectEvent ev;
+                                                DwarfEffectEvent ev;
                                                 ItemStack[] altered = new ItemStack[1];
                                                 altered[0] = new ItemStack( Material.CACTUS, amount );
 
                                                 ItemStack[] orig = new ItemStack[event.getBlock().getDrops().size()];
                                                 event.getBlock().getDrops().toArray( orig );
 
-                                                ev = new DwarfCraftEffectEvent( dCPlayer, e, orig, altered, null, null, null, null, null, event.getBlock(), null );
+                                                ev = new DwarfEffectEvent( dCPlayer, e, orig, altered, null, null, null, null, null, event.getBlock(), null );
                                                 plugin.getServer().getPluginManager().callEvent( ev );
 
                                                 if ( ev.isCancelled() )
@@ -641,14 +641,14 @@ public class DwarfBlockListener implements Listener
                                         int amount = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) );
                                         if ( amount != 0 )
                                         {
-                                            DwarfCraftEffectEvent ev;
+                                            DwarfEffectEvent ev;
                                             ItemStack[] altered = new ItemStack[1];
                                             altered[0] = new ItemStack( Material.CACTUS, amount );
 
                                             ItemStack[] orig = new ItemStack[event.getBlock().getDrops().size()];
                                             event.getBlock().getDrops().toArray( orig );
 
-                                            ev = new DwarfCraftEffectEvent( dCPlayer, e, orig, altered, null, null, null, null, null, event.getBlock(), null );
+                                            ev = new DwarfEffectEvent( dCPlayer, e, orig, altered, null, null, null, null, null, event.getBlock(), null );
                                             plugin.getServer().getPluginManager().callEvent( ev );
 
                                             if ( ev.isCancelled() )

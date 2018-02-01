@@ -29,7 +29,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.model.DwarfEffect;
 import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
@@ -121,7 +121,7 @@ public class DwarfPlayerListener implements Listener
 
                         if ( block.getType() == Material.CAKE_BLOCK )
                         {
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, null, null, 2, foodLevel, null, null, null, block, null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, null, null, 2, foodLevel, null, null, null, block, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -171,7 +171,7 @@ public class DwarfPlayerListener implements Listener
                 {
                     int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount(dwarfPlayer) ) );
 
-                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, null, null, lvl, foodLevel, null, null, null, null, item );
+                    DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, null, null, lvl, foodLevel, null, null, null, null, item );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
@@ -212,7 +212,7 @@ public class DwarfPlayerListener implements Listener
 
                                 ItemStack item = e.getOutput(dwarfPlayer, sheep.getColor().getWoolData(), -1 );
 
-                                DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getTypeId(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                                DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getTypeId(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
                                 plugin.getServer().getPluginManager().callEvent( ev );
 
                                 if ( ev.isCancelled() )
@@ -241,7 +241,7 @@ public class DwarfPlayerListener implements Listener
                         {
                             ItemStack item = e.getOutput(dwarfPlayer);
 
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                            DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -322,7 +322,7 @@ public class DwarfPlayerListener implements Listener
                         {
                             ItemStack drop = effect.getOutput( player, meta );
 
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( player, effect, new ItemStack[] { item }, new ItemStack[] { drop }, null, null, null, null, null, null, tool );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( player, effect, new ItemStack[] { item }, new ItemStack[] { drop }, null, null, null, null, null, null, tool );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )

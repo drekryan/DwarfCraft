@@ -8,7 +8,7 @@ import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
 
-public class DwarfCraftLevelUpEvent extends Event implements Cancellable
+public class DwarfDepositEvent extends Event implements Cancellable
 {
 
     private static final HandlerList handlers = new HandlerList();
@@ -39,7 +39,7 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
     }
 
     /**
-     * The event for when a DwarfPlayer levels up their skill. This event is fired
+     * The event for when a DwarfPlayer deposits into their skill. This event is fired
      * after the skill is levelled but before the data is saved.
      * 
      * @param player
@@ -49,7 +49,7 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
      * @param skill
      *            the skill that was levelled up
      */
-    public DwarfCraftLevelUpEvent( DwarfPlayer player, DwarfTrainer trainer, DwarfSkill skill )
+    public DwarfDepositEvent( DwarfPlayer player, DwarfTrainer trainer, DwarfSkill skill )
     {
         this.player = player;
         this.trainer = trainer;
@@ -61,7 +61,7 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
      * 
      * @return DwarfPlayer
      */
-    public DwarfPlayer getDCPlayer()
+    public DwarfPlayer getDwarfPlayer()
     {
         return player;
     }
@@ -77,7 +77,7 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the skill that was levelled up.
+     * Gets the skill that was deposited into.
      * 
      * @return DwarfSkill
      */

@@ -11,7 +11,7 @@ import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import com.Jessy1237.DwarfCraft.DCCommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.model.DwarfEffect;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
@@ -57,7 +57,7 @@ public class CommandEffectInfo extends Command
                     effect = ( DwarfEffect ) outputList.get( 1 );
                     dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
                 }
-                catch ( DCCommandException dce )
+                catch ( CommandException dce )
                 {
                     if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS )
                     {
@@ -72,7 +72,7 @@ public class CommandEffectInfo extends Command
                 }
                 plugin.getOut().effectInfo( sender, dCPlayer, effect );
             }
-            catch ( DCCommandException e )
+            catch ( CommandException e )
             {
                 e.describe( sender );
                 sender.sendMessage( CommandInformation.Usage.EFFECTINFO.getUsage() );

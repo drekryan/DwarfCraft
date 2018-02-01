@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftRaceChangeEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfRaceChangeEvent;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
 public class CommandRace extends Command
@@ -122,7 +122,7 @@ public class CommandRace extends Command
                     {
                         if ( plugin.getPermission().has( ( Player ) sender, "dwarfcraft.norm.race." + newRace.toLowerCase() ) )
                         {
-                            DwarfCraftRaceChangeEvent e = new DwarfCraftRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
+                            DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
                             plugin.getServer().getPluginManager().callEvent( e );
 
                             if ( !e.isCancelled() )
@@ -138,7 +138,7 @@ public class CommandRace extends Command
                     }
                     else
                     {
-                        DwarfCraftRaceChangeEvent e = new DwarfCraftRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
+                        DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
                         plugin.getServer().getPluginManager().callEvent( e );
 
                         if ( !e.isCancelled() )

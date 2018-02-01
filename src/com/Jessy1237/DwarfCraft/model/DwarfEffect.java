@@ -62,7 +62,7 @@ import org.jbls.LexManos.CSV.CSVRecord;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 
 @SuppressWarnings( "deprecation" )
 public class DwarfEffect
@@ -588,7 +588,7 @@ public class DwarfEffect
                     // it
                     // internally.
 
-        DwarfCraftEffectEvent e = new DwarfCraftEffectEvent( player, this, null, null, null, null, ( double ) base, ( double ) wear, null, null, tool );
+        DwarfEffectEvent e = new DwarfEffectEvent( player, this, null, null, null, null, ( double ) base, ( double ) wear, null, null, tool );
         plugin.getServer().getPluginManager().callEvent( e );
 
         if ( e.isCancelled() )

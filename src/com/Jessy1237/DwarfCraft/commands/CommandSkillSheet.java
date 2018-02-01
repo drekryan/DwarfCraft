@@ -12,7 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.DCCommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
 public class CommandSkillSheet extends Command
@@ -43,7 +43,7 @@ public class CommandSkillSheet extends Command
             else
             {
                 if ( args.length == 0 )
-                    throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
+                    throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
             }
 
             CommandParser parser = new CommandParser( plugin, sender, args );
@@ -72,14 +72,14 @@ public class CommandSkillSheet extends Command
                 else
                     displayName = dCPlayer.getPlayer().getDisplayName();
             }
-            catch ( DCCommandException dce )
+            catch ( CommandException dce )
             {
                 if ( dce.getType() == Type.PARSEDWARFFAIL )
                 {
                     if ( sender instanceof Player )
                         dCPlayer = plugin.getDataManager().find( ( Player ) sender );
                     else
-                        throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
+                        throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                 }
                 else
                     throw dce;
@@ -87,7 +87,7 @@ public class CommandSkillSheet extends Command
             plugin.getOut().printSkillSheet( dCPlayer, sender, displayName, printFull );
             return true;
         }
-        catch ( DCCommandException e )
+        catch ( CommandException e )
         {
             e.describe( sender );
             sender.sendMessage( CommandInformation.Usage.SKILLSHEET.getUsage() );
