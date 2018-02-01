@@ -1,7 +1,6 @@
 package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,31 +15,78 @@ import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
 public class ListTrainersGUI extends DwarfGUI
 {
 
-    private DwarfTrainer[] trainers = null;
-    private int page = 1; // TODO Support multiple pages
-    private int inventorySize = 54;
+    private ArrayList<DwarfTrainer[]> trainers = new ArrayList<DwarfTrainer[]>();
+    private int page = 0; // TODO Support multiple pages
+    private final int inventorySize = 54;
+    private int numPages = 0;
 
     public ListTrainersGUI( DwarfCraft plugin, DwarfPlayer dwarfPlayer )
     {
         super( plugin, dwarfPlayer );
     }
 
-    @SuppressWarnings( "deprecation" )
     @Override
     public void init()
     {
-        Collection<DwarfTrainer> col = plugin.getDataManager().trainerList.values();
-        DwarfTrainer[] trainers = new DwarfTrainer[col.size()];
-        col.toArray( trainers );
 
-        this.trainers = trainers;
-        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), inventorySize, "Trainers List" );
+        initTrainers();
+        inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), inventorySize, "Trainers List" );
+        initItems();
+    }
 
-        System.out.println( "Found " + trainers.length + " trainers to display" );
+    public DwarfTrainer getTrainerAtSlot( int slot )
+    {
+        if ( trainers == null )
+            return null;
 
-        // TODO: Better handle 0 trainers
-        int slot = 0;
-        for ( int index = 0; index <= trainers.length - 1; index++ )
+        DwarfTrainer trainer = null;
+        if ( slot < trainers.get( page ).length )
+            trainer = trainers.get( page )[slot];
+        return trainer;
+    }
+
+    @Override
+    public void remove()
+    {
+    }
+
+    @Override
+    public void click( InventoryClickEvent event )
+    {
+        if ( event.getRawSlot() < 45 )
+        {
+            DwarfTrainer trainer = getTrainerAtSlot( event.getRawSlot() );
+            if ( trainer != null )
+            {
+                event.getWhoClicked().sendMessage( ChatColor.LIGHT_PURPLE + "Teleporting to " + trainer.getName() + " at X: " + trainer.getLocation().getX() + ", Y: " + trainer.getLocation().getY() + ", Z: " + trainer.getLocation().getZ() );
+                event.getWhoClicked().teleport( trainer.getLocation().setDirection( trainer.getLocation().getDirection().multiply( -1 ) ) );
+
+            }
+        }
+        // Previous Page
+        else if ( event.getRawSlot() == 45 )
+        {
+            if ( page != 0 )
+            {
+                page--;
+                initItems();
+            }
+        }
+        // Next Page
+        else if ( event.getRawSlot() == 53 )
+        {
+            if ( page < numPages - 1 )
+            {
+                page++;
+                initItems();
+            }
+        }
+    }
+
+    private void initItems()
+    {
+
+        for ( int index = 0; index < trainers.get( 0 ).length; index++ )
         {
             DwarfTrainer trainer = getTrainerAtSlot( index );
             DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
@@ -53,31 +99,50 @@ public class ListTrainersGUI extends DwarfGUI
             lore.add( "" );
             lore.add( ChatColor.LIGHT_PURPLE + "Click to teleport to Trainer..." );
 
-            addItem( trainer.getName(), lore, slot, new ItemStack( Material.SKULL_ITEM, 1, ( short ) 3, ( byte ) 3 ) );
-            slot++;
+            // Apparently causes too many requests of GameProfile lookups and Mojang times out
+            /**
+             * ItemStack skull = new ItemStack( Material.SKULL_ITEM, 1, ( short ) 3 ); SkullMeta meta = ( SkullMeta ) skull.getItemMeta(); meta.setOwner( trainer.getName() ); skull.setItemMeta( meta
+             * );
+             */
+
+            addItem( trainer.getName(), lore, index, new ItemStack( Material.SKULL_ITEM, 1, ( short ) 3 ) );
         }
+
+        addItem( "Previous Page", null, 45, new ItemStack( Material.STAINED_GLASS_PANE, 1, ( short ) 14 ) );
+        addItem( "Next Page", null, 53, new ItemStack( Material.STAINED_GLASS_PANE, 1, ( short ) 5 ) );
     }
 
-    public DwarfTrainer getTrainerAtSlot( int slot )
+    private void initTrainers()
     {
-        if ( trainers == null )
-            return null;
+        DwarfTrainer[] tempArray = new DwarfTrainer[getArraySize( 0 )];
+        int num = 0;
+        int index = 0;
+        for ( DwarfTrainer trainer : plugin.getDataManager().trainerList.values() )
+        {
+            if ( index == 45 )
+            {
+                trainers.add( tempArray );
+                tempArray = new DwarfTrainer[getArraySize( num )];
+                index = 0;
+                numPages++;
+            }
 
-        int startTrainer = ( page * inventorySize ) - inventorySize;
-        return trainers[startTrainer + slot];
+            tempArray[index] = trainer;
+            num++;
+            index++;
+        }
+
+        trainers.add( tempArray );
+        numPages++;
     }
 
-    @Override
-    public void remove()
+    private int getArraySize( int num )
     {
+        int size = plugin.getDataManager().trainerList.size() - num;
+        if ( plugin.getDataManager().trainerList.size() - num >= 45 )
+        {
+            size = 45;
+        }
+        return size;
     }
-
-    @Override
-    public void click( InventoryClickEvent event )
-    {
-        DwarfTrainer trainer = getTrainerAtSlot( event.getRawSlot() );
-        event.getWhoClicked().sendMessage( ChatColor.LIGHT_PURPLE + "Teleporting to " + trainer.getName() + " at X: " + trainer.getLocation().getX() + ", Y: " + trainer.getLocation().getY() + ", Z: " + trainer.getLocation().getZ() );
-        event.getWhoClicked().teleport( trainer.getLocation().subtract( 1, 0, 0 ) );
-    }
-
 }

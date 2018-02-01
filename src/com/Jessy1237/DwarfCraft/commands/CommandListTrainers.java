@@ -6,19 +6,16 @@ package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.Collection;
 
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.guis.ListTrainersGUI;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-
-import org.bukkit.entity.Player;
 
 public class CommandListTrainers extends Command
 {
@@ -44,14 +41,7 @@ public class CommandListTrainers extends Command
 
         if (sender instanceof Player) {
             // Use GUI implementation
-            System.out.println("Calling Trainer List GUI");
 
-            //TODO: Support paging to allow more than 54 trainers
-            //HACK: DONT HARDCODE VALUES HERE
-            if (trainers.length > 54) {
-                sender.sendMessage(ChatColor.DARK_RED + "Error: More than 54 trainers is not supported at this time...");
-                return true;
-            }
 
             DwarfPlayer dwarfPlayer = new DwarfPlayer(plugin, (Player)sender);
 
