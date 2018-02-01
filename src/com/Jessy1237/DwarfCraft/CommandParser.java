@@ -17,7 +17,7 @@ public final class CommandParser
     private final DwarfCraft plugin;
     private CommandSender sender;
     private String[] input;
-    private DCPlayer target = null;
+    private DwarfPlayer target = null;
 
     public CommandParser( final DwarfCraft plugin, CommandSender sender, String[] args )
     {
@@ -34,13 +34,13 @@ public final class CommandParser
         {
             for ( Object o : desiredArguments )
             {
-                if ( o instanceof DCPlayer )
+                if ( o instanceof DwarfPlayer)
                     output.add( parseDwarf( arrayIterator ) );
                 else if ( o instanceof Player )
                     output.add( parsePlayer( arrayIterator ) );
-                else if ( o instanceof Skill )
+                else if ( o instanceof DwarfSkill)
                     output.add( parseSkill( arrayIterator ) );
-                else if ( o instanceof Effect )
+                else if ( o instanceof DwarfEffect)
                     output.add( parseEffect( arrayIterator ) );
                 else if ( o instanceof Boolean )
                     output.add( parseConfirm( arrayIterator ) );
@@ -89,10 +89,10 @@ public final class CommandParser
     }
 
     @SuppressWarnings( "deprecation" )
-    private DCPlayer parseDwarf( int argNumber ) throws DCCommandException
+    private DwarfPlayer parseDwarf(int argNumber ) throws DCCommandException
     {
         Player player;
-        DCPlayer dCPlayer = null;
+        DwarfPlayer dCPlayer = null;
         try
         {
             String dwarf = input[argNumber];
@@ -128,10 +128,10 @@ public final class CommandParser
 
     }
 
-    private Effect parseEffect( int argNumber ) throws DCCommandException
+    private DwarfEffect parseEffect(int argNumber ) throws DCCommandException
     {
         String inputString = input[argNumber];
-        Effect effect;
+        DwarfEffect effect;
         int effectId;
 
         try
@@ -194,9 +194,9 @@ public final class CommandParser
         return null;
     }
 
-    private Skill parseSkill( int argNumber ) throws DCCommandException
+    private DwarfSkill parseSkill(int argNumber ) throws DCCommandException
     {
-        Skill skill = null;
+        DwarfSkill skill = null;
         String inputString = input[argNumber];
         if ( inputString.equalsIgnoreCase( "all" ) )
             return null;
@@ -217,7 +217,7 @@ public final class CommandParser
                     throw new DCCommandException( plugin, Type.PARSESKILLFAIL );
                 for ( int i : plugin.getConfigManager().getAllSkills( target.getRace() ) )
                 {
-                    Skill s = plugin.getConfigManager().getGenericSkill( i );
+                    DwarfSkill s = plugin.getConfigManager().getGenericSkill( i );
                     if ( s.getDisplayName().regionMatches( 0, inputString, 0, 8 ) )
                         return s;
                 }

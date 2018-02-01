@@ -1,21 +1,21 @@
 package com.Jessy1237.DwarfCraft.events;
 
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.DwarfSkill;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
 import com.Jessy1237.DwarfCraft.DwarfTrainer;
-import com.Jessy1237.DwarfCraft.Skill;
 
 public class DwarfCraftLevelUpEvent extends Event implements Cancellable
 {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
-    private DCPlayer player;
+    private DwarfPlayer player;
     private DwarfTrainer trainer;
-    private Skill skill;
+    private DwarfSkill skill;
 
     @Override
     public HandlerList getHandlers()
@@ -39,7 +39,7 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
     }
 
     /**
-     * The event for when a DCPlayer levels up their skill. This event is fired
+     * The event for when a DwarfPlayer levels up their skill. This event is fired
      * after the skill is levelled but before the data is saved.
      * 
      * @param player
@@ -49,7 +49,7 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
      * @param skill
      *            the skill that was levelled up
      */
-    public DwarfCraftLevelUpEvent( DCPlayer player, DwarfTrainer trainer, Skill skill )
+    public DwarfCraftLevelUpEvent( DwarfPlayer player, DwarfTrainer trainer, DwarfSkill skill )
     {
         this.player = player;
         this.trainer = trainer;
@@ -57,11 +57,11 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the DCPlayer that levelled up a skill.
+     * Gets the DwarfPlayer that levelled up a skill.
      * 
-     * @return DCPlayer
+     * @return DwarfPlayer
      */
-    public DCPlayer getDCPlayer()
+    public DwarfPlayer getDCPlayer()
     {
         return player;
     }
@@ -79,9 +79,9 @@ public class DwarfCraftLevelUpEvent extends Event implements Cancellable
     /**
      * Gets the skill that was levelled up.
      * 
-     * @return Skill
+     * @return DwarfSkill
      */
-    public Skill getSkill()
+    public DwarfSkill getSkill()
     {
         return skill;
     }

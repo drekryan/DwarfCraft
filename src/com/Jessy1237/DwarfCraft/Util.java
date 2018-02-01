@@ -431,7 +431,7 @@ public class Util
         return null;
     }
 
-    public String getPlayerPrefix( DCPlayer player )
+    public String getPlayerPrefix( DwarfPlayer player )
     {
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
         return plugin.getOut().parseColors( plugin.getConfigManager().getRace( race ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f" );
@@ -459,7 +459,7 @@ public class Util
             {
                 for ( World w : plugin.getServer().getWorlds() )
                 {
-                    for ( Race race : plugin.getConfigManager().getRaceList() )
+                    for ( DwarfRace race : plugin.getConfigManager().getRaceList() )
                     {
                         String raceStr = race.getName();
                         while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefix( raceStr ) ) )
@@ -484,7 +484,7 @@ public class Util
     public void setPlayerPrefix( Player player )
     {
         DataManager dm = plugin.getDataManager();
-        DCPlayer data = dm.find( player );
+        DwarfPlayer data = dm.find( player );
 
         if ( data == null )
             data = dm.createDwarf( player );

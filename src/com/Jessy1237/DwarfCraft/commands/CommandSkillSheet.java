@@ -7,16 +7,13 @@ package com.Jessy1237.DwarfCraft.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
 
 public class CommandSkillSheet extends Command
 {
@@ -59,7 +56,7 @@ public class CommandSkillSheet extends Command
                 desiredArguments.add( args[0] );
             }
 
-            DCPlayer dCPlayer = new DCPlayer( plugin, null );
+            DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
             desiredArguments.add( dCPlayer );
             String displayName = null;
 
@@ -67,9 +64,9 @@ public class CommandSkillSheet extends Command
             {
                 outputList = parser.parse( desiredArguments, false );
                 if ( outputList.get( 0 ) instanceof String )
-                    dCPlayer = ( DCPlayer ) outputList.get( 1 );
+                    dCPlayer = (DwarfPlayer) outputList.get( 1 );
                 else
-                    dCPlayer = ( DCPlayer ) outputList.get( 0 );
+                    dCPlayer = (DwarfPlayer) outputList.get( 0 );
                 if ( dCPlayer.getPlayer() == null )
                     displayName = ( printFull ? args[1] : args[0] );
                 else

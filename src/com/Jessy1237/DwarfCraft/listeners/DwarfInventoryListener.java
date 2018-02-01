@@ -3,6 +3,9 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.Jessy1237.DwarfCraft.*;
+import com.Jessy1237.DwarfCraft.guis.ListTrainersGUI;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -17,30 +20,22 @@ import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.inventory.BrewerInventory;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.material.MaterialData;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.Effect;
-import com.Jessy1237.DwarfCraft.EffectType;
-import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.Skill;
-import com.Jessy1237.DwarfCraft.TrainSkillSchedule;
-import com.Jessy1237.DwarfCraft.TrainerGUI;
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
-public class DCInventoryListener implements Listener
+public class DwarfInventoryListener implements Listener
 {
 
     private DwarfCraft plugin;
-    private HashMap<Location, BrewerInventory> stands = new HashMap<Location, BrewerInventory>();
-    public HashMap<Player, TrainerGUI> trainerGUIs = new HashMap<Player, TrainerGUI>();
+    private HashMap<Location, BrewerInventory> stands = new HashMap<>();
+    public HashMap<Player, TrainerGUI> trainerGUIs = new HashMap<>();
+    public HashMap<Player, ListTrainersGUI> listTrainersGUI = new HashMap<>();
 
-    public DCInventoryListener( final DwarfCraft plugin )
+    public DwarfInventoryListener(final DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
@@ -52,14 +47,14 @@ public class DCInventoryListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
             return;
 
-        DCPlayer player = plugin.getDataManager().find( event.getPlayer() );
-        HashMap<Integer, Skill> skills = player.getSkills();
+        DwarfPlayer player = plugin.getDataManager().find( event.getPlayer() );
+        HashMap<Integer, DwarfSkill> skills = player.getSkills();
         Material item = event.getItemType();
         final int amount = event.getItemAmount();
 
-        for ( Skill s : skills.values() )
+        for ( DwarfSkill s : skills.values() )
         {
-            for ( Effect effect : s.getEffects() )
+            for ( DwarfEffect effect : s.getEffects() )
             {
                 if ( effect.getEffectType() == EffectType.SMELT && effect.checkInitiator( new ItemStack( item ) ) )
                 {
@@ -137,10 +132,10 @@ public class DCInventoryListener implements Listener
 
             if ( event.isShiftClick() )
             {
-                DCPlayer dCPlayer = plugin.getDataManager().find( ( Player ) player );
-                for ( Skill s : dCPlayer.getSkills().values() )
+                DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) player );
+                for ( DwarfSkill s : dCPlayer.getSkills().values() )
                 {
-                    for ( Effect e : s.getEffects() )
+                    for ( DwarfEffect e : s.getEffects() )
                     {
                         if ( e.getEffectType() == EffectType.CRAFT && e.checkInitiator( toCraft.getTypeId(), ( byte ) toCraft.getData().getData() ) )
                         {
@@ -200,11 +195,11 @@ public class DCInventoryListener implements Listener
                 if ( isStackSumLegal( toCraft, toStore ) )
                 {
 
-                    DCPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
+                    DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
 
-                    for ( Skill s : dCPlayer.getSkills().values() )
+                    for ( DwarfSkill s : dCPlayer.getSkills().values() )
                     {
-                        for ( Effect e : s.getEffects() )
+                        for ( DwarfEffect e : s.getEffects() )
                         {
                             if ( e.getEffectType() == EffectType.CRAFT && e.checkInitiator( toCraft.getTypeId(), ( byte ) toCraft.getData().getData() ) )
                             {
@@ -268,13 +263,13 @@ public class DCInventoryListener implements Listener
         if ( event.isShiftClick() )
         {
             Player player = ( Player ) event.getWhoClicked();
-            DCPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
-            HashMap<Integer, Skill> skills = dCPlayer.getSkills();
+            DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
+            HashMap<Integer, DwarfSkill> skills = dCPlayer.getSkills();
             ItemStack extract = event.getCurrentItem();
 
-            for ( Skill s : skills.values() )
+            for ( DwarfSkill s : skills.values() )
             {
-                for ( Effect effect : s.getEffects() )
+                for ( DwarfEffect effect : s.getEffects() )
                 {
                     if ( effect.getEffectType() == EffectType.SMELT && effect.checkInitiator( extract ) )
                     {
@@ -363,6 +358,18 @@ public class DCInventoryListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getWhoClicked().getWorld() ) )
             return;
 
+        ListTrainersGUI listTrainerGUI = listTrainersGUI.get( ( Player ) event.getWhoClicked() );
+        if (listTrainerGUI != null) {
+            // Handle List Trainers GUI
+            if (listTrainerGUI.getInventory().equals( event.getInventory() )) {
+                event.setCancelled(true);
+
+                DwarfTrainer trainer = listTrainerGUI.getTrainerAtSlot(event.getRawSlot());
+                event.getWhoClicked().sendMessage(ChatColor.LIGHT_PURPLE + "Teleporting to " + trainer.getName() + " at X: " + trainer.getLocation().getX() + ", Y: " + trainer.getLocation().getY() + ", Z: " + trainer.getLocation().getZ());
+                event.getWhoClicked().teleport(trainer.getLocation().subtract(1, 0, 0));
+            }
+        }
+
         TrainerGUI trainerGUI = trainerGUIs.get( ( Player ) event.getWhoClicked() );
         if ( trainerGUI != null )
         {
@@ -379,7 +386,7 @@ public class DCInventoryListener implements Listener
                     if ( event.getCurrentItem().getType().equals( Material.AIR ) )
                         return;
 
-                    if ( trainerGUI.getTrainer() == null || trainerGUI.getDCPlayer().getPlayer() == null )
+                    if ( trainerGUI.getTrainer() == null || trainerGUI.getDwarfPlayer().getPlayer() == null )
                     {
                         player.closeInventory();
                         return;
@@ -393,7 +400,7 @@ public class DCInventoryListener implements Listener
                     else
                     {
                         trainerGUI.getTrainer().setWait( true );
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainerGUI.getTrainer(), trainerGUI.getDCPlayer(), event.getCurrentItem(), trainerGUI ), 2 );
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainerGUI.getTrainer(), trainerGUI.getDwarfPlayer(), event.getCurrentItem(), trainerGUI ), 2 );
                     }
                 }
 
@@ -419,8 +426,8 @@ public class DCInventoryListener implements Listener
 
         if ( event.getSlotType() == SlotType.CRAFTING && ( event.isLeftClick() || event.isShiftClick() ) && event.getInventory().getHolder() instanceof BrewingStand )
         {
-            DCPlayer player = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
-            HashMap<Integer, Skill> skills = player.getSkills();
+            DwarfPlayer player = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
+            HashMap<Integer, DwarfSkill> skills = player.getSkills();
             ItemStack item = event.getCurrentItem();
             final int amount = item.getAmount();
             BrewingStand block = ( BrewingStand ) event.getInventory().getHolder();
@@ -437,9 +444,9 @@ public class DCInventoryListener implements Listener
             {
                 if ( sameInv( stack, block.getInventory() ) )
                 {
-                    for ( Skill s : skills.values() )
+                    for ( DwarfSkill s : skills.values() )
                     {
-                        for ( Effect effect : s.getEffects() )
+                        for ( DwarfEffect effect : s.getEffects() )
                         {
                             if ( effect.getEffectType() == EffectType.BREW && effect.checkInitiator( item ) )
                             {
@@ -550,15 +557,15 @@ public class DCInventoryListener implements Listener
 class ShiftClickTask implements Runnable
 {
 
-    private DCPlayer p;
+    private DwarfPlayer p;
     private int init;
     private ItemStack item;
     private ItemStack check;
     private float modifier;
-    private Effect e;
+    private DwarfEffect e;
     private DwarfCraft plugin;
 
-    public ShiftClickTask( DwarfCraft plugin, DCPlayer p, final ItemStack item, ItemStack check, int init, float modifier, Effect e )
+    public ShiftClickTask(DwarfCraft plugin, DwarfPlayer p, final ItemStack item, ItemStack check, int init, float modifier, DwarfEffect e )
     {
         this.p = p;
         this.item = item;
@@ -629,7 +636,7 @@ class ShiftClickTask implements Runnable
             int amount = plugin.getUtil().randomAmount( ( difference - modifier * difference ) );
             p.getPlayer().getInventory().removeItem( new ItemStack( item.getType(), amount, item.getDurability() ) );
         }
-        for ( Skill s : p.getSkills().values() )
+        for ( DwarfSkill s : p.getSkills().values() )
         {
             if ( s.getEffects().contains( e ) )
             {

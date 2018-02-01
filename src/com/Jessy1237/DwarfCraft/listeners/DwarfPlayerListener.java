@@ -6,6 +6,7 @@ package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.HashMap;
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,19 +29,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.Effect;
-import com.Jessy1237.DwarfCraft.EffectType;
-import com.Jessy1237.DwarfCraft.Skill;
-import com.Jessy1237.DwarfCraft.Util;
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
-public class DCPlayerListener implements Listener
+public class DwarfPlayerListener implements Listener
 {
     private final DwarfCraft plugin;
 
-    public DCPlayerListener( final DwarfCraft plugin )
+    public DwarfPlayerListener( final DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
@@ -76,8 +72,8 @@ public class DCPlayerListener implements Listener
             return;
 
         Player player = event.getPlayer();
-        DCPlayer dcPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, Skill> skills = dcPlayer.getSkills();
+        DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
+        HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
 
         // ItemStack item = player.getItemInHand(); Does this work the same as
         // below?
@@ -91,13 +87,13 @@ public class DCPlayerListener implements Listener
 
             if ( material == Material.DIRT || material == Material.GRASS )
             {
-                for ( Skill s : skills.values() )
+                for ( DwarfSkill s : skills.values() )
                 {
-                    for ( Effect effect : s.getEffects() )
+                    for ( DwarfEffect effect : s.getEffects() )
                     {
                         if ( effect.getEffectType() == EffectType.PLOWDURABILITY && effect.checkTool( item ) )
                         {
-                            effect.damageTool( dcPlayer, 1, item );
+                            effect.damageTool(dwarfPlayer, 1, item );
                             // block.setTypeId(60);
                         }
                     }
@@ -111,18 +107,18 @@ public class DCPlayerListener implements Listener
         // EffectType.EAT
         if ( event.getAction() == Action.RIGHT_CLICK_BLOCK )
         {
-            for ( Skill s : skills.values() )
+            for ( DwarfSkill s : skills.values() )
             {
-                for ( Effect e : s.getEffects() )
+                for ( DwarfEffect e : s.getEffects() )
                 {
                     if ( e.getEffectType() == EffectType.EAT && e.checkInitiator( block.getTypeId(), block.getData() ) )
                     {
 
-                        int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount( dcPlayer ) ) );
+                        int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount(dwarfPlayer) ) );
 
                         if ( block.getType() == Material.CAKE_BLOCK )
                         {
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, e, null, null, 2, foodLevel, null, null, null, block, null );
+                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, null, null, 2, foodLevel, null, null, null, block, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -155,8 +151,8 @@ public class DCPlayerListener implements Listener
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
         int id = item.getTypeId();
-        DCPlayer dcPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, Skill> skills = dcPlayer.getSkills();
+        DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
+        HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
         int lvl = Util.FoodLevel.getLvl( id );
 
         if ( lvl == 0 )
@@ -164,15 +160,15 @@ public class DCPlayerListener implements Listener
             return;
         }
 
-        for ( Skill s : skills.values() )
+        for ( DwarfSkill s : skills.values() )
         {
-            for ( Effect e : s.getEffects() )
+            for ( DwarfEffect e : s.getEffects() )
             {
                 if ( e.getEffectType() == EffectType.EAT && e.checkInitiator( item ) )
                 {
-                    int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount( dcPlayer ) ) );
+                    int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount(dwarfPlayer) ) );
 
-                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, e, null, null, lvl, foodLevel, null, null, null, null, item );
+                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, null, null, lvl, foodLevel, null, null, null, null, item );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
@@ -193,13 +189,13 @@ public class DCPlayerListener implements Listener
 
         Player player = event.getPlayer();
         Entity entity = event.getEntity();
-        DCPlayer dcPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, Skill> skills = dcPlayer.getSkills();
+        DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
+        HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
         boolean changed = false;
 
-        for ( Skill s : skills.values() )
+        for ( DwarfSkill s : skills.values() )
         {
-            for ( Effect e : s.getEffects() )
+            for ( DwarfEffect e : s.getEffects() )
             {
                 if ( e.getEffectType() == EffectType.SHEAR )
                 {
@@ -211,9 +207,9 @@ public class DCPlayerListener implements Listener
                             if ( sheep.isAdult() )
                             {
 
-                                ItemStack item = e.getOutput( dcPlayer, sheep.getColor().getWoolData(), -1 );
+                                ItemStack item = e.getOutput(dwarfPlayer, sheep.getColor().getWoolData(), -1 );
 
-                                DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, e, new ItemStack[] { new ItemStack( item.getTypeId(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                                DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getTypeId(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
                                 plugin.getServer().getPluginManager().callEvent( ev );
 
                                 if ( ev.isCancelled() )
@@ -240,9 +236,9 @@ public class DCPlayerListener implements Listener
                         MushroomCow mooshroom = ( MushroomCow ) entity;
                         if ( mooshroom.isAdult() )
                         {
-                            ItemStack item = e.getOutput( dcPlayer );
+                            ItemStack item = e.getOutput(dwarfPlayer);
 
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dcPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -302,7 +298,7 @@ public class DCPlayerListener implements Listener
 
         if ( event.getState() == State.CAUGHT_FISH )
         {
-            DCPlayer player = plugin.getDataManager().find( event.getPlayer() );
+            DwarfPlayer player = plugin.getDataManager().find( event.getPlayer() );
             ItemStack item = ( ( Item ) event.getCaught() ).getItemStack();
             byte meta = item.getData().getData();
             Location loc = player.getPlayer().getLocation();
@@ -315,9 +311,9 @@ public class DCPlayerListener implements Listener
 
             if ( item.getType() == Material.RAW_FISH )
             {
-                for ( Skill skill : player.getSkills().values() )
+                for ( DwarfSkill skill : player.getSkills().values() )
                 {
-                    for ( Effect effect : skill.getEffects() )
+                    for ( DwarfEffect effect : skill.getEffects() )
                     {
                         if ( effect.getEffectType() == EffectType.FISH )
                         {
@@ -346,9 +342,9 @@ public class DCPlayerListener implements Listener
 
                 if ( tool != null && tool.getType().getMaxDurability() > 0 )
                 {
-                    for ( Skill s : player.getSkills().values() )
+                    for ( DwarfSkill s : player.getSkills().values() )
                     {
-                        for ( Effect e : s.getEffects() )
+                        for ( DwarfEffect e : s.getEffects() )
                         {
                             if ( e.getEffectType() == EffectType.RODDURABILITY && e.checkTool( tool ) )
                                 e.damageTool( player, 1, tool );

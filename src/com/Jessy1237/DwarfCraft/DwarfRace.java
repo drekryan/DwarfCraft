@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-public class Race
+public class DwarfRace
 {
 
     private final String mName;
@@ -14,12 +14,12 @@ public class Race
     private String Desc;
     private String prefixColour;
 
-    public Race( String name )
+    public DwarfRace(String name )
     {
         this.mName = name;
     }
 
-    public Race( String name, final ArrayList<Integer> skills, String Desc )
+    public DwarfRace(String name, final ArrayList<Integer> skills, String Desc )
     {
         this.mName = name;
         this.Desc = Desc;

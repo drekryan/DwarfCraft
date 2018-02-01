@@ -7,17 +7,13 @@ package com.Jessy1237.DwarfCraft.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
 import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.Skill;
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
 
 public class CommandSkillInfo extends Command
 {
@@ -51,9 +47,9 @@ public class CommandSkillInfo extends Command
                 List<Object> desiredArguments = new ArrayList<Object>();
                 List<Object> outputList = null;
 
-                DCPlayer dCPlayer = new DCPlayer( plugin, null );
-                Skill skill = new Skill( 0, null, 0, null, null, null, null, null );
-                desiredArguments.add( dCPlayer );
+                DwarfPlayer dwarfPlayer = new DwarfPlayer( plugin, null );
+                DwarfSkill skill = new DwarfSkill( 0, null, 0, null, null, null, null, null );
+                desiredArguments.add( dwarfPlayer );
                 desiredArguments.add( skill );
 
                 try
@@ -62,8 +58,8 @@ public class CommandSkillInfo extends Command
                     if ( args.length > outputList.size() )
                         throw new DCCommandException( plugin, Type.TOOMANYARGS );
 
-                    skill = ( Skill ) outputList.get( 1 );
-                    dCPlayer = ( DCPlayer ) outputList.get( 0 );
+                    skill = (DwarfSkill) outputList.get( 1 );
+                    dwarfPlayer = (DwarfPlayer) outputList.get( 0 );
                 }
                 catch ( DCCommandException dce )
                 {
@@ -71,15 +67,15 @@ public class CommandSkillInfo extends Command
                     {
                         desiredArguments.remove( 0 );
                         outputList = parser.parse( desiredArguments, true );
-                        skill = ( Skill ) outputList.get( 0 );
+                        skill = (DwarfSkill) outputList.get( 0 );
                         if ( !( sender instanceof Player ) )
                             throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
-                        dCPlayer = plugin.getDataManager().find( ( Player ) sender );
+                        dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );
                     }
                     else
                         throw dce;
                 }
-                plugin.getOut().printSkillInfo( sender, skill, dCPlayer, 30 );
+                plugin.getOut().printSkillInfo( sender, skill, dwarfPlayer, 30 );
                 return true;
 
             }

@@ -1,18 +1,17 @@
 package com.Jessy1237.DwarfCraft.events;
 
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.DwarfRace;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.Race;
 
 public class DwarfCraftRaceChangeEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
-    private DCPlayer player;
-    private Race race;
+    private DwarfPlayer player;
+    private DwarfRace race;
 
     @Override
     public HandlerList getHandlers()
@@ -35,18 +34,18 @@ public class DwarfCraftRaceChangeEvent extends Event implements Cancellable
         cancelled = cancel;
     }
 
-    public DwarfCraftRaceChangeEvent( DCPlayer player, Race race )
+    public DwarfCraftRaceChangeEvent( DwarfPlayer player, DwarfRace race )
     {
         this.player = player;
         this.race = race;
     }
 
     /**
-     * Gets the DCPlayer that levelled up a skill.
+     * Gets the DwarfPlayer that levelled up a skill.
      * 
-     * @return DCPlayer
+     * @return DwarfPlayer
      */
-    public DCPlayer getDCPlayer()
+    public DwarfPlayer getDwarfPlayer()
     {
         return player;
     }
@@ -54,9 +53,9 @@ public class DwarfCraftRaceChangeEvent extends Event implements Cancellable
     /**
      * Gets the race that the player is changing to.
      * 
-     * @return Race
+     * @return DwarfRace
      */
-    public Race getRace()
+    public DwarfRace getRace()
     {
         return race;
     }
@@ -68,7 +67,7 @@ public class DwarfCraftRaceChangeEvent extends Event implements Cancellable
      *            A dwarfcraft race that the player will change to.
      * 
      */
-    public void setRace( Race race )
+    public void setRace( DwarfRace race )
     {
         this.race = race;
     }

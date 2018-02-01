@@ -3,6 +3,7 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.HashMap;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -17,33 +18,26 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
-import com.Jessy1237.DwarfCraft.DCPlayer;
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.DwarfTrainer;
-import com.Jessy1237.DwarfCraft.Effect;
-import com.Jessy1237.DwarfCraft.EffectType;
-import com.Jessy1237.DwarfCraft.InitTrainerGUISchedule;
-import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.Skill;
-import com.Jessy1237.DwarfCraft.TrainerGUI;
+import com.Jessy1237.DwarfCraft.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.guis.InitTrainerGUISchedule;
+import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
-public class DCEntityListener implements Listener
+public class DwarfEntityListener implements Listener
 {
     private final DwarfCraft plugin;
-    private HashMap<Entity, DCPlayer> killMap;
+    private HashMap<Entity, DwarfPlayer> killMap;
 
-    public DCEntityListener( DwarfCraft plugin )
+    public DwarfEntityListener( DwarfCraft plugin )
     {
         this.plugin = plugin;
-        killMap = new HashMap<Entity, DCPlayer>();
+        killMap = new HashMap<>();
     }
 
     @EventHandler( priority = EventPriority.HIGH )
@@ -95,8 +89,8 @@ public class DCEntityListener implements Listener
                 else
                 {
                     Player player = ( Player ) event.getClicker();
-                    DCPlayer dCPlayer = plugin.getDataManager().find( player );
-                    Skill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+                    DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
+                    DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
                     plugin.getOut().printSkillInfo( player, skill, dCPlayer, trainer.getMaxSkill() );
                 }
             }
@@ -109,7 +103,7 @@ public class DCEntityListener implements Listener
     {
         try
         {
-            DCPlayer dCPlayer = plugin.getDataManager().find( event.getClicker() );
+            DwarfPlayer dwarfPlayer = plugin.getDataManager().find( event.getClicker() );
             DwarfTrainer trainer = plugin.getDataManager().getTrainer( event.getNPC() );
             if ( trainer != null )
             {
@@ -121,11 +115,11 @@ public class DCEntityListener implements Listener
                 {
                     if ( trainer.isWaiting() )
                     {
-                        plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.trainerOccupied );
+                        plugin.getOut().sendMessage( dwarfPlayer.getPlayer(), Messages.trainerOccupied );
                     }
                     else
                     {
-                        Skill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+                        DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
 
                         if ( skill == null )
                         {
@@ -134,13 +128,13 @@ public class DCEntityListener implements Listener
                         }
 
                         String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
-                        if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                        if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
                         {
                             plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
                             return true;
                         }
 
-                        if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
+                        if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
                         {
                             plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
                             return true;
@@ -164,11 +158,9 @@ public class DCEntityListener implements Listener
                             return true;
                         }
 
-                        Inventory inv = plugin.getServer().createInventory( event.getClicker(), 18, plugin.getOut().parseColors( Messages.trainerGUITitle.replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() )
-                                .replaceAll( "%skilllevel%", "" + skill.getLevel() ).replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) ) );
-                        TrainerGUI trainerGUI = new TrainerGUI( plugin, trainer, dCPlayer, inv );
-                        plugin.getDCInventoryListener().trainerGUIs.put( event.getClicker(), trainerGUI );
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 1 );
+                        TrainerGUI trainerGUI = new TrainerGUI(plugin, trainer, dwarfPlayer);
+                        plugin.getDwarfInventoryListener().trainerGUIs.put(dwarfPlayer.getPlayer(), trainerGUI);
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new InitTrainerGUISchedule(trainerGUI), 1);
                     }
 
                 }
@@ -216,7 +208,7 @@ public class DCEntityListener implements Listener
         }
 
         boolean isPVP = false;
-        DCPlayer attacker = null;
+        DwarfPlayer attacker = null;
 
         if ( victim instanceof Player )
         {
@@ -247,11 +239,11 @@ public class DCEntityListener implements Listener
         // Need to test PlayerInteractEvent to see if it is called before this
         // event to add player and which item was used to attack this entity.
         ItemStack tool = attacker.getPlayer().getInventory().getItemInMainHand();
-        HashMap<Integer, Skill> skills = attacker.getSkills();
+        HashMap<Integer, DwarfSkill> skills = attacker.getSkills();
 
-        for ( Skill s : skills.values() )
+        for ( DwarfSkill s : skills.values() )
         {
-            for ( Effect e : s.getEffects() )
+            for ( DwarfEffect e : s.getEffects() )
             {
                 if ( tool != null && tool.getType().getMaxDurability() > 0 )
                 {
@@ -342,14 +334,14 @@ public class DCEntityListener implements Listener
         double damage = event.getDamage();
         final double origDamage = event.getDamage();
         double mitigation = 1;
-        DCPlayer attackDwarf = null;
+        DwarfPlayer attackDwarf = null;
 
         if ( attacker instanceof Player )
         {
             attackDwarf = plugin.getDataManager().find( ( Player ) attacker );
-            for ( Skill skill : attackDwarf.getSkills().values() )
+            for ( DwarfSkill skill : attackDwarf.getSkills().values() )
             {
-                for ( Effect effect : skill.getEffects() )
+                for ( DwarfEffect effect : skill.getEffects() )
                 {
                     if ( effect.getEffectType() == EffectType.BOWATTACK )
                     {
@@ -383,12 +375,12 @@ public class DCEntityListener implements Listener
 
         if ( ( event.getEntity() instanceof Player ) )
         {
-            DCPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getEntity() );
+            DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getEntity() );
             double damage = event.getDamage();
             final double origDamage = event.getDamage();
-            for ( Skill s : dCPlayer.getSkills().values() )
+            for ( DwarfSkill s : dCPlayer.getSkills().values() )
             {
-                for ( Effect e : s.getEffects() )
+                for ( DwarfEffect e : s.getEffects() )
                 {
                     if ( e.getEffectType() == EffectType.FALLDAMAGE && event.getCause() == DamageCause.FALL )
                         damage = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) * damage );
@@ -456,10 +448,10 @@ public class DCEntityListener implements Listener
 
             items.clear();
 
-            DCPlayer killer = killMap.get( deadThing );
-            for ( Skill skill : killer.getSkills().values() )
+            DwarfPlayer killer = killMap.get( deadThing );
+            for ( DwarfSkill skill : killer.getSkills().values() )
             {
-                for ( Effect effect : skill.getEffects() )
+                for ( DwarfEffect effect : skill.getEffects() )
                 {
                     if ( effect.getEffectType() == EffectType.MOBDROP )
                     {
