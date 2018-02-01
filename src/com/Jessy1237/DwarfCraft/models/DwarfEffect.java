@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft.model;
+package com.Jessy1237.DwarfCraft.models;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta

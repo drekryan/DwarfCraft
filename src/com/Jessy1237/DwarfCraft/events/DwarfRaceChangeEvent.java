@@ -4,8 +4,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.model.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfRace;
 
 public class DwarfRaceChangeEvent extends Event implements Cancellable
 {

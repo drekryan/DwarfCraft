@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.Jessy1237.DwarfCraft.model.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfRace;
 
 public class DwarfLoadRacesEvent extends Event
 {

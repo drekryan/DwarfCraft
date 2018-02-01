@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.model.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfRace;
 
 /**
  * Original Authors: Jessy1237

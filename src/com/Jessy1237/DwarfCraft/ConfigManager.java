@@ -24,11 +24,11 @@ import org.jbls.LexManos.CSV.CSVRecord;
 
 import com.Jessy1237.DwarfCraft.events.DwarfLoadRacesEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLoadSkillsEvent;
-import com.Jessy1237.DwarfCraft.model.DwarfEffect;
-import com.Jessy1237.DwarfCraft.model.DwarfGreeterMessage;
-import com.Jessy1237.DwarfCraft.model.DwarfRace;
-import com.Jessy1237.DwarfCraft.model.DwarfSkill;
-import com.Jessy1237.DwarfCraft.model.DwarfTrainingItem;
+import com.Jessy1237.DwarfCraft.models.DwarfEffect;
+import com.Jessy1237.DwarfCraft.models.DwarfGreeterMessage;
+import com.Jessy1237.DwarfCraft.models.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
 
 public final class ConfigManager
 {
