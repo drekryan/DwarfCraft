@@ -59,7 +59,7 @@ public class CommandListTrainers extends Command
             listTrainersGUI.init();
             listTrainersGUI.openGUI();
 
-            plugin.getDwarfInventoryListener().listTrainersGUI.put(dwarfPlayer.getPlayer(), listTrainersGUI);
+            plugin.getDwarfInventoryListener().dwarfGUIs.put(dwarfPlayer.getPlayer(), listTrainersGUI);
 
             return true;
         } else {

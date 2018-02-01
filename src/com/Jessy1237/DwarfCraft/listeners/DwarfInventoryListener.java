@@ -3,9 +3,6 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.Jessy1237.DwarfCraft.*;
-import com.Jessy1237.DwarfCraft.guis.ListTrainersGUI;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -20,27 +17,28 @@ import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
-import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.guis.DwarfGUI;
 import com.Jessy1237.DwarfCraft.model.DwarfEffect;
 import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
-import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
-import com.Jessy1237.DwarfCraft.schedules.TrainSkillSchedule;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
 
 public class DwarfInventoryListener implements Listener
 {
 
     private DwarfCraft plugin;
     private HashMap<Location, BrewerInventory> stands = new HashMap<>();
-    public HashMap<Player, TrainerGUI> trainerGUIs = new HashMap<>();
-    public HashMap<Player, ListTrainersGUI> listTrainersGUI = new HashMap<>();
+    public HashMap<Player, DwarfGUI> dwarfGUIs = new HashMap<>();
 
-    public DwarfInventoryListener(final DwarfCraft plugin )
+    public DwarfInventoryListener( final DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
@@ -346,14 +344,13 @@ public class DwarfInventoryListener implements Listener
     @EventHandler( priority = EventPriority.NORMAL )
     public void onInventoryCloseEvent( InventoryCloseEvent event )
     {
-        TrainerGUI trainerGUI = trainerGUIs.get( ( Player ) event.getPlayer() );
+        DwarfGUI dwarfGUI = dwarfGUIs.get( ( Player ) event.getPlayer() );
 
-        if ( trainerGUI == null )
+        if ( dwarfGUI == null )
             return;
 
-        trainerGUI.getTrainer().setWait( false );
-
-        trainerGUIs.remove( ( Player ) event.getPlayer() );
+        dwarfGUI.remove();
+        dwarfGUIs.remove( ( Player ) event.getPlayer() );
     }
 
     @SuppressWarnings( { "deprecation", "incomplete-switch" } )
@@ -363,53 +360,13 @@ public class DwarfInventoryListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getWhoClicked().getWorld() ) )
             return;
 
-        ListTrainersGUI listTrainerGUI = listTrainersGUI.get( ( Player ) event.getWhoClicked() );
-        if (listTrainerGUI != null) {
-            // Handle List Trainers GUI
-            if (listTrainerGUI.getInventory().equals( event.getInventory() )) {
-                event.setCancelled(true);
-
-                DwarfTrainer trainer = listTrainerGUI.getTrainerAtSlot(event.getRawSlot());
-                event.getWhoClicked().sendMessage(ChatColor.LIGHT_PURPLE + "Teleporting to " + trainer.getName() + " at X: " + trainer.getLocation().getX() + ", Y: " + trainer.getLocation().getY() + ", Z: " + trainer.getLocation().getZ());
-                event.getWhoClicked().teleport(trainer.getLocation().subtract(1, 0, 0));
-            }
-        }
-
-        TrainerGUI trainerGUI = trainerGUIs.get( ( Player ) event.getWhoClicked() );
-        if ( trainerGUI != null )
+        DwarfGUI dwarfGUI = dwarfGUIs.get( ( Player ) event.getWhoClicked() );
+        if ( dwarfGUI != null )
         {
-            // Handle Trainer GUI
-            if ( trainerGUI.getInventory().equals( event.getInventory() ) )
+            if ( dwarfGUI.getInventory().equals( event.getInventory() ) )
             {
-                Player player = ( Player ) event.getWhoClicked();
-
-                if ( event.isLeftClick() && event.getRawSlot() <= 17 )
-                {
-                    if ( event.getCurrentItem() == null )
-                        return;
-
-                    if ( event.getCurrentItem().getType().equals( Material.AIR ) )
-                        return;
-
-                    if ( trainerGUI.getTrainer() == null || trainerGUI.getDwarfPlayer().getPlayer() == null )
-                    {
-                        player.closeInventory();
-                        return;
-                    }
-
-                    long currentTime = System.currentTimeMillis();
-                    if ( ( currentTime - trainerGUI.getTrainer().getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
-                    {
-                        plugin.getOut().sendMessage( event.getWhoClicked(), Messages.trainerCooldown );
-                    }
-                    else
-                    {
-                        trainerGUI.getTrainer().setWait( true );
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainerGUI.getTrainer(), trainerGUI.getDwarfPlayer(), event.getCurrentItem(), trainerGUI ), 2 );
-                    }
-                }
-
                 event.setCancelled( true );
+                dwarfGUI.click( event );
             }
         }
 
@@ -570,7 +527,7 @@ class ShiftClickTask implements Runnable
     private DwarfEffect e;
     private DwarfCraft plugin;
 
-    public ShiftClickTask(DwarfCraft plugin, DwarfPlayer p, final ItemStack item, ItemStack check, int init, float modifier, DwarfEffect e )
+    public ShiftClickTask( DwarfCraft plugin, DwarfPlayer p, final ItemStack item, ItemStack check, int init, float modifier, DwarfEffect e )
     {
         this.p = p;
         this.item = item;

@@ -3,23 +3,27 @@ package com.Jessy1237.DwarfCraft.guis;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import com.Jessy1237.DwarfCraft.schedules.TrainSkillSchedule;
 
 public class TrainerGUI extends DwarfGUI
 {
     private DwarfTrainer trainer;
 
-    public TrainerGUI(DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dwarfPlayer)
+    public TrainerGUI( DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dwarfPlayer )
     {
-        super(plugin, dwarfPlayer);
+        super( plugin, dwarfPlayer );
 
         this.trainer = trainer;
     }
@@ -27,9 +31,9 @@ public class TrainerGUI extends DwarfGUI
     @Override
     public void init()
     {
-        DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained());
-        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( Messages.trainerGUITitle.replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() )
-                .replaceAll( "%skilllevel%", "" + skill.getLevel() ).replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) ) );
+        DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
+        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut()
+                .parseColors( Messages.trainerGUITitle.replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() ).replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) ) );
         inventory.clear();
 
         List<List<ItemStack>> costs = dwarfPlayer.calculateTrainingCost( skill );
@@ -60,6 +64,43 @@ public class TrainerGUI extends DwarfGUI
 
         guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 2 );
         addItem( "Train & Deposit DwarfSkill", null, 14, guiItem );
+    }
+
+    public void remove()
+    {
+        trainer.setWait( false );
+    }
+
+    public void click( InventoryClickEvent event )
+    {
+        Player player = ( Player ) event.getWhoClicked();
+
+        if ( event.isLeftClick() && event.getRawSlot() <= 17 )
+        {
+            if ( event.getCurrentItem() == null )
+                return;
+
+            if ( event.getCurrentItem().getType().equals( Material.AIR ) )
+                return;
+
+            if ( trainer == null || dwarfPlayer.getPlayer() == null )
+            {
+                player.closeInventory();
+                return;
+            }
+
+            long currentTime = System.currentTimeMillis();
+            if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
+            {
+                plugin.getOut().sendMessage( event.getWhoClicked(), Messages.trainerCooldown );
+            }
+            else
+            {
+                trainer.setWait( true );
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, event.getCurrentItem(), this ), 2 );
+            }
+        }
+
     }
 
     public DwarfTrainer getTrainer()
@@ -99,6 +140,6 @@ public class TrainerGUI extends DwarfGUI
         init();
         dwarfPlayer.getPlayer().updateInventory();
         openGUI();
-        plugin.getDwarfInventoryListener().trainerGUIs.put( dwarfPlayer.getPlayer(), this );
+        plugin.getDwarfInventoryListener().dwarfGUIs.put( dwarfPlayer.getPlayer(), this );
     }
 }
