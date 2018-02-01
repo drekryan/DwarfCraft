@@ -24,20 +24,25 @@
             <id>md_5-snapshots</id>
             <url>http://repo.md-5.net/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>public</id>
+            <name>Bukkit Snapshot</name>
+            <url>http://repo.mvdw-software.be/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
-        <!--Spigot API-->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
         <!--Bukkit API-->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
+            <version>18w03b-R0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--Spigot API-->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
