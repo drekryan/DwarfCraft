@@ -22,7 +22,7 @@ public class DwarfListener implements Listener
     @EventHandler( priority = EventPriority.NORMAL, ignoreCancelled = true )
     public void onDwarfCraftLevelUp( DwarfLevelUpEvent event )
     {
-        DwarfPlayer player = event.getDCPlayer();
+        DwarfPlayer player = event.getDwarfPlayer();
         DwarfSkill skill = event.getSkill();
 
         if ( skill.getLevel() % plugin.getConfigManager().getAnnouncementInterval() == 0 && plugin.getConfigManager().announce )

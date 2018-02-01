@@ -28,45 +28,19 @@ public class DwarfEffectEvent extends Event implements Cancellable
     private ItemStack itemInHand;
 
     /**
-     * The event for when an DwarfEffect is fired. This event is fired after the
-     * effect is fired but before any of the stats are applied to the
-     * player/game.
+     * The event for when an DwarfEffect is fired. This event is fired after the effect is fired but before any of the stats are applied to the player/game.
      * 
-     * @param player
-     *            The player that fired the effect
-     * @param Effect
-     *            The effect that was fired
-     * @param orig
-     *            The original itemstack contains the original
-     *            drops/smelted/crafted/etc
-     * @param altered
-     *            The altered itemstack contains all items that the effect
-     *            alters/adds
-     * @param origHunger
-     *            The original hunger added to the player before the effect. Put
-     *            null if the players hunger is not altered
-     * @param newHunger
-     *            The altered hunger added to the player. Put null if the
-     *            players hunger is not altered
-     * @param orgDmg
-     *            The original Damgage taken by or given by the player before
-     *            the event, can also be damage done to a tool. Null if the
-     *            damage is not altered. Can also be the original boat speed
-     * @param newDmg
-     *            The altered damage taken by or given by the player, can also
-     *            be damage done to a tool. Put null if the damage is not
-     *            altered. Can also be the altered boat speed
-     * @param entity
-     *            The Entity that is involved with the effect. Put null if no
-     *            entity other than the player is involved.
-     * @param block
-     *            The block that is involved with the effect. i.e the block
-     *            broken or the block that contains the inventory used. Put null
-     *            if no block is involved in the event.
-     * @param itemInHand
-     *            The item that was in the hand of the player and that also
-     *            allowed the effect to fire. i.e. a sword when killing an
-     *            entity.
+     * @param player The player that fired the effect
+     * @param Effect The effect that was fired
+     * @param orig The original itemstack contains the original drops/smelted/crafted/etc
+     * @param altered The altered itemstack contains all items that the effect alters/adds
+     * @param origHunger The original hunger added to the player before the effect. Put null if the players hunger is not altered
+     * @param newHunger The altered hunger added to the player. Put null if the players hunger is not altered
+     * @param orgDmg The original Damgage taken by or given by the player before the event, can also be damage done to a tool. Null if the damage is not altered. Can also be the original boat speed
+     * @param newDmg The altered damage taken by or given by the player, can also be damage done to a tool. Put null if the damage is not altered. Can also be the altered boat speed
+     * @param entity The Entity that is involved with the effect. Put null if no entity other than the player is involved.
+     * @param block The block that is involved with the effect. i.e the block broken or the block that contains the inventory used. Put null if no block is involved in the event.
+     * @param itemInHand The item that was in the hand of the player and that also allowed the effect to fire. i.e. a sword when killing an entity.
      */
     public DwarfEffectEvent( DwarfPlayer player, DwarfEffect effect, ItemStack[] orig, final ItemStack[] altered, Integer origHunger, Integer newHunger, Double origDmg, Double newDmg, Entity entity, Block block, ItemStack itemInHand )
     {
@@ -125,8 +99,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets an ItemStack Array containing the original items that wouldve been
-     * dropped/smelted/etc or null if no items were altered.
+     * Gets an ItemStack Array containing the original items that wouldve been dropped/smelted/etc or null if no items were altered.
      * 
      * @return ItemStack[]
      */
@@ -136,9 +109,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets an ItemStack Array containing the new Items altered by DwarfCraft.
-     * i.e. new Mob drops, block drops, craft drops, etc. Will return null if
-     * there were no altered items.
+     * Gets an ItemStack Array containing the new Items altered by DwarfCraft. i.e. new Mob drops, block drops, craft drops, etc. Will return null if there were no altered items.
      * 
      * @return ItemStack[]
      */
@@ -148,8 +119,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the players added original hunger before the effect was fired. Will
-     * return null if the effect doesn't alter the players hunger.
+     * Gets the players added original hunger before the effect was fired. Will return null if the effect doesn't alter the players hunger.
      * 
      * @return Integer
      */
@@ -159,8 +129,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the players added altered hunger after the effect was fired. Will
-     * return null if the effect doesn't alter the players hunger.
+     * Gets the players added altered hunger after the effect was fired. Will return null if the effect doesn't alter the players hunger.
      * 
      * @return Integer
      */
@@ -170,12 +139,9 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Sets the players altered hunger. If the effect does change the players
-     * hunger then changing this value with do nothing.
+     * Sets the players altered hunger. If the effect does change the players hunger then changing this value with do nothing.
      * 
-     * @param newHunger
-     *            The altered hunger of the player after the effect takes place.
-     * 
+     * @param newHunger The altered hunger of the player after the effect takes place.
      */
     public void setAlteredHunger( int newHunger )
     {
@@ -183,8 +149,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the original damage taken by or given by the player, can also be the
-     * damage to a tool. Will return null if the effect doesn't alter damage.
+     * Gets the original damage taken by or given by the player, can also be the damage to a tool. Will return null if the effect doesn't alter damage.
      * 
      * @return Integer
      */
@@ -194,8 +159,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the altered damage taken by or given by the player, can also be the
-     * damage to a tool. Will return null if the effect doesn't alter damage.
+     * Gets the altered damage taken by or given by the player, can also be the damage to a tool. Will return null if the effect doesn't alter damage.
      * 
      * @return Integer
      */
@@ -205,14 +169,9 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Sets the altered damage taken by or given by the player, can also be the
-     * damage to a tool. If the effect doesn't altered damage then changing this
-     * value will do nothing.
+     * Sets the altered damage taken by or given by the player, can also be the damage to a tool. If the effect doesn't altered damage then changing this value will do nothing.
      * 
-     * @param newDmg
-     *            The altered damage taken by or given by the player after the
-     *            effect takes place.
-     * 
+     * @param newDmg The altered damage taken by or given by the player after the effect takes place.
      */
     public void setAlteredDamage( double newDmg )
     {
@@ -220,8 +179,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the entity that is involved with the effect. If there is no entity
-     * involved with the effect other then the player then this will return null
+     * Gets the entity that is involved with the effect. If there is no entity involved with the effect other then the player then this will return null
      * 
      * @return Entity
      */
@@ -231,9 +189,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the block involved with the effect, i.e. the block broken or the
-     * block that contains the inventory used (furnace, workbench, etc.). Will
-     * return null if no block is involved.
+     * Gets the block involved with the effect, i.e. the block broken or the block that contains the inventory used (furnace, workbench, etc.). Will return null if no block is involved.
      * 
      * @return Block
      */
@@ -243,9 +199,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
     }
 
     /**
-     * Gets the item in the hand slot of the player. Will return null if the
-     * item in hand didn't help fire the effect of if the player didn't have an
-     * item in hand
+     * Gets the item in the hand slot of the player. Will return null if the item in hand didn't help fire the effect of if the player didn't have an item in hand
      * 
      * @return ItemStack
      */

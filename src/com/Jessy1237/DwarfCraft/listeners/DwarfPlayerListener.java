@@ -45,10 +45,7 @@ public class DwarfPlayerListener implements Listener
     }
 
     /**
-     * When a player joins the server this initialized their data from the
-     * database or creates new info for them.
-     * 
-     * also broadcasts a welcome "player" message
+     * When a player joins the server this initialized their data from the database or creates new info for them. also broadcasts a welcome "player" message
      */
     @EventHandler( priority = EventPriority.NORMAL )
     public void onPlayerJoin( PlayerJoinEvent event )
@@ -64,8 +61,7 @@ public class DwarfPlayerListener implements Listener
     /**
      * Called when a player interacts
      * 
-     * @param event
-     *            Relevant event details
+     * @param event Relevant event details
      */
     @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.NORMAL )
@@ -96,7 +92,7 @@ public class DwarfPlayerListener implements Listener
                     {
                         if ( effect.getEffectType() == DwarfEffectType.PLOWDURABILITY && effect.checkTool( item ) )
                         {
-                            effect.damageTool(dwarfPlayer, 1, item );
+                            effect.damageTool( dwarfPlayer, 1, item );
                             // block.setTypeId(60);
                         }
                     }
@@ -117,11 +113,11 @@ public class DwarfPlayerListener implements Listener
                     if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( block.getTypeId(), block.getData() ) )
                     {
 
-                        int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount(dwarfPlayer) ) );
+                        int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount( dwarfPlayer ) ) );
 
                         if ( block.getType() == Material.CAKE_BLOCK )
                         {
-                            DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, null, null, 2, foodLevel, null, null, null, block, null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, null, null, 2, foodLevel, null, null, null, block, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -169,9 +165,9 @@ public class DwarfPlayerListener implements Listener
             {
                 if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( item ) )
                 {
-                    int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount(dwarfPlayer) ) );
+                    int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount( dwarfPlayer ) ) );
 
-                    DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, null, null, lvl, foodLevel, null, null, null, null, item );
+                    DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, null, null, lvl, foodLevel, null, null, null, null, item );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
@@ -210,9 +206,9 @@ public class DwarfPlayerListener implements Listener
                             if ( sheep.isAdult() )
                             {
 
-                                ItemStack item = e.getOutput(dwarfPlayer, sheep.getColor().getWoolData(), -1 );
+                                ItemStack item = e.getOutput( dwarfPlayer, sheep.getColor().getWoolData(), -1 );
 
-                                DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getTypeId(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                                DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getTypeId(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
                                 plugin.getServer().getPluginManager().callEvent( ev );
 
                                 if ( ev.isCancelled() )
@@ -239,9 +235,9 @@ public class DwarfPlayerListener implements Listener
                         MushroomCow mooshroom = ( MushroomCow ) entity;
                         if ( mooshroom.isAdult() )
                         {
-                            ItemStack item = e.getOutput(dwarfPlayer);
+                            ItemStack item = e.getOutput( dwarfPlayer );
 
-                            DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -285,8 +281,7 @@ public class DwarfPlayerListener implements Listener
     /**
      * Called when a player opens an inventory
      * 
-     * @param event
-     *            Relevant event details
+     * @param event Relevant event details
      */
 
     @SuppressWarnings( "deprecation" )

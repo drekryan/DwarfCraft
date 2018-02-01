@@ -526,6 +526,7 @@ public class Util
 
     /**
      * Gets the clean name of the Entity.
+     * 
      * @param mCreature The creature to get the clean name of
      * @return The clean name of the entity if the entity exists otherwise returns 'NULL'
      */

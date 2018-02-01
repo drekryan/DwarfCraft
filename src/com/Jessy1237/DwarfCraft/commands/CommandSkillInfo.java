@@ -59,8 +59,8 @@ public class CommandSkillInfo extends Command
                     if ( args.length > outputList.size() )
                         throw new CommandException( plugin, Type.TOOMANYARGS );
 
-                    skill = (DwarfSkill) outputList.get( 1 );
-                    dwarfPlayer = (DwarfPlayer) outputList.get( 0 );
+                    skill = ( DwarfSkill ) outputList.get( 1 );
+                    dwarfPlayer = ( DwarfPlayer ) outputList.get( 0 );
                 }
                 catch ( CommandException dce )
                 {
@@ -68,7 +68,7 @@ public class CommandSkillInfo extends Command
                     {
                         desiredArguments.remove( 0 );
                         outputList = parser.parse( desiredArguments, true );
-                        skill = (DwarfSkill) outputList.get( 0 );
+                        skill = ( DwarfSkill ) outputList.get( 0 );
                         if ( !( sender instanceof Player ) )
                             throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                         dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );

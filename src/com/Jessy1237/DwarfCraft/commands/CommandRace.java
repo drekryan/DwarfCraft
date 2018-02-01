@@ -106,7 +106,7 @@ public class CommandRace extends Command
         return true;
     }
 
-    private void race(String newRace, boolean confirm, DwarfPlayer dCPlayer, CommandSender sender )
+    private void race( String newRace, boolean confirm, DwarfPlayer dCPlayer, CommandSender sender )
     {
         if ( dCPlayer.getRace() == newRace )
         {
@@ -133,7 +133,7 @@ public class CommandRace extends Command
                         }
                         else
                         {
-                            sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to do that." );
+                            sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
                         }
                     }
                     else

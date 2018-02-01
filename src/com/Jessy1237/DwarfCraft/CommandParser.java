@@ -37,13 +37,13 @@ public final class CommandParser
         {
             for ( Object o : desiredArguments )
             {
-                if ( o instanceof DwarfPlayer)
+                if ( o instanceof DwarfPlayer )
                     output.add( parseDwarf( arrayIterator ) );
                 else if ( o instanceof Player )
                     output.add( parsePlayer( arrayIterator ) );
-                else if ( o instanceof DwarfSkill)
+                else if ( o instanceof DwarfSkill )
                     output.add( parseSkill( arrayIterator ) );
-                else if ( o instanceof DwarfEffect)
+                else if ( o instanceof DwarfEffect )
                     output.add( parseEffect( arrayIterator ) );
                 else if ( o instanceof Boolean )
                     output.add( parseConfirm( arrayIterator ) );
@@ -92,7 +92,7 @@ public final class CommandParser
     }
 
     @SuppressWarnings( "deprecation" )
-    private DwarfPlayer parseDwarf(int argNumber ) throws CommandException
+    private DwarfPlayer parseDwarf( int argNumber ) throws CommandException
     {
         Player player;
         DwarfPlayer dCPlayer = null;
@@ -131,7 +131,7 @@ public final class CommandParser
 
     }
 
-    private DwarfEffect parseEffect(int argNumber ) throws CommandException
+    private DwarfEffect parseEffect( int argNumber ) throws CommandException
     {
         String inputString = input[argNumber];
         DwarfEffect effect;
@@ -197,7 +197,7 @@ public final class CommandParser
         return null;
     }
 
-    private DwarfSkill parseSkill(int argNumber ) throws CommandException
+    private DwarfSkill parseSkill( int argNumber ) throws CommandException
     {
         DwarfSkill skill = null;
         String inputString = input[argNumber];

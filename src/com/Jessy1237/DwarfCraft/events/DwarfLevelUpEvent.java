@@ -39,15 +39,11 @@ public class DwarfLevelUpEvent extends Event implements Cancellable
     }
 
     /**
-     * The event for when a DwarfPlayer levels up their skill. This event is fired
-     * after the skill is levelled but before the data is saved.
+     * The event for when a DwarfPlayer levels up their skill. This event is fired after the skill is levelled but before the data is saved.
      * 
-     * @param player
-     *            the player that levelled up a skill
-     * @param trainer
-     *            the trainer that was used to level up the skill
-     * @param skill
-     *            the skill that was levelled up
+     * @param player the player that levelled up a skill
+     * @param trainer the trainer that was used to level up the skill
+     * @param skill the skill that was levelled up
      */
     public DwarfLevelUpEvent( DwarfPlayer player, DwarfTrainer trainer, DwarfSkill skill )
     {

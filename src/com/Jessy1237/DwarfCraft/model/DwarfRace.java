@@ -14,12 +14,12 @@ public class DwarfRace
     private String Desc;
     private String prefixColour;
 
-    public DwarfRace(String name )
+    public DwarfRace( String name )
     {
         this.mName = name;
     }
 
-    public DwarfRace(String name, final ArrayList<Integer> skills, String Desc )
+    public DwarfRace( String name, final ArrayList<Integer> skills, String Desc )
     {
         this.mName = name;
         this.Desc = Desc;

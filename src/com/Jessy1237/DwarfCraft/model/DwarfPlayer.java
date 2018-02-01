@@ -28,7 +28,7 @@ public class DwarfPlayer
         this.player = player;
     }
 
-    public DwarfPlayer(final DwarfCraft plugin, Player player )
+    public DwarfPlayer( final DwarfCraft plugin, Player player )
     {
         this.plugin = plugin;
         this.player = player;
@@ -37,7 +37,7 @@ public class DwarfPlayer
         this.raceMaster = false;
     }
 
-    public DwarfPlayer(final DwarfCraft plugin, Player player, String race, boolean raceMaster )
+    public DwarfPlayer( final DwarfCraft plugin, Player player, String race, boolean raceMaster )
     {
         this.plugin = plugin;
         this.player = player;
@@ -113,8 +113,7 @@ public class DwarfPlayer
     }
 
     /**
-     * Counts skills greater than level the race level limit, used for training
-     * costs
+     * Counts skills greater than level the race level limit, used for training costs
      */
     private int countHighSkills()
     {
@@ -128,9 +127,7 @@ public class DwarfPlayer
     }
 
     /**
-     * Calculates the dwarf's total level for display. Value is the total of all
-     * skill level above the race level limit, or the highest skill level when
-     * none are above the race level limit.
+     * Calculates the dwarf's total level for display. Value is the total of all skill level above the race level limit, or the highest skill level when none are above the race level limit.
      * 
      * @return
      */
@@ -157,7 +154,7 @@ public class DwarfPlayer
      * @param effectId
      * @return
      */
-    public DwarfEffect getEffect(int effectId )
+    public DwarfEffect getEffect( int effectId )
     {
         DwarfSkill skill = getSkill( effectId / 10 );
         for ( DwarfEffect effect : skill.getEffects() )
@@ -176,11 +173,10 @@ public class DwarfPlayer
     /**
      * Gets a dwarf's skill from an effect
      * 
-     * @param effect
-     *            (does not have to be this dwarf's effect, only used for ID#)
+     * @param effect (does not have to be this dwarf's effect, only used for ID#)
      * @return DwarfSkill or null if none found
      */
-    protected DwarfSkill getSkill(DwarfEffect effect )
+    protected DwarfSkill getSkill( DwarfEffect effect )
     {
         for ( DwarfSkill skill : skills.values() )
         {
@@ -196,7 +192,7 @@ public class DwarfPlayer
      * @param skillId
      * @return DwarfSkill or null if none found
      */
-    public DwarfSkill getSkill(int skillId )
+    public DwarfSkill getSkill( int skillId )
     {
         DwarfSkill skill = skills.get( skillId );
         return skill;
@@ -208,7 +204,7 @@ public class DwarfPlayer
      * @param skillName
      * @return DwarfSkill or null if none found
      */
-    public DwarfSkill getSkill(String skillName )
+    public DwarfSkill getSkill( String skillName )
     {
         try
         {
@@ -262,8 +258,7 @@ public class DwarfPlayer
     }
 
     /**
-     * @param skills
-     *            the skills to set
+     * @param skills the skills to set
      */
     public void setSkills( HashMap<Integer, DwarfSkill> skills )
     {
@@ -314,7 +309,7 @@ public class DwarfPlayer
     {
         this.race = race.trim();
     }
-    
+
     public boolean isRaceMaster()
     {
         return raceMaster;

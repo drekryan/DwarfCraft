@@ -60,8 +60,8 @@ public class CommandSetSkill extends Command
                 try
                 {
                     outputList = parser.parse( desiredArguments, false );
-                    dCPlayer = (DwarfPlayer) outputList.get( 0 );
-                    skill = (DwarfSkill) outputList.get( 1 );
+                    dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
+                    skill = ( DwarfSkill ) outputList.get( 1 );
                     level = ( Integer ) outputList.get( 2 );
                     name = dCPlayer.getPlayer().getName();
                 }
@@ -74,8 +74,8 @@ public class CommandSetSkill extends Command
                             desiredArguments.remove( 0 );
                             desiredArguments.add( dCPlayer );
                             outputList = parser.parse( desiredArguments, true );
-                            dCPlayer = (DwarfPlayer) outputList.get( 2 );
-                            skill = (DwarfSkill) outputList.get( 0 );
+                            dCPlayer = ( DwarfPlayer ) outputList.get( 2 );
+                            skill = ( DwarfSkill ) outputList.get( 0 );
                             level = ( Integer ) outputList.get( 1 );
                             name = ( ( Player ) sender ).getName();
                         }
@@ -103,7 +103,9 @@ public class CommandSetSkill extends Command
                             s.setDeposit3( 0 );
                             skills[i] = s;
                             i++;
-                        } else {
+                        }
+                        else
+                        {
                             s.setLevel( oldLevel );
                         }
                     }

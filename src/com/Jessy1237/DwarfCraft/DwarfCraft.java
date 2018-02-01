@@ -388,7 +388,7 @@ public class DwarfCraft extends JavaPlugin
 
         pm.registerEvents( inventoryListener, this );
 
-        pm.registerEvents(dwarfListener, this );
+        pm.registerEvents( dwarfListener, this );
 
         if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
         {

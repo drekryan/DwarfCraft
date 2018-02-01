@@ -64,9 +64,9 @@ public class CommandSkillSheet extends Command
             {
                 outputList = parser.parse( desiredArguments, false );
                 if ( outputList.get( 0 ) instanceof String )
-                    dCPlayer = (DwarfPlayer) outputList.get( 1 );
+                    dCPlayer = ( DwarfPlayer ) outputList.get( 1 );
                 else
-                    dCPlayer = (DwarfPlayer) outputList.get( 0 );
+                    dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
                 if ( dCPlayer.getPlayer() == null )
                     displayName = ( printFull ? args[1] : args[0] );
                 else

@@ -456,8 +456,7 @@ public class DwarfBlockListener implements Listener
     }
 
     /**
-     * onBlockDamage used to accelerate how quickly blocks are destroyed.
-     * setDamage() not implemented yet
+     * onBlockDamage used to accelerate how quickly blocks are destroyed. setDamage() not implemented yet
      */
 
     @SuppressWarnings( "deprecation" )

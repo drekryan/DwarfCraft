@@ -63,9 +63,9 @@ public class DwarfVehicleListener implements Listener
                     {
                         if ( effect.getEffectType() == DwarfEffectType.VEHICLEDROP )
                         {
-                            ItemStack drop = effect.getOutput(dwarfPlayer);
+                            ItemStack drop = effect.getOutput( dwarfPlayer );
 
-                            DwarfEffectEvent ev = new DwarfEffectEvent(dwarfPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )

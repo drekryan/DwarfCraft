@@ -105,7 +105,7 @@ public class DataManager
         return false;
     }
 
-    public DwarfPlayer createDwarf(Player player )
+    public DwarfPlayer createDwarf( Player player )
     {
         DwarfPlayer newDwarf = new DwarfPlayer( plugin, player );
         newDwarf.setRace( plugin.getConfigManager().getDefaultRace() );
@@ -308,7 +308,7 @@ public class DataManager
      * @param player
      * @return DwarfPlayer or null
      */
-    public DwarfPlayer find(Player player )
+    public DwarfPlayer find( Player player )
     {
         for ( DwarfPlayer d : dwarves )
         {
@@ -327,7 +327,7 @@ public class DataManager
         return null;
     }
 
-    protected DwarfPlayer findOffline(UUID uuid )
+    protected DwarfPlayer findOffline( UUID uuid )
     {
         DwarfPlayer dCPlayer = createDwarf( null );
         if ( checkDwarfData( dCPlayer, uuid ) )
@@ -366,7 +366,7 @@ public class DataManager
      * @param player
      * @param name
      */
-    private boolean checkDwarfData(DwarfPlayer player, UUID uuid )
+    private boolean checkDwarfData( DwarfPlayer player, UUID uuid )
     {
         try
         {
@@ -526,7 +526,7 @@ public class DataManager
         return -1;
     }
 
-    public boolean saveDwarfData(DwarfPlayer dwarfPlayer, DwarfSkill[] skills )
+    public boolean saveDwarfData( DwarfPlayer dwarfPlayer, DwarfSkill[] skills )
     {
         try
         {

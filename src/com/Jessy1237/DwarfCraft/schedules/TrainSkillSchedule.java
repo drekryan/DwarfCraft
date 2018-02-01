@@ -19,7 +19,7 @@ public class TrainSkillSchedule implements Runnable
     private final ItemStack clickedItem;
     private final TrainerGUI trainerGUI;
 
-    public TrainSkillSchedule(DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dCPlayer, ItemStack clickedItem, TrainerGUI trainerGUI )
+    public TrainSkillSchedule( DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dCPlayer, ItemStack clickedItem, TrainerGUI trainerGUI )
     {
         this.plugin = plugin;
         this.trainer = trainer;

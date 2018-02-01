@@ -64,9 +64,7 @@ public class DwarfRaceChangeEvent extends Event implements Cancellable
     /**
      * Sets the race that the player will change to
      * 
-     * @param race
-     *            A dwarfcraft race that the player will change to.
-     * 
+     * @param race A dwarfcraft race that the player will change to.
      */
     public void setRace( DwarfRace race )
     {

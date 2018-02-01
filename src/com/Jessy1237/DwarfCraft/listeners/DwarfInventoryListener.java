@@ -295,8 +295,8 @@ public class DwarfInventoryListener implements Listener
                         if ( extract.getTypeId() != output.getTypeId() )
                             check = extract;
 
-                        DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, effect, new ItemStack[] { check != null ? new ItemStack( output.getType(), 0, output.getData().getData() ) : extract }, new ItemStack[] { output }, null, null, null, null, null, ( ( BlockState ) event
-                                .getInventory().getHolder() ).getBlock(), null );
+                        DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, effect, new ItemStack[] { check != null ? new ItemStack( output.getType(), 0, output.getData().getData() ) : extract }, new ItemStack[] { output }, null, null, null, null, null, ( ( BlockState ) event.getInventory()
+                                .getHolder() ).getBlock(), null );
                         plugin.getServer().getPluginManager().callEvent( ev );
 
                         if ( ev.isCancelled() )

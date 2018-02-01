@@ -24,13 +24,9 @@ public class DwarfLoadSkillsEvent extends Event
     }
 
     /**
-     * The event for when DwarfCraft loads all the skills from the csv file but
-     * before it is set into the plugins memory. So you can inject, remove or
-     * edit skills into the plugin via this event
+     * The event for when DwarfCraft loads all the skills from the csv file but before it is set into the plugins memory. So you can inject, remove or edit skills into the plugin via this event
      * 
-     * @param skills
-     *            the skills that were loaded by DwarfCraft from the csv file.
-     *            The key is the skill ID, the value is the skill.
+     * @param skills the skills that were loaded by DwarfCraft from the csv file. The key is the skill ID, the value is the skill.
      */
     public DwarfLoadSkillsEvent( HashMap<Integer, DwarfSkill> skills )
     {
@@ -38,8 +34,7 @@ public class DwarfLoadSkillsEvent extends Event
     }
 
     /**
-     * Gets the skills HashMap, the key is the skillID and the value is the
-     * DwarfSkill
+     * Gets the skills HashMap, the key is the skillID and the value is the DwarfSkill
      * 
      * @return DwarfPlayer
      */
@@ -52,10 +47,7 @@ public class DwarfLoadSkillsEvent extends Event
     /**
      * Sets the skills that will be stored in DwarfCrafts memory.
      * 
-     * @param skills
-     *            The skills HashMap, The key is the skillID, the value is the
-     *            DwarfSkill.
-     * 
+     * @param skills The skills HashMap, The key is the skillID, the value is the DwarfSkill.
      */
     public void setSkills( HashMap<Integer, DwarfSkill> skills )
     {
@@ -63,12 +55,9 @@ public class DwarfLoadSkillsEvent extends Event
     }
 
     /**
-     * Adds a skill to the DwarfSkill HashMap that is stored in the DwarfCraft
-     * memory.
+     * Adds a skill to the DwarfSkill HashMap that is stored in the DwarfCraft memory.
      * 
-     * @param skill
-     *            A skill to be added to the skills HashMap
-     * 
+     * @param skill A skill to be added to the skills HashMap
      */
     public void addSkill( DwarfSkill skill )
     {
@@ -76,12 +65,9 @@ public class DwarfLoadSkillsEvent extends Event
     }
 
     /**
-     * Removes a skill from the DwarfSkill HashMap that is stored in the DwarfCraft
-     * memory.
+     * Removes a skill from the DwarfSkill HashMap that is stored in the DwarfCraft memory.
      * 
-     * @param skill
-     *            A skill to be removed from the skills HashMap
-     * 
+     * @param skill A skill to be removed from the skills HashMap
      */
     @SuppressWarnings( "unlikely-arg-type" )
     public void removeSkill( DwarfSkill skill )

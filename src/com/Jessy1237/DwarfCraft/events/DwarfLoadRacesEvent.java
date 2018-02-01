@@ -24,13 +24,9 @@ public class DwarfLoadRacesEvent extends Event
     }
 
     /**
-     * The event for when DwarfCraft loads all the races from the config file
-     * but before it is set into the plugins memory. So you can inject, remove
-     * or edit races into the plugin via this event
+     * The event for when DwarfCraft loads all the races from the config file but before it is set into the plugins memory. So you can inject, remove or edit races into the plugin via this event
      * 
-     * @param races
-     *            The races that are going to be loaded into the DwarfCraft
-     *            memory
+     * @param races The races that are going to be loaded into the DwarfCraft memory
      */
     public DwarfLoadRacesEvent( ArrayList<DwarfRace> races )
     {
@@ -51,9 +47,7 @@ public class DwarfLoadRacesEvent extends Event
     /**
      * Sets the races that will be stored in DwarfCraft memory.
      * 
-     * @param races
-     *            The races ArrayList to be loaded into the DwarfCraft memory
-     * 
+     * @param races The races ArrayList to be loaded into the DwarfCraft memory
      */
     public void setRaces( ArrayList<DwarfRace> races )
     {
@@ -61,12 +55,9 @@ public class DwarfLoadRacesEvent extends Event
     }
 
     /**
-     * Adds a races to the race ArrayList that is stored in the DwarfCraft
-     * memory.
+     * Adds a races to the race ArrayList that is stored in the DwarfCraft memory.
      * 
-     * @param race
-     *            A race to be added to the races ArrayList
-     * 
+     * @param race A race to be added to the races ArrayList
      */
     public void addSkill( DwarfRace race )
     {
@@ -74,12 +65,9 @@ public class DwarfLoadRacesEvent extends Event
     }
 
     /**
-     * Removes a race from the race ArrayList that is stored in the DwarfCraft
-     * memory.
+     * Removes a race from the race ArrayList that is stored in the DwarfCraft memory.
      * 
-     * @param race
-     *            A race to be removed from the races ArrayList
-     * 
+     * @param race A race to be removed from the races ArrayList
      */
     public void removeSkill( DwarfRace race )
     {

@@ -163,9 +163,9 @@ public class DwarfEntityListener implements Listener
                         }
 
                         trainer.setWait( true );
-                        TrainerGUI trainerGUI = new TrainerGUI(plugin, trainer, dwarfPlayer);
-                        plugin.getDwarfInventoryListener().dwarfGUIs.put(dwarfPlayer.getPlayer(), trainerGUI);
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new InitTrainerGUISchedule(trainerGUI), 1);
+                        TrainerGUI trainerGUI = new TrainerGUI( plugin, trainer, dwarfPlayer );
+                        plugin.getDwarfInventoryListener().dwarfGUIs.put( dwarfPlayer.getPlayer(), trainerGUI );
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 1 );
                     }
 
                 }

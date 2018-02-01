@@ -88,7 +88,7 @@ public class DwarfEffect
 
     private EntityType mCreature;
 
-    public DwarfEffect(CSVRecord record, DwarfCraft plugin )
+    public DwarfEffect( CSVRecord record, DwarfCraft plugin )
     {
         if ( record == null )
             return;
@@ -334,12 +334,12 @@ public class DwarfEffect
         return getOutput( player, ( byte ) 0, -1 );
     }
 
-    public ItemStack getOutput(DwarfPlayer player, Byte oldData )
+    public ItemStack getOutput( DwarfPlayer player, Byte oldData )
     {
         return getOutput( player, oldData, -1 );
     }
 
-    public ItemStack getOutput(DwarfPlayer player, Byte oldData, int oldID )
+    public ItemStack getOutput( DwarfPlayer player, Byte oldData, int oldID )
     {
         Byte data = ( mOutput.getData() == null ? null : mOutput.getData().getData() );
 
@@ -557,12 +557,12 @@ public class DwarfEffect
         return Integer.toString( mID );
     }
 
-    public void damageTool(DwarfPlayer player, int base, ItemStack tool )
+    public void damageTool( DwarfPlayer player, int base, ItemStack tool )
     {
         damageTool( player, base, tool, true );
     }
 
-    public void damageTool(DwarfPlayer player, int base, ItemStack tool, boolean negate )
+    public void damageTool( DwarfPlayer player, int base, ItemStack tool, boolean negate )
     {
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
 

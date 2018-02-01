@@ -72,7 +72,7 @@ public class CommandCreateTrainer extends Command
                     outputList = parser.parse( desiredArguments, false );
                     uniqueId = ( String ) outputList.get( 0 );
                     name = ( String ) outputList.get( 1 );
-                    skill = (DwarfSkill) outputList.get( 2 );
+                    skill = ( DwarfSkill ) outputList.get( 2 );
                     maxSkill = ( Integer ) outputList.get( 3 );
                     minSkill = ( Integer ) outputList.get( 4 );
                     type = ( String ) outputList.get( 5 );
@@ -84,7 +84,7 @@ public class CommandCreateTrainer extends Command
                         outputList = parser.parse( desiredArguments, true );
                         uniqueId = ( String ) outputList.get( 0 );
                         name = ( String ) outputList.get( 1 );
-                        skill = (DwarfSkill) outputList.get( 2 );
+                        skill = ( DwarfSkill ) outputList.get( 2 );
                         maxSkill = ( Integer ) outputList.get( 3 );
                         minSkill = ( Integer ) outputList.get( 4 );
                         type = ( String ) outputList.get( 5 );

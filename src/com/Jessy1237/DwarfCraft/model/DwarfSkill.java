@@ -23,7 +23,7 @@ public class DwarfSkill implements Cloneable
     private int deposit2;
     private int deposit3;
 
-    public DwarfSkill(int id, String displayName, int level, List<DwarfEffect> effects, DwarfTrainingItem item1, DwarfTrainingItem item2, DwarfTrainingItem item3, Material trainerHeldMaterial )
+    public DwarfSkill( int id, String displayName, int level, List<DwarfEffect> effects, DwarfTrainingItem item1, DwarfTrainingItem item2, DwarfTrainingItem item3, Material trainerHeldMaterial )
     {
         mID = id;
         mName = displayName;
@@ -38,10 +38,7 @@ public class DwarfSkill implements Cloneable
     }
 
     /**
-     * My attempt at making a cloneable class.
-     * 
-     * Known issue: it does not clone the effects table or itemStack table. This
-     * is not a problem because effects are 100% final, and ItemStack is never
+     * My attempt at making a cloneable class. Known issue: it does not clone the effects table or itemStack table. This is not a problem because effects are 100% final, and ItemStack is never
      * modified.
      */
     @Override

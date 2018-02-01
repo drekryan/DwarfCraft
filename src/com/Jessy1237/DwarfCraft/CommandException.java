@@ -43,12 +43,12 @@ public class CommandException extends Throwable
     private final DwarfCraft plugin;
     private static final long serialVersionUID = 7319961775971310701L;
 
-    protected CommandException(final DwarfCraft plugin )
+    protected CommandException( final DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
 
-    public CommandException(final DwarfCraft plugin, Type type )
+    public CommandException( final DwarfCraft plugin, Type type )
     {
         this.plugin = plugin;
         this.type = type;
