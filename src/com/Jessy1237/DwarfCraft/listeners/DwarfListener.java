@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
-import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
 public class DwarfListener implements Listener
 {

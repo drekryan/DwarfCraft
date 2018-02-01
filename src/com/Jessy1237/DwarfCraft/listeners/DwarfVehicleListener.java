@@ -19,11 +19,11 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
-import com.Jessy1237.DwarfCraft.model.DwarfEffect;
-import com.Jessy1237.DwarfCraft.model.DwarfEffectType;
-import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.model.DwarfSkill;
-import com.Jessy1237.DwarfCraft.model.DwarfVehicle;
+import com.Jessy1237.DwarfCraft.models.DwarfEffect;
+import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 
 public class DwarfVehicleListener implements Listener
 {

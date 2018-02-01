@@ -1,4 +1,4 @@
-package com.Jessy1237.DwarfCraft.model;
+package com.Jessy1237.DwarfCraft.models;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;

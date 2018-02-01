@@ -4,9 +4,9 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.model.DwarfSkill;
-import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 
 public class DwarfDepositEvent extends Event implements Cancellable
 {

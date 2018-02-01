@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.Jessy1237.DwarfCraft.model.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
 public class DwarfLoadSkillsEvent extends Event
 {

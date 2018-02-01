@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfRaceChangeEvent;
-import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 
 public class CommandRace extends Command
 {

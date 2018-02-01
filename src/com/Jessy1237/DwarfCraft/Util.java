@@ -14,9 +14,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.model.DwarfRace;
-import com.Jessy1237.DwarfCraft.model.DwarfTrainerTrait;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.NPC;
 
