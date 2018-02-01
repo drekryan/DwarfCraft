@@ -12,8 +12,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.DCCommandException.Type;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
@@ -65,7 +65,7 @@ public class CommandSetSkill extends Command
                     level = ( Integer ) outputList.get( 2 );
                     name = dCPlayer.getPlayer().getName();
                 }
-                catch ( DCCommandException e )
+                catch ( CommandException e )
                 {
                     if ( e.getType() == Type.TOOFEWARGS )
                     {
@@ -80,7 +80,7 @@ public class CommandSetSkill extends Command
                             name = ( ( Player ) sender ).getName();
                         }
                         else
-                            throw new DCCommandException( plugin, Type.CONSOLECANNOTUSE );
+                            throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                     }
                     else
                         throw e;
@@ -94,7 +94,7 @@ public class CommandSetSkill extends Command
                         int oldLevel = s.getLevel();
                         s.setLevel( level );
 
-                        DwarfCraftLevelUpEvent event = new DwarfCraftLevelUpEvent( dCPlayer, null, s );
+                        DwarfLevelUpEvent event = new DwarfLevelUpEvent( dCPlayer, null, s );
                         plugin.getServer().getPluginManager().callEvent( event );
                         if ( !event.isCancelled() )
                         {
@@ -115,7 +115,7 @@ public class CommandSetSkill extends Command
                     int oldLevel = skill.getLevel();
                     skill.setLevel( level );
 
-                    DwarfCraftLevelUpEvent event = new DwarfCraftLevelUpEvent( dCPlayer, null, skill );
+                    DwarfLevelUpEvent event = new DwarfLevelUpEvent( dCPlayer, null, skill );
                     plugin.getServer().getPluginManager().callEvent( event );
                     if ( !event.isCancelled() )
                     {
@@ -133,7 +133,7 @@ public class CommandSetSkill extends Command
                     }
                 }
             }
-            catch ( DCCommandException e )
+            catch ( CommandException e )
             {
                 e.describe( sender );
                 sender.sendMessage( CommandInformation.Usage.SETSKILL.getUsage() );

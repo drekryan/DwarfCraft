@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfRace;
 
-public class DwarfCraftRaceChangeEvent extends Event implements Cancellable
+public class DwarfRaceChangeEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
@@ -35,7 +35,7 @@ public class DwarfCraftRaceChangeEvent extends Event implements Cancellable
         cancelled = cancel;
     }
 
-    public DwarfCraftRaceChangeEvent( DwarfPlayer player, DwarfRace race )
+    public DwarfRaceChangeEvent( DwarfPlayer player, DwarfRace race )
     {
         this.player = player;
         this.race = race;

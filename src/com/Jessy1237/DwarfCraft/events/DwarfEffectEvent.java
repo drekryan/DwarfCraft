@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import com.Jessy1237.DwarfCraft.model.DwarfEffect;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 
-public class DwarfCraftEffectEvent extends Event implements Cancellable
+public class DwarfEffectEvent extends Event implements Cancellable
 {
 
     private static final HandlerList handlers = new HandlerList();
@@ -68,7 +68,7 @@ public class DwarfCraftEffectEvent extends Event implements Cancellable
      *            allowed the effect to fire. i.e. a sword when killing an
      *            entity.
      */
-    public DwarfCraftEffectEvent( DwarfPlayer player, DwarfEffect effect, ItemStack[] orig, final ItemStack[] altered, Integer origHunger, Integer newHunger, Double origDmg, Double newDmg, Entity entity, Block block, ItemStack itemInHand )
+    public DwarfEffectEvent( DwarfPlayer player, DwarfEffect effect, ItemStack[] orig, final ItemStack[] altered, Integer origHunger, Integer newHunger, Double origDmg, Double newDmg, Entity entity, Block block, ItemStack itemInHand )
     {
         this.player = player;
         this.effect = effect;
@@ -109,7 +109,7 @@ public class DwarfCraftEffectEvent extends Event implements Cancellable
      * 
      * @return DwarfPlayer
      */
-    public DwarfPlayer getDCPlayer()
+    public DwarfPlayer getDwarfPlayer()
     {
         return player;
     }

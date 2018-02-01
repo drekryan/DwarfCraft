@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.DCCommandException;
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 public class CommandDebug extends Command
@@ -57,7 +57,7 @@ public class CommandDebug extends Command
                 if ( sender instanceof Player )
                     plugin.getOut().sendMessage( sender, "Debug messaging level set to " + DwarfCraft.debugMessagesThreshold );
             }
-            catch ( DCCommandException e )
+            catch ( CommandException e )
             {
                 e.describe( sender );
                 sender.sendMessage( CommandInformation.Usage.DEBUG.getUsage() );

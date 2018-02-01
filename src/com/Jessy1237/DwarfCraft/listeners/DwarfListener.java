@@ -5,7 +5,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftLevelUpEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
@@ -20,7 +20,7 @@ public class DwarfListener implements Listener
     }
 
     @EventHandler( priority = EventPriority.NORMAL, ignoreCancelled = true )
-    public void onDwarfCraftLevelUp( DwarfCraftLevelUpEvent event )
+    public void onDwarfCraftLevelUp( DwarfLevelUpEvent event )
     {
         DwarfPlayer player = event.getDCPlayer();
         DwarfSkill skill = event.getSkill();

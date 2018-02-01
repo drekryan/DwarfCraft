@@ -7,10 +7,10 @@ import org.bukkit.event.HandlerList;
 
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 
-public class DwarfCraftLoadSkillsEvent extends Event
+public class DwarfLoadSkillsEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
-    private HashMap<Integer, DwarfSkill> skills = new HashMap<Integer, DwarfSkill>();
+    private HashMap<Integer, DwarfSkill> skills = new HashMap<>();
 
     @Override
     public HandlerList getHandlers()
@@ -32,7 +32,7 @@ public class DwarfCraftLoadSkillsEvent extends Event
      *            the skills that were loaded by DwarfCraft from the csv file.
      *            The key is the skill ID, the value is the skill.
      */
-    public DwarfCraftLoadSkillsEvent( HashMap<Integer, DwarfSkill> skills )
+    public DwarfLoadSkillsEvent( HashMap<Integer, DwarfSkill> skills )
     {
         this.skills = skills;
     }

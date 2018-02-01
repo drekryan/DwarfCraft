@@ -28,7 +28,7 @@ import com.Jessy1237.DwarfCraft.model.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.model.DwarfSkill;
 import com.Jessy1237.DwarfCraft.model.DwarfTrainer;
 import com.Jessy1237.DwarfCraft.schedules.InitTrainerGUISchedule;
-import com.Jessy1237.DwarfCraft.events.DwarfCraftEffectEvent;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -271,7 +271,7 @@ public class DwarfEntityListener implements Listener
                         killMap.put( victim, attacker );
                     }
 
-                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( attacker, e, null, null, null, null, Origdamage, damage, victim, null, tool );
+                    DwarfEffectEvent ev = new DwarfEffectEvent( attacker, e, null, null, null, null, Origdamage, damage, victim, null, tool );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
@@ -291,7 +291,7 @@ public class DwarfEntityListener implements Listener
                 {
                     damage = plugin.getUtil().randomAmount( ( e.getEffectAmount( attacker ) ) * damage );
 
-                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( attacker, e, null, null, null, null, Origdamage, damage, victim, null, tool );
+                    DwarfEffectEvent ev = new DwarfEffectEvent( attacker, e, null, null, null, null, Origdamage, damage, victim, null, tool );
 
                     if ( ev.isCancelled() )
                     {
@@ -351,7 +351,7 @@ public class DwarfEntityListener implements Listener
                     {
                         damage = effect.getEffectAmount( attackDwarf );
 
-                        DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( attackDwarf, effect, null, null, null, null, origDamage, damage, hitThing, null, null );
+                        DwarfEffectEvent ev = new DwarfEffectEvent( attackDwarf, effect, null, null, null, null, origDamage, damage, hitThing, null, null );
                         plugin.getServer().getPluginManager().callEvent( ev );
 
                         if ( ev.isCancelled() )
@@ -407,7 +407,7 @@ public class DwarfEntityListener implements Listener
                         }
                     }
 
-                    DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( dCPlayer, e, null, null, null, null, origDamage, damage, null, null, null );
+                    DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, null, null, null, null, origDamage, damage, null, null, null );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
@@ -528,7 +528,7 @@ public class DwarfEntityListener implements Listener
                         }
                         if ( changed )
                         {
-                            DwarfCraftEffectEvent ev = new DwarfCraftEffectEvent( killer, effect, normal, items.toArray( new ItemStack[items.size()] ).clone(), null, null, null, null, deadThing, null, null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( killer, effect, normal, items.toArray( new ItemStack[items.size()] ).clone(), null, null, null, null, deadThing, null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )

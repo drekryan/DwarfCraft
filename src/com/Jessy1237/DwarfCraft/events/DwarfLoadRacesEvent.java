@@ -7,10 +7,10 @@ import org.bukkit.event.HandlerList;
 
 import com.Jessy1237.DwarfCraft.model.DwarfRace;
 
-public class DwarfCraftLoadRacesEvent extends Event
+public class DwarfLoadRacesEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
-    private ArrayList<DwarfRace> races = new ArrayList<DwarfRace>();
+    private ArrayList<DwarfRace> races = new ArrayList<>();
 
     @Override
     public HandlerList getHandlers()
@@ -32,7 +32,7 @@ public class DwarfCraftLoadRacesEvent extends Event
      *            The races that are going to be loaded into the DwarfCraft
      *            memory
      */
-    public DwarfCraftLoadRacesEvent( ArrayList<DwarfRace> races )
+    public DwarfLoadRacesEvent( ArrayList<DwarfRace> races )
     {
         this.races = races;
     }
