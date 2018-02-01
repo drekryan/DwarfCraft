@@ -287,11 +287,21 @@ public final class DwarfTrainer
         return this.lastTrain;
     }
 
+    /**
+     * Sets whether the player has to wait for the trainer to not be busy. A trainer is busy when another player is already talking to the trainer (i.e. has an inventory open)
+     * 
+     * @param wait True if the trainer will make the player wait
+     */
     public void setWait( boolean wait )
     {
         this.wait = wait;
     }
 
+    /**
+     * Sets the last the time the trainer has leveled someone's skill up. This is allows for a cooldown between leveling players to allow the server to catchup.
+     * 
+     * @param lastTrain The time in milliseconds
+     */
     public void setLastTrain( long lastTrain )
     {
         this.lastTrain = lastTrain;

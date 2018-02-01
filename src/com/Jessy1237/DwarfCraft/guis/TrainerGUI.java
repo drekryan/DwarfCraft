@@ -60,10 +60,10 @@ public class TrainerGUI extends DwarfGUI
         addItem( "Deposit All", null, 12, guiItem );
 
         guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 10 );
-        addItem( "Train DwarfSkill", null, 13, guiItem );
+        addItem( "Train Skill", null, 13, guiItem );
 
         guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 2 );
-        addItem( "Train & Deposit DwarfSkill", null, 14, guiItem );
+        addItem( "Train & Deposit Skill", null, 14, guiItem );
     }
 
     public void remove()
@@ -96,7 +96,6 @@ public class TrainerGUI extends DwarfGUI
             }
             else
             {
-                trainer.setWait( true );
                 plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, event.getCurrentItem(), this ), 2 );
             }
         }
