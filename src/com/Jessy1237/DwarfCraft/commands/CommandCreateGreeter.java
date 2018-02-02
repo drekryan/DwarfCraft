@@ -32,7 +32,6 @@ public class CommandCreateGreeter extends Command
         this.plugin = plugin;
     }
 
-    @SuppressWarnings( "deprecation" )
     @Override
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
@@ -82,7 +81,7 @@ public class CommandCreateGreeter extends Command
                 }
                 else
                 {
-                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.fromName( type ), UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
+                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
                 }
                 npc.spawn( location );
                 npc.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( uniqueId ), null, null, null, true, greeterMessage ) );

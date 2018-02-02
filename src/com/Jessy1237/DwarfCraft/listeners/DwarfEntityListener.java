@@ -3,7 +3,6 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.HashMap;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -21,6 +20,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
@@ -28,7 +30,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 import com.Jessy1237.DwarfCraft.schedules.InitTrainerGUISchedule;
-import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -430,7 +431,6 @@ public class DwarfEntityListener implements Listener
         }
     }
 
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.LOW )
     public void onEntityDeath( EntityDeathEvent event )
     {
@@ -482,7 +482,7 @@ public class DwarfEntityListener implements Listener
                             {
                                 for ( ItemStack i : normal )
                                 {
-                                    if ( i.getTypeId() == output.getTypeId() )
+                                    if ( i.getType() == output.getType() )
                                         items.remove( i );
                                 }
                                 items.add( output );
@@ -505,7 +505,7 @@ public class DwarfEntityListener implements Listener
                             boolean added = false;
                             for ( ItemStack i : normal )
                             {
-                                if ( i.getTypeId() == output.getTypeId() )
+                                if ( i.getType() == output.getType() )
                                 {
                                     if ( !added )
                                     {

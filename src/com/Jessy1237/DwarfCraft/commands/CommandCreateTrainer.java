@@ -8,17 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.Jessy1237.DwarfCraft.*;
-import net.citizensnpcs.api.npc.AbstractNPC;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandInformation;
+import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
+
+import net.citizensnpcs.api.npc.AbstractNPC;
 
 public class CommandCreateTrainer extends Command
 {
@@ -30,7 +33,6 @@ public class CommandCreateTrainer extends Command
         this.plugin = plugin;
     }
 
-    @SuppressWarnings( "deprecation" )
     @Override
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
@@ -111,10 +113,10 @@ public class CommandCreateTrainer extends Command
                 }
                 else
                 {
-                    if ( EntityType.fromName( type ) == null )
+                    if ( EntityType.valueOf( type ) == null )
                         throw new CommandException( plugin, Type.INVALIDENTITYTYPE );
 
-                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.fromName( type ), UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
+                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
                 }
                 npc.spawn( p.getLocation() );
                 npc.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( uniqueId ), skill.getId(), maxSkill, minSkill, false, null ) );

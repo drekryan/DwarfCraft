@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
@@ -59,7 +60,7 @@ public final class DwarfTrainer
         return mEntity.getStoredLocation();
     }
 
-    protected int getMaterial()
+    protected Material getMaterial()
     {
         return mEntity.getTrait( DwarfTrainerTrait.class ).getMaterial();
     }
@@ -319,7 +320,6 @@ public final class DwarfTrainer
      * @param player The player who is trying to skill up
      * @return true if the player contains enough of the item or its equivalents otherwise false
      */
-    @SuppressWarnings( "deprecation" )
     private boolean containsItem( ItemStack costStack, Player player )
     {
 
@@ -337,18 +337,18 @@ public final class DwarfTrainer
                 return true;
         }
 
-        ArrayList<Integer> equivs = plugin.getUtil().checkEquivalentBuildBlocks( costStack.getTypeId(), -1 );
+        ArrayList<Material> equivs = plugin.getUtil().checkEquivalentBuildBlocks( costStack.getType(), null );
 
         if ( equivs != null )
         {
-            for ( int id : equivs )
+            for ( Material mat : equivs )
             {
                 for ( ItemStack item : player.getInventory().getContents() )
                 {
                     if ( item == null )
                         continue;
 
-                    if ( item.getTypeId() == id )
+                    if ( item.getType() == mat )
                         return true;
                 }
             }
@@ -363,7 +363,6 @@ public final class DwarfTrainer
      * @param costStack The item to check against and remove
      * @return The amount of removed from the players inventory
      */
-    @SuppressWarnings( "deprecation" )
     private int removeItem( Player player, ItemStack costStack, String tag )
     {
         int amountTaken = 0;
@@ -371,8 +370,8 @@ public final class DwarfTrainer
         {
             if ( invStack == null )
                 continue;
-            if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getTypeId() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
-                    || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getTypeId(), costStack.getTypeId() ) != null )
+            if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+                    || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getType(), costStack.getType() ) != null )
             {
                 int inv = invStack.getAmount();
                 int cost = costStack.getAmount();
