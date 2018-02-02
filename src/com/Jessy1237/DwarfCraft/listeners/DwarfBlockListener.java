@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,13 +29,15 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+
+import de.diddiz.LogBlock.Actor;
 
 public class DwarfBlockListener implements Listener
 {
@@ -126,14 +127,16 @@ public class DwarfBlockListener implements Listener
         ItemStack tool = player.getPlayer().getInventory().getItemInMainHand();
         Block block = event.getBlock();
         Location loc = event.getBlock().getLocation();
-        int blockID = event.getBlock().getTypeId();
-        byte meta = event.getBlock().getData();
+        Material blockMat = event.getBlock().getType();
 
-        // Changed illuminated redstone ore block id to normal redstone ore
-        // block id
-        if ( blockID == 74 )
+        // TODO:Remove this in 1.13
+        short meta = ( short ) event.getBlock().getData();
+
+        // Changed illuminated redstone ore block id to normal redstone ore block id
+        // Probably remove this in 1.13
+        if ( blockMat == Material.GLOWING_REDSTONE_ORE )
         {
-            blockID = 73;
+            blockMat = Material.REDSTONE_ORE;
             block.setType( Material.REDSTONE_ORE );
         }
 
@@ -142,23 +145,23 @@ public class DwarfBlockListener implements Listener
         {
             for ( DwarfEffect effect : s.getEffects() )
             {
-                if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && effect.checkInitiator( blockID, meta ) )
+                if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && effect.checkInitiator( blockMat, meta ) )
                 {
 
                     // Crops special line:
-                    if ( effect.getInitiatorId() == 59 || effect.getInitiatorId() == 141 || effect.getInitiatorId() == 142 )
+                    if ( effect.getInitiatorMaterial() == Material.CROPS || effect.getInitiatorMaterial() == Material.CARROT || effect.getInitiatorMaterial() == Material.POTATO )
                     {
                         if ( meta != 7 )
                             return;
                     }
 
-                    if ( effect.getInitiatorId() == 127 )
+                    if ( effect.getInitiatorMaterial() == Material.COCOA )
                     {
                         if ( meta < 8 )
                             return;
                     }
 
-                    if ( effect.getInitiatorId() == 115 )
+                    if ( effect.getInitiatorMaterial() == Material.NETHER_WARTS )
                     {
                         if ( meta != 3 )
                             return;
@@ -186,41 +189,43 @@ public class DwarfBlockListener implements Listener
 
                     if ( effect.checkTool( tool ) )
                     {
-                        ItemStack item = effect.getOutput( player, meta, blockID );
+                        ItemStack item = effect.getOutput( player, meta, blockMat );
                         ItemStack item1 = null;
 
                         // Gives the 2% to drop poisonous potatoes when
                         // potatoes
                         // are broken
-                        if ( effect.getInitiatorId() == 142 && item.getTypeId() == 392 )
+                        if ( effect.getInitiatorMaterial() == Material.POTATO && item.getType() == Material.POTATO_ITEM )
                         {
                             Random r = new Random();
                             final int i = r.nextInt( 100 );
                             if ( i == 0 || i == 1 )
                             {
-                                loc.getWorld().dropItemNaturally( loc, new ItemStack( 394, 1 ) );
+                                loc.getWorld().dropItemNaturally( loc, new ItemStack( Material.POISONOUS_POTATO, 1 ) );
                             }
                         }
 
-                        if ( item.getTypeId() != 351 && item.getTypeId() == blockID && item.getTypeId() != 295 && blockID != 141 && item.getTypeId() != 391 && blockID != 142 && item.getTypeId() != 392 && blockID != 115 && item.getTypeId() != 372 && blockID != 31 && blockID != 175 && blockID != 59
-                                && blockID != 105 && item.getTypeId() != 362 && blockID != 104 && item.getTypeId() != 361 && blockID != 127 )
+                        // TODO:Remove in 1.13
+                        if ( item.getType() != Material.INK_SACK && item.getType() == blockMat && item.getType() != Material.SEEDS && blockMat != Material.CARROT && item.getType() != Material.CARROT_ITEM && blockMat != Material.POTATO && item.getType() != Material.POTATO_ITEM
+                                && blockMat != Material.NETHER_WARTS && item.getType() != Material.NETHER_STALK && blockMat != Material.DEAD_BUSH && blockMat != Material.DOUBLE_PLANT && blockMat != Material.CROPS && blockMat != Material.MELON_STEM && item.getType() != Material.MELON_SEEDS
+                                && blockMat != Material.PUMPKIN_STEM && item.getType() != Material.PUMPKIN_SEEDS && blockMat != Material.COCOA )
                         {
-                            item.setDurability( block.getData() );
+                            item.setDurability( meta );
                         }
-                        else if ( item.getTypeId() != 351 )
+                        else if ( item.getType() != Material.INK_SACK )
                         {
-                            item.setDurability( new ItemStack( item.getTypeId(), 1 ).getDurability() );
+                            item.setDurability( new ItemStack( item.getType(), 1 ).getDurability() );
                         }
 
                         // Makes sure that the right blocks are dropped
                         // according to metadata for sand and wood planks
-                        if ( block.getTypeId() == 12 || block.getTypeId() == 5 )
+                        if ( block.getType() == Material.SAND || block.getType() == Material.WOOD )
                         {
-                            item.setData( new MaterialData( item.getTypeId(), meta ) );
+                            item.setDurability( meta );
                         }
 
                         // Makes sure the correct log is dropped
-                        if ( event.getBlock().getTypeId() == 17 )
+                        if ( event.getBlock().getType() == Material.LOG )
                         {
                             final ItemStack old = item;
                             item = new ItemStack( Material.LOG, old.getAmount() );
@@ -241,7 +246,7 @@ public class DwarfBlockListener implements Listener
                                 item.setDurability( ( short ) 3 );
                             }
                         }
-                        else if ( event.getBlock().getTypeId() == 162 )
+                        else if ( event.getBlock().getType() == Material.LOG_2 )
                         {
                             final ItemStack old = item;
                             item = new ItemStack( Material.LOG_2, old.getAmount() );
@@ -257,7 +262,7 @@ public class DwarfBlockListener implements Listener
                         }
 
                         // Makes sure that the right stone is dropped
-                        if ( block.getTypeId() == 1 && block.getData() != ( byte ) 0 )
+                        if ( block.getType() == Material.STONE && block.getData() != ( byte ) 0 )
                         {
                             return;
                         }
@@ -424,7 +429,7 @@ public class DwarfBlockListener implements Listener
                         }
                         if ( plugin.getConsumer() != null )
                         {
-                            plugin.getConsumer().queueBlockBreak( event.getPlayer().getName(), event.getBlock().getState() );
+                            plugin.getConsumer().queueBlockBreak( Actor.actorFromEntity( event.getPlayer() ), event.getBlock().getState() );
                         }
                         blockDropChange = true;
 
@@ -450,7 +455,7 @@ public class DwarfBlockListener implements Listener
 
         if ( blockDropChange )
         {
-            event.getBlock().setTypeId( 0 );
+            event.getBlock().setType( Material.AIR );
             event.setCancelled( true );
         }
     }
@@ -475,8 +480,8 @@ public class DwarfBlockListener implements Listener
 
         // Effect Specific information
         ItemStack tool = player.getInventory().getItemInMainHand();
-        int materialId = event.getBlock().getTypeId();
-        byte data = event.getBlock().getData();
+        Material mat = event.getBlock().getType();
+        short data = ( short ) event.getBlock().getData();
 
         // if (event.getDamageLevel() != BlockDamageLevel.STARTED)
         // return;
@@ -485,7 +490,7 @@ public class DwarfBlockListener implements Listener
         {
             for ( DwarfEffect e : s.getEffects() )
             {
-                if ( e.getEffectType() == DwarfEffectType.DIGTIME && e.checkInitiator( materialId, data ) && e.checkTool( tool ) )
+                if ( e.getEffectType() == DwarfEffectType.DIGTIME && e.checkInitiator( mat, data ) && e.checkTool( tool ) )
                 {
                     if ( DwarfCraft.debugMessagesThreshold < 2 )
                         System.out.println( "DC2: started instamine check" );
@@ -494,7 +499,7 @@ public class DwarfBlockListener implements Listener
                         return;
 
                     if ( DwarfCraft.debugMessagesThreshold < 3 )
-                        System.out.println( "DC3: Insta-mine occured. Block: " + materialId );
+                        System.out.println( "DC3: Insta-mine occured. Block: " + mat );
 
                     DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, null, null, null, null, null, null, null, event.getBlock(), null );
                     plugin.getServer().getPluginManager().callEvent( ev );
@@ -510,7 +515,6 @@ public class DwarfBlockListener implements Listener
 
     // Code to check for farm automation i.e. (breaking the
     // block below, cacti farms, etc)
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.HIGH )
     public void onBlockPhysics( BlockPhysicsEvent event )
     {
@@ -526,7 +530,7 @@ public class DwarfBlockListener implements Listener
                 Location loc = event.getBlock().getLocation();
                 if ( !( checkCrops( world, loc ) ) )
                 {
-                    event.getBlock().setTypeId( 0, true );
+                    event.getBlock().setType( Material.AIR, true );
                     event.setCancelled( true );
                 }
             }
@@ -604,12 +608,12 @@ public class DwarfBlockListener implements Listener
                     }
                     if ( remove )
                     {
-                        event.getBlock().setTypeId( 0, true );
+                        event.getBlock().setType( Material.AIR, true );
                         event.setCancelled( true );
                     }
                     else if ( !checked )
                     {
-                        event.getBlock().setTypeId( 0, true );
+                        event.getBlock().setType( Material.AIR, true );
                         event.setCancelled( true );
                     }
                 }
@@ -681,7 +685,7 @@ public class DwarfBlockListener implements Listener
                 }
                 if ( remove )
                 {
-                    event.getBlock().setTypeId( 0, true );
+                    event.getBlock().setType( Material.AIR, true );
                     event.setCancelled( true );
                 }
             }
@@ -697,7 +701,7 @@ public class DwarfBlockListener implements Listener
             if ( !plugin.getUtil().isWorldAllowed( event.getBlock().getWorld() ) )
                 return;
 
-            Material[] mats = { Material.COCOA, Material.CACTUS, Material.CROPS, Material.POTATO, Material.CARROT, Material.NETHER_STALK, Material.MELON_BLOCK, Material.SUGAR_CANE_BLOCK };
+            Material[] mats = { Material.COCOA, Material.CACTUS, Material.CROPS, Material.POTATO, Material.CARROT, Material.NETHER_WARTS, Material.MELON_BLOCK, Material.SUGAR_CANE_BLOCK };
             if ( removeCrops( event.getBlocks(), mats ) )
                 event.setCancelled( true );
         }

@@ -60,8 +60,8 @@ public final class ConfigManager
 
     private HashMap<Integer, DwarfSkill> skillsArray = new HashMap<Integer, DwarfSkill>();
     public ArrayList<World> worlds = new ArrayList<World>();
-    private HashMap<String, ArrayList<Integer>> blockGroups = new HashMap<String, ArrayList<Integer>>();
-    private HashMap<String, ArrayList<Integer>> toolGroups = new HashMap<String, ArrayList<Integer>>();
+    private HashMap<String, ArrayList<Material>> blockGroups = new HashMap<String, ArrayList<Material>>();
+    private HashMap<String, ArrayList<Material>> toolGroups = new HashMap<String, ArrayList<Material>>();
     private final HashMap<String, String> aliases = new HashMap<String, String>();
 
     private ArrayList<DwarfRace> raceList = new ArrayList<DwarfRace>();
@@ -196,7 +196,7 @@ public final class ConfigManager
         if ( cfgBlockGroupsFile == null )
             cfgBlockGroupsFile = "block-groups.config";
         if ( cfgToolGroupsFile == null )
-            cfgToolGroupsFile = "block-groups.config";
+            cfgToolGroupsFile = "tool-groups.config";
         if ( configAliasesFileName == null )
             configAliasesFileName = "aliases.config";
         if ( defaultRace == null )
@@ -808,10 +808,9 @@ public final class ConfigManager
             {
                 CSVRecord item = records.next();
 
-                @SuppressWarnings( "deprecation" )
                 DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<DwarfEffect>(), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new DwarfTrainingItem( plugin
                         .getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
-                                .getMaterial( item.getInt( "Held" ) ) );
+                                .matchMaterial( item.getString( "Held" ) ) );
 
                 skillsArray.put( skill.getId(), skill );
 
@@ -872,7 +871,7 @@ public final class ConfigManager
                 }
 
                 String[] ints = split[1].split( "," );
-                ArrayList<Integer> blocks = new ArrayList<Integer>();
+                ArrayList<Material> blocks = new ArrayList<Material>();
 
                 if ( ints.length == 0 || ints == null )
                 {
@@ -882,7 +881,9 @@ public final class ConfigManager
 
                 for ( int i = 0; i < ints.length; i++ )
                 {
-                    blocks.add( Integer.parseInt( ints[i].trim() ) );
+                    Material mat = Material.matchMaterial( ints[i].trim() );
+                    if ( mat != null )
+                        blocks.add( mat );
                 }
 
                 blockGroups.put( split[0].trim(), blocks );
@@ -942,7 +943,7 @@ public final class ConfigManager
                 }
 
                 String[] ints = split[1].split( "," );
-                ArrayList<Integer> tools = new ArrayList<Integer>();
+                ArrayList<Material> tools = new ArrayList<Material>();
 
                 if ( ints.length == 0 || ints == null )
                 {
@@ -952,7 +953,9 @@ public final class ConfigManager
 
                 for ( int i = 0; i < ints.length; i++ )
                 {
-                    tools.add( Integer.parseInt( ints[i].trim() ) );
+                    Material mat = Material.matchMaterial( ints[i].trim() );
+                    if ( mat != null )
+                        tools.add( mat );
                 }
 
                 blockGroups.put( split[0].trim(), tools );
@@ -1033,10 +1036,9 @@ public final class ConfigManager
         {
             e.printStackTrace();
         }
-        
+
         return false;
     }
-    
 
     /**
      * Gets the alias of a shortened command name
@@ -1054,7 +1056,7 @@ public final class ConfigManager
 
         return alias;
     }
-    
+
     public String getDefaultRace()
     {
         return defaultRace;
@@ -1110,12 +1112,12 @@ public final class ConfigManager
         return announcementMessage;
     }
 
-    public HashMap<String, ArrayList<Integer>> getBlockGroups()
+    public HashMap<String, ArrayList<Material>> getBlockGroups()
     {
         return blockGroups;
     }
 
-    public HashMap<String, ArrayList<Integer>> getToolGroups()
+    public HashMap<String, ArrayList<Material>> getToolGroups()
     {
         return toolGroups;
     }

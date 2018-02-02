@@ -260,7 +260,7 @@ public class DataManager
                         }
                         else
                         {
-                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.fromName( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
+                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
                         }
                         npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
                         npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ), rs.getBoolean( "isGreeter" ), rs.getString( "messageId" ) ) );

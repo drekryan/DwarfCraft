@@ -44,9 +44,6 @@ public class DwarfTrainerTrait extends Trait
         if ( this.mHeldItem != Material.AIR )
             ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( mHeldItem, 1 ) );
 
-        if ( plugin.getDataManager() == null )
-            System.out.println( "1" );
-
         plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
     }
 
@@ -116,12 +113,11 @@ public class DwarfTrainerTrait extends Trait
         return this.mSkillID;
     }
 
-    @SuppressWarnings( "deprecation" )
-    public int getMaterial()
+    public Material getMaterial()
     {
         if ( this.mHeldItem != null )
-            return this.mHeldItem.getId();
+            return this.mHeldItem;
         else
-            return ( Material.AIR.getId() );
+            return Material.AIR;
     }
 }

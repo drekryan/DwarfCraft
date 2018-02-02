@@ -6,7 +6,6 @@ package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.HashMap;
 
-import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,6 +28,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Util;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
@@ -110,7 +111,7 @@ public class DwarfPlayerListener implements Listener
             {
                 for ( DwarfEffect e : s.getEffects() )
                 {
-                    if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( block.getTypeId(), block.getData() ) )
+                    if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( block.getType(), ( short ) block.getData() ) )
                     {
 
                         int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount( dwarfPlayer ) ) );
@@ -140,7 +141,6 @@ public class DwarfPlayerListener implements Listener
         }
     }
 
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onPlayerItemConsume( PlayerItemConsumeEvent event )
     {
@@ -149,10 +149,10 @@ public class DwarfPlayerListener implements Listener
 
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
-        int id = item.getTypeId();
+        Material mat = item.getType();
         DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
         HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
-        int lvl = Util.FoodLevel.getLvl( id );
+        int lvl = Util.FoodLevel.getLvl( mat );
 
         if ( lvl == 0 )
         {
@@ -206,9 +206,9 @@ public class DwarfPlayerListener implements Listener
                             if ( sheep.isAdult() )
                             {
 
-                                ItemStack item = e.getOutput( dwarfPlayer, sheep.getColor().getWoolData(), -1 );
+                                ItemStack item = e.getOutput( dwarfPlayer, ( short ) sheep.getColor().getWoolData(), Material.AIR );
 
-                                DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getTypeId(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                                DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getType(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getEquipment().getItemInMainHand() );
                                 plugin.getServer().getPluginManager().callEvent( ev );
 
                                 if ( ev.isCancelled() )
@@ -237,7 +237,7 @@ public class DwarfPlayerListener implements Listener
                         {
                             ItemStack item = e.getOutput( dwarfPlayer );
 
-                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getItemInHand() );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( Material.RED_MUSHROOM, 5 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getEquipment().getItemInMainHand() );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
@@ -284,7 +284,6 @@ public class DwarfPlayerListener implements Listener
      * @param event Relevant event details
      */
 
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onPlayerFish( PlayerFishEvent event )
     {
@@ -298,7 +297,7 @@ public class DwarfPlayerListener implements Listener
         {
             DwarfPlayer player = plugin.getDataManager().find( event.getPlayer() );
             ItemStack item = ( ( Item ) event.getCaught() ).getItemStack();
-            byte meta = item.getData().getData();
+            short meta = item.getDurability();
             Location loc = player.getPlayer().getLocation();
 
             ItemStack tool = player.getPlayer().getInventory().getItemInMainHand();

@@ -87,33 +87,21 @@ public class Util
         return retval;
     }
 
-    @SuppressWarnings( "deprecation" )
     public ItemStack parseItem( String info )
     {
         String[] pts = info.split( ":" );
         int data = ( pts.length > 1 ? Integer.parseInt( pts[1] ) : 0 );
-        int item = -1;
-
-        try
+        Material mat = Material.matchMaterial( pts[0] );
+        if ( mat == null )
         {
-            item = Integer.parseInt( pts[0] );
+            System.out.println( "DC ERROR: Could not parse material: " + info );
+            return null;
         }
-        catch ( NumberFormatException e )
-        {
-            Material mat = Material.getMaterial( pts[0] );
-            if ( mat == null )
-            {
-                System.out.println( "DC ERROR: Could not parse material: " + info );
-                return null;
-            }
-            item = mat.getId();
-        }
-        ItemStack item1 = new ItemStack( item );
+        ItemStack item1 = new ItemStack( mat );
         item1.setDurability( ( short ) data );
         return item1;
     }
 
-    @SuppressWarnings( "deprecation" )
     /**
      * Gets the official clean name of the item as spigot names are a bit iffy.
      * 
@@ -127,9 +115,9 @@ public class Util
         switch ( item.getType() )
         {
             case SAPLING:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Sapling";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Oak Sapling";
@@ -147,7 +135,7 @@ public class Util
                         return "Sapling";
                 }
             case SAND:
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Sand";
@@ -157,9 +145,9 @@ public class Util
                         return "Sand";
                 }
             case RAW_FISH:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Raw Fish";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Raw Fish";
@@ -174,9 +162,9 @@ public class Util
                 }
 
             case LOG:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Log";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Oak Log";
@@ -190,9 +178,9 @@ public class Util
                         return "Log";
                 }
             case LOG_2:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Log";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Acacia Log";
@@ -202,9 +190,9 @@ public class Util
                         return "Log";
                 }
             case LEAVES:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Leaves";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Oak Leaves";
@@ -218,9 +206,9 @@ public class Util
                         return "Leaves";
                 }
             case LEAVES_2:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Leaves";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Acacia Leaves";
@@ -230,9 +218,9 @@ public class Util
                         return "Leaves";
                 }
             case WOOL:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Wool";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "White Wool";
@@ -267,12 +255,12 @@ public class Util
                     case 15:
                         return "Ink Sac";
                     default:
-                        return String.format( "Unknown Dye(%d)", item.getData().getData() );
+                        return String.format( "Unknown Dye(%d)", item.getDurability() );
                 }
             case DOUBLE_STEP:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Slab";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 15:
                         return "Tile Quartz Double Slab";
@@ -302,7 +290,7 @@ public class Util
             case SUGAR_CANE_BLOCK:
                 return "Sugar Cane";
             case CROPS:
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 7:
                         return "Fully Grown Crops";
@@ -310,9 +298,9 @@ public class Util
                         return String.format( "Crop" );
                 }
             case COAL:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Coal";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 0:
                         return "Coal";
@@ -336,9 +324,9 @@ public class Util
             case CARROT:
                 return "Carrot Crop";
             case INK_SACK:
-                if ( checkEquivalentBuildBlocks( item.getTypeId(), -1 ) != null )
+                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
                     return "Dye";
-                switch ( item.getData().getData() )
+                switch ( item.getDurability() )
                 {
                     case 15:
                         return "Bone Meal";
@@ -373,7 +361,7 @@ public class Util
                     case 0:
                         return "Ink Sac";
                     default:
-                        return String.format( "Unknown Dye(%d)", item.getData().getData() );
+                        return String.format( "Unknown Dye(%d)", item.getDurability() );
                 }
             default:
                 return cleanEnumString( item.getType().toString().replaceAll( "_", " " ) );
@@ -385,14 +373,16 @@ public class Util
     // and steel.
 
     /**
-     * Checks the itemID to see if it is a tool. Excludes fishing rod and, flint and steel.
+     * Checks the Material to see if it is a tool. Excludes fishing rod and, flint and steel.
      * 
-     * @param ID The itemID to be checked
-     * @return True if the itemID is a tool otherwise false
+     * @param mat The Material to be checked
+     * @return True if the mat is a tool otherwise false
      */
-    public boolean isTool( int ID )
+    public boolean isTool( Material mat )
     {
-        if ( ( ID >= 256 && ID <= 258 ) || ( ID >= 267 && ID <= 279 ) || ( ID >= 283 && ID <= 286 ) || ( ID >= 290 && ID <= 294 ) || ID == 359 )
+        if ( mat == Material.IRON_SPADE || mat == Material.IRON_AXE || mat == Material.IRON_PICKAXE || mat == Material.IRON_SWORD || mat == Material.WOOD_SWORD || mat == Material.WOOD_SPADE || mat == Material.WOOD_PICKAXE || mat == Material.WOOD_AXE || mat == Material.STONE_SWORD
+                || mat == Material.STONE_SPADE || mat == Material.STONE_PICKAXE || mat == Material.STONE_AXE || mat == Material.DIAMOND_SWORD || mat == Material.DIAMOND_SPADE || mat == Material.DIAMOND_PICKAXE || mat == Material.DIAMOND_AXE || mat == Material.GOLD_SWORD || mat == Material.GOLD_SPADE
+                || mat == Material.GOLD_PICKAXE || mat == Material.GOLD_AXE || mat == Material.WOOD_HOE || mat == Material.STONE_HOE || mat == Material.IRON_HOE || mat == Material.DIAMOND_HOE || mat == Material.GOLD_HOE || mat == Material.SHEARS )
         {
             return true;
         }
@@ -402,27 +392,27 @@ public class Util
     /**
      * Checks the supplied itemID and sees if it is equivalent to the comparable itemID. The equivalent blocks are set in a config file as a list.
      * 
-     * @param ID The main itemID to obtain the list of comparable IDs
-     * @param compareID The itemID to check if it is in the list of comparableIDS
-     * @return A list of all the equivalent itemIDs if the comparableID is equivalent to the itemID. If the compareID is -1 then the list of equivalent itemIDs to the main ID is returned. Otherwise
-     *         null is returned
+     * @param mat The main Material to obtain the list of comparable Materials
+     * @param compareMat The Material to check if it is in the list of comparableMaterials
+     * @return A list of all the equivalent Materials if the comparableMaterial is equivalent to the Material. If the compareMat is null then the list of equivalent Materials to the main Material is
+     *         returned. Otherwise null is returned
      */
-    public ArrayList<Integer> checkEquivalentBuildBlocks( int ID, int compareID )
+    public ArrayList<Material> checkEquivalentBuildBlocks( Material mat, Material compareMat )
     {
         if ( !plugin.getConfigManager().buildingblocks )
             return null;
 
-        for ( ArrayList<Integer> blocks : plugin.getConfigManager().getBlockGroups().values() )
+        for ( ArrayList<Material> blocks : plugin.getConfigManager().getBlockGroups().values() )
         {
             if ( blocks != null && blocks.size() > 0 )
             {
-                for ( Integer i : blocks )
+                for ( Material m : blocks )
                 {
-                    if ( ID == i )
+                    if ( mat == m )
                     {
-                        for ( Integer i1 : blocks )
+                        for ( Material m1 : blocks )
                         {
-                            if ( compareID == i1 || compareID == -1 )
+                            if ( compareMat == m1 || compareMat == null )
                             {
                                 return blocks;
                             }
@@ -577,49 +567,52 @@ public class Util
 
     public enum FoodLevel
     {
-        APPLE( 260, 4, 2.4f ),
-        BAKED_POTATO( 393, 5, 7.2f ),
-        BREAD( 297, 5, 6f ),
-        CAKE( 92, 2, 2f ),
-        CARROT( 391, 3, 4.8f ),
-        COOKED_CHICKEN( 366, 6, 7.2f ),
-        COOKED_FISH( 350, 5, 6f ),
-        COOKED_MUTTON( 424, 6, 9.6f ),
-        COOKED_PORKCHOP( 320, 8, 12.8f ),
-        COOKED_RABBIT( 412, 5, 6f ),
-        COOKIE( 357, 2, 0.4f ),
-        GOLDEN_APPLE( 322, 4, 9.6f ),
-        GOLDEN_CARROT( 396, 6, 14.4f ),
-        MELON( 360, 2, 1.2f ),
-        MUSHROOM_STEW( 282, 6, 7.2f ),
-        POISONOUS_POTATO( 394, 2, 1.2f ),
-        POTATO( 392, 1, 0.6f ),
-        PUMPKIN_PIE( 400, 8, 4.8f ),
-        RABBIT_STEW( 413, 10, 12f ),
-        RAW_BEEF( 363, 3, 1.8f ),
-        RAW_CHICKEN( 365, 2, 1.2f ),
-        RAW_FISH( 349, 2, 0.4f ),
-        RAW_MUTTON( 423, 2, 1.2f ),
-        RAW_PORKCHOP( 319, 3, 1.8f ),
-        RAW_RABBIT( 411, 2, 1.8f ),
-        ROTTEN_FLESH( 367, 4, 0.8f ),
-        SPIDER_EYE( 375, 2, 3.2f ),
-        STEAK( 364, 8, 12.8f );
+        APPLE( Material.APPLE, 4, 2.4f ),
+        BAKED_POTATO( Material.BAKED_POTATO, 5, 6.0f ),
+        BEETROOT( Material.BEETROOT, 1, 1.2f ),
+        BEETROOT_SOUP( Material.BEETROOT_SOUP, 6, 7.2f ),
+        BREAD( Material.BREAD, 5, 6f ),
+        CAKE( Material.CAKE, 2, 0.4f ),
+        CARROT( Material.CARROT_ITEM, 3, 3.6f ),
+        CHORUS_FRUIT( Material.CHORUS_FRUIT, 4, 2.4f ),
+        COOKED_CHICKEN( Material.COOKED_CHICKEN, 6, 7.2f ),
+        COOKED_FISH( Material.COOKED_FISH, 5, 6f ),
+        COOKED_MUTTON( Material.COOKED_MUTTON, 6, 9.6f ),
+        COOKED_PORKCHOP( Material.GRILLED_PORK, 8, 12.8f ),
+        COOKED_RABBIT( Material.COOKED_RABBIT, 5, 6f ),
+        COOKIE( Material.COOKIE, 2, 0.4f ),
+        GOLDEN_APPLE( Material.GOLDEN_APPLE, 4, 9.6f ),
+        GOLDEN_CARROT( Material.GOLDEN_CARROT, 6, 14.4f ),
+        MELON( Material.MELON, 2, 1.2f ),
+        MUSHROOM_STEW( Material.MUSHROOM_SOUP, 6, 7.2f ),
+        POISONOUS_POTATO( Material.POISONOUS_POTATO, 2, 1.2f ),
+        POTATO( Material.POTATO_ITEM, 1, 0.6f ),
+        PUMPKIN_PIE( Material.PUMPKIN_PIE, 8, 4.8f ),
+        RABBIT_STEW( Material.RABBIT_STEW, 10, 12f ),
+        RAW_BEEF( Material.RAW_BEEF, 3, 1.8f ),
+        RAW_CHICKEN( Material.RAW_CHICKEN, 2, 1.2f ),
+        RAW_FISH( Material.RAW_FISH, 2, 0.4f ),
+        RAW_MUTTON( Material.MUTTON, 2, 1.2f ),
+        RAW_PORKCHOP( Material.PORK, 3, 1.8f ),
+        RAW_RABBIT( Material.RABBIT, 2, 1.8f ),
+        ROTTEN_FLESH( Material.ROTTEN_FLESH, 4, 0.8f ),
+        SPIDER_EYE( Material.SPIDER_EYE, 2, 3.2f ),
+        STEAK( Material.COOKED_BEEF, 8, 12.8f );
 
         private int lvl;
-        private int id;
+        private Material mat;
         private float sat;
 
-        private FoodLevel( int id, int lvl, float sat )
+        private FoodLevel( Material mat, int lvl, float sat )
         {
-            this.id = id;
+            this.mat = mat;
             this.lvl = lvl;
             this.sat = sat;
         }
 
-        public int getId()
+        public Material getMaterial()
         {
-            return id;
+            return mat;
         }
 
         public int getLevel()
@@ -632,13 +625,13 @@ public class Util
             return this.sat;
         }
 
-        public static int getLvl( int id )
+        public static int getLvl( Material mat )
         {
             for ( FoodLevel f : FoodLevel.values() )
             {
                 if ( f != null )
                 {
-                    if ( f.getId() == id )
+                    if ( f.getMaterial() == mat )
                     {
                         return f.getLevel();
                     }
@@ -647,13 +640,13 @@ public class Util
             return 0;
         }
 
-        public float getSat( int id )
+        public float getSat( Material mat )
         {
             for ( FoodLevel f : FoodLevel.values() )
             {
                 if ( f != null )
                 {
-                    if ( f.getId() == id )
+                    if ( f.getMaterial() == mat )
                     {
                         return f.getSat();
                     }

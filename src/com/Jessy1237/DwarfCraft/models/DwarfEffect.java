@@ -64,7 +64,6 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 
-@SuppressWarnings( "deprecation" )
 public class DwarfEffect
 {
     private DwarfCraft plugin;
@@ -83,7 +82,7 @@ public class DwarfEffect
     private ItemStack mInitiator;
     private ItemStack mOutput;
     private boolean mRequireTool;
-    private int[] mTools;
+    private Material[] mTools;
     private boolean mFloorResult;
 
     private EntityType mCreature;
@@ -104,26 +103,30 @@ public class DwarfEffect
         mExceptionValue = record.getDouble( "ExceptionValue" );
         mNormalLevel = record.getInt( "NormalLevel" );
         mType = DwarfEffectType.getEffectType( record.getString( "Type" ) );
-        if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR )
+        if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR || record.getString( "OriginMaterial" ).equalsIgnoreCase( "AIR" ) )
         {
-            mInitiator = plugin.getUtil().parseItem( record.getString( "OriginID" ) );
+            mInitiator = plugin.getUtil().parseItem( record.getString( "OriginMaterial" ) );
         }
         else
         {
-            mCreature = EntityType.fromName( record.getString( "OriginID" ) );
+            mCreature = EntityType.valueOf( record.getString( "OriginMaterial" ) );
         }
-        mOutput = plugin.getUtil().parseItem( record.getString( "OutputID" ) );
+        mOutput = plugin.getUtil().parseItem( record.getString( "OutputMaterial" ) );
         mRequireTool = record.getBool( "RequireTool" );
         mFloorResult = record.getBool( "Floor" );
 
         if ( record.getString( "Tools" ).isEmpty() )
-            mTools = new int[0];
+            mTools = new Material[0];
         else
         {
             String[] stools = record.getString( "Tools" ).split( " " );
-            mTools = new int[stools.length];
+            mTools = new Material[stools.length];
             for ( int x = 0; x < stools.length; x++ )
-                mTools[x] = Integer.parseInt( stools[x] );
+            {
+                Material mat = Material.matchMaterial( stools[x] );
+                if ( mat != null )
+                    mTools[x] = mat;
+            }
         }
 
         this.plugin = plugin;
@@ -182,72 +185,79 @@ public class DwarfEffect
         String effectLevelColor = effectLevelColor( dCPlayer.getSkill( this ).getLevel() );
         String toolType = toolType();
 
+        // TODO: use checkEquivalentBlocks to future proof the 1.13 changes
         if ( mType == DwarfEffectType.SMELT )
         {
-            if ( mInitiator.getTypeId() == 265 )
+            if ( mInitiator.getType() == Material.IRON_INGOT )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.IRON_ORE ) );
             }
-            else if ( mInitiator.getTypeId() == 266 )
+            else if ( mInitiator.getType() == Material.GOLD_INGOT )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.GOLD_ORE ) );
             }
-            else if ( mInitiator.getTypeId() == 320 )
+            else if ( mInitiator.getType() == Material.GRILLED_PORK )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.PORK ) );
             }
-            else if ( mInitiator.getTypeId() == 350 )
+            else if ( mInitiator.getType() == Material.COOKED_FISH )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_FISH ) );
             }
-            else if ( mInitiator.getTypeId() == 366 )
+            else if ( mInitiator.getType() == Material.COOKED_CHICKEN )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_CHICKEN ) );
             }
-            else if ( mInitiator.getTypeId() == 412 )
+            else if ( mInitiator.getType() == Material.COOKED_RABBIT )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RABBIT ) );
             }
-            else if ( mInitiator.getTypeId() == 424 )
+            else if ( mInitiator.getType() == Material.COOKED_MUTTON )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.MUTTON ) );
             }
-            else if ( mInitiator.getTypeId() == 364 )
+            else if ( mInitiator.getType() == Material.COOKED_BEEF )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_BEEF ) );
             }
-            else if ( mInitiator.getTypeId() == 20 )
+            else if ( mInitiator.getType() == Material.GLASS )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.SAND ) );
             }
-            else if ( mInitiator.getTypeId() == 393 )
+            else if ( mInitiator.getType() == Material.BAKED_POTATO )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.POTATO_ITEM ) );
             }
-            else if ( mInitiator.getTypeId() == 263 )
+            else if ( mInitiator.getType() == Material.COAL )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.LOG ) );
             }
-            else if ( mInitiator.getTypeId() == 1 )
+            else if ( mInitiator.getType() == Material.STONE )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.COBBLESTONE ) );
             }
-            else if ( mInitiator.getTypeId() == 336 )
+            else if ( mInitiator.getType() == Material.BRICK )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY_BALL ) );
             }
-            else if ( mInitiator.getTypeId() == 405 )
+            else if ( mInitiator.getType() == Material.NETHER_BRICK )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.NETHERRACK ) );
             }
-            else if ( mInitiator.getTypeId() == 172 )
+            else if ( mInitiator.getType() == Material.HARD_CLAY )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY ) );
             }
-            else if ( mInitiator.getTypeId() == 351 )
+            else if ( mInitiator.getType() == Material.INK_SACK )
             {
                 initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CACTUS ) );
             }
+
+            else if ( mInitiator.getType() == Material.WHITE_GLAZED_TERRACOTTA || plugin.getUtil().checkEquivalentBuildBlocks( mInitiator.getType(), Material.WHITE_GLAZED_TERRACOTTA ) != null )
+            {
+                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.HARD_CLAY ) );
+            }
+
         }
 
         description = plugin.getOut().parseEffectLevel( mType, initiator, output, effectAmount, minorAmount, moreThanOne, effectLevelColor, toolType, mCreature, dCPlayer, mInitiator );
@@ -314,14 +324,14 @@ public class DwarfEffect
         return mID;
     }
 
-    public int getInitiatorId()
+    public Material getInitiatorMaterial()
     {
-        return mInitiator.getTypeId();
+        return mInitiator.getType();
     }
 
-    public int getOutputId()
+    public Material getOutputMaterial()
     {
-        return mOutput.getTypeId();
+        return mOutput.getType();
     }
 
     public ItemStack getOutput()
@@ -331,30 +341,30 @@ public class DwarfEffect
 
     public ItemStack getOutput( DwarfPlayer player )
     {
-        return getOutput( player, ( byte ) 0, -1 );
+        return getOutput( player, ( short ) 0, Material.AIR );
     }
 
-    public ItemStack getOutput( DwarfPlayer player, Byte oldData )
+    public ItemStack getOutput( DwarfPlayer player, Short oldData )
     {
-        return getOutput( player, oldData, -1 );
+        return getOutput( player, oldData, Material.AIR );
     }
 
-    public ItemStack getOutput( DwarfPlayer player, Byte oldData, int oldID )
+    public ItemStack getOutput( DwarfPlayer player, Short oldData, Material oldMat )
     {
-        Byte data = ( mOutput.getData() == null ? null : mOutput.getData().getData() );
+        short data = mOutput.getDurability();
 
-        if ( data != null && data == 0 )
+        if ( data == 0 )
             data = oldData;
 
         final int count = plugin.getUtil().randomAmount( getEffectAmount( player ) );
         ItemStack item = null;
-        if ( plugin.getUtil().checkEquivalentBuildBlocks( mOutput.getTypeId(), oldID ) == null || oldID == -1 )
+        if ( plugin.getUtil().checkEquivalentBuildBlocks( mOutput.getType(), oldMat ) == null || oldMat == null || oldMat == Material.AIR )
         {
-            item = new ItemStack( mOutput.getTypeId(), count, data );
+            item = new ItemStack( mOutput.getType(), count, data );
         }
         else
         {
-            item = new ItemStack( oldID, count, data );
+            item = new ItemStack( oldMat, count, data );
         }
         return item;
     }
@@ -364,7 +374,7 @@ public class DwarfEffect
         return mRequireTool;
     }
 
-    public int[] getTools()
+    public Material[] getTools()
     {
         return mTools;
     }
@@ -372,21 +382,19 @@ public class DwarfEffect
     public boolean checkInitiator( ItemStack item )
     {
         if ( item == null )
-            return checkInitiator( 0, ( byte ) 0 );
+            return checkInitiator( Material.AIR, ( short ) 0 );
         else
-            return checkInitiator( item.getTypeId(), ( byte ) item.getDurability() );
+            return checkInitiator( item.getType(), item.getDurability() );
     }
 
-    public boolean checkInitiator( int id, byte data )
+    public boolean checkInitiator( Material mat, Short data )
     {
-        if ( mInitiator.getTypeId() != id && plugin.getUtil().checkEquivalentBuildBlocks( id, mInitiator.getTypeId() ) == null )
+        if ( mInitiator.getType() != mat && plugin.getUtil().checkEquivalentBuildBlocks( mat, mInitiator.getType() ) == null )
             return false;
 
-        if ( mInitiator.getData() != null )
+        if ( mInitiator.getDurability() != 0 )
         {
-            if ( mInitiator.getData().getData() == 0 ) // 0 means we dont care.
-                return true;
-            return mInitiator.getData().getData() == data;
+            return mInitiator.getDurability() == data;
         }
         return true;
     }
@@ -398,23 +406,23 @@ public class DwarfEffect
      */
     private String toolType()
     {
-        for ( int toolId : mTools )
+        for ( Material mat : mTools )
         {
-            if ( toolId == 267 )
+            if ( mat == Material.IRON_SWORD )
                 return "swords";
-            if ( toolId == 292 )
+            if ( mat == Material.IRON_HOE )
                 return "hoes";
-            if ( toolId == 258 )
+            if ( mat == Material.IRON_AXE )
                 return "axes";
-            if ( toolId == 270 )
+            if ( mat == Material.WOOD_PICKAXE )
                 return "pickaxes";
-            if ( toolId == 257 )
+            if ( mat == Material.IRON_PICKAXE )
                 return "most picks";
-            if ( toolId == 278 )
+            if ( mat == Material.DIAMOND_PICKAXE )
                 return "high picks";
-            if ( toolId == 256 )
+            if ( mat == Material.IRON_SPADE )
                 return "shovels";
-            if ( toolId == 346 )
+            if ( mat == Material.FISHING_ROD )
                 return "fishing rod";
         }
         return "any tool";
@@ -544,8 +552,8 @@ public class DwarfEffect
         if ( tool == null )
             return false;
 
-        for ( int id : mTools )
-            if ( id == tool.getTypeId() )
+        for ( Material mat : mTools )
+            if ( mat == tool.getType() )
                 return true;
 
         return false;
@@ -603,7 +611,7 @@ public class DwarfEffect
 
         if ( tool.getDurability() >= tool.getType().getMaxDurability() )
         {
-            if ( tool.getTypeId() == 267 && tool.getDurability() < 250 )
+            if ( tool.getType() == Material.IRON_SWORD && tool.getDurability() < 250 )
                 return;
 
             if ( tool.getAmount() > 1 )
@@ -613,7 +621,14 @@ public class DwarfEffect
             }
             else
             {
-                player.getPlayer().setItemInHand( null );
+                if ( player.getPlayer().getEquipment().getItemInMainHand().getType() == tool.getType() )
+                {
+                    player.getPlayer().getEquipment().setItemInMainHand( null );
+                }
+                else if ( player.getPlayer().getEquipment().getItemInOffHand().getType() == tool.getType() )
+                {
+                    player.getPlayer().getEquipment().setItemInOffHand( null );
+                }
             }
         }
     }
