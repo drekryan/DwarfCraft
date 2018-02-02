@@ -59,8 +59,7 @@ public class ListTrainersGUI extends DwarfGUI
             if ( trainer != null )
             {
                 event.getWhoClicked().sendMessage( ChatColor.LIGHT_PURPLE + "Teleporting to " + trainer.getName() + " at X: " + trainer.getLocation().getX() + ", Y: " + trainer.getLocation().getY() + ", Z: " + trainer.getLocation().getZ() );
-                event.getWhoClicked().teleport( trainer.getLocation().setDirection( trainer.getLocation().getDirection().multiply( -1 ) ) );
-
+                event.getWhoClicked().teleport( trainer.getLocation().subtract( -1, 0, 0 ).setDirection( trainer.getLocation().getDirection().multiply( -1 ) ) );
             }
         }
         // Previous Page
