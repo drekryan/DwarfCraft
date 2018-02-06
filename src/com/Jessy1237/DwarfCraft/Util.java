@@ -449,23 +449,36 @@ public class Util
         // players with the old colours method and new colours method.
         for ( OfflinePlayer op : plugin.getServer().getOfflinePlayers() )
         {
+            if ( op == null )
+                continue;
+
             if ( plugin.isChatEnabled() )
             {
                 for ( World w : plugin.getServer().getWorlds() )
                 {
+                    if ( w == null )
+                        continue;
+
                     for ( DwarfRace race : plugin.getConfigManager().getRaceList() )
                     {
+                        if ( race == null )
+                            continue;
+
                         String raceStr = race.getName();
+                        String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+
+                        if ( prefix == null )
+                            continue;
                         while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefix( raceStr ) ) )
                         {
-                            String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+                            prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
                             prefix = prefix.replace( getPlayerPrefix( raceStr ) + " ", "" );
                             plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
                         }
 
                         while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefixOldColours( raceStr ) ) )
                         {
-                            String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+                            prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
                             prefix = prefix.replace( getPlayerPrefixOldColours( raceStr ) + " ", "" );
                             plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
                         }
