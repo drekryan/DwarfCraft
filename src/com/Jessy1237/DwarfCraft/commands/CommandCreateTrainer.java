@@ -101,7 +101,18 @@ public class CommandCreateTrainer extends Command
                 }
 
                 Player p = ( Player ) sender;
-                if ( plugin.getNPCRegistry().getById( Integer.parseInt( uniqueId ) ) != null )
+                int uid = -1;
+                try
+                {
+                    uid = Integer.parseInt( uniqueId );
+                }
+                catch ( NumberFormatException e )
+                {
+                    plugin.getOut().sendMessage( sender, "Invalid ID. It must be a numerical value." );
+                    return true;
+                }
+
+                if ( plugin.getNPCRegistry().getById( uid ) != null )
                 {
                     plugin.getOut().sendMessage( sender, "An NPC with that ID already exsists! Try another ID." );
                     return true;
@@ -109,17 +120,17 @@ public class CommandCreateTrainer extends Command
                 AbstractNPC npc;
                 if ( type.equalsIgnoreCase( "PLAYER" ) )
                 {
-                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
+                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), uid, name );
                 }
                 else
                 {
                     if ( EntityType.valueOf( type ) == null )
                         throw new CommandException( plugin, Type.INVALIDENTITYTYPE );
 
-                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
+                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), uid, name );
                 }
                 npc.spawn( p.getLocation() );
-                npc.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( uniqueId ), skill.getId(), maxSkill, minSkill, false, null ) );
+                npc.addTrait( new DwarfTrainerTrait( plugin, uid, skill.getId(), maxSkill, minSkill, false, null ) );
                 npc.setProtected( true );
             }
             catch ( CommandException e )

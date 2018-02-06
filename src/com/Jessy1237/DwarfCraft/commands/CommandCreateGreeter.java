@@ -69,7 +69,19 @@ public class CommandCreateGreeter extends Command
                 type = ( String ) outputList.get( 3 );
 
                 Location location = ( ( Player ) sender ).getLocation();
-                if ( plugin.getNPCRegistry().getById( Integer.parseInt( uniqueId ) ) != null )
+
+                int uid = -1;
+                try
+                {
+                    uid = Integer.parseInt( uniqueId );
+                }
+                catch ( NumberFormatException e )
+                {
+                    plugin.getOut().sendMessage( sender, "Invalid ID. It must be a numerical value." );
+                    return true;
+                }
+
+                if ( plugin.getNPCRegistry().getById( uid ) != null )
                 {
                     plugin.getOut().sendMessage( sender, "An NPC with that ID already exsists! Try another ID." );
                     return false;
@@ -77,14 +89,14 @@ public class CommandCreateGreeter extends Command
                 AbstractNPC npc;
                 if ( type.equalsIgnoreCase( "PLAYER" ) )
                 {
-                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
+                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), uid, name );
                 }
                 else
                 {
-                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), Integer.parseInt( uniqueId ), name );
+                    npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), uid, name );
                 }
                 npc.spawn( location );
-                npc.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( uniqueId ), null, null, null, true, greeterMessage ) );
+                npc.addTrait( new DwarfTrainerTrait( plugin, uid, null, null, null, true, greeterMessage ) );
                 npc.setProtected( true );
             }
             catch ( CommandException e )
