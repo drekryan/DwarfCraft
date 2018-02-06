@@ -3,9 +3,14 @@ package com.Jessy1237.DwarfCraft.guis;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.util.Vector;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
@@ -53,13 +58,16 @@ public class ListTrainersGUI extends DwarfGUI
     @Override
     public void click( InventoryClickEvent event )
     {
-        if ( event.getRawSlot() < 45 )
+        if ( event.getRawSlot() < 45 && event.getRawSlot() >= 0 )
         {
             DwarfTrainer trainer = getTrainerAtSlot( event.getRawSlot() );
             if ( trainer != null )
             {
                 event.getWhoClicked().sendMessage( ChatColor.LIGHT_PURPLE + "Teleporting to " + trainer.getName() + " at X: " + trainer.getLocation().getX() + ", Y: " + trainer.getLocation().getY() + ", Z: " + trainer.getLocation().getZ() );
-                event.getWhoClicked().teleport( trainer.getLocation().subtract( -1, 0, 0 ).setDirection( trainer.getLocation().getDirection().multiply( -1 ) ) );
+                Location loc = trainer.getLocation().subtract( -1, 0, 0 );
+                Vector direction = trainer.getLocation().toVector().subtract( loc.toVector() );
+                event.getWhoClicked().teleport( loc.setDirection( direction ) );
+
             }
         }
         // Previous Page
@@ -69,6 +77,7 @@ public class ListTrainersGUI extends DwarfGUI
             {
                 page--;
                 initItems();
+                ( ( Player ) event.getWhoClicked() ).updateInventory();
             }
         }
         // Next Page
@@ -78,6 +87,7 @@ public class ListTrainersGUI extends DwarfGUI
             {
                 page++;
                 initItems();
+                ( ( Player ) event.getWhoClicked() ).updateInventory();
             }
         }
     }
@@ -85,26 +95,24 @@ public class ListTrainersGUI extends DwarfGUI
     private void initItems()
     {
 
-        for ( int index = 0; index < trainers.get( 0 ).length; index++ )
+        inventory.clear();
+
+        for ( int index = 0; index < trainers.get( page ).length; index++ )
         {
             DwarfTrainer trainer = getTrainerAtSlot( index );
             DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
 
             ArrayList<String> lore = new ArrayList<>();
+            lore.add( ChatColor.GOLD + "Unique ID: " + ChatColor.RED + trainer.getUniqueId() );
             lore.add( ChatColor.GOLD + "Skill: " + ChatColor.RED + skill.getDisplayName() );
-            lore.add( ChatColor.GOLD + "Min Level: " + ChatColor.WHITE + trainer.getMinSkill() );
+            lore.add( ChatColor.GOLD + "Min Level: " + ChatColor.WHITE + ( trainer.getMinSkill() == -1 ? 0 : trainer.getMinSkill() ) );
             lore.add( ChatColor.GOLD + "Max Level: " + ChatColor.WHITE + trainer.getMaxSkill() );
-            lore.add( ChatColor.GOLD + "Loc: " + ChatColor.WHITE + trainer.getLocation().getX() + ", " + trainer.getLocation().getY() + ", " + trainer.getLocation().getZ() );
+            lore.add( ChatColor.GOLD + "Loc: " + ChatColor.WHITE + trainer.getLocation().getBlockX() + ", " + trainer.getLocation().getBlockY() + ", " + trainer.getLocation().getBlockZ() );
             lore.add( "" );
             lore.add( ChatColor.LIGHT_PURPLE + "Click to teleport to Trainer..." );
 
-            // Apparently causes too many requests of GameProfile lookups and Mojang times out
-            /**
-             * ItemStack skull = new ItemStack( Material.SKULL_ITEM, 1, ( short ) 3 ); SkullMeta meta = ( SkullMeta ) skull.getItemMeta(); meta.setOwner( trainer.getName() ); skull.setItemMeta( meta
-             * );
-             */
-
             addItem( trainer.getName(), lore, index, new ItemStack( Material.SKULL_ITEM, 1, ( short ) 3 ) );
+
         }
 
         addItem( "Previous Page", null, 45, new ItemStack( Material.STAINED_GLASS_PANE, 1, ( short ) 14 ) );
