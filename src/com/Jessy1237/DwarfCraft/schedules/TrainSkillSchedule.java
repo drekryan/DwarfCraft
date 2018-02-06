@@ -67,8 +67,10 @@ public class TrainSkillSchedule implements Runnable
             }
             else if ( clickedItem.getDurability() == 2 && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train & Deposit Skill" ) )
             {
-                trainer.trainSkill( dCPlayer, clickedItem, trainerGUI );
-                trainer.depositAll( dCPlayer, clickedItem, trainerGUI );
+                if ( trainer.trainSkill( dCPlayer, clickedItem, trainerGUI ) )
+                {
+                    trainer.depositAll( dCPlayer, clickedItem, trainerGUI );
+                }
             }
         }
         else if ( clickedItem.getType().equals( Material.BARRIER ) && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Cancel" ) )

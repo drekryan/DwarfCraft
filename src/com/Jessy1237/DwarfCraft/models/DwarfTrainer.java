@@ -217,7 +217,7 @@ public final class DwarfTrainer
         }
     }
 
-    public void trainSkill( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public boolean trainSkill( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
@@ -261,7 +261,7 @@ public final class DwarfTrainer
                     player.getInventory().setContents( oldInv.getContents() );
                     player.getInventory().setExtraContents( oldInv.getExtraContents() );
 
-                    return;
+                    return hasMatsOrDeposits[0];
                 }
                 else
                 {
@@ -275,6 +275,8 @@ public final class DwarfTrainer
             trainerGUI.updateTitle();
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
+        
+        return hasMatsOrDeposits[0];
 
     }
 
