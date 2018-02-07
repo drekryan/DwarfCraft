@@ -39,7 +39,9 @@ public class DwarfTrainerTrait extends Trait
         else
             this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
 
-        assert ( this.mHeldItem != null );
+        if (this.mHeldItem == null) {
+            this.mHeldItem = Material.AIR;
+        }
 
         if ( this.mHeldItem != Material.AIR )
             ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( mHeldItem, 1 ) );
