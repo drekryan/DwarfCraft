@@ -469,6 +469,8 @@ public class Util
 
                         if ( prefix == null )
                             continue;
+                        if ( prefix.equals( "" ) )
+                            continue;
                         while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefix( raceStr ) ) )
                         {
                             prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
@@ -503,26 +505,38 @@ public class Util
             if ( plugin.getConfigManager().prefix )
             {
 
-                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    String prefix = plugin.getChat().getPlayerPrefix( player );
-                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
-                    plugin.getChat().setPlayerPrefix( player, prefix );
-                }
+                String prefix = plugin.getChat().getPlayerPrefix( player );
 
-                if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                if ( prefix != null )
                 {
-                    plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
+                    if ( !prefix.equals( "" ) )
+                    {
+                        while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                        {
+                            prefix = plugin.getChat().getPlayerPrefix( player );
+                            prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                            plugin.getChat().setPlayerPrefix( player, prefix );
+                        }
+
+                        if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                        {
+                            plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
+                        }
+                    }
                 }
             }
             else
             {
-                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    String prefix = plugin.getChat().getPlayerPrefix( player );
-                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
-                    plugin.getChat().setPlayerPrefix( player, prefix );
-                }
+                String prefix = plugin.getChat().getPlayerPrefix( player );
+
+                if ( prefix != null )
+                    if ( !prefix.equals( "" ) )
+                        while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                        {
+                            prefix = plugin.getChat().getPlayerPrefix( player );
+                            prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                            plugin.getChat().setPlayerPrefix( player, prefix );
+                        }
             }
         }
     }
