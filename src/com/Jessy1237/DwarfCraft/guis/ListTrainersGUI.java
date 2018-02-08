@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.Vector;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
@@ -108,6 +106,7 @@ public class ListTrainersGUI extends DwarfGUI
             lore.add( ChatColor.GOLD + "Min Level: " + ChatColor.WHITE + ( trainer.getMinSkill() == -1 ? 0 : trainer.getMinSkill() ) );
             lore.add( ChatColor.GOLD + "Max Level: " + ChatColor.WHITE + trainer.getMaxSkill() );
             lore.add( ChatColor.GOLD + "Loc: " + ChatColor.WHITE + trainer.getLocation().getBlockX() + ", " + trainer.getLocation().getBlockY() + ", " + trainer.getLocation().getBlockZ() );
+            lore.add( ChatColor.GOLD + "World: " + ChatColor.WHITE + trainer.getLocation().getWorld().getName() );
             lore.add( "" );
             lore.add( ChatColor.LIGHT_PURPLE + "Click to teleport to Trainer..." );
 
