@@ -1,11 +1,5 @@
 package com.Jessy1237.DwarfCraft.models;
 
-import net.citizensnpcs.api.event.NPCLeftClickEvent;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
-import net.citizensnpcs.api.npc.AbstractNPC;
-import net.citizensnpcs.api.persistence.Persist;
-import net.citizensnpcs.api.trait.Trait;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -13,6 +7,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.npc.AbstractNPC;
+import net.citizensnpcs.api.persistence.Persist;
+import net.citizensnpcs.api.trait.Trait;
+import net.citizensnpcs.api.util.DataKey;
 
 public class DwarfTrainerTrait extends Trait
 {
@@ -31,28 +32,38 @@ public class DwarfTrainerTrait extends Trait
     private String mMsgID;
 
     @Override
-    public void onSpawn()
+    public void load( DataKey key )
     {
+        this.mSkillID = key.getInt( "mSkillID" );
+        this.mMaxLevel = key.getInt( "mMaxLevel" );
+        this.mMinLevel = key.getInt( "mMinLevel" );
+        this.mIsGreeter = key.getBoolean( "mIsGreeter" );
+        this.mMsgID = key.getString( "mMsgID" );
         DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) getNPC() );
         if ( isGreeter() )
             this.mHeldItem = Material.AIR;
         else
             this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
 
-        if (this.mHeldItem == null) {
+        if ( this.mHeldItem == null )
+        {
             this.mHeldItem = Material.AIR;
         }
 
+        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
+    }
+    
+    @Override
+    public void onSpawn()
+    {
         if ( this.mHeldItem != Material.AIR )
             ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( mHeldItem, 1 ) );
-
-        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
     }
 
     @Override
-    public void onDespawn()
+    public void onRemove()
     {
-        plugin.getDataManager().trainerList.remove( getNPC().getId() );
+        plugin.getDataManager().trainerList.remove( this.npc.getId() );
     }
 
     public DwarfTrainerTrait()

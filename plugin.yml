@@ -2,7 +2,7 @@ name: DwarfCraft
 description: A skills and progression plugin for character development in RPG worlds.
 author: Jessy1237
 main: com.Jessy1237.DwarfCraft.DwarfCraft
-version: 4.0.1
+version: 4.0.2
 depend: [Vault, Citizens]
 softdepend: [LogBlock]
 commands: 

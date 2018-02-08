@@ -12,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -45,8 +44,8 @@ public final class DwarfTrainer
     {
         if ( this == that )
             return true;
-        else if ( that instanceof HumanEntity )
-            return ( mEntity.getId() == ( ( HumanEntity ) that ).getEntityId() );
+        else if ( that instanceof DwarfTrainer )
+            return ( getUniqueId() == ( ( DwarfTrainer ) that ).getUniqueId() );
         return false;
     }
 

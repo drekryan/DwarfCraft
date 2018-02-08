@@ -472,7 +472,7 @@ public class DwarfCraft extends JavaPlugin
         {
             System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
         }
-
+        
         System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
     }
 }
