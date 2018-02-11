@@ -406,17 +406,11 @@ public class Util
         {
             if ( blocks != null && blocks.size() > 0 )
             {
-                for ( Material m : blocks )
+                if ( blocks.contains( mat ) )
                 {
-                    if ( mat == m )
+                    if ( blocks.contains( compareMat ) || compareMat == null )
                     {
-                        for ( Material m1 : blocks )
-                        {
-                            if ( compareMat == m1 || compareMat == null )
-                            {
-                                return blocks;
-                            }
-                        }
+                        return blocks;
                     }
                 }
             }
