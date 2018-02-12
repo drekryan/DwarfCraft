@@ -3,6 +3,7 @@ package com.Jessy1237.DwarfCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -45,6 +46,9 @@ import net.citizensnpcs.api.trait.TraitInfo;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DwarfCraft is a RPG-like plugin for minecraft (via Spigot) that allows players to improve their characters. Players may pay materials to a trainer to improve a skill level, which will provide
  * benefits such as increased weapon damage, decreased tool durability drop, increased drops from blocks or mobs, etc. Data used for this plugin comes from two places: On each load, a list of skills
@@ -55,7 +59,7 @@ import net.milkbowl.vault.permission.Permission;
  * @OriginalAuthor LexManos
  * @CurrentAuthor Jessy1237
  */
-public class DwarfCraft extends JavaPlugin
+public class DwarfCraft extends JavaPlugin implements TabCompleter
 {
 
     private final DwarfBlockListener blockListener = new DwarfBlockListener( this );
@@ -356,6 +360,30 @@ public class DwarfCraft extends JavaPlugin
         }
     }
 
+    @Override
+    public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) ) return null;
+
+        List<String> matches = new ArrayList<>();
+
+        if ( args.length <= 1 || args[0].equalsIgnoreCase( "" ) )
+        {
+            matches = new CommandDCCommands( this ).onTabComplete( sender, command, alias, args );
+        }
+        else
+        {
+            if ( args[0].equalsIgnoreCase( "debug" ) )
+            {
+                matches = new CommandDebug( this ).onTabComplete( sender, command, alias, args );
+            } else {
+                matches = null;
+            }
+        }
+
+        return matches;
+    }
+
     /**
      * Called upon disabling the plugin.
      */
@@ -472,7 +500,7 @@ public class DwarfCraft extends JavaPlugin
         {
             System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
         }
-        
+
         System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
     }
 }
