@@ -465,10 +465,11 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         return hasMatsOrDeposits;
     }
 
-    @Override
+
     /**
      * Compares the trainers by unique ID if configured to true otherwise compares by name
      */
+    @Override
     public int compareTo( DwarfTrainer trainer )
     {
         return plugin.getConfigManager().byID ? ( getUniqueId() - trainer.getUniqueId() ) : ( getName().compareTo( trainer.getName() ) == 0 ? ( getUniqueId() - trainer.getUniqueId() ) : getName().compareTo( trainer.getName() ) );
