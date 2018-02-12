@@ -1,8 +1,8 @@
-name: DwarfCraft
+name: ${project.name}
 description: A skills and progression plugin for character development in RPG worlds.
 author: Jessy1237
 main: com.Jessy1237.DwarfCraft.DwarfCraft
-version: 4.0.3
+version: ${project.version}
 depend: [Vault, Citizens]
 softdepend: [LogBlock]
 commands: 
