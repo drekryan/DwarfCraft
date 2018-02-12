@@ -120,9 +120,16 @@ public class Out
 
     public boolean printSkillInfo( CommandSender sender, DwarfSkill skill, DwarfPlayer dCPlayer, int maxTrainLevel )
     {
+        // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
+        int levelLimit = plugin.getConfigManager().getMaxSkillLevel();
+        if ( !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
+        {
+            levelLimit = plugin.getConfigManager().getRaceLevelLimit();
+        }
+
         // general line
         sendMessage( sender, Messages.skillInfoHeader.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ).replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() )
-                .replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) );
+                .replaceAll( "%maxskilllevel%", "" + levelLimit ) );
 
         // effects lines
         sendMessage( sender, Messages.skillInfoMinorHeader );
