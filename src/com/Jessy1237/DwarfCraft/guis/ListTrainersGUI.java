@@ -1,6 +1,8 @@
 package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -120,10 +122,13 @@ public class ListTrainersGUI extends DwarfGUI
 
     private void initTrainers()
     {
-        DwarfTrainer[] tempArray = new DwarfTrainer[getArraySize( 0 )];
+        List<DwarfTrainer> sorted = new ArrayList<DwarfTrainer>( plugin.getDataManager().trainerList.values() );
+        Collections.sort( sorted );
+
         int num = 0;
         int index = 0;
-        for ( DwarfTrainer trainer : plugin.getDataManager().trainerList.values() )
+        DwarfTrainer[] tempArray = new DwarfTrainer[getArraySize( 0 )];
+        for ( DwarfTrainer trainer : sorted )
         {
             if ( index == 45 )
             {

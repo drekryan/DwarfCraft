@@ -24,7 +24,7 @@ import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-public final class DwarfTrainer
+public final class DwarfTrainer implements Comparable<DwarfTrainer>
 {
     private AbstractNPC mEntity;
     private final DwarfCraft plugin;
@@ -274,7 +274,7 @@ public final class DwarfTrainer
             trainerGUI.updateTitle();
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
-        
+
         return hasMatsOrDeposits[0];
 
     }
@@ -463,5 +463,14 @@ public final class DwarfTrainer
         }
 
         return hasMatsOrDeposits;
+    }
+
+    @Override
+    /**
+     * Compares the trainers by unique ID if configured to true otherwise compares by name
+     */
+    public int compareTo( DwarfTrainer trainer )
+    {
+        return plugin.getConfigManager().byID ? ( getUniqueId() - trainer.getUniqueId() ) : ( getName().compareTo( trainer.getName() ) == 0 ? ( getUniqueId() - trainer.getUniqueId() ) : getName().compareTo( trainer.getName() ) );
     }
 }

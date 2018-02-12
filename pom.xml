@@ -8,7 +8,7 @@
     <artifactId>DwarfCraft</artifactId>
     <name>DwarfCraft</name>
     <packaging>jar</packaging>
-    <version>4.0.3</version>
+    <version>4.0.4</version>
 
     <repositories>
         <repository>
@@ -76,8 +76,8 @@
 
     <build>
         <defaultGoal>package</defaultGoal>
-        <directory>${project.basedir}/build/bin</directory>
-        <outputDirectory>${project.basedir}/build/classes</outputDirectory>
+        <directory>${project.basedir}/target</directory>
+        <outputDirectory>${project.basedir}/target/classes</outputDirectory>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <resources>
