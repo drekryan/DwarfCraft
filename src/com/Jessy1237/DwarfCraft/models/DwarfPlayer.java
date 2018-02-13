@@ -280,6 +280,7 @@ public class DwarfPlayer
         skills = plugin.getConfigManager().getAllSkills();
         DwarfSkill[] dCSkills = new DwarfSkill[skills.size()];
 
+        int I = 0;
         // Resets the players skills
         for ( DwarfSkill skill : skills.values() )
         {
@@ -295,7 +296,8 @@ public class DwarfPlayer
             skill.setDeposit1( 0 );
             skill.setDeposit2( 0 );
             skill.setDeposit3( 0 );
-            dCSkills[skill.getId()] = skill;
+            dCSkills[I] = skill;
+            I++;
         }
 
         // Resets the players prefix
