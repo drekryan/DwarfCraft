@@ -401,7 +401,7 @@ public final class ConfigManager
 
         if ( vanilla )
         {
-            raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla).", Material.PAPER ) );
+            raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla).", Material.GRASS ) );
             System.out.println( "[DwarfCraft] Loaded vanilla race: Vanilla" );
         }
 
