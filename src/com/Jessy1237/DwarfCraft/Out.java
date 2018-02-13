@@ -395,6 +395,7 @@ public class Out
 
         out = out.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() );
         out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
+        out = out.replaceAll( "%colon%", ":" );
         if ( newRace != null )
             out = out.replaceAll( "%racename%", newRace );
 
@@ -406,6 +407,7 @@ public class Out
         String out = message.replace( "%playername%", ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) );
         out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
         out = out.replaceAll( "%playerlevel%", "" + dCPlayer.getDwarfLevel() );
+        out = out.replaceAll( "%colon%", ":" );
         if ( skill != null )
         {
             out = out.replaceAll( "%skilllevel%", String.format( "%02d", skill.getLevel() ) );
