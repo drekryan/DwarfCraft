@@ -5,19 +5,22 @@ package com.Jessy1237.DwarfCraft.commands;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+import org.bukkit.util.StringUtil;
 
-public class CommandSetSkill extends Command
+public class CommandSetSkill extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
 
@@ -143,5 +146,27 @@ public class CommandSetSkill extends Command
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) ) return null;
+
+        if ( args.length == 3 ) {
+            // Gets a list of all possible skill names
+            Collection<DwarfSkill> skills = plugin.getConfigManager().getAllSkills().values();
+            ArrayList<String> completions = new ArrayList<>();
+            ArrayList<String> matches = new ArrayList<>();
+
+            for ( DwarfSkill skill : skills )
+            {
+                String skillName = skill.getDisplayName().replaceAll( " ", "_" );
+                completions.add( skillName );
+            }
+
+            return StringUtil.copyPartialMatches( args[2], completions, matches );
+        }
+
+        return null;
     }
 }
