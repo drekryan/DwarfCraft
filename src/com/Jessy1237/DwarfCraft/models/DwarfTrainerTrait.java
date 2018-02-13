@@ -36,6 +36,11 @@ public class DwarfTrainerTrait extends Trait
             this.mMaxLevel = key.getInt( "mMaxLevel" );
         if ( mSkillID == 0 )
             this.mMinLevel = key.getInt( "mMinLevel" );
+    }
+
+    @Override
+    public void onAttach()
+    {
         DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) getNPC() );
         this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
 
@@ -43,7 +48,6 @@ public class DwarfTrainerTrait extends Trait
         {
             this.mHeldItem = Material.AIR;
         }
-
         plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
     }
 
