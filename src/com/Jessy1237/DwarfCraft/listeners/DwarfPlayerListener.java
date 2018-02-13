@@ -64,7 +64,6 @@ public class DwarfPlayerListener implements Listener
      * 
      * @param event Relevant event details
      */
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onPlayerInteract( PlayerInteractEvent event )
     {
@@ -102,7 +101,6 @@ public class DwarfPlayerListener implements Listener
         }
 
         Block block = event.getClickedBlock();
-        int origFoodLevel = event.getPlayer().getFoodLevel();
 
         // EffectType.EAT
         if ( event.getAction() == Action.RIGHT_CLICK_BLOCK )
@@ -111,28 +109,34 @@ public class DwarfPlayerListener implements Listener
             {
                 for ( DwarfEffect e : s.getEffects() )
                 {
-                    if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( block.getType(), ( short ) block.getData() ) )
+                    if ( e.getEffectType() == DwarfEffectType.EAT && e.checkInitiator( block.getType(), ( short ) 0 ) )
                     {
 
                         int foodLevel = plugin.getUtil().randomAmount( ( e.getEffectAmount( dwarfPlayer ) ) );
 
                         if ( block.getType() == Material.CAKE_BLOCK )
                         {
+
+                            int lvl = Util.FoodLevel.getLvl( block.getType() );
+
+                            if ( lvl == 0 )
+                            {
+                                return;
+                            }
+
                             DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, null, null, 2, foodLevel, null, null, null, block, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
                                 return;
 
-                            if ( ( ( origFoodLevel - 2 ) + ev.getAlteredHunger() ) > 20 )
+                            if ( ( ( player.getFoodLevel() - 2 ) + foodLevel ) > 20 )
                             {
                                 event.getPlayer().setFoodLevel( 20 );
-                                event.getPlayer().setSaturation( event.getPlayer().getSaturation() + 0.4f );
                             }
                             else
                             {
-                                event.getPlayer().setFoodLevel( ( origFoodLevel - 2 ) + ev.getAlteredHunger() );
-                                event.getPlayer().setSaturation( event.getPlayer().getSaturation() + 0.4f );
+                                event.getPlayer().setFoodLevel( ( player.getFoodLevel() - lvl ) + foodLevel );
                             }
                         }
                     }
@@ -173,7 +177,14 @@ public class DwarfPlayerListener implements Listener
                     if ( ev.isCancelled() )
                         return;
 
-                    player.setFoodLevel( ( player.getFoodLevel() - lvl ) + foodLevel );
+                    if ( ( ( player.getFoodLevel() - 2 ) + foodLevel ) > 20 )
+                    {
+                        event.getPlayer().setFoodLevel( 20 );
+                    }
+                    else
+                    {
+                        event.getPlayer().setFoodLevel( ( player.getFoodLevel() - lvl ) + foodLevel );
+                    }
                 }
             }
         }
