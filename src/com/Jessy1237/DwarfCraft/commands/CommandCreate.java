@@ -30,7 +30,7 @@ public class CommandCreate extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
 
-    public CommandCreate(final DwarfCraft plugin )
+    public CommandCreate( final DwarfCraft plugin )
     {
         super( "Create" );
         this.plugin = plugin;
@@ -132,9 +132,9 @@ public class CommandCreate extends Command implements TabCompleter
 
                     npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), uid, name );
                 }
-                npc.spawn( p.getLocation() );
                 npc.addTrait( new DwarfTrainerTrait( plugin, uid, skill.getId(), maxSkill, minSkill ) );
                 npc.setProtected( true );
+                npc.spawn( p.getLocation() );
             }
             catch ( CommandException e )
             {
@@ -146,10 +146,13 @@ public class CommandCreate extends Command implements TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) ) return null;
+    public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
 
-        if ( args.length == 4 ) {
+        if ( args.length == 4 )
+        {
             // Gets a list of all possible skill names
             Collection<DwarfSkill> skills = plugin.getConfigManager().getAllSkills().values();
             ArrayList<String> completions = new ArrayList<>();

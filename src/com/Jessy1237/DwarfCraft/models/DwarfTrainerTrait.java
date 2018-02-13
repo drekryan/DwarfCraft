@@ -26,6 +26,8 @@ public class DwarfTrainerTrait extends Trait
     private int mMaxLevel;
     @Persist( required = true )
     private int mMinLevel;
+    @Persist( required = true )
+    private boolean firstLoad = false;
 
     @Override
     public void load( DataKey key )
@@ -36,19 +38,20 @@ public class DwarfTrainerTrait extends Trait
             this.mMaxLevel = key.getInt( "mMaxLevel" );
         if ( mSkillID == 0 )
             this.mMinLevel = key.getInt( "mMinLevel" );
+        this.firstLoad = key.getBoolean( "firstLoad" );
+        if ( !firstLoad )
+        {
+            load();
+        }
     }
 
     @Override
     public void onAttach()
     {
-        DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) getNPC() );
-        this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
-
-        if ( this.mHeldItem == null )
+        if ( firstLoad )
         {
-            this.mHeldItem = Material.AIR;
+            load();
         }
-        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
     }
 
     @Override
@@ -77,6 +80,7 @@ public class DwarfTrainerTrait extends Trait
         this.mSkillID = skillID;
         this.mMaxLevel = maxLevel;
         this.mMinLevel = minLevel;
+        this.firstLoad = true;
     }
 
     @EventHandler
@@ -118,5 +122,18 @@ public class DwarfTrainerTrait extends Trait
             return this.mHeldItem;
         else
             return Material.AIR;
+    }
+    
+
+    private void load()
+    {
+        DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) getNPC() );
+        this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
+
+        if ( this.mHeldItem == null )
+        {
+            this.mHeldItem = Material.AIR;
+        }
+        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
     }
 }
