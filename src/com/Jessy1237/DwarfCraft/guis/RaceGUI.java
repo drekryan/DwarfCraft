@@ -33,7 +33,7 @@ public class RaceGUI extends DwarfGUI
             if ( !plugin.getPermission().has( dwarfPlayer.getPlayer(), "dwarfcraft.norm.race." + race.getName().toLowerCase() ) )
                 continue;
 
-            ItemStack item = new ItemStack( Material.PAPER );
+            ItemStack item = new ItemStack( race.getIcon() );
             ArrayList<String> lore = new ArrayList<String>();
             lore.add( ChatColor.GOLD + "Description:" );
             lore.addAll( parseStringToLore( race.getDesc(), "" + ChatColor.WHITE ) );
@@ -47,7 +47,8 @@ public class RaceGUI extends DwarfGUI
             addItem( race.getName(), lore, i++, item );
         }
 
-        addItem( "Cancel", null, 13, new ItemStack( Material.BARRIER ) );
+        for ( i = 9; i < 18; i++ )
+            addItem( "Cancel", null, i, new ItemStack( Material.BARRIER ) );
     }
 
     @Override
@@ -66,15 +67,7 @@ public class RaceGUI extends DwarfGUI
             if ( event.getCurrentItem().getType() == Material.AIR )
                 return;
 
-            if ( event.getCurrentItem().getType() == Material.PAPER && event.getCurrentItem().getItemMeta().hasDisplayName() )
-            {
-                race = event.getCurrentItem().getItemMeta().getDisplayName();
-                if ( !race.equals( ChatColor.RED + "WARNING" ) && race != null )
-                {
-                    confirmInit();
-                }
-            }
-            else if ( event.getCurrentItem().getType() == Material.BARRIER )
+            if ( event.getCurrentItem().getType() == Material.BARRIER )
             {
                 dwarfPlayer.getPlayer().closeInventory();
             }
@@ -88,6 +81,14 @@ public class RaceGUI extends DwarfGUI
                     dwarfPlayer.getPlayer().closeInventory();
                     plugin.getOut().changedRace( dwarfPlayer.getPlayer(), dwarfPlayer, e.getRace().getName() );
                     dwarfPlayer.changeRace( e.getRace().getName() );
+                }
+            }
+            else if ( event.getCurrentItem().getItemMeta().hasDisplayName() )
+            {
+                race = event.getCurrentItem().getItemMeta().getDisplayName();
+                if ( !race.equals( ChatColor.RED + "WARNING" ) && race != null )
+                {
+                    confirmInit();
                 }
             }
         }

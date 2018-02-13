@@ -2,6 +2,8 @@ package com.Jessy1237.DwarfCraft.models;
 
 import java.util.ArrayList;
 
+import org.bukkit.Material;
+
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
@@ -13,18 +15,20 @@ public class DwarfRace
     private ArrayList<Integer> skills;
     private String Desc;
     private String prefixColour;
+    private Material icon;
 
     public DwarfRace( String name )
     {
         this.mName = name;
     }
 
-    public DwarfRace( String name, final ArrayList<Integer> skills, String Desc )
+    public DwarfRace( String name, final ArrayList<Integer> skills, String Desc, Material icon )
     {
         this.mName = name;
         this.Desc = Desc;
         this.skills = skills;
         prefixColour = "&f";
+        this.icon = icon;
     }
 
     public String getName()
@@ -60,5 +64,15 @@ public class DwarfRace
     public void setPrefixColour( String prefixColour )
     {
         this.prefixColour = prefixColour;
+    }
+
+    public Material getIcon()
+    {
+        return icon;
+    }
+
+    public void setIcon( Material icon )
+    {
+        this.icon = icon;
     }
 }

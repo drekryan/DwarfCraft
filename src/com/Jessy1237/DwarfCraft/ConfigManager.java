@@ -401,7 +401,7 @@ public final class ConfigManager
 
         if ( vanilla )
         {
-            raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla)." ) );
+            raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla).", Material.PAPER ) );
             System.out.println( "[DwarfCraft] Loaded vanilla race: Vanilla" );
         }
 
@@ -414,6 +414,7 @@ public final class ConfigManager
             boolean desc = false;
             boolean skills = false;
             boolean prefix = false;
+            boolean hasIcon = false;
             DwarfRace race = null;
             while ( line != null )
             {
@@ -465,7 +466,20 @@ public final class ConfigManager
                     prefix = true;
                     line = br.readLine();
                 }
-                if ( name && desc && skills && prefix )
+                if ( theline[0].equalsIgnoreCase( "Material Icon" ) )
+                {
+                    Material icon = Material.matchMaterial( theline[1].trim() );
+                    if ( icon != null )
+                    {
+                        if ( icon != Material.AIR )
+                        {
+                            race.setIcon( icon );
+                            hasIcon = true;
+                            line = br.readLine();
+                        }
+                    }
+                }
+                if ( name && desc && skills && prefix && hasIcon )
                 {
                     if ( raceList.size() < 9 )
                     {
