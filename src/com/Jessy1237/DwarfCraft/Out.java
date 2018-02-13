@@ -132,7 +132,7 @@ public class Out
                 .replaceAll( "%maxskilllevel%", "" + levelLimit ) );
 
         // effects lines
-        sendMessage( sender, Messages.skillInfoMinorHeader );
+        // sendMessage( sender, Messages.skillInfoMinorHeader ); // TODO: Remove this possibly? Not Needed. Adds clutter
         for ( DwarfEffect effect : skill.getEffects() )
         {
             if ( effect != null )
@@ -225,11 +225,6 @@ public class Out
             sendMessage( sender, message2, prefix );
         if ( printFull )
             sendMessage( sender, untrainedSkills, prefix );
-    }
-
-    public void rules( CommandSender sender )
-    {
-        sendMessage( sender, Messages.serverRules, Messages.serverRulesPrefix );
     }
 
     /**

@@ -23,7 +23,7 @@ public class CommandListTrainers extends Command
 
     public CommandListTrainers( final DwarfCraft plugin )
     {
-        super( "ListTrainers" );
+        super( "List" );
         this.plugin = plugin;
     }
 
@@ -31,7 +31,7 @@ public class CommandListTrainers extends Command
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'list_trainers'" );
+            System.out.println( "DC1: started command 'list'" );
 
         int page = 1;
 

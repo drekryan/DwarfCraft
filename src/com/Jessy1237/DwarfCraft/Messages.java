@@ -18,25 +18,20 @@ public final class Messages
     // fails.
     public enum Fixed
     {
-        SERVERRULESMESSAGE( "This is a dummy Server Rules Message, please place a message in your messages.config" ),
-
-        TUTORIAL1( "&fWelcome to the dwarfcraft tutorial. To get started, type &4/skillsheet full&f. Afterwards, type &4/tutorial 2&f to continue." ),
-        TUTORIAL2( "&fYour Skillshset lists all skills that are affecting you and their level. Lets find out more about the Demolitionist skill. Type &4/skillinfo Demolit&f or" + " &4/skillinfo 63&f. Continue with &4/tutorial 3&f" ),
-        TUTORIAL3(
-                "&fThe skillinfo shows that your low level demotionist skill allows you to craft a normal amount of TNT. If you increase this skill enough, you'll get 2 or even more TNT per craft. The skill also affects damage you take from explosions. Below that, it shows how to train the skill. Find a nearby trainer and left click them to get more information about the skill. Right click to attempt training"
+        TUTORIAL1( "&fWelcome to DwarfCraft! You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive. Type &4/dc tutorial 2&f to continue." ),
+        TUTORIAL2( "&fYour skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&f skill. Type &4/dc skillinfo pickaxe_use&f or" + " &4/dc skillinfo 1&f. After running the Skill Info command, continue the tutorial with &4/dc tutorial 3&f" ),
+        TUTORIAL3( "&fThe skill info shows that your low level Pickaxe Use skill will cause your pickaxe to have lower durability causing it to break easier. If you increase this skill enough, you'll be able to mine much longer before your pickaxe breaks. Below that, it shows what you need to train the skill. Find a nearby trainer (NPC) in the world and left click them to get more information about the skill they teach or right click to begin training"
                         + ", then continue with &4/tutorial 4&f" ),
         TUTORIAL4( "&fWhen you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little," + "but becoming a master is very challenging. Continue with &4/tutorial 5&f" ),
-        TUTORIAL5(
-                "&fMost trainers can only take you to a limited level, you'll need to seek out the " + "best trainers in the world to eventually reach level " + plugin.getConfigManager().getMaxSkillLevel()
+        TUTORIAL5( "&fMost trainers can only take you to a limited level, you'll need to seek out the " + "best trainers in the world to eventually reach level " + plugin.getConfigManager().getMaxSkillLevel()
                         + " in a skill. Go gathersome dirt, stone, or logs and try to train up a relevant skill, using what" + "you have learned, then continue with &4/tutorial 6&f" ),
         TUTORIAL6( "&fYou now know the basic commands you need to succeed and develop. To find out more, use &4/dchelp&f and &4/dchelp <command>&f." ),
-        WELCOME( "Welcome to a DwarfCraft world, first time player!" ),
-        GENERALINFO(
-                "&dWelcome to DwarfCraft. You are a player with a set of skills that let you do minecraft tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive. Each of the skills listed in your skillsheet(&4/skillsheet full&d) has multiple effects. You can find out more about training a skill and its effects with &4/skillinfo <skillname or id>&d.         Original Authors: smartaleq, LexManos and RCarretta Authors: Jessy1237" );
+        WELCOME( "Welcome to a DwarfCraft world! Things are bit different here as this world focuses heavily on skilling. To learn more about what you can do here, type '&4/dc tutorial&2' to get started." ),
+        GENERALINFO( "&dWelcome to DwarfCraft. You are a player with a set of skills that let you do certain tasks better. For more information see &4/dc tutorial&d. Original Authors: smartaleq, LexManos and RCarretta Authors: Jessy1237" );
 
         private String message;
 
-        private Fixed( String message )
+        Fixed( String message )
         {
             this.message = message;
         }
@@ -48,17 +43,15 @@ public final class Messages
     }
 
     // String messages loaded from messages.config
-    public static String serverRules = null;
-    public static String serverRulesPrefix = "&6[&dRules&6] ";
     public static String welcomePrefix = "&6[DC]         ";
     public static String welcome = "&fWelcome, &9%playerrace% &6%playername%";
-    public static String tutorialPrefix = "&6[&dDC&6] &f";
+    public static String tutorialPrefix = "&6[&d*&6] &f"; // TODO: Remove this when the chat part of the tutorial is removed
     public static String skillSheetPrefix = "&6[&dSS&6] ";
     public static String skillSheetHeader = "&6Skill Sheet for &9%playername% &6[&9%playerrace% &6- &6Lvl &3%playerlevel%&6]";
     public static String skillSheetSkillLine = "&6[&3%skilllevel%&6] &b%skillname%";
     public static String skillSheetUntrainedSkillHeader = "&6Untrained Skills%colon%";
     public static String skillSheetUntrainedSkillLine = "|&7%skillname%&6| ";
-    public static String skillInfoHeader = "&6Skillinfo for &b%playername%&6 || &b%skillname%&6 [&b%skillid%&6] || Your level &3%skilllevel%/%maxskilllevel%";
+    public static String skillInfoHeader = "&6Skill Info: &b%skillname%&6 [&b%skillid%&6] || Your level &3%skilllevel%/%maxskilllevel%";
     public static String skillInfoMinorHeader = "&6[&5EffectID&6]&f------&6[Effect]&f------";
     public static String skillInfoEffectIDPrefix = "&6[&5%effectid%&6] ";
     public static String skillInfoMaxSkillLevel = "&6---This skill is maximum level, no training available---";

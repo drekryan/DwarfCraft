@@ -624,10 +624,6 @@ public final class ConfigManager
 
                 if ( message != null || !message.trim().equals( "" ) || !message.equals( null ) )
                 {
-                    if ( name.equalsIgnoreCase( "Server Rules" ) )
-                        Messages.serverRules = message;
-                    if ( name.equalsIgnoreCase( "Server Rules prefix" ) )
-                        Messages.serverRulesPrefix = message;
                     if ( name.equalsIgnoreCase( "Welcome prefix" ) )
                         Messages.welcomePrefix = message;
                     if ( name.equalsIgnoreCase( "Welcome" ) )
