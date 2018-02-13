@@ -86,18 +86,11 @@ public class DwarfEntityListener implements Listener
         {
             if ( event.getClicker() instanceof Player )
             {
-                // in business, left click
-                if ( trainer.isGreeter() )
-                {
-                    trainer.printLeftClick( ( Player ) ( event.getClicker() ) );
-                }
-                else
-                {
-                    Player player = ( Player ) event.getClicker();
-                    DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
-                    DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
-                    plugin.getOut().printSkillInfo( player, skill, dCPlayer, trainer.getMaxSkill() );
-                }
+                Player player = ( Player ) event.getClicker();
+                DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
+                DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+                plugin.getOut().printSkillInfo( player, skill, dCPlayer, trainer.getMaxSkill() );
+
             }
             return true;
         }
@@ -112,64 +105,58 @@ public class DwarfEntityListener implements Listener
             DwarfTrainer trainer = plugin.getDataManager().getTrainer( event.getNPC() );
             if ( trainer != null )
             {
-                if ( trainer.isGreeter() )
+
+                if ( trainer.isWaiting() )
                 {
-                    trainer.printRightClick( event.getClicker() );
+                    plugin.getOut().sendMessage( dwarfPlayer.getPlayer(), Messages.trainerOccupied );
                 }
                 else
                 {
-                    if ( trainer.isWaiting() )
+                    DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
+
+                    if ( skill == null )
                     {
-                        plugin.getOut().sendMessage( dwarfPlayer.getPlayer(), Messages.trainerOccupied );
-                    }
-                    else
-                    {
-                        DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
-
-                        if ( skill == null )
-                        {
-                            plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, Messages.trainSkillPrefix.replaceAll( "%skillid%", "" ) );
-                            return true;
-                        }
-
-                        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
-                        if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
-                        {
-                            plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
-                            return true;
-                        }
-
-                        if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
-                        {
-                            plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
-                            return true;
-                        }
-
-                        if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
-                        {
-                            plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
-                            return true;
-                        }
-
-                        if ( skill.getLevel() >= trainer.getMaxSkill() )
-                        {
-                            plugin.getOut().sendMessage( event.getClicker(), Messages.trainerMaxLevel, tag );
-                            return true;
-                        }
-
-                        if ( skill.getLevel() < trainer.getMinSkill() )
-                        {
-                            plugin.getOut().sendMessage( event.getClicker(), Messages.trainerLevelTooHigh, tag );
-                            return true;
-                        }
-
-                        trainer.setWait( true );
-                        TrainerGUI trainerGUI = new TrainerGUI( plugin, trainer, dwarfPlayer );
-                        plugin.getDwarfInventoryListener().dwarfGUIs.put( dwarfPlayer.getPlayer(), trainerGUI );
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 1 );
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, Messages.trainSkillPrefix.replaceAll( "%skillid%", "" ) );
+                        return true;
                     }
 
+                    String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                    {
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
+                        return true;
+                    }
+
+                    if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
+                    {
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
+                        return true;
+                    }
+
+                    if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
+                    {
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                        return true;
+                    }
+
+                    if ( skill.getLevel() >= trainer.getMaxSkill() )
+                    {
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.trainerMaxLevel, tag );
+                        return true;
+                    }
+
+                    if ( skill.getLevel() < trainer.getMinSkill() )
+                    {
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.trainerLevelTooHigh, tag );
+                        return true;
+                    }
+
+                    trainer.setWait( true );
+                    TrainerGUI trainerGUI = new TrainerGUI( plugin, trainer, dwarfPlayer );
+                    plugin.getDwarfInventoryListener().dwarfGUIs.put( dwarfPlayer.getPlayer(), trainerGUI );
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 1 );
                 }
+
                 return true;
             }
         }

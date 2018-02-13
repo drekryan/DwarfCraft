@@ -90,20 +90,14 @@ public class CommandListTrainers extends Command
                 DwarfTrainer trainer = trainers[idx + x];
                 Location loc = trainer.getLocation();
 
-                if ( trainer.isGreeter() )
+                String skillName = "Unknown";
+                for ( DwarfSkill skill : skills )
                 {
-                    sender.sendMessage( String.format( "Greeter ID: %s Name: %s (%d, %d, %d)", trainer.getUniqueId(), trainer.getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() ) );
+                    if ( skill.getId() == trainer.getSkillTrained() )
+                        skillName = skill.getDisplayName();
                 }
-                else
-                {
-                    String skillName = "Unknown";
-                    for ( DwarfSkill skill : skills )
-                    {
-                        if ( skill.getId() == trainer.getSkillTrained() )
-                            skillName = skill.getDisplayName();
-                    }
-                    sender.sendMessage( String.format( "Trainer ID: %s Name: %s Trains: %d %s (%d, %d, %d)", trainer.getUniqueId(), trainer.getName(), trainer.getMaxSkill(), skillName, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() ) );
-                }
+                sender.sendMessage( String.format( "Trainer ID: %s Name: %s Trains: %d %s (%d, %d, %d)", trainer.getUniqueId(), trainer.getName(), trainer.getMaxSkill(), skillName, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() ) );
+
             }
             return true;
         }

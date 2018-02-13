@@ -25,7 +25,6 @@ import org.jbls.LexManos.CSV.CSVRecord;
 import com.Jessy1237.DwarfCraft.events.DwarfLoadRacesEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLoadSkillsEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
-import com.Jessy1237.DwarfCraft.models.DwarfGreeterMessage;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
@@ -45,7 +44,6 @@ public final class ConfigManager
     private String configMessagesFileName;
     private String configWorldFileName;
     private String configAliasesFileName;
-    private String cfgGreeterFile;
     private String cfgRaceFile;
     private String cfgBlockGroupsFile;
     private String cfgToolGroupsFile;
@@ -187,8 +185,6 @@ public final class ConfigManager
             configMessagesFileName = "messages.config";
         if ( configWorldFileName == null )
             configWorldFileName = "world-blacklist.config";
-        if ( cfgGreeterFile == null )
-            cfgGreeterFile = "greeters.config";
         if ( dbpath == null )
             dbpath = "dwarfcraft.db";
         if ( cfgRaceFile == null )
@@ -230,7 +226,7 @@ public final class ConfigManager
             readConfigFile();
             getDefaultValues();
 
-            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { configAliasesFileName, "aliases.config" } };
+            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { configAliasesFileName, "aliases.config" } };
             for ( String[] mfile : mfiles )
             {
                 file = new File( root, mfile[0] );
@@ -300,8 +296,6 @@ public final class ConfigManager
                     configMessagesFileName = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "World Blacklist File Name" ) )
                     configWorldFileName = theline[1].trim();
-                if ( theline[0].equalsIgnoreCase( "Greeter Messages File Name" ) )
-                    cfgGreeterFile = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Races File Name" ) )
                     cfgRaceFile = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Database File Name" ) )
@@ -537,45 +531,6 @@ public final class ConfigManager
                 defaultRace = "NULL";
         }
         return true;
-    }
-
-    @SuppressWarnings( "resource" )
-    protected boolean readGreeterMessagesfile()
-    {
-        System.out.println( "[DwarfCraft] Reading greeter messages file: " + configDirectory + cfgGreeterFile );
-        try
-        {
-            getDefaultValues();
-            FileReader fr = new FileReader( configDirectory + cfgGreeterFile );
-            BufferedReader br = new BufferedReader( fr );
-            String messageId = br.readLine();
-            while ( messageId != null )
-            {
-                messageId = messageId.trim();
-                String leftClick, rightClick;
-                if ( messageId.length() == 0 )
-                {
-                    messageId = br.readLine();
-                    continue;
-                }
-                if ( messageId.charAt( 0 ) == '#' )
-                {
-                    messageId = br.readLine();
-                    continue;
-                }
-                leftClick = br.readLine().trim();
-                rightClick = br.readLine().trim();
-
-                plugin.getDataManager().insertGreeterMessage( messageId, new DwarfGreeterMessage( leftClick, rightClick ) );
-                messageId = br.readLine();
-            }
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
-        return true;
-
     }
 
     @SuppressWarnings( { "resource", "null" } )
@@ -1106,6 +1061,11 @@ public final class ConfigManager
     public String getAnnouncementMessage()
     {
         return announcementMessage;
+    }
+    
+    public String getVanillaRace()
+    {
+        return vanillaRace;
     }
 
     public HashMap<String, ArrayList<Material>> getBlockGroups()

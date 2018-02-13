@@ -1,5 +1,8 @@
 package com.Jessy1237.DwarfCraft;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -9,11 +12,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.Jessy1237.DwarfCraft.commands.CommandCreateGreeter;
 import com.Jessy1237.DwarfCraft.commands.CommandCreateTrainer;
-import com.Jessy1237.DwarfCraft.commands.CommandHelp;
 import com.Jessy1237.DwarfCraft.commands.CommandDebug;
 import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
+import com.Jessy1237.DwarfCraft.commands.CommandHelp;
 import com.Jessy1237.DwarfCraft.commands.CommandInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandListTrainers;
 import com.Jessy1237.DwarfCraft.commands.CommandRace;
@@ -43,9 +45,6 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * DwarfCraft is a RPG-like plugin for minecraft (via Spigot) that allows players to improve their characters. Players may pay materials to a trainer to improve a skill level, which will provide
@@ -289,13 +288,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
                 cmd = new CommandSetSkill( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "creategreeter" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandCreateGreeter( this );
-            }
-        }
         else if ( name.equalsIgnoreCase( "createtrainer" ) )
         {
             if ( hasOp || hasAll )
@@ -447,14 +439,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         dm.dbInitialize();
 
         out = new Out( this );
-
-        // readGreeterMessagesfile() depends on datamanager existing, so this
-        // has to go here
-        if ( !getConfigManager().readGreeterMessagesfile() )
-        {
-            System.out.println( "[SEVERE] Failed to read DwarfCraft Greeter Messages)" );
-            pm.disablePlugin( this );
-        }
 
         // Creates the citizen trait for the DwarfTrainers
         if ( !reload )

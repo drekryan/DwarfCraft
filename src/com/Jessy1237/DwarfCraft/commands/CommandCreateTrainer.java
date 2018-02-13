@@ -130,7 +130,7 @@ public class CommandCreateTrainer extends Command
                     npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), uid, name );
                 }
                 npc.spawn( p.getLocation() );
-                npc.addTrait( new DwarfTrainerTrait( plugin, uid, skill.getId(), maxSkill, minSkill, false, null ) );
+                npc.addTrait( new DwarfTrainerTrait( plugin, uid, skill.getId(), maxSkill, minSkill ) );
                 npc.setProtected( true );
             }
             catch ( CommandException e )

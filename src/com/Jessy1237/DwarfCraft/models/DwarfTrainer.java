@@ -79,11 +79,6 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         return mEntity.getTrait( DwarfTrainerTrait.class ).getMinSkill();
     }
 
-    protected String getMessage()
-    {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).getMessage();
-    }
-
     public String getName()
     {
         return mEntity.getName();
@@ -97,36 +92,6 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
     public int getUniqueId()
     {
         return mEntity.getId();
-    }
-
-    public boolean isGreeter()
-    {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).isGreeter();
-    }
-
-    public void printLeftClick( Player player )
-    {
-        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
-        if ( msg != null )
-        {
-            plugin.getOut().sendMessage( player, msg.getLeftClickMessage() );
-        }
-        else
-        {
-            System.out.println( String.format( "[DC] Error: Greeter %s has no left click message. Check your configuration file for message ID %d", getUniqueId(), getMessage() ) );
-        }
-        return;
-    }
-
-    public void printRightClick( Player player )
-    {
-        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
-        if ( msg != null )
-        {
-            plugin.getOut().sendMessage( player, msg.getRightClickMessage() );
-        }
-
-        return;
     }
 
     public void depositOne( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
