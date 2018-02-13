@@ -23,13 +23,13 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-public class CommandCreateTrainer extends Command
+public class CommandCreate extends Command
 {
     private final DwarfCraft plugin;
 
-    public CommandCreateTrainer( final DwarfCraft plugin )
+    public CommandCreate(final DwarfCraft plugin )
     {
-        super( "CreateTrainer" );
+        super( "Create" );
         this.plugin = plugin;
     }
 
@@ -37,15 +37,15 @@ public class CommandCreateTrainer extends Command
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'createtrainer'" );
+            System.out.println( "DC1: started command 'create'" );
 
         if ( args.length == 0 || args[0].equals( null ) )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Usage.CREATETRAINER.getUsage() );
+            plugin.getOut().sendMessage( sender, CommandInformation.Usage.CREATE.getUsage() );
         }
         else if ( args[0].equalsIgnoreCase( "?" ) )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Desc.CREATETRAINER.getDesc() );
+            plugin.getOut().sendMessage( sender, CommandInformation.Desc.CREATE.getDesc() );
         }
         else
         {
@@ -136,7 +136,7 @@ public class CommandCreateTrainer extends Command
             catch ( CommandException e )
             {
                 e.describe( sender );
-                sender.sendMessage( CommandInformation.Usage.CREATETRAINER.getUsage() );
+                sender.sendMessage( CommandInformation.Usage.CREATE.getUsage() );
             }
         }
         return true;

@@ -17,11 +17,11 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 
-public class CommandListTrainers extends Command
+public class CommandList extends Command
 {
     private final DwarfCraft plugin;
 
-    public CommandListTrainers( final DwarfCraft plugin )
+    public CommandList(final DwarfCraft plugin )
     {
         super( "List" );
         this.plugin = plugin;
