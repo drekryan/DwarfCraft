@@ -24,6 +24,7 @@ public class DwarfRace
         this.mName = name;
         this.Desc = Desc;
         this.skills = skills;
+        prefixColour = "&f";
     }
 
     public String getName()

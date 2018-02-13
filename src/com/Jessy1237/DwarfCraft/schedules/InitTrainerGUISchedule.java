@@ -1,21 +1,22 @@
 package com.Jessy1237.DwarfCraft.schedules;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 public class InitTrainerGUISchedule implements Runnable
 {
     private TrainerGUI trainerGUI;
+    private DwarfCraft plugin;
 
-    public InitTrainerGUISchedule( TrainerGUI trainerGUI )
+    public InitTrainerGUISchedule( DwarfCraft plugin, TrainerGUI trainerGUI )
     {
         this.trainerGUI = trainerGUI;
+        this.plugin = plugin;
     }
 
     @Override
     public void run()
     {
-        trainerGUI.init();
-        trainerGUI.getDwarfPlayer().getPlayer().updateInventory();
-        trainerGUI.openGUI();
+        plugin.getDwarfInventoryListener().addDwarfGUI( trainerGUI.getDwarfPlayer().getPlayer(), trainerGUI );
     }
 }

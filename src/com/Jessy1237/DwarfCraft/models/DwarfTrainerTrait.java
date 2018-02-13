@@ -27,13 +27,15 @@ public class DwarfTrainerTrait extends Trait
     @Persist( required = true )
     private int mMinLevel;
 
-
     @Override
     public void load( DataKey key )
     {
-        this.mSkillID = key.getInt( "mSkillID" );
-        this.mMaxLevel = key.getInt( "mMaxLevel" );
-        this.mMinLevel = key.getInt( "mMinLevel" );
+        if ( mSkillID == 0 )
+            this.mSkillID = key.getInt( "mSkillID" );
+        if ( mSkillID == 0 )
+            this.mMaxLevel = key.getInt( "mMaxLevel" );
+        if ( mSkillID == 0 )
+            this.mMinLevel = key.getInt( "mMinLevel" );
         DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) getNPC() );
         this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
 

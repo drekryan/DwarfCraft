@@ -35,7 +35,7 @@ public class DwarfInventoryListener implements Listener
 
     private DwarfCraft plugin;
     private HashMap<Location, BrewerInventory> stands = new HashMap<>();
-    public HashMap<Player, DwarfGUI> dwarfGUIs = new HashMap<>();
+    private HashMap<Player, DwarfGUI> dwarfGUIs = new HashMap<>();
 
     public DwarfInventoryListener( final DwarfCraft plugin )
     {
@@ -347,6 +347,14 @@ public class DwarfInventoryListener implements Listener
 
         dwarfGUI.remove();
         dwarfGUIs.remove( ( Player ) event.getPlayer() );
+    }
+    
+    public void addDwarfGUI(Player player, DwarfGUI gui)
+    {
+        dwarfGUIs.put( player, gui );
+        gui.init();
+        gui.openGUI();
+        player.updateInventory();
     }
 
     @EventHandler( priority = EventPriority.NORMAL )

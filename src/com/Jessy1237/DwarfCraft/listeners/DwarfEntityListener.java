@@ -127,12 +127,12 @@ public class DwarfEntityListener implements Listener
                         return true;
                     }
 
-                    if( dwarfPlayer.getRace().equalsIgnoreCase( "Vanilla" ))
+                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "Vanilla" ) )
                     {
                         plugin.getOut().sendMessage( event.getClicker(), Messages.vanillaRace );
                         return true;
                     }
-                    
+
                     if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
                     {
                         plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
@@ -159,8 +159,7 @@ public class DwarfEntityListener implements Listener
 
                     trainer.setWait( true );
                     TrainerGUI trainerGUI = new TrainerGUI( plugin, trainer, dwarfPlayer );
-                    plugin.getDwarfInventoryListener().dwarfGUIs.put( dwarfPlayer.getPlayer(), trainerGUI );
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( trainerGUI ), 1 );
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( plugin, trainerGUI ), 1 );
                 }
 
                 return true;

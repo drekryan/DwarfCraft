@@ -21,7 +21,7 @@ public class CommandList extends Command
 {
     private final DwarfCraft plugin;
 
-    public CommandList(final DwarfCraft plugin )
+    public CommandList( final DwarfCraft plugin )
     {
         super( "List" );
         this.plugin = plugin;
@@ -46,10 +46,8 @@ public class CommandList extends Command
             DwarfPlayer dwarfPlayer = new DwarfPlayer( plugin, ( Player ) sender );
 
             ListGUI listTrainersGUI = new ListGUI( plugin, dwarfPlayer );
-            listTrainersGUI.init();
-            listTrainersGUI.openGUI();
 
-            plugin.getDwarfInventoryListener().dwarfGUIs.put( dwarfPlayer.getPlayer(), listTrainersGUI );
+            plugin.getDwarfInventoryListener().addDwarfGUI( dwarfPlayer.getPlayer(), listTrainersGUI );
 
             return true;
         }

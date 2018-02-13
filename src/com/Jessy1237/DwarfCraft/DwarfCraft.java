@@ -18,7 +18,6 @@ import com.Jessy1237.DwarfCraft.commands.CommandHelp;
 import com.Jessy1237.DwarfCraft.commands.CommandInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandList;
 import com.Jessy1237.DwarfCraft.commands.CommandRace;
-import com.Jessy1237.DwarfCraft.commands.CommandRaces;
 import com.Jessy1237.DwarfCraft.commands.CommandReload;
 import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
@@ -292,13 +291,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             if ( hasOp || hasAll )
             {
                 cmd = new CommandCreate( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "races" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandRaces( this );
             }
         }
         else if ( name.equalsIgnoreCase( "reload" ) )
