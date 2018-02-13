@@ -339,9 +339,10 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) ) return null;
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
 
-        List<String> matches = new ArrayList<>();
+        List<String> matches;
 
         if ( args.length <= 1 || args[0].equalsIgnoreCase( "" ) )
         {
@@ -352,7 +353,21 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             if ( args[0].equalsIgnoreCase( "debug" ) )
             {
                 matches = new CommandDebug( this ).onTabComplete( sender, command, alias, args );
-            } else {
+            }
+            else if ( args[0].equalsIgnoreCase( "create" ) )
+            {
+                matches = new CommandCreate( this ).onTabComplete( sender, command, alias, args );
+            }
+            else if ( args[0].equalsIgnoreCase( "skillinfo" ) )
+            {
+                matches = new CommandSkillInfo( this ).onTabComplete( sender, command, alias, args );
+            }
+            else if ( args[0].equalsIgnoreCase( "setskill" ) )
+            {
+                matches = new CommandSetSkill( this ).onTabComplete( sender, command, alias, args );
+            }
+            else
+            {
                 matches = null;
             }
         }
