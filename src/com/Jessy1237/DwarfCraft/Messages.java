@@ -18,14 +18,14 @@ public final class Messages
     // fails.
     public enum Fixed
     {
-        TUTORIAL1( "&fWelcome to DwarfCraft! You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive. Type &4/dc tutorial 2&f to continue." ),
-        TUTORIAL2( "&fYour skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&f skill. Type &4/dc skillinfo pickaxe_use&f or" + " &4/dc skillinfo 1&f. After running the Skill Info command, continue the tutorial with &4/dc tutorial 3&f" ),
-        TUTORIAL3( "&fThe skill info shows that your low level Pickaxe Use skill will cause your pickaxe to have lower durability causing it to break easier. If you increase this skill enough, you'll be able to mine much longer before your pickaxe breaks. Below that, it shows what you need to train the skill. Find a nearby trainer (NPC) in the world and left click them to get more information about the skill they teach or right click to begin training"
-                        + ", then continue with &4/tutorial 4&f" ),
-        TUTORIAL4( "&fWhen you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little," + "but becoming a master is very challenging. Continue with &4/tutorial 5&f" ),
-        TUTORIAL5( "&fMost trainers can only take you to a limited level, you'll need to seek out the " + "best trainers in the world to eventually reach level " + plugin.getConfigManager().getMaxSkillLevel()
-                        + " in a skill. Go gathersome dirt, stone, or logs and try to train up a relevant skill, using what" + "you have learned, then continue with &4/tutorial 6&f" ),
-        TUTORIAL6( "&fYou now know the basic commands you need to succeed and develop. To find out more, use &4/dchelp&f and &4/dchelp <command>&f." ),
+        TUTORIAL1( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive." ),
+        TUTORIAL2( "&0Your skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&0 skill. Type &4/dc skillinfo pickaxe_use&0." ),
+        TUTORIAL3( "&0The skill info shows that your low level Pickaxe Use skill will cause your pickaxe to have lower durability causing it to break easier. If you increase this skill enough, you'll be able to mine much longer before your pickaxe breaks. " +
+                "Below that, it shows what you need to train the skill. Find a nearby trainer (NPC) in the world and left click them to get more information about the skill they teach or right click to begin training"),
+        TUTORIAL4( "&0When you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little," + "but becoming a master is very challenging." ),
+        TUTORIAL5( "&0Most trainers can only take you to a limited level, you'll need to seek out the best trainers in the world to eventually reach level " + plugin.getConfigManager().getMaxSkillLevel() + " in a skill. Go gather some dirt, stone, or logs and " +
+                "try to train up a relevant skill, using what you have learned" ),
+        TUTORIAL6( "&0You now know the basic commands you need to succeed and develop. To find out more, use &4/dc help&0" ),
         WELCOME( "Welcome to a DwarfCraft world! Things are bit different here as this world focuses heavily on skilling. To learn more about what you can do here, type '&4/dc tutorial&2' to get started." ),
         GENERALINFO( "&dWelcome to DwarfCraft. You are a player with a set of skills that let you do certain tasks better. For more information see &4/dc tutorial&d. Original Authors: smartaleq, LexManos and RCarretta Authors: Jessy1237" );
 
@@ -36,7 +36,7 @@ public final class Messages
             this.message = message;
         }
 
-        protected String getMessage()
+        public String getMessage()
         {
             return message;
         }

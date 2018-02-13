@@ -4,21 +4,20 @@ package com.Jessy1237.DwarfCraft.commands;
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.Jessy1237.DwarfCraft.Messages;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import com.Jessy1237.DwarfCraft.CommandInformation.Usage;
-import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.CommandException;
-import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 
 public class CommandTutorial extends Command
 {
+    @SuppressWarnings("unused")
     private final DwarfCraft plugin;
 
     public CommandTutorial( final DwarfCraft plugin )
@@ -30,58 +29,37 @@ public class CommandTutorial extends Command
     @Override
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
-        try
-        {
+        if ( DwarfCraft.debugMessagesThreshold < 1 )
+            System.out.println( "DC1: started command 'tutorial'" );
 
-            CommandParser parser = new CommandParser( plugin, sender, args );
-            List<Object> desiredArguments = new ArrayList<Object>();
-            List<Object> outputList = null;
+        if ( sender instanceof Player ) {
+            // Create a new Written Book
+            ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
 
-            if ( DwarfCraft.debugMessagesThreshold < 1 )
-                System.out.println( "DC1: started command 'tutorial'" );
-            int page = 0;
-            desiredArguments.add( page );
+            // Set the Book Pages to the text from the Messages config
+            //TODO: Support more than the previously capped 6 Tutorial Pages. Make Tutorial Messages non-fixed and customizable
+            String[] bookPages = new String[]{
+                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL1.getMessage()),
+                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL2.getMessage()),
+                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL3.getMessage()),
+                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL4.getMessage()),
+                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL5.getMessage()),
+                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL6.getMessage())
+            };
 
-            try
-            {
-                outputList = parser.parse( desiredArguments, false );
-                page = ( Integer ) outputList.get( 0 );
-            }
-            catch ( CommandException e )
-            {
-                if ( e.getType() == Type.TOOFEWARGS )
-                    page = 1;
-                else
-                    throw e;
-            }
+            // Set the Book metadata onto the Written Book
+            BookMeta bookMeta = (BookMeta) book.getItemMeta();
+            bookMeta.setTitle("Welcome to DwarfCraft");
+            bookMeta.setAuthor("Jessy1237");
+            bookMeta.addPage( bookPages );
+            book.setItemMeta( bookMeta );
 
-            if ( page < 0 || page > 6 )
-                throw new CommandException( plugin, Type.PAGENUMBERNOTFOUND );
-            plugin.getOut().tutorial( sender, page );
-
-            if ( sender instanceof Player ) {
-                // TODO: This is temporary.. Allow customization again from Messages.config by parsing the messages into the JSON format shown here. See #parsePagesToBookJSON
-                String bookCommand = "give " + sender.getName() + " written_book 1 0 {pages:[\"[\\\"\\\",{\\\"text\\\":\\\"Welcome to DwarfCraft!\\\\n\\\\n\\\",\\\"color\\\":\\\"dark_purple\\\",\\\"bold\\\":true}," +
-                        "{\\\"text\\\":\\\"You have a set of skills that let you do certain tasks better. \\\",\\\"color\\\":\\\"black\\\",\\\"bold\\\":false},{\\\"text\\\":\\\"When you first start, " +
-                        "things may be more difficult than you are used to, but as you level up your skills, you will be much more productive.\\\",\\\"color\\\":\\\"none\\\"}]\",\"[\\\"\\\",{\\\"text\\\":\\\"Your " +
-                        "'Skillsheet' lists all the skills that are affecting you.\\\\n\\\\n\\\"},{\\\"text\\\":\\\"Type /dc skillsheet to see your skillsheet.\\\",\\\"color\\\":\\\"red\\\",\\\"clickEvent\\\":{\\\"action\\\":\\\"" +
-                        "run_command\\\",\\\"value\\\":\\\"/dc skillsheet\\\"}}]\"],title:\"Welcome to DwarfCraft\",author:\"Jessy1237\"}";
-
-                plugin.getServer().dispatchCommand( sender, bookCommand );
-            }
-
-            return true;
+            // Add Written Book to Player Inventory
+            ((Player) sender).getInventory().addItem(book);
+        } else {
+            sender.sendMessage( "Error: This command must be run from in-game" );
         }
-        catch ( CommandException e )
-        {
-            e.describe( sender );
-            sender.sendMessage( Usage.TUTORIAL.getUsage() );
-            return false;
-        }
-    }
 
-    @SuppressWarnings("unused")
-    private void parsePagesToBookJSON(String[] pageStrings) {
-
+        return true;
     }
 }
