@@ -1,6 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;

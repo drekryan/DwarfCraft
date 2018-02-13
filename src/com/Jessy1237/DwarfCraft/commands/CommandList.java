@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.guis.ListTrainersGUI;
+import com.Jessy1237.DwarfCraft.guis.ListGUI;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
@@ -45,7 +45,7 @@ public class CommandList extends Command
 
             DwarfPlayer dwarfPlayer = new DwarfPlayer( plugin, ( Player ) sender );
 
-            ListTrainersGUI listTrainersGUI = new ListTrainersGUI( plugin, dwarfPlayer );
+            ListGUI listTrainersGUI = new ListGUI( plugin, dwarfPlayer );
             listTrainersGUI.init();
             listTrainersGUI.openGUI();
 
