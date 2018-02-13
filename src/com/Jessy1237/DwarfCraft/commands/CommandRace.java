@@ -30,9 +30,7 @@ public class CommandRace extends Command
         {
             Player p = ( Player ) sender;
             RaceGUI gui = new RaceGUI( plugin, plugin.getDataManager().find( p ) );
-            gui.init();
-            gui.openGUI();
-            plugin.getDwarfInventoryListener().dwarfGUIs.put( p, gui );
+            plugin.getDwarfInventoryListener().addDwarfGUI( p, gui );
         }
         else if ( !( sender instanceof Player ) || plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
         {
