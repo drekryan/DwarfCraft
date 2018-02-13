@@ -76,9 +76,9 @@ public final class ConfigManager
 
         try
         {
-            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() )
+            if ( !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() )
             {
-                System.out.println( "[SEVERE] Failed to Enable DwarfCraft Skills and Effects)" );
+                System.out.println( "[SEVERE] Failed to Enable DwarfCraft configs" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
             }
             else
@@ -98,7 +98,7 @@ public final class ConfigManager
         catch ( Exception e )
         {
             e.printStackTrace();
-            System.out.println( "[SEVERE] Failed to Enable DwarfCraft Skills and Effects)" );
+            System.out.println( "[SEVERE] Failed to Enable DwarfCraft configs" );
             plugin.getServer().getPluginManager().disablePlugin( plugin );
         }
 
@@ -194,7 +194,11 @@ public final class ConfigManager
                 CopyFile( "/default_files/DwarfCraft.config", file );
             }
 
-            readConfigFile();
+            if ( !readConfigFile() )
+            {
+                System.out.println( "[SEVERE] Failed to Enable DwarfCraft configs" );
+                plugin.getServer().getPluginManager().disablePlugin( plugin );
+            }
             getDefaultValues();
 
             String[] mfiles = { "skills.csv", "effects.csv", "messages.config", "dwarfcraft.db", "world-blacklist.config", "races.config", "block-groups.config" };
