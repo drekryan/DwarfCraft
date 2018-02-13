@@ -37,29 +37,19 @@ public final class ConfigManager
     private final String configDirectory;
 
     private String configMainFileName;
-    private String configSkillsFileName;
-    private int configSkillsVersion;
-    private String configEffectsFileName;
-    private int configEffectsVersion;
-    private String configMessagesFileName;
     private String configWorldFileName;
-    private String configAliasesFileName;
-    private String cfgRaceFile;
     private String cfgBlockGroupsFile;
-    private String cfgToolGroupsFile;
     private String dbpath;
     private Integer trainDelay;
     private Integer announcementInterval;
     private String announcementMessage;
     private Integer maxLevel;
     private Integer raceLevelLimit;
-    private String vanillaRace;
     private String prefixStr;
 
     private HashMap<Integer, DwarfSkill> skillsArray = new HashMap<Integer, DwarfSkill>();
     public ArrayList<World> worlds = new ArrayList<World>();
     private HashMap<String, ArrayList<Material>> blockGroups = new HashMap<String, ArrayList<Material>>();
-    private final HashMap<String, String> aliases = new HashMap<String, String>();
 
     private ArrayList<DwarfRace> raceList = new ArrayList<DwarfRace>();
     private String defaultRace;
@@ -86,7 +76,7 @@ public final class ConfigManager
 
         try
         {
-            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() || !readAliasesFile() )
+            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() )
             {
                 System.out.println( "[SEVERE] Failed to Enable DwarfCraft Skills and Effects)" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
@@ -161,11 +151,6 @@ public final class ConfigManager
         return null;
     }
 
-    protected int getConfigSkillsVersion()
-    {
-        return configSkillsVersion;
-    }
-
     protected String getDbPath()
     {
         return configDirectory + dbpath;
@@ -173,26 +158,12 @@ public final class ConfigManager
 
     private void getDefaultValues()
     {
-        if ( configSkillsVersion == 0 )
-            configSkillsVersion = 100;
-        if ( configEffectsVersion == 0 )
-            configEffectsVersion = 100;
-        if ( configSkillsFileName == null )
-            configSkillsFileName = "skills.csv";
-        if ( configEffectsFileName == null )
-            configEffectsFileName = "effects.csv";
-        if ( configMessagesFileName == null )
-            configMessagesFileName = "messages.config";
         if ( configWorldFileName == null )
             configWorldFileName = "world-blacklist.config";
         if ( dbpath == null )
             dbpath = "dwarfcraft.db";
-        if ( cfgRaceFile == null )
-            cfgRaceFile = "races.config";
         if ( cfgBlockGroupsFile == null )
             cfgBlockGroupsFile = "block-groups.config";
-        if ( configAliasesFileName == null )
-            configAliasesFileName = "aliases.config";
         if ( defaultRace == null )
             defaultRace = "NULL";
         if ( trainDelay == null )
@@ -226,14 +197,14 @@ public final class ConfigManager
             readConfigFile();
             getDefaultValues();
 
-            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { configAliasesFileName, "aliases.config" } };
-            for ( String[] mfile : mfiles )
+            String[] mfiles = { "skills.csv", "effects.csv", "messages.config", "dwarfcraft.db", "world-blacklist.config", "races.config", "block-groups.config" };
+            for ( String mfile : mfiles )
             {
-                file = new File( root, mfile[0] );
+                file = new File( root, mfile );
                 if ( !file.exists() )
                 {
                     file.createNewFile();
-                    CopyFile( "/default_files/" + mfile[1], file );
+                    CopyFile( "/default_files/" + mfile, file );
                 }
             }
         }
@@ -288,20 +259,8 @@ public final class ConfigManager
                     line = br.readLine();
                     continue;
                 }
-                if ( theline[0].equalsIgnoreCase( "Skills File Name" ) )
-                    configSkillsFileName = theline[1].trim();
-                if ( theline[0].equalsIgnoreCase( "Effects File Name" ) )
-                    configEffectsFileName = theline[1].trim();
-                if ( theline[0].equalsIgnoreCase( "Messages File Name" ) )
-                    configMessagesFileName = theline[1].trim();
-                if ( theline[0].equalsIgnoreCase( "World Blacklist File Name" ) )
-                    configWorldFileName = theline[1].trim();
-                if ( theline[0].equalsIgnoreCase( "Races File Name" ) )
-                    cfgRaceFile = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Database File Name" ) )
                     dbpath = theline[1].trim();
-                if ( theline[0].equalsIgnoreCase( "Aliases File Name" ) )
-                    configAliasesFileName = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Debug Level" ) )
                     DwarfCraft.debugMessagesThreshold = Integer.parseInt( theline[1].trim() );
                 if ( theline[0].equalsIgnoreCase( "Send Login Greet" ) )
@@ -320,8 +279,6 @@ public final class ConfigManager
                     defaultRace = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Vanilla Race Enabled" ) )
                     vanilla = Boolean.parseBoolean( theline[1].trim() );
-                if ( theline[0].equalsIgnoreCase( "Vanilla Race" ) )
-                    vanillaRace = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Prefix Enabled" ) )
                     prefix = Boolean.parseBoolean( theline[1].trim() );
                 if ( theline[0].equalsIgnoreCase( "Prefix" ) )
@@ -344,11 +301,8 @@ public final class ConfigManager
 
             if ( vanilla )
             {
-                if ( getRace( vanillaRace ) == null )
-                {
-                    raceList.add( new DwarfRace( vanillaRace, new ArrayList<Integer>(), "The all round balanced race (vanilla)." ) );
-                    System.out.println( "[DwarfCraft] Loaded vanilla race: " + vanillaRace );
-                }
+                raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla)." ) );
+                System.out.println( "[DwarfCraft] Loaded vanilla race: Vanilla" );
             }
         }
         catch ( FileNotFoundException fN )
@@ -413,10 +367,10 @@ public final class ConfigManager
 
     private boolean readEffectsFile()
     {
-        System.out.println( "[DwarfCraft] Reading effects file: " + configDirectory + configEffectsFileName );
+        System.out.println( "[DwarfCraft] Reading effects file: " + configDirectory + "effects.csv" );
         try
         {
-            CSVReader csv = new CSVReader( configDirectory + configEffectsFileName );
+            CSVReader csv = new CSVReader( configDirectory + "effects.csv" );
             Iterator<CSVRecord> records = csv.getRecords();
             while ( records.hasNext() )
             {
@@ -445,10 +399,10 @@ public final class ConfigManager
     @SuppressWarnings( "resource" )
     protected boolean readRacesFile()
     {
-        System.out.println( "[DwarfCraft] Reading races file: " + configDirectory + cfgRaceFile );
+        System.out.println( "[DwarfCraft] Reading races file: " + configDirectory + "races.config" );
         try
         {
-            FileReader fr = new FileReader( configDirectory + cfgRaceFile );
+            FileReader fr = new FileReader( configDirectory + "races.config" );
             BufferedReader br = new BufferedReader( fr );
             String line = br.readLine();
             boolean name = false;
@@ -536,7 +490,7 @@ public final class ConfigManager
     @SuppressWarnings( { "resource", "null" } )
     private boolean readMessagesFile()
     {
-        System.out.println( "[DwarfCraft] Reading messages file: " + configDirectory + configMessagesFileName );
+        System.out.println( "[DwarfCraft] Reading messages file: " + configDirectory + "messages.config" );
 
         // Loads the messages class after the config is read but before all the
         // messages are read.
@@ -544,7 +498,7 @@ public final class ConfigManager
         try
         {
             getDefaultValues();
-            FileReader fr = new FileReader( configDirectory + configMessagesFileName );
+            FileReader fr = new FileReader( configDirectory + "messages.config" );
             BufferedReader br = new BufferedReader( fr );
 
             String line = br.readLine();
@@ -739,23 +693,15 @@ public final class ConfigManager
         {
             e.printStackTrace();
         }
-        finally
-        {
-            // Default to enum values if not found
-            /*
-             * if ( Messages.serverRules == null ) Messages.serverRules = Messages.Fixed.SERVERRULESMESSAGE.getMessage();
-             */
-        }
         return true;
     }
 
     private boolean readSkillsFile()
     {
-        System.out.println( "[DwarfCraft] Reading skills file: " + configDirectory + configSkillsFileName );
+        System.out.println( "[DwarfCraft] Reading skills file: " + configDirectory + "skills.csv" );
         try
         {
-            CSVReader csv = new CSVReader( configDirectory + configSkillsFileName );
-            configSkillsVersion = csv.getVersion();
+            CSVReader csv = new CSVReader( configDirectory + "skills.csv" );
             Iterator<CSVRecord> records = csv.getRecords();
             while ( records.hasNext() )
             {
@@ -853,163 +799,6 @@ public final class ConfigManager
         return false;
     }
 
-    public boolean readToolGroupsFile()
-    {
-        System.out.println( "[DwarfCraft] Reading Tool Groups file: " + configDirectory + cfgToolGroupsFile );
-
-        try
-        {
-            FileReader fr = new FileReader( configDirectory + cfgToolGroupsFile );
-            BufferedReader br = new BufferedReader( fr );
-            String line = br.readLine();
-
-            while ( line != null )
-            {
-                if ( line.length() == 0 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-                if ( line.charAt( 0 ) == '#' )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-                if ( line.indexOf( ':' ) <= 0 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                String[] split = line.split( ":" );
-
-                if ( split.length > 2 || split.length == 0 || split == null )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                if ( split[0] == null || split[0].trim() == "" )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                String[] ints = split[1].split( "," );
-                ArrayList<Material> tools = new ArrayList<Material>();
-
-                if ( ints.length == 0 || ints == null )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                for ( int i = 0; i < ints.length; i++ )
-                {
-                    Material mat = Material.matchMaterial( ints[i].trim() );
-                    if ( mat != null )
-                        tools.add( mat );
-                }
-
-                blockGroups.put( split[0].trim(), tools );
-                line = br.readLine();
-            }
-            br.close();
-            return true;
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public boolean readAliasesFile()
-    {
-        System.out.println( "[DwarfCraft] Reading Aliases file: " + configDirectory + configAliasesFileName );
-
-        try
-        {
-            FileReader fr = new FileReader( configDirectory + configAliasesFileName );
-            BufferedReader br = new BufferedReader( fr );
-            String line = br.readLine();
-
-            while ( line != null )
-            {
-                if ( line.length() == 0 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-                if ( line.charAt( 0 ) == '#' )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-                if ( line.indexOf( ':' ) <= 0 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                String[] split = line.split( ":" );
-
-                if ( split.length < 2 || split.length == 0 || split == null )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                if ( split[0] == null || split[0].trim() == "" )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                String[] aliases = split[1].split( "," );
-
-                if ( aliases.length == 0 || aliases == null )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                for ( int i = 0; i < aliases.length; i++ )
-                {
-                    this.aliases.put( aliases[i], split[0] );
-                }
-
-                line = br.readLine();
-            }
-            br.close();
-            return true;
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
-     * Gets the alias of a shortened command name
-     * 
-     * @param name The command name to check
-     * @return The alias if it exists otherwise returns the original name
-     */
-    public String getAlias( String name )
-    {
-        String alias = aliases.get( name.toLowerCase() );
-        if ( alias == null )
-        {
-            alias = name;
-        }
-
-        return alias;
-    }
-
     public String getDefaultRace()
     {
         return defaultRace;
@@ -1063,11 +852,6 @@ public final class ConfigManager
     public String getAnnouncementMessage()
     {
         return announcementMessage;
-    }
-    
-    public String getVanillaRace()
-    {
-        return vanillaRace;
     }
 
     public HashMap<String, ArrayList<Material>> getBlockGroups()

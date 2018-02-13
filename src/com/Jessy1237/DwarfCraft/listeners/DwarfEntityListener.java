@@ -127,7 +127,7 @@ public class DwarfEntityListener implements Listener
                         return true;
                     }
 
-                    if( dwarfPlayer.getRace().equalsIgnoreCase( plugin.getConfigManager().getVanillaRace() ))
+                    if( dwarfPlayer.getRace().equalsIgnoreCase( "Vanilla" ))
                     {
                         plugin.getOut().sendMessage( event.getClicker(), Messages.vanillaRace );
                         return true;

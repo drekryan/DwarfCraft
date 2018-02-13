@@ -284,7 +284,7 @@ public class DwarfPlayer
         // Resets the players skills
         for ( DwarfSkill skill : skills.values() )
         {
-            if ( race.equalsIgnoreCase( plugin.getConfigManager().getVanillaRace() ) )
+            if ( race.equalsIgnoreCase( "Vanilla" ) )
             {
                 skill.setLevel( 5 );
             }
