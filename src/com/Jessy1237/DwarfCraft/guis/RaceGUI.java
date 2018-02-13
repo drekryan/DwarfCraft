@@ -69,7 +69,7 @@ public class RaceGUI extends DwarfGUI
             if ( event.getCurrentItem().getType() == Material.PAPER && event.getCurrentItem().getItemMeta().hasDisplayName() )
             {
                 race = event.getCurrentItem().getItemMeta().getDisplayName();
-                if ( !race.equals( "" ) && race != null )
+                if ( !race.equals( ChatColor.RED + "WARNING" ) && race != null )
                 {
                     confirmInit();
                 }
@@ -96,7 +96,7 @@ public class RaceGUI extends DwarfGUI
     private void confirmInit()
     {
         inventory.clear();
-        addItem( "", parseStringToLore( "Are you sure you want to change race to " + race + ". All your skills will be reset.", "" ), 0, new ItemStack( Material.PAPER ) );
+        addItem( ChatColor.RED + "WARNING", parseStringToLore( "Are you sure you want to change race to " + race + ". All your skills will be reset.", "" ), 0, new ItemStack( Material.PAPER ) );
 
         for ( int i = 9; i < 18; i++ )
         {
