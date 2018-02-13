@@ -51,6 +51,7 @@ public class DwarfTrainerTrait extends Trait
         if ( firstLoad )
         {
             load();
+            firstLoad = false;
         }
     }
 
