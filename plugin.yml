@@ -6,8 +6,8 @@ version: ${project.version}
 depend: [Vault, Citizens]
 softdepend: [LogBlock]
 commands: 
-   DwarfCraft: 
-      description: The base command for all DwarfCraft commands. The old commands are now args to this command
+   dwarfcraft:
+      description: The base command for DwarfCraft
       usage: |
-           /DwarfCraft
+           /dwarfcraft
       aliases: [dc]

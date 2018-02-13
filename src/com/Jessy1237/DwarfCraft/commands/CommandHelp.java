@@ -13,17 +13,17 @@ import org.bukkit.util.StringUtil;
 
 import java.util.*;
 
-public class CommandDCCommands extends Command implements TabCompleter
+public class CommandHelp extends Command implements TabCompleter
 {
     // A list of all supported DwarfCraft commands
-    private static final String[] COMMANDS = new String[] { "debug", "help", "info", "rules", "tutorial", "commands", "skillsheet", "skillinfo", "effectinfo", "race", "races", "setskill", "creategreeter", "createtrainer", "listtrainers", "dmem" };
+    private static final String[] COMMANDS = new String[] { "debug", "help", "tutorial", "info", "skillsheet", "skillinfo", "effectinfo", "race", "races", "setskill", "creategreeter", "createtrainer", "list" };
 
     @SuppressWarnings( "unused" )
     private final DwarfCraft plugin;
 
-    public CommandDCCommands( final DwarfCraft plugin )
+    public CommandHelp(final DwarfCraft plugin )
     {
-        super( "DCCommands" );
+        super( "dchelp" );
         this.plugin = plugin;
     }
 
@@ -35,7 +35,7 @@ public class CommandDCCommands extends Command implements TabCompleter
             System.out.println( "DC1: started command 'dchelp'" );
         }
 
-        sender.sendMessage( "DwarfCraft commands: " + String.join( ", ", COMMANDS ) );
+        sender.sendMessage( "Available Commands: " + String.join( ", ", COMMANDS ) );
         return true;
     }
 

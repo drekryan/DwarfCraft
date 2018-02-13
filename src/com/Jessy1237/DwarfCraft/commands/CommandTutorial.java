@@ -15,6 +15,7 @@ import com.Jessy1237.DwarfCraft.CommandParser;
 import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import org.bukkit.entity.Player;
 
 public class CommandTutorial extends Command
 {
@@ -57,8 +58,19 @@ public class CommandTutorial extends Command
             if ( page < 0 || page > 6 )
                 throw new CommandException( plugin, Type.PAGENUMBERNOTFOUND );
             plugin.getOut().tutorial( sender, page );
-            return true;
 
+            if ( sender instanceof Player ) {
+                // TODO: This is temporary.. Allow customization again from Messages.config by parsing the messages into the JSON format shown here. See #parsePagesToBookJSON
+                String bookCommand = "give " + sender.getName() + " written_book 1 0 {pages:[\"[\\\"\\\",{\\\"text\\\":\\\"Welcome to DwarfCraft!\\\\n\\\\n\\\",\\\"color\\\":\\\"dark_purple\\\",\\\"bold\\\":true}," +
+                        "{\\\"text\\\":\\\"You have a set of skills that let you do certain tasks better. \\\",\\\"color\\\":\\\"black\\\",\\\"bold\\\":false},{\\\"text\\\":\\\"When you first start, " +
+                        "things may be more difficult than you are used to, but as you level up your skills, you will be much more productive.\\\",\\\"color\\\":\\\"none\\\"}]\",\"[\\\"\\\",{\\\"text\\\":\\\"Your " +
+                        "'Skillsheet' lists all the skills that are affecting you.\\\\n\\\\n\\\"},{\\\"text\\\":\\\"Type /dc skillsheet to see your skillsheet.\\\",\\\"color\\\":\\\"red\\\",\\\"clickEvent\\\":{\\\"action\\\":\\\"" +
+                        "run_command\\\",\\\"value\\\":\\\"/dc skillsheet\\\"}}]\"],title:\"Welcome to DwarfCraft\",author:\"Jessy1237\"}";
+
+                plugin.getServer().dispatchCommand( sender, bookCommand );
+            }
+
+            return true;
         }
         catch ( CommandException e )
         {
@@ -66,5 +78,10 @@ public class CommandTutorial extends Command
             sender.sendMessage( Usage.TUTORIAL.getUsage() );
             return false;
         }
+    }
+
+    @SuppressWarnings("unused")
+    private void parsePagesToBookJSON(String[] pageStrings) {
+
     }
 }

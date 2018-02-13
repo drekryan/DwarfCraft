@@ -11,8 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.Jessy1237.DwarfCraft.commands.CommandCreateGreeter;
 import com.Jessy1237.DwarfCraft.commands.CommandCreateTrainer;
-import com.Jessy1237.DwarfCraft.commands.CommandDCCommands;
-import com.Jessy1237.DwarfCraft.commands.CommandDMem;
+import com.Jessy1237.DwarfCraft.commands.CommandHelp;
 import com.Jessy1237.DwarfCraft.commands.CommandDebug;
 import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandInfo;
@@ -20,7 +19,6 @@ import com.Jessy1237.DwarfCraft.commands.CommandListTrainers;
 import com.Jessy1237.DwarfCraft.commands.CommandRace;
 import com.Jessy1237.DwarfCraft.commands.CommandRaces;
 import com.Jessy1237.DwarfCraft.commands.CommandReload;
-import com.Jessy1237.DwarfCraft.commands.CommandRules;
 import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillSheet;
@@ -195,13 +193,13 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         boolean isCmd = true;
         String[] cArgs = new String[0];
 
-        if ( name.equalsIgnoreCase( "DwarfCraft" ) )
+        if ( name.equalsIgnoreCase( "dwarfcraft" ) )
         {
             if ( hasNorm || hasAll )
             {
                 if ( args.length == 0 )
                 {
-                    cmd = new CommandDCCommands( this );
+                    cmd = new CommandHelp( this );
                 }
                 else
                 {
@@ -228,105 +226,91 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             return false;
         }
 
-        if ( name.equalsIgnoreCase( "SkillSheet" ) )
+        if ( name.equalsIgnoreCase( "skillsheet" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandSkillSheet( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "Tutorial" ) )
+        else if ( name.equalsIgnoreCase( "tutorial" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandTutorial( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "Info" ) )
+        else if ( name.equalsIgnoreCase( "info" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandInfo( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "Rules" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandRules( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "SkillInfo" ) )
+        else if ( name.equalsIgnoreCase( "skillinfo" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandSkillInfo( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "Race" ) )
+        else if ( name.equalsIgnoreCase( "race" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandRace( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "EffectInfo" ) )
+        else if ( name.equalsIgnoreCase( "effectinfo" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandEffectInfo( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "Debug" ) )
+        else if ( name.equalsIgnoreCase( "debug" ) )
         {
             if ( hasOp || hasAll )
             {
                 cmd = new CommandDebug( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "ListTrainers" ) )
+        else if ( name.equalsIgnoreCase( "list" ) )
         {
             if ( hasOp || hasAll )
             {
                 cmd = new CommandListTrainers( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "SetSkill" ) )
+        else if ( name.equalsIgnoreCase( "setskill" ) )
         {
             if ( hasOp || hasAll )
             {
                 cmd = new CommandSetSkill( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "CreateGreeter" ) )
+        else if ( name.equalsIgnoreCase( "creategreeter" ) )
         {
             if ( hasOp || hasAll )
             {
                 cmd = new CommandCreateGreeter( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "CreateTrainer" ) )
+        else if ( name.equalsIgnoreCase( "createtrainer" ) )
         {
             if ( hasOp || hasAll )
             {
                 cmd = new CommandCreateTrainer( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "DMem" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandDMem( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Races" ) )
+        else if ( name.equalsIgnoreCase( "races" ) )
         {
             if ( hasNorm || hasAll )
             {
                 cmd = new CommandRaces( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "Reload" ) )
+        else if ( name.equalsIgnoreCase( "reload" ) )
         {
             if ( hasOp || hasAll )
             {
@@ -342,7 +326,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         {
             if ( isCmd == false )
             {
-                cmd = new CommandDCCommands( this );
+                cmd = new CommandHelp( this );
                 return cmd.execute( sender, commandLabel, cArgs );
             }
             else
@@ -369,7 +353,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( args.length <= 1 || args[0].equalsIgnoreCase( "" ) )
         {
-            matches = new CommandDCCommands( this ).onTabComplete( sender, command, alias, args );
+            matches = new CommandHelp( this ).onTabComplete( sender, command, alias, args );
         }
         else
         {
