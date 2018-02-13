@@ -720,6 +720,8 @@ public final class ConfigManager
                         Messages.effectLevelColorEqualToNormal = message;
                     if ( name.equalsIgnoreCase( "Effect level color less than normal" ) )
                         Messages.effectLevelColorLessThanNormal = message;
+                    if ( name.equalsIgnoreCase( "Vanilla Race Message" ) )
+                        Messages.vanillaRace = message;
                 }
                 else
                 {

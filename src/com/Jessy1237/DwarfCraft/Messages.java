@@ -111,4 +111,5 @@ public final class Messages
     public static String effectLevelColorGreaterThanNormal = "&a";
     public static String effectLevelColorEqualToNormal = "&e";
     public static String effectLevelColorLessThanNormal = "&c";
+    public static String vanillaRace = "Sorry but you are the vanilla race. Change your race to use DwarfCraft";
 }

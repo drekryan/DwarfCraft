@@ -127,6 +127,12 @@ public class DwarfEntityListener implements Listener
                         return true;
                     }
 
+                    if( dwarfPlayer.getRace().equalsIgnoreCase( plugin.getConfigManager().getVanillaRace() ))
+                    {
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.vanillaRace );
+                        return true;
+                    }
+                    
                     if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
                     {
                         plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );

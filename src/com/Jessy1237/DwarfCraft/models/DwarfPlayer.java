@@ -281,15 +281,21 @@ public class DwarfPlayer
         DwarfSkill[] dCSkills = new DwarfSkill[skills.size()];
 
         // Resets the players skills
-        int I = 0;
         for ( DwarfSkill skill : skills.values() )
         {
-            skill.setLevel( 0 );
+            if ( race.equalsIgnoreCase( plugin.getConfigManager().getVanillaRace() ) )
+            {
+                skill.setLevel( 5 );
+            }
+            else
+            {
+                skill.setLevel( 0 );
+            }
+
             skill.setDeposit1( 0 );
             skill.setDeposit2( 0 );
             skill.setDeposit3( 0 );
-            dCSkills[I] = skill;
-            I++;
+            dCSkills[skill.getId()] = skill;
         }
 
         // Resets the players prefix
