@@ -85,9 +85,9 @@ public class RaceGUI extends DwarfGUI
 
                 if ( !e.isCancelled() )
                 {
+                    dwarfPlayer.getPlayer().closeInventory();
                     plugin.getOut().changedRace( dwarfPlayer.getPlayer(), dwarfPlayer, e.getRace().getName() );
                     dwarfPlayer.changeRace( e.getRace().getName() );
-                    dwarfPlayer.getPlayer().closeInventory();
                 }
             }
         }
