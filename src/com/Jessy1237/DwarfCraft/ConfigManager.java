@@ -61,7 +61,6 @@ public final class ConfigManager
     private HashMap<Integer, DwarfSkill> skillsArray = new HashMap<Integer, DwarfSkill>();
     public ArrayList<World> worlds = new ArrayList<World>();
     private HashMap<String, ArrayList<Material>> blockGroups = new HashMap<String, ArrayList<Material>>();
-    private HashMap<String, ArrayList<Material>> toolGroups = new HashMap<String, ArrayList<Material>>();
     private final HashMap<String, String> aliases = new HashMap<String, String>();
 
     private ArrayList<DwarfRace> raceList = new ArrayList<DwarfRace>();
@@ -89,7 +88,7 @@ public final class ConfigManager
 
         try
         {
-            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() || !readToolGroupsFile() || !readAliasesFile() )
+            if ( !readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() || !readAliasesFile() )
             {
                 System.out.println( "[SEVERE] Failed to Enable DwarfCraft Skills and Effects)" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
@@ -196,8 +195,6 @@ public final class ConfigManager
             cfgRaceFile = "races.config";
         if ( cfgBlockGroupsFile == null )
             cfgBlockGroupsFile = "block-groups.config";
-        if ( cfgToolGroupsFile == null )
-            cfgToolGroupsFile = "tool-groups.config";
         if ( configAliasesFileName == null )
             configAliasesFileName = "aliases.config";
         if ( defaultRace == null )
@@ -233,7 +230,7 @@ public final class ConfigManager
             readConfigFile();
             getDefaultValues();
 
-            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { cfgToolGroupsFile, "tool-groups.config" }, { configAliasesFileName, "aliases.config" } };
+            String[][] mfiles = { { configSkillsFileName, "skills.csv" }, { configEffectsFileName, "effects.csv" }, { configMessagesFileName, "messages.config" }, { dbpath, "dwarfcraft.db" }, { cfgGreeterFile, "greeters.config" }, { configWorldFileName, "world-blacklist.config" }, { cfgRaceFile, "races.config" }, { cfgBlockGroupsFile, "block-groups.config" }, { configAliasesFileName, "aliases.config" } };
             for ( String[] mfile : mfiles )
             {
                 file = new File( root, mfile[0] );
@@ -1118,10 +1115,5 @@ public final class ConfigManager
     public HashMap<String, ArrayList<Material>> getBlockGroups()
     {
         return blockGroups;
-    }
-
-    public HashMap<String, ArrayList<Material>> getToolGroups()
-    {
-        return toolGroups;
     }
 }
