@@ -203,7 +203,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
                 else
                 {
                     // Converts the variables to work with the old command method
-                    name = getConfigManager().getAlias( args[0] );
+                    name = args[0];
                     cArgs = new String[args.length - 1];
                     for ( int i = 1; i < args.length; i++ )
                     {

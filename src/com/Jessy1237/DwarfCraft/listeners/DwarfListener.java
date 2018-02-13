@@ -39,7 +39,7 @@ public class DwarfListener implements Listener
         if ( player == null )
             return;
         
-        if ( player.getRace().equalsIgnoreCase( plugin.getConfigManager().getVanillaRace() ) )
+        if ( player.getRace().equalsIgnoreCase( "Vanilla" ) )
         {
             event.setCancelled( true );
         }
