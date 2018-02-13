@@ -12,12 +12,12 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.Jessy1237.DwarfCraft.commands.CommandCreateTrainer;
+import com.Jessy1237.DwarfCraft.commands.CommandCreate;
 import com.Jessy1237.DwarfCraft.commands.CommandDebug;
 import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandHelp;
 import com.Jessy1237.DwarfCraft.commands.CommandInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandListTrainers;
+import com.Jessy1237.DwarfCraft.commands.CommandList;
 import com.Jessy1237.DwarfCraft.commands.CommandRace;
 import com.Jessy1237.DwarfCraft.commands.CommandRaces;
 import com.Jessy1237.DwarfCraft.commands.CommandReload;
@@ -278,7 +278,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         {
             if ( hasOp || hasAll )
             {
-                cmd = new CommandListTrainers( this );
+                cmd = new CommandList( this );
             }
         }
         else if ( name.equalsIgnoreCase( "setskill" ) )
@@ -288,11 +288,11 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
                 cmd = new CommandSetSkill( this );
             }
         }
-        else if ( name.equalsIgnoreCase( "createtrainer" ) )
+        else if ( name.equalsIgnoreCase( "create" ) )
         {
             if ( hasOp || hasAll )
             {
-                cmd = new CommandCreateTrainer( this );
+                cmd = new CommandCreate( this );
             }
         }
         else if ( name.equalsIgnoreCase( "races" ) )
