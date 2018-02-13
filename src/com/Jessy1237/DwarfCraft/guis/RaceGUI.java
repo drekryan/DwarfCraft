@@ -72,7 +72,6 @@ public class RaceGUI extends DwarfGUI
                 race = event.getCurrentItem().getItemMeta().getDisplayName();
                 if ( !race.equals( "" ) && race != null )
                 {
-                    System.out.println( race.toLowerCase() );
                     confirmInit();
                 }
             }
