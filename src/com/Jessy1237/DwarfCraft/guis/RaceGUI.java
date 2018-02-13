@@ -15,7 +15,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfRace;
 
 public class RaceGUI extends DwarfGUI
 {
-
     private String race = null;
 
     public RaceGUI( DwarfCraft plugin, DwarfPlayer player )
