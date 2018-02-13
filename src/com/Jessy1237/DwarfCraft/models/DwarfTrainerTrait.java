@@ -58,7 +58,7 @@ public class DwarfTrainerTrait extends Trait
     @Override
     public void onSpawn()
     {
-        if ( this.mHeldItem != Material.AIR )
+        if ( this.mHeldItem != Material.AIR && this.mHeldItem != null )
             ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( mHeldItem, 1 ) );
     }
 
@@ -124,7 +124,6 @@ public class DwarfTrainerTrait extends Trait
         else
             return Material.AIR;
     }
-    
 
     private void load()
     {
