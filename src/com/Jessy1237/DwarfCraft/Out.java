@@ -364,11 +364,6 @@ public class Out
         sendMessage( sender, parseRace( Messages.alreadyRace, dCPlayer, newRace ) );
     }
 
-    public void resetRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
-    {
-        sendMessage( sender, parseRace( Messages.resetRace, dCPlayer, newRace ) );
-    }
-
     public void changedRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
     {
         sendMessage( sender, parseRace( Messages.changedRace, dCPlayer, newRace ) );
