@@ -202,6 +202,28 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         opCommands.put( "reload", new CommandReload( this ) );
     }
 
+    /**
+     * Allows companion plugins to add sub commands that require normal permissions
+     * 
+     * @param name The name of the command
+     * @param cmd An instance of the command
+     */
+    public void addNormCommand( String name, Command cmd )
+    {
+        normCommands.put( name, cmd );
+    }
+
+    /**
+     * Allows companion plugins to add sub commands that require admin permissions
+     * 
+     * @param name The name of the command
+     * @param cmd An instance of the command
+     */
+    public void addOpCommand( String name, Command cmd )
+    {
+        opCommands.put( name, cmd );
+    }
+
     @Override
     public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
     {
