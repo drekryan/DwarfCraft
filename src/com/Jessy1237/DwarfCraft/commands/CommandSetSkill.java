@@ -9,17 +9,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.*;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandInformation;
+import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
-import org.bukkit.util.StringUtil;
 
 public class CommandSetSkill extends Command implements TabCompleter
 {
@@ -150,8 +154,10 @@ public class CommandSetSkill extends Command implements TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) ) return null;
+    public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
 
         ArrayList<String> completions = new ArrayList<>();
         ArrayList<String> matches = new ArrayList<>();
@@ -160,10 +166,10 @@ public class CommandSetSkill extends Command implements TabCompleter
             completions.clear();
             matches.clear();
 
-            Object[] onlinePlayers = plugin.getServer().getOnlinePlayers().toArray();
-            for (Object o : onlinePlayers) {
-                Player player = (Player) o;
-                completions.add( player.getDisplayName() );
+            for ( Player player : plugin.getServer().getOnlinePlayers() )
+            {
+                // Strip Colours from Display Names from silly plugins that add it to the Player Name instead of using prefixes
+                completions.add( ChatColor.stripColor( player.getDisplayName() ) );
             }
 
             return StringUtil.copyPartialMatches( args[1], completions, matches );
