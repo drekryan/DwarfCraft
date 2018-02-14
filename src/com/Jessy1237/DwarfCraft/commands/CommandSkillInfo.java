@@ -104,7 +104,7 @@ public class CommandSkillInfo extends Command implements TabCompleter
             for ( DwarfSkill skill : skills )
             {
                 String skillName = skill.getDisplayName().replaceAll( " ", "_" );
-                completions.add( skillName );
+                completions.add( skillName.toLowerCase() );
             }
 
             return StringUtil.copyPartialMatches( args[1], completions, matches );
