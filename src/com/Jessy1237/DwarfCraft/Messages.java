@@ -19,7 +19,7 @@ public final class Messages
     public enum Fixed
     {
         TUTORIAL1( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive." ),
-        TUTORIAL2( "&0Your skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&0 skill. Type &4/dc skillinfo pickaxe_use&0." ),
+        TUTORIAL2( "[{\"text\":\"Your skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&0 skill.\\n\\n\"},{\"text\":\"Type /dc skillinfo pickaxe_use\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc skillinfo pickaxe_use\"}}]" ),
         TUTORIAL3( "&0The skill info shows that your low level Pickaxe Use skill will cause your pickaxe to have lower durability causing it to break easier. If you increase this skill enough, you'll be able to mine much longer before your pickaxe breaks. " +
                 "Below that, it shows what you need to train the skill. Find a nearby trainer (NPC) in the world and left click them to get more information about the skill they teach or right click to begin training"),
         TUTORIAL4( "&0When you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little," + "but becoming a master is very challenging." ),
@@ -45,7 +45,6 @@ public final class Messages
     // String messages loaded from messages.config
     public static String welcomePrefix = "&6[DC]         ";
     public static String welcome = "&fWelcome, &9%playerrace% &6%playername%";
-    public static String tutorialPrefix = "&6[&d*&6] &f"; // TODO: Remove this when the chat part of the tutorial is removed
     public static String skillSheetPrefix = "&6[&dSS&6] ";
     public static String skillSheetHeader = "&6Skill Sheet for &9%playername% &6[&9%playerrace% &6- &6Lvl &3%playerlevel%&6]";
     public static String skillSheetSkillLine = "&6[&3%skilllevel%&6] &b%skillname%";

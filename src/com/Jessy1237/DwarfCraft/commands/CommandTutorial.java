@@ -5,6 +5,8 @@ package com.Jessy1237.DwarfCraft.commands;
  */
 
 import com.Jessy1237.DwarfCraft.Messages;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -15,9 +17,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import java.util.logging.Level;
+
 public class CommandTutorial extends Command
 {
-    @SuppressWarnings("unused")
     private final DwarfCraft plugin;
 
     public CommandTutorial( final DwarfCraft plugin )
@@ -32,31 +35,54 @@ public class CommandTutorial extends Command
         if ( DwarfCraft.debugMessagesThreshold < 1 )
             System.out.println( "DC1: started command 'tutorial'" );
 
-        if ( sender instanceof Player ) {
+        // Ensure the command is being run by an in-game player, otherwise the book cannot be given to them
+        if ( sender instanceof Player )
+        {
+            // TODO: Support more than 6 pages and make Tutorial Messages customizable
+            String[] bookPages = new String[]{
+                     Messages.Fixed.TUTORIAL1.getMessage(),
+                     Messages.Fixed.TUTORIAL2.getMessage(),
+                     Messages.Fixed.TUTORIAL3.getMessage(),
+                     Messages.Fixed.TUTORIAL4.getMessage(),
+                     Messages.Fixed.TUTORIAL5.getMessage(),
+                     Messages.Fixed.TUTORIAL6.getMessage()
+            };
+
             // Create a new Written Book
             ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
 
-            // Set the Book Pages to the text from the Messages config
-            //TODO: Support more than the previously capped 6 Tutorial Pages. Make Tutorial Messages non-fixed and customizable
-            String[] bookPages = new String[]{
-                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL1.getMessage()),
-                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL2.getMessage()),
-                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL3.getMessage()),
-                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL4.getMessage()),
-                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL5.getMessage()),
-                    ChatColor.translateAlternateColorCodes( '&', Messages.Fixed.TUTORIAL6.getMessage())
-            };
-
-            // Set the Book metadata onto the Written Book
+            // Set the BookMeta onto the Written Book
             BookMeta bookMeta = (BookMeta) book.getItemMeta();
-            bookMeta.setTitle("Welcome to DwarfCraft");
-            bookMeta.setAuthor("Jessy1237");
-            bookMeta.addPage( bookPages );
+            bookMeta.setTitle( "Welcome to DwarfCraft" );
+            bookMeta.setAuthor( "Jessy1237" );
+
+            for ( String page : bookPages )
+            {
+                if ( page.startsWith( "{" ) || page.startsWith( "[" ) )
+                {
+                    try {
+                        BaseComponent[] comps = ComponentSerializer.parse( ChatColor.translateAlternateColorCodes( '&', page ) );
+                        bookMeta.spigot().addPage( comps );
+                    }
+                    catch ( Exception e )
+                    {
+                        plugin.getLogger().log( Level.SEVERE, "Failed to add page to Tutorial Book! Skipping..." );
+                        plugin.getLogger().log( Level.SEVERE, "Invalid JSON found at page: " + page );
+                    }
+                }
+                else
+                {
+                    bookMeta.addPage( ChatColor.translateAlternateColorCodes( '&', page ) );
+                }
+            }
+
             book.setItemMeta( bookMeta );
 
-            // Add Written Book to Player Inventory
-            ((Player) sender).getInventory().addItem(book);
-        } else {
+            // Add Written Book to Players Inventory
+            ( (Player) sender ).getInventory().addItem( book );
+        }
+        else
+        {
             sender.sendMessage( "Error: This command must be run from in-game" );
         }
 
