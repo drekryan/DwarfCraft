@@ -1,5 +1,7 @@
 package com.Jessy1237.DwarfCraft;
 
+import java.util.ArrayList;
+
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
@@ -7,11 +9,16 @@ package com.Jessy1237.DwarfCraft;
 public final class Messages
 {
 
-    private static DwarfCraft plugin;
-
-    public Messages( DwarfCraft plugin )
+    public Messages()
     {
-        Messages.plugin = plugin;
+        Messages.tutorial.add( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive." );
+        Messages.tutorial
+                .add( "[{\"text\":\"Your skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&0 skill.\\n\\n\"},{\"text\":\"Type /dc skillinfo pickaxe_use\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc skillinfo pickaxe_use\"}}]" );
+        Messages.tutorial
+                .add( "&0The skill info shows that your low level Pickaxe Use skill will cause your pickaxe to have lower durability causing it to break easier. If you increase this skill enough, you'll be able to mine much longer before your pickaxe breaks. Below that, it shows what you need to train the skill. Find a nearby trainer (NPC) in the world and left click them to get more information about the skill they teach or right click to begin training" );
+        Messages.tutorial.add( "&0When you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little, but becoming a master is very challenging." );
+        Messages.tutorial.add( "&0Most trainers can only take you to a limited level, you'll need to seek out the best trainers in the world to eventually reach level %maxskilllevel% in a skill. Go gather some dirt, stone, or logs and try to train up a relevant skill, using what you have learned" );
+        Messages.tutorial.add( "[{\"text\":\"&0You now know the basic commands you need to succeed and develop. To find out more,\\n\\n\"},{\"text\":\"use /dc help\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc help\"}}]" );
     }
 
     // String messages fixed for DwarfCraft, and backup messages when loading
@@ -34,40 +41,15 @@ public final class Messages
         }
     }
 
-    // TODO: Replace with loading of messages from Messages.config
-    public enum TutorialMessage
-    {
-        TUTORIAL1( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive." ),
-        TUTORIAL2( "[{\"text\":\"Your skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&0 skill.\\n\\n\"},{\"text\":\"Type /dc skillinfo pickaxe_use\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc skillinfo pickaxe_use\"}}]" ),
-        TUTORIAL3( "&0The skill info shows that your low level Pickaxe Use skill will cause your pickaxe to have lower durability causing it to break easier. If you increase this skill enough, you'll be able to mine much longer before your pickaxe breaks. " +
-                "Below that, it shows what you need to train the skill. Find a nearby trainer (NPC) in the world and left click them to get more information about the skill they teach or right click to begin training"),
-        TUTORIAL4( "&0When you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little," + "but becoming a master is very challenging." ),
-        TUTORIAL5( "&0Most trainers can only take you to a limited level, you'll need to seek out the best trainers in the world to eventually reach level " + plugin.getConfigManager().getMaxSkillLevel() + " in a skill. Go gather some dirt, stone, or logs and " +
-                "try to train up a relevant skill, using what you have learned" ),
-        TUTORIAL6( "&0You now know the basic commands you need to succeed and develop. To find out more, use &4/dc help&0" );
-
-        private String message;
-
-        TutorialMessage( String message )
-        {
-            this.message = message;
-        }
-
-        public String getMessage()
-        {
-            return message;
-        }
-    }
-
     // String messages loaded from messages.config
-    public static String welcomePrefix = "&6[DC]         ";
+    public static String welcomePrefix = "&6[DwarfCraft] ";
     public static String welcome = "&fWelcome, &9%playerrace% &6%playername%";
     public static String skillSheetPrefix = "&6[&dSS&6] ";
     public static String skillSheetHeader = "&6Skill Sheet for &9%playername% &6[&9%playerrace% &6- &6Lvl &3%playerlevel%&6]";
     public static String skillSheetSkillLine = "&6[&3%skilllevel%&6] &b%skillname%";
     public static String skillSheetUntrainedSkillHeader = "&6Untrained Skills%colon%";
     public static String skillSheetUntrainedSkillLine = "|&7%skillname%&6| ";
-    public static String skillInfoHeader = "&6Skill Info: &b%skillname%&6 [&b%skillid%&6] || Your level &3%skilllevel%/%maxskilllevel%";
+    public static String skillInfoHeader = "&6Skillinfo for &b%playername%&6 || &b%skillname%&6 [&b%skillid%&6] || Your level &3%skilllevel%/%maxskilllevel%";
     public static String skillInfoMinorHeader = "&6[&5EffectID&6]&f------&6[Effect]&f------";
     public static String skillInfoEffectIDPrefix = "&6[&5%effectid%&6] ";
     public static String skillInfoMaxSkillLevel = "&6---This skill is maximum level, no training available---";
@@ -127,4 +109,5 @@ public final class Messages
     public static String effectLevelColorEqualToNormal = "&e";
     public static String effectLevelColorLessThanNormal = "&c";
     public static String vanillaRace = "Sorry but you are the vanilla race. Change your race to use DwarfCraft";
+    public static ArrayList<String> tutorial = new ArrayList<String>();
 }

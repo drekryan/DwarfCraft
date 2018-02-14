@@ -1,23 +1,26 @@
 package com.Jessy1237.DwarfCraft.commands;
 
+import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
 import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
-import com.Jessy1237.DwarfCraft.DwarfCraft;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-
-import java.util.logging.Level;
 
 public class CommandTutorial extends Command
 {
@@ -40,27 +43,31 @@ public class CommandTutorial extends Command
         // Ensure the command is being run by an in-game player, otherwise the book cannot be given to them
         if ( sender instanceof Player )
         {
-            // TODO: Make Tutorial Messages customizable
-            Messages.TutorialMessage[] bookPages = Messages.TutorialMessage.values();
 
             // Create a new Written Book
-            ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+            ItemStack book = new ItemStack( Material.WRITTEN_BOOK );
 
             // Set the BookMeta onto the Written Book
-            BookMeta bookMeta = (BookMeta) book.getItemMeta();
+            BookMeta bookMeta = ( BookMeta ) book.getItemMeta();
             bookMeta.setTitle( "Welcome to DwarfCraft" );
             bookMeta.setAuthor( "Jessy1237" );
 
-            for ( Messages.TutorialMessage pageFixed : bookPages )
+            for ( String readPage : Messages.tutorial )
             {
-                String page = pageFixed.getMessage();
 
-                if ( isOverPageLimit( bookMeta, sender ) ) break;
+                Player player = ( Player ) sender;
+                DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
+
+                String page = plugin.getOut().parseColors( readPage.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ).replaceAll( "%playername%", player.getDisplayName() ).replaceAll( "%playerrace%", dwarfPlayer.getRace() ) );
+
+                if ( isOverPageLimit( bookMeta, sender ) )
+                    break;
 
                 if ( page.startsWith( "{" ) || page.startsWith( "[" ) )
                 {
-                    try {
-                        BaseComponent[] comps = ComponentSerializer.parse( ChatColor.translateAlternateColorCodes( '&', page ) );
+                    try
+                    {
+                        BaseComponent[] comps = ComponentSerializer.parse( page );
                         bookMeta.spigot().addPage( comps );
                     }
                     catch ( Exception e )
@@ -72,39 +79,37 @@ public class CommandTutorial extends Command
                 else
                 {
                     // Handle text overflowing the page by inserting additional pages
-                    if (page.length() > pageCharLimit)
+                    String leftOver = page;
+                    while ( leftOver != null )
                     {
-                        int numSplits = page.length() / pageCharLimit;
-                        int remainder = page.length() % pageCharLimit;
-
-                        for ( int i = 0; i < numSplits; i++ )
+                        String section = "";
+                        if ( leftOver.length() > pageCharLimit )
                         {
-                            String split = page.substring( i * pageCharLimit, ( i * pageCharLimit ) + pageCharLimit );
-                            bookMeta.addPage( ChatColor.translateAlternateColorCodes('&', split.trim() ) );
+                            section = leftOver.substring( 0, pageCharLimit );
 
-                            if ( isOverPageLimit( bookMeta, sender ) ) break;
+                            int index = section.lastIndexOf( ' ' );
+                            section = section.substring( 0, index++ );
+                            leftOver = leftOver.substring( index, leftOver.length() );
+                        }
+                        else
+                        {
+                            section = leftOver;
+                            leftOver = null;
                         }
 
-                        if ( remainder > 0 )
-                        {
-                            int finalStart = page.length() - remainder;
-
-                            String split = page.substring( finalStart, page.length() );
-                            bookMeta.addPage( ChatColor.translateAlternateColorCodes('&', split.trim() ) );
-                        }
-
-                        if ( isOverPageLimit( bookMeta, sender ) ) break;
+                        bookMeta.addPage( section );
                     }
-                    else {
-                        bookMeta.addPage( ChatColor.translateAlternateColorCodes('&', page ) );
-                    }
+
+                    if ( isOverPageLimit( bookMeta, sender ) )
+                        break;
+
                 }
             }
 
             book.setItemMeta( bookMeta );
 
             // Add Written Book to Players Inventory
-            ( (Player) sender ).getInventory().addItem( book );
+            ( ( Player ) sender ).getInventory().addItem( book );
         }
         else
         {
@@ -116,7 +121,8 @@ public class CommandTutorial extends Command
 
     private boolean isOverPageLimit( BookMeta bookMeta, CommandSender sender )
     {
-        if (bookMeta.getPageCount() >= 50) {
+        if ( bookMeta.getPageCount() >= 50 )
+        {
             plugin.getLogger().log( Level.SEVERE, "The tutorial book cannot support more than 50 pages!" );
             sender.sendMessage( ChatColor.DARK_RED + "The tutorial book reached the maximum page limit of 50. Skipping all additional pages... " );
 

@@ -523,7 +523,7 @@ public final class ConfigManager
 
         // Loads the messages class after the config is read but before all the
         // messages are read.
-        new Messages( plugin );
+        new Messages();
         try
         {
             getDefaultValues();
@@ -701,6 +701,39 @@ public final class ConfigManager
                         Messages.effectLevelColorLessThanNormal = message;
                     if ( name.equalsIgnoreCase( "Vanilla Race Message" ) )
                         Messages.vanillaRace = message;
+                    if ( name.equalsIgnoreCase( "Tutorial Messages" ) )
+                    {
+                        ArrayList<String> tutorial = new ArrayList<String>();
+                        if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
+                        {
+                            boolean foundEndTag = false;
+                            line = br.readLine();
+                            while ( !foundEndTag && line != null )
+                            {
+
+                                if ( !line.equals( "" ) )
+                                    tutorial.add( line );
+
+                                line = br.readLine().trim();
+
+                                if ( line.equalsIgnoreCase( "</TUTORIAL>" ) )
+                                    foundEndTag = true;
+                            }
+
+                            if ( !foundEndTag )
+                            {
+                                tutorial.clear();
+                                System.out.println( "[DwarfCraft] Unable to find the ending Tutorial XML tag. Using default tutorial." );
+                            }
+                        }
+                        else
+                        {
+                            System.out.println( "[DwarfCraft] Unable to find the opening Tutorial XML tag. Using default tutorial." );
+                        }
+
+                        if ( !tutorial.isEmpty() )
+                            Messages.tutorial = tutorial;
+                    }
                 }
                 else
                 {
