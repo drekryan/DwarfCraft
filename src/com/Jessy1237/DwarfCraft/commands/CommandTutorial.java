@@ -38,15 +38,8 @@ public class CommandTutorial extends Command
         // Ensure the command is being run by an in-game player, otherwise the book cannot be given to them
         if ( sender instanceof Player )
         {
-            // TODO: Support more than 6 pages and make Tutorial Messages customizable
-            String[] bookPages = new String[]{
-                     Messages.Fixed.TUTORIAL1.getMessage(),
-                     Messages.Fixed.TUTORIAL2.getMessage(),
-                     Messages.Fixed.TUTORIAL3.getMessage(),
-                     Messages.Fixed.TUTORIAL4.getMessage(),
-                     Messages.Fixed.TUTORIAL5.getMessage(),
-                     Messages.Fixed.TUTORIAL6.getMessage()
-            };
+            // TODO: Make Tutorial Messages customizable
+            Messages.TutorialMessage[] bookPages = Messages.TutorialMessage.values();
 
             // Create a new Written Book
             ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
@@ -56,8 +49,10 @@ public class CommandTutorial extends Command
             bookMeta.setTitle( "Welcome to DwarfCraft" );
             bookMeta.setAuthor( "Jessy1237" );
 
-            for ( String page : bookPages )
+            for ( Messages.TutorialMessage pageFixed : bookPages )
             {
+                String page = pageFixed.getMessage();
+
                 if ( page.startsWith( "{" ) || page.startsWith( "[" ) )
                 {
                     try {

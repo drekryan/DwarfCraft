@@ -16,7 +16,26 @@ public final class Messages
 
     // String messages fixed for DwarfCraft, and backup messages when loading
     // fails.
-    public enum Fixed
+    protected enum Fixed
+    {
+        WELCOME( "Welcome to a DwarfCraft world! Things are bit different here as this world focuses heavily on skilling. To learn more about what you can do here, type '&4/dc tutorial&2' to get started." ),
+        GENERALINFO( "&dWelcome to DwarfCraft. You are a player with a set of skills that let you do certain tasks better. For more information see &4/dc tutorial&d. Original Authors: smartaleq, LexManos and RCarretta Authors: Jessy1237" );
+
+        private String message;
+
+        Fixed( String message )
+        {
+            this.message = message;
+        }
+
+        public String getMessage()
+        {
+            return message;
+        }
+    }
+
+    // TODO: Replace with loading of messages from Messages.config
+    public enum TutorialMessage
     {
         TUTORIAL1( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive." ),
         TUTORIAL2( "[{\"text\":\"Your skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&0 skill.\\n\\n\"},{\"text\":\"Type /dc skillinfo pickaxe_use\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc skillinfo pickaxe_use\"}}]" ),
@@ -25,13 +44,11 @@ public final class Messages
         TUTORIAL4( "&0When you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little," + "but becoming a master is very challenging." ),
         TUTORIAL5( "&0Most trainers can only take you to a limited level, you'll need to seek out the best trainers in the world to eventually reach level " + plugin.getConfigManager().getMaxSkillLevel() + " in a skill. Go gather some dirt, stone, or logs and " +
                 "try to train up a relevant skill, using what you have learned" ),
-        TUTORIAL6( "&0You now know the basic commands you need to succeed and develop. To find out more, use &4/dc help&0" ),
-        WELCOME( "Welcome to a DwarfCraft world! Things are bit different here as this world focuses heavily on skilling. To learn more about what you can do here, type '&4/dc tutorial&2' to get started." ),
-        GENERALINFO( "&dWelcome to DwarfCraft. You are a player with a set of skills that let you do certain tasks better. For more information see &4/dc tutorial&d. Original Authors: smartaleq, LexManos and RCarretta Authors: Jessy1237" );
+        TUTORIAL6( "&0You now know the basic commands you need to succeed and develop. To find out more, use &4/dc help&0" );
 
         private String message;
 
-        Fixed( String message )
+        TutorialMessage( String message )
         {
             this.message = message;
         }
