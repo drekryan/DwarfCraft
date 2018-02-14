@@ -155,6 +155,6 @@ public class TrainerGUI extends DwarfGUI
         init();
         dwarfPlayer.getPlayer().updateInventory();
         openGUI();
-        plugin.getDwarfInventoryListener().dwarfGUIs.put( dwarfPlayer.getPlayer(), this );
+        plugin.getDwarfInventoryListener().addDwarfGUI( dwarfPlayer.getPlayer(), this );
     }
 }

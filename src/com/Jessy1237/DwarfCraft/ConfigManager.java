@@ -302,12 +302,6 @@ public final class ConfigManager
 
                 line = br.readLine();
             }
-
-            if ( vanilla )
-            {
-                raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla)." ) );
-                System.out.println( "[DwarfCraft] Loaded vanilla race: Vanilla" );
-            }
         }
         catch ( FileNotFoundException fN )
         {
@@ -404,6 +398,13 @@ public final class ConfigManager
     protected boolean readRacesFile()
     {
         System.out.println( "[DwarfCraft] Reading races file: " + configDirectory + "races.config" );
+
+        if ( vanilla )
+        {
+            raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla).", Material.GRASS ) );
+            System.out.println( "[DwarfCraft] Loaded vanilla race: Vanilla" );
+        }
+
         try
         {
             FileReader fr = new FileReader( configDirectory + "races.config" );
@@ -413,6 +414,7 @@ public final class ConfigManager
             boolean desc = false;
             boolean skills = false;
             boolean prefix = false;
+            boolean hasIcon = false;
             DwarfRace race = null;
             while ( line != null )
             {
@@ -464,13 +466,33 @@ public final class ConfigManager
                     prefix = true;
                     line = br.readLine();
                 }
-                if ( name && desc && skills && prefix )
+                if ( theline[0].equalsIgnoreCase( "Material Icon" ) )
                 {
-                    raceList.add( race );
-                    name = false;
-                    desc = false;
-                    skills = false;
-                    System.out.println( "[DwarfCraft] Loaded race: " + race.getName() );
+                    Material icon = Material.matchMaterial( theline[1].trim() );
+                    if ( icon != null )
+                    {
+                        if ( icon != Material.AIR )
+                        {
+                            race.setIcon( icon );
+                            hasIcon = true;
+                            line = br.readLine();
+                        }
+                    }
+                }
+                if ( name && desc && skills && prefix && hasIcon )
+                {
+                    if ( raceList.size() < 9 )
+                    {
+                        raceList.add( race );
+                        name = false;
+                        desc = false;
+                        skills = false;
+                        System.out.println( "[DwarfCraft] Loaded race: " + race.getName() );
+                    }
+                    else
+                    {
+                        System.out.println( "[DwarfCraft] Did not load race: " + race.getName() + " as already at cap of 9 races" );
+                    }
                     continue;
                 }
             }
@@ -576,8 +598,6 @@ public final class ConfigManager
                         Messages.adminRaceCheck = message;
                     if ( name.equalsIgnoreCase( "Already race" ) )
                         Messages.alreadyRace = message;
-                    if ( name.equalsIgnoreCase( "Reset race" ) )
-                        Messages.resetRace = message;
                     if ( name.equalsIgnoreCase( "Changed race" ) )
                         Messages.changedRace = message;
                     if ( name.equalsIgnoreCase( "Confirm race" ) )

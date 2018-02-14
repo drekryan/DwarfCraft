@@ -18,10 +18,10 @@ public abstract class DwarfGUI
     protected DwarfPlayer dwarfPlayer;
     protected Inventory inventory;
 
-    public DwarfGUI( DwarfCraft plugin, DwarfPlayer player )
+    public DwarfGUI( DwarfCraft plugin, DwarfPlayer dwarfPlayer )
     {
         this.plugin = plugin;
-        this.dwarfPlayer = player;
+        this.dwarfPlayer = dwarfPlayer;
     }
 
     public abstract void init();
@@ -84,5 +84,40 @@ public abstract class DwarfGUI
         item.setItemMeta( meta );
 
         inventory.setItem( guiIndex, item );
+    }
+
+    /**
+     * Parses the input string into a readable lore for items
+     * 
+     * @param str The input string to convert to lore
+     * @param prefix The prefix formatting to add to the lore. i.e ChatColor
+     * @return The lore generated from the string
+     */
+    protected ArrayList<String> parseStringToLore( String str, String prefix )
+    {
+        final int loreMax = 30;
+        ArrayList<String> lore = new ArrayList<String>();
+        String leftOver = str;
+        while ( leftOver != null )
+        {
+            String section = "";
+            if ( leftOver.length() > loreMax )
+            {
+                section = leftOver.substring( 0, loreMax );
+
+                int index = section.lastIndexOf( ' ' );
+                section = section.substring( 0, index++ );
+                leftOver = leftOver.substring( index, leftOver.length() );
+            }
+            else
+            {
+                section = leftOver;
+                leftOver = null;
+            }
+
+            lore.add( prefix + section );
+        }
+
+        return lore;
     }
 }

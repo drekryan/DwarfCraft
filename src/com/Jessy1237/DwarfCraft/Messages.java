@@ -61,9 +61,8 @@ public final class Messages
     public static String raceCheck = "You are a %playerrace%";
     public static String adminRaceCheck = "%playername% is a %playerrace%";
     public static String alreadyRace = "You are already a %playerrace%";
-    public static String resetRace = "You are once again a fresh new %racename%";
     public static String changedRace = "You are now a %racename%";
-    public static String confirmRace = "You need to confirm this command with confirm at the end. (Note: This will reset all your skills)";
+    public static String confirmRace = "You need to confirm this command with confirm at the end. (Note: This will reset all their skills)";
     public static String raceDoesNotExist = "The race %racename% doesn't exist";
     public static String chooseARace = "&cPlease choose a race!";
     public static String trainSkillPrefix = "&6[Train &b%skillid%&6] ";
