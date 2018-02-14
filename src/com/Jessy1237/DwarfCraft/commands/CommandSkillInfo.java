@@ -110,6 +110,6 @@ public class CommandSkillInfo extends Command implements TabCompleter
             return StringUtil.copyPartialMatches( args[1], completions, matches );
         }
 
-        return null;
+        return Collections.emptyList();
     }
 }
