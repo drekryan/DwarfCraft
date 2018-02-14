@@ -114,7 +114,6 @@ public class DwarfTrainerTrait extends Trait
     {
         this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
 
-        System.out.println( this.mHeldItem );
         if ( this.mHeldItem == null )
         {
             this.mHeldItem = Material.AIR;
