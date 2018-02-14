@@ -277,25 +277,44 @@ public class DwarfPlayer
     {
         final String oldRace = this.race;
         this.race = race;
-        skills = plugin.getConfigManager().getAllSkills();
         DwarfSkill[] dCSkills = new DwarfSkill[skills.size()];
 
         int I = 0;
         // Resets the players skills
         for ( DwarfSkill skill : skills.values() )
         {
-            if ( race.equalsIgnoreCase( "Vanilla" ) )
+            if ( !plugin.getConfigManager().softcore )
             {
-                skill.setLevel( 5 );
+                if ( race.equalsIgnoreCase( "Vanilla" ) )
+                {
+                    skill.setLevel( 5 );
+                }
+                else
+                {
+                    skill.setLevel( 0 );
+                }
+
+                skill.setDeposit1( 0 );
+                skill.setDeposit2( 0 );
+                skill.setDeposit3( 0 );
             }
             else
             {
-                skill.setLevel( 0 );
+                if ( race.equalsIgnoreCase( "Vanilla" ) )
+                {
+                    skill.setLevel( 5 );
+                }
+                else
+                {
+                    if ( !plugin.getConfigManager().getRace( race ).getSkills().contains( Integer.valueOf( skill.getId() ) ) && skill.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
+                    {
+                        skill.setLevel( plugin.getConfigManager().getRaceLevelLimit() );
+                        skill.setDeposit1( 0 );
+                        skill.setDeposit2( 0 );
+                        skill.setDeposit3( 0 );
+                    }
+                }
             }
-
-            skill.setDeposit1( 0 );
-            skill.setDeposit2( 0 );
-            skill.setDeposit3( 0 );
             dCSkills[I] = skill;
             I++;
         }

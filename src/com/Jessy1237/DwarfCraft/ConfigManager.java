@@ -63,6 +63,7 @@ public final class ConfigManager
     public boolean prefix = false;
     public boolean announce = false;
     public boolean byID = true;
+    public boolean softcore = false;
 
     @SuppressWarnings( "unchecked" )
     protected ConfigManager( DwarfCraft plugin, String directory, String paramsFileName )
@@ -299,6 +300,8 @@ public final class ConfigManager
                     announcementMessage = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Sort DwarfTrainers by Unique ID" ) )
                     byID = Boolean.parseBoolean( theline[1].trim() );
+                if ( theline[0].equalsIgnoreCase( "Softcore race skill reset" ) )
+                    softcore = Boolean.parseBoolean( theline[1].trim() );
 
                 line = br.readLine();
             }
