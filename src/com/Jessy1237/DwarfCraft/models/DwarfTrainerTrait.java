@@ -10,6 +10,7 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
@@ -36,6 +37,10 @@ public class DwarfTrainerTrait extends Trait
         if ( mSkillID == 0 )
             this.mMinLevel = key.getInt( "mMinLevel" );
         loadHeldItem();
+
+        // Adding the trainer to DwarfCraft DB
+        DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
+        plugin.getDataManager().trainerList.put( npc.getId(), trainer );
     }
 
     @Override
