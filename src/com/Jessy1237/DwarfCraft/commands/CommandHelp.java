@@ -16,7 +16,7 @@ import java.util.*;
 public class CommandHelp extends Command implements TabCompleter
 {
     // A list of all supported DwarfCraft commands
-    private static final String[] COMMANDS = new String[] { "debug", "help", "tutorial", "info", "skillsheet", "skillinfo", "effectinfo", "race", "races", "setskill", "create", "list" };
+    private static final String[] COMMANDS = new String[] { "debug", "help", "tutorial", "info", "skillsheet", "skillinfo", "effectinfo", "race", "setskill", "create", "list" };
 
     @SuppressWarnings( "unused" )
     private final DwarfCraft plugin;

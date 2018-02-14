@@ -563,8 +563,6 @@ public final class ConfigManager
                         Messages.welcomePrefix = message;
                     if ( name.equalsIgnoreCase( "Welcome" ) )
                         Messages.welcome = message;
-                    if ( name.equalsIgnoreCase( "Tutorial prefix" ) )
-                        Messages.tutorialPrefix = message;
                     if ( name.equalsIgnoreCase( "SkillSheet prefix" ) )
                         Messages.skillSheetPrefix = message;
                     if ( name.equalsIgnoreCase( "SkillSheet header" ) )

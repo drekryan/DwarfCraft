@@ -306,31 +306,6 @@ public class Out
         return lastColor;
     }
 
-    public void tutorial( CommandSender sender, int page )
-    {
-        switch ( page )
-        {
-            case 1:
-                sendMessage( sender, Messages.Fixed.TUTORIAL1.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 2:
-                sendMessage( sender, Messages.Fixed.TUTORIAL2.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 3:
-                sendMessage( sender, Messages.Fixed.TUTORIAL3.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 4:
-                sendMessage( sender, Messages.Fixed.TUTORIAL4.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 5:
-                sendMessage( sender, Messages.Fixed.TUTORIAL5.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 6:
-                sendMessage( sender, Messages.Fixed.TUTORIAL6.getMessage(), Messages.tutorialPrefix );
-                break;
-        }
-    }
-
     /**
      * Sends a welcome message based on race of player joining. Broadcasts to the whole server
      *

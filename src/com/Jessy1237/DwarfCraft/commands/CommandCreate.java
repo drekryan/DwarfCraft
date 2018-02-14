@@ -133,6 +133,7 @@ public class CommandCreate extends Command implements TabCompleter
 
                     npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), uid, name );
                 }
+
                 npc.addTrait( new DwarfTrainerTrait( plugin, uid, skill.getId(), maxSkill, minSkill ) );
                 npc.setProtected( true );
                 npc.spawn( p.getLocation() );
