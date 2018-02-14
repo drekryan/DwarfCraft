@@ -181,7 +181,7 @@ public class Out
         sendMessage( sender, message1, prefix );
 
         boolean odd = true;
-        String untrainedSkills = Messages.skillSheetUntrainedSkillHeader;
+        String untrainedSkills = Messages.skillSheetUntrainedSkillHeader.replaceAll( "%colon%", ":" );
         for ( DwarfSkill s : dCPlayer.getSkills().values() )
         {
             if ( s.getLevel() == 0 )
