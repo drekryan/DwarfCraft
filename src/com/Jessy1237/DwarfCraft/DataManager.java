@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -34,6 +30,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DataManager
 {
 

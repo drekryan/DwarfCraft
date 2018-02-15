@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,6 +26,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public final class ConfigManager
 {
 

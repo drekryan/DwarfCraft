@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.models;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -64,6 +60,9 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfEffect
 {
     private DwarfCraft plugin;

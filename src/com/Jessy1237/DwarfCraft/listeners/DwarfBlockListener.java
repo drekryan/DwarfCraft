@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.listeners;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +35,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
 import de.diddiz.LogBlock.Actor;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfBlockListener implements Listener
 {
     private final DwarfCraft plugin;

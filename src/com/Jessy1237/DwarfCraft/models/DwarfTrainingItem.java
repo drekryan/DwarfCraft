@@ -1,11 +1,10 @@
 package com.Jessy1237.DwarfCraft.models;
 
+import org.bukkit.inventory.ItemStack;
+
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
-
-import org.bukkit.inventory.ItemStack;
-
 public class DwarfTrainingItem
 {
 

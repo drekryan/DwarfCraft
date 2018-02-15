@@ -1,14 +1,13 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandInfo extends Command
 {
     private final DwarfCraft plugin;

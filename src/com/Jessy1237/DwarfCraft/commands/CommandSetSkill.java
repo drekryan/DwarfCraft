@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +21,9 @@ import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandSetSkill extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;

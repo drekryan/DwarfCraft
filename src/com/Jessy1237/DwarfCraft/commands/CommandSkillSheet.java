@@ -1,20 +1,22 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandInformation;
+import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandSkillSheet extends Command
 {
     private final DwarfCraft plugin;

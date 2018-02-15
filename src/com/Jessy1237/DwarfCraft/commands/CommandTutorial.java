@@ -11,17 +11,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandTutorial extends Command
 {
     private final DwarfCraft plugin;

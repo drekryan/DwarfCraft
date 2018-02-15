@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 
 import org.bukkit.Material;
@@ -20,6 +16,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.NPC;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class Util
 {
 

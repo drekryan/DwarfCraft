@@ -1,8 +1,5 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +23,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandCreate extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
