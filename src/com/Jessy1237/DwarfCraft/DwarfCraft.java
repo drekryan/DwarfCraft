@@ -71,6 +71,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private Out out;
     private Consumer consumer = null;
     private Util util;
+    private PlaceHolderParser placeHolderParser;
     private Permission perms = null;
     private Chat chat = null;
     private TraitInfo trainerTrait;
@@ -107,6 +108,11 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     public Util getUtil()
     {
         return util;
+    }
+
+    public PlaceHolderParser getPlaceHolderParser()
+    {
+        return placeHolderParser;
     }
 
     public DwarfEntityListener getDwarfEntityListener()
@@ -398,6 +404,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         dm.dbInitialize();
 
         out = new Out( this );
+
+        placeHolderParser = new PlaceHolderParser( this );
 
         // Creates the citizen trait for the DwarfTrainers
         if ( !reload )
