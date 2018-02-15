@@ -707,17 +707,84 @@ public final class ConfigManager
                         if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
                         {
                             boolean foundEndTag = false;
-                            line = br.readLine();
-                            while ( !foundEndTag && line != null )
+                            boolean possibleTag = false;
+                            boolean backSlash = false;
+                            char c = ( char ) br.read();
+                            StringBuffer sb = new StringBuffer();
+                            StringBuffer endTag = new StringBuffer();
+                            while ( !foundEndTag && c != -1 )
                             {
+                                if ( c == '<' )
+                                    possibleTag = true;
 
-                                if ( !line.equals( "" ) )
-                                    tutorial.add( line );
+                                if ( backSlash )
+                                {
+                                    switch ( c )
+                                    {
+                                        case 'n':
+                                            sb.append( '\n' );
+                                            backSlash = false;
+                                            break;
+                                        case 'r':
+                                            sb.append( '\r' );
+                                            backSlash = false;
+                                            break;
+                                        case '"':
+                                            sb.append( '\"' );
+                                            backSlash = false;
+                                            break;
+                                        default:
+                                            sb.append( "\\" + c );
+                                            backSlash = false;
+                                            break;
+                                    }
+                                    c = ( char ) br.read();
+                                }
 
-                                line = br.readLine().trim();
+                                if ( c == '\\' )
+                                    backSlash = true;
 
-                                if ( line.equalsIgnoreCase( "</TUTORIAL>" ) )
+                                if ( possibleTag )
+                                {
+                                    endTag.append( c );
+                                }
+                                else if ( !backSlash )
+                                {
+                                    sb.append( c );
+                                }
+
+                                if ( !"</TUTORIAL>".contains( endTag.toString() ) && possibleTag )
+                                {
+                                    possibleTag = false;
+                                    sb.append( endTag );
+                                    endTag = new StringBuffer();
+                                }
+                                else if ( possibleTag && endTag.toString().equalsIgnoreCase( "</TUTORIAL>" ) )
+                                {
                                     foundEndTag = true;
+                                }
+                                c = ( char ) br.read();
+                            }
+
+                            String pages = sb.toString();
+                            while ( pages != null )
+                            {
+                                int startIndex = pages.indexOf( "<PAGE>", 0 );
+                                int finalIndex = pages.indexOf( "</PAGE>", 0 );
+
+                                if ( startIndex == -1 || finalIndex == -1 )
+                                    break;
+
+                                tutorial.add( new String( pages.substring( startIndex + 6, finalIndex ) ) );
+
+                                if ( finalIndex + 1 >= pages.length() )
+                                {
+                                    pages = null;
+                                }
+                                else
+                                {
+                                    pages = pages.substring( finalIndex + 8 );
+                                }
                             }
 
                             if ( !foundEndTag )
