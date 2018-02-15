@@ -4,30 +4,22 @@ package com.Jessy1237.DwarfCraft;
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.jbls.LexManos.CSV.CSVReader;
-import org.jbls.LexManos.CSV.CSVRecord;
-
 import com.Jessy1237.DwarfCraft.events.DwarfLoadRacesEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLoadSkillsEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.jbls.LexManos.CSV.CSVReader;
+import org.jbls.LexManos.CSV.CSVRecord;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public final class ConfigManager
 {
@@ -707,17 +699,84 @@ public final class ConfigManager
                         if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
                         {
                             boolean foundEndTag = false;
-                            line = br.readLine();
-                            while ( !foundEndTag && line != null )
+                            boolean possibleTag = false;
+                            boolean backSlash = false;
+                            char c = ( char ) br.read();
+                            StringBuffer sb = new StringBuffer();
+                            StringBuffer endTag = new StringBuffer();
+                            while ( !foundEndTag && c != -1 )
                             {
+                                if ( c == '<' )
+                                    possibleTag = true;
 
-                                if ( !line.equals( "" ) )
-                                    tutorial.add( line );
+                                if ( backSlash )
+                                {
+                                    switch ( c )
+                                    {
+                                        case 'n':
+                                            sb.append( '\n' );
+                                            backSlash = false;
+                                            break;
+                                        case 'r':
+                                            sb.append( '\r' );
+                                            backSlash = false;
+                                            break;
+                                        case '"':
+                                            sb.append( '\"' );
+                                            backSlash = false;
+                                            break;
+                                        default:
+                                            sb.append( "\\" + c );
+                                            backSlash = false;
+                                            break;
+                                    }
+                                    c = ( char ) br.read();
+                                }
 
-                                line = br.readLine().trim();
+                                if ( c == '\\' )
+                                    backSlash = true;
 
-                                if ( line.equalsIgnoreCase( "</TUTORIAL>" ) )
+                                if ( possibleTag )
+                                {
+                                    endTag.append( c );
+                                }
+                                else if ( !backSlash )
+                                {
+                                    sb.append( c );
+                                }
+
+                                if ( !"</TUTORIAL>".contains( endTag.toString() ) && possibleTag )
+                                {
+                                    possibleTag = false;
+                                    sb.append( endTag );
+                                    endTag = new StringBuffer();
+                                }
+                                else if ( possibleTag && endTag.toString().equalsIgnoreCase( "</TUTORIAL>" ) )
+                                {
                                     foundEndTag = true;
+                                }
+                                c = ( char ) br.read();
+                            }
+
+                            String pages = sb.toString();
+                            while ( pages != null )
+                            {
+                                int startIndex = pages.indexOf( "<PAGE>", 0 );
+                                int finalIndex = pages.indexOf( "</PAGE>", 0 );
+
+                                if ( startIndex == -1 || finalIndex == -1 )
+                                    break;
+
+                                tutorial.add( new String( pages.substring( startIndex + 6, finalIndex ) ) );
+
+                                if ( finalIndex + 1 >= pages.length() )
+                                {
+                                    pages = null;
+                                }
+                                else
+                                {
+                                    pages = pages.substring( finalIndex + 8 );
+                                }
                             }
 
                             if ( !foundEndTag )

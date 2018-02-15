@@ -11,9 +11,10 @@ public final class Messages
 
     public Messages()
     {
+        Messages.tutorial.clear();
         Messages.tutorial.add( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start things may be more difficult than you're used to, but as you level your skills up you will be much more productive." );
         Messages.tutorial.add( "&5The Races of DwarfCraft\n\n&0There are four basic races in DwarfCraft. It is up to you to choose a race that best fits your play style. You will not be able to level any skills in DwarfCraft until you pick a race.\n" );
-        Messages.tutorial.add("{\"text\":\"Read about the four races on the pages that follow, then type '/dc race' or click here to begin your journey.\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc race\"}}" );
+        Messages.tutorial.add( "{\"text\":\"Read about the four races on the pages that follow, then type '/dc race' or click here to begin your journey.\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc race\"}}" );
         Messages.tutorial.add( "&3The Dwarf\n\n&0The Dwarf race specializes in mining. The skills in this race will allow you to mine more efficiently, gather additional ores, and are great excavators. The Dwarf plays an important role in providing resources for tools and equipment needed by the other races. Their race relies on you providing resources. If you enjoy mining, this race would be great for you." );
         Messages.tutorial.add( "&9The Gnome\n\n&0The Gnome race specializes in crafting and building. They will provide structures for you, craft your tools and equipment, and are all around masters of the crafting table. If you enjoy casually and creatively building or are a  master in redstone contraptions, this race would be great for you." );
         Messages.tutorial.add( "&4The Elf\n\n&0The Elf race specializes in all things combat. They deal extra damage to animals and mobs and get extra drops. They are great at gaining experience levels and protecting your fellow members. They are also great archers and have great exploration skills whether it be on foot or boat. If you enoy combat and exploring, the elven race is all about you." );
@@ -113,5 +114,5 @@ public final class Messages
     public static String effectLevelColorEqualToNormal = "&e";
     public static String effectLevelColorLessThanNormal = "&c";
     public static String vanillaRace = "Sorry but you are the vanilla race. Change your race to use DwarfCraft";
-    public static ArrayList<String> tutorial = new ArrayList<String>();
+    public static ArrayList<String> tutorial = new ArrayList<>();
 }
