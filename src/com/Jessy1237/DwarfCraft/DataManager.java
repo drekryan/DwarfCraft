@@ -25,7 +25,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
-import com.Jessy1237.DwarfCraft.models.DwarfGreeterMessage;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
@@ -41,7 +40,6 @@ public class DataManager
     private List<DwarfPlayer> dwarves = new ArrayList<DwarfPlayer>();
     public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<Integer, DwarfVehicle>();
     public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<Integer, DwarfTrainer>();
-    private HashMap<String, DwarfGreeterMessage> greeterMessageList = new HashMap<String, DwarfGreeterMessage>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
@@ -62,7 +60,7 @@ public class DataManager
      * 
      * @param oldVersion
      */
-    private void buildDB( int oldVersion )
+    private void buildDB()
     {
         try
         {
@@ -136,7 +134,7 @@ public class DataManager
             ResultSet rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'players';" );
             if ( !rs.next() )
             {
-                buildDB( 0 );
+                buildDB();
             }
 
             // check for update to skill deposits
@@ -417,11 +415,6 @@ public class DataManager
         }
     }
 
-    public DwarfGreeterMessage getGreeterMessage( String messageId )
-    {
-        return greeterMessageList.get( messageId );
-    }
-
     public DwarfTrainer getTrainer( NPC npc )
     {
         for ( Iterator<Map.Entry<Integer, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext(); )
@@ -462,18 +455,6 @@ public class DataManager
             }
         }
         return null;
-    }
-
-    protected void insertGreeterMessage( String messageId, DwarfGreeterMessage greeterMessage )
-    {
-        try
-        {
-            greeterMessageList.put( messageId, greeterMessage );
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
     }
 
     public DwarfTrainer getTrainerByName( String name )
