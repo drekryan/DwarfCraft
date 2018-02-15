@@ -4,7 +4,7 @@ author: Jessy1237
 main: com.Jessy1237.DwarfCraft.DwarfCraft
 version: ${project.version}
 depend: [Vault, Citizens]
-softdepend: [LogBlock]
+softdepend: [LogBlock, PlaceholderAPI]
 commands: 
    dwarfcraft:
       description: The base command for DwarfCraft

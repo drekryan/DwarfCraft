@@ -1,9 +1,16 @@
 package com.Jessy1237.DwarfCraft;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.Jessy1237.DwarfCraft.commands.*;
+import com.Jessy1237.DwarfCraft.listeners.*;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
+import de.diddiz.LogBlock.Consumer;
+import de.diddiz.LogBlock.LogBlock;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.trait.TraitInfo;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,38 +20,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.Jessy1237.DwarfCraft.commands.CommandCreate;
-import com.Jessy1237.DwarfCraft.commands.CommandDebug;
-import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandHelp;
-import com.Jessy1237.DwarfCraft.commands.CommandInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandList;
-import com.Jessy1237.DwarfCraft.commands.CommandRace;
-import com.Jessy1237.DwarfCraft.commands.CommandReload;
-import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
-import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandSkillSheet;
-import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
-import com.Jessy1237.DwarfCraft.listeners.DwarfBlockListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfEntityListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfInventoryListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfPlayerListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfVehicleListener;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
-
-import de.diddiz.LogBlock.Consumer;
-import de.diddiz.LogBlock.LogBlock;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
-
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.trait.TraitInfo;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.permission.Permission;
 
 /**
  * DwarfCraft is a RPG-like plugin for minecraft (via Spigot) that allows players to improve their characters. Players may pay materials to a trainer to improve a skill level, which will provide
@@ -70,6 +52,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private DataManager dm;
     private Out out;
     private Consumer consumer = null;
+    private PlaceholderAPIPlugin placeholderAPI;
     private Util util;
     private Permission perms = null;
     private Chat chat = null;
@@ -427,6 +410,17 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         {
             System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
         }
+
+        if (pm.getPlugin("PlaceholderAPI") != null) {
+            placeholderAPI = ((PlaceholderAPIPlugin) pm.getPlugin("PlaceholderAPI"));
+
+            // TODO: Register PlaceholderAPI Hook here
+
+            System.out.println("[DwarfCraft] Hooked into PlaceholderAPI!");
+        } else {
+            System.out.println("[DwarfCraft] Couldn't find PlaceholderAPI!");
+        }
+
 
         initCommands();
 
