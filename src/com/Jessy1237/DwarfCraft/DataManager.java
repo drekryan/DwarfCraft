@@ -4,9 +4,20 @@ package com.Jessy1237.DwarfCraft;
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-import com.Jessy1237.DwarfCraft.models.*;
-import net.citizensnpcs.api.npc.AbstractNPC;
-import net.citizensnpcs.api.npc.NPC;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -14,15 +25,21 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
-import java.sql.*;
-import java.util.*;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
+import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
+
+import net.citizensnpcs.api.npc.AbstractNPC;
+import net.citizensnpcs.api.npc.NPC;
 
 public class DataManager
 {
 
-    private List<DwarfPlayer> dwarves = new ArrayList<>();
-    public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<>();
-    public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<>();
+    private List<DwarfPlayer> dwarves = new ArrayList<DwarfPlayer>();
+    public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<Integer, DwarfVehicle>();
+    public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<Integer, DwarfTrainer>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
@@ -40,6 +57,8 @@ public class DataManager
 
     /**
      * this is untested and quite a lot of new code, it will probably fail several times. no way to bugfix currently. Just praying it works
+     * 
+     * @param oldVersion
      */
     private void buildDB()
     {
@@ -64,7 +83,7 @@ public class DataManager
         }
         catch ( SQLException e )
         {
-            System.out.println( "[SEVERE]DB not built successfully" );
+            plugin.getLogger().log( Level.SEVERE, "DB not built successfully" );
             e.printStackTrace();
             plugin.getServer().getPluginManager().disablePlugin( plugin );
         }
@@ -137,7 +156,7 @@ public class DataManager
             }
             catch ( Exception e )
             {
-                System.out.println( "[DwarfCraft] Converting Player DB (may lag a little wait for completion message)." );
+                plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
                 HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
                 HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
@@ -173,7 +192,7 @@ public class DataManager
                         prep.close();
                     }
                 }
-                System.out.println( "[DwarfCraft] Finished Converting the Players DB." );
+                plugin.getLogger().log( Level.INFO, "Finished Converting the Players DB." );
             }
 
             // Adds raceMaster arg to the player table
@@ -183,10 +202,10 @@ public class DataManager
             }
             catch ( Exception e )
             {
-                System.out.println( "[DwarfCraft] Converting Player DB (may lag a little wait for completion message)." );
+                plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
-                HashMap<UUID, String> dcplayers = new HashMap<>();
-                HashMap<UUID, Integer> ids = new HashMap<>();
+                HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
+                HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
 
                 try
                 {
@@ -219,7 +238,7 @@ public class DataManager
                         prep.close();
                     }
                 }
-                System.out.println( "[DwarfCraft] Finished Converting the Players DB." );
+                plugin.getLogger().log( Level.INFO, "Finished Converting the Players DB." );
             }
 
             try
@@ -227,7 +246,7 @@ public class DataManager
                 rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'trainers';" );
                 if ( rs.next() )
                 {
-                    System.out.println( "[DwarfCraft] Transfering Trainer DB to citizens  (may lag a little wait for completion message)." );
+                    plugin.getLogger().log( Level.INFO, "Transfering Trainer DB to citizens  (may lag a little wait for completion message)." );
 
                     rs = statement.executeQuery( "select * from trainers;" );
 
@@ -248,7 +267,7 @@ public class DataManager
                     }
                 }
                 statement.execute( "DROP TABLE trainers" );
-                System.out.println( "[DwarfCraft] Finished Transferring the Trainers DB." );
+                plugin.getLogger().log( Level.INFO, "Finished Transfering the Trainers DB." );
             }
             catch ( Exception e )
             {
@@ -344,7 +363,7 @@ public class DataManager
      * Used for creating and populating a dwarf with a null(off line) player
      * 
      * @param player
-     * @param uuid
+     * @param name
      */
     private boolean checkDwarfData( DwarfPlayer player, UUID uuid )
     {
@@ -484,7 +503,7 @@ public class DataManager
         }
         catch ( Exception e )
         {
-            System.out.println( "DC: Failed to get player ID: " + uuid.toString() );
+            plugin.getLogger().log( Level.WARNING, "Failed to get player ID: " + uuid.toString() );
         }
         return -1;
     }
