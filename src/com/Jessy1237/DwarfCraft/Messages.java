@@ -11,14 +11,14 @@ public final class Messages
 
     public Messages()
     {
-        Messages.tutorial.add( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive." );
+        Messages.tutorial.add( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start things may be more difficult than you're used to, but as you level your skills up you will be much more productive." );
         Messages.tutorial
-                .add( "[{\"text\":\"Your skillsheet lists all skills that are affecting you. Lets find out more about the &bPickaxe Use&0 skill.\\n\\n\"},{\"text\":\"Type /dc skillinfo pickaxe_use\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc skillinfo pickaxe_use\"}}]" );
+                .add( "&5The Races of DwarfCraft\n\n&0There are four basic races in DwarfCraft. It is up to you to choose a race that best fits your play style. You will not be able to level any skills in DwarfCraft until you pick a race.\n" );
+        Messages.tutorial.add("{\"text\":\"Read about the four races on the pages that follow, then type '/dc race' or click here to begin your journey.\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc race\"}}" );
         Messages.tutorial
-                .add( "&0The skill info shows that your low level Pickaxe Use skill will cause your pickaxe to have lower durability causing it to break easier. If you increase this skill enough, you'll be able to mine much longer before your pickaxe breaks. Below that, it shows what you need to train the skill. Find a nearby trainer (NPC) in the world and left click them to get more information about the skill they teach or right click to begin training" );
-        Messages.tutorial.add( "&0When you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little, but becoming a master is very challenging." );
-        Messages.tutorial.add( "&0Most trainers can only take you to a limited level, you'll need to seek out the best trainers in the world to eventually reach level %maxskilllevel% in a skill. Go gather some dirt, stone, or logs and try to train up a relevant skill, using what you have learned" );
-        Messages.tutorial.add( "[{\"text\":\"&0You now know the basic commands you need to succeed and develop. To find out more,\\n\\n\"},{\"text\":\"use /dc help\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc help\"}}]" );
+                .add( "&3The Dwarf\n&0The Dwarf is a race that specializes in mining. The skills in this race will allow you to mine more efficiently, gather additional ores, and are great excavators. The Dwarf plays an important role in providing resources for tools and equipment needed by the other races. Their race relies on you providing resources. If you enjoy mining, this race would be great for you." );
+        Messages.tutorial.add( "&9The Gnome\n&0The Gnome is a race that specializes in crafting and building. They will provide structures for you, craft your tools and equipment, and are all around masters of the crafting table. If you enjoy casually and creatively building or are a  master in redstone contraptions, this race would be great for you." );
+        Messages.tutorial.add( "&4The Elf\n&0The Elf is a race that specializes in all things combat. They deal extra damage to animals and mobs and get extra drops. They are great at gaining experience levels and protecting your fellow members. They are also great archers and have great exploration skills whether it be on foot or boat. If you enoy combat and exploring, the elven race is all about you." );
     }
 
     // String messages fixed for DwarfCraft, and backup messages when loading
