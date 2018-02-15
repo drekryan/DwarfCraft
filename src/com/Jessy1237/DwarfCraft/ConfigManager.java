@@ -734,6 +734,18 @@ public final class ConfigManager
                                             sb.append( '\"' );
                                             backSlash = false;
                                             break;
+                                        case '\\':
+                                            sb.append( '\\' );
+                                            c = ( char ) br.read();
+                                            if ( c == 'n' )
+                                            {
+                                                sb.append( '\n' );
+                                            }
+                                            else
+                                            {
+                                                sb.append( "" + '\\' + c );
+                                            }
+
                                         default:
                                             sb.append( "\\" + c );
                                             backSlash = false;
@@ -829,7 +841,7 @@ public final class ConfigManager
 
     private boolean readSkillsFile()
     {
-        plugin.getLogger().log( Level.INFO, " Reading skills file: " + configDirectory + "skills.csv" );
+        plugin.getLogger().log( Level.INFO, "Reading skills file: " + configDirectory + "skills.csv" );
         try
         {
             CSVReader csv = new CSVReader( configDirectory + "skills.csv" );
