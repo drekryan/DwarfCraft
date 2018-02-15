@@ -4,19 +4,9 @@ package com.Jessy1237.DwarfCraft;
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.Jessy1237.DwarfCraft.models.*;
+import net.citizensnpcs.api.npc.AbstractNPC;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -24,23 +14,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
-import com.Jessy1237.DwarfCraft.models.DwarfGreeterMessage;
-import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.models.DwarfSkill;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
-import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
-
-import net.citizensnpcs.api.npc.AbstractNPC;
-import net.citizensnpcs.api.npc.NPC;
+import java.sql.*;
+import java.util.*;
 
 public class DataManager
 {
 
-    private List<DwarfPlayer> dwarves = new ArrayList<DwarfPlayer>();
-    public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<Integer, DwarfVehicle>();
-    public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<Integer, DwarfTrainer>();
-    private HashMap<String, DwarfGreeterMessage> greeterMessageList = new HashMap<String, DwarfGreeterMessage>();
+    private List<DwarfPlayer> dwarves = new ArrayList<>();
+    public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<>();
+    public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
@@ -58,10 +40,8 @@ public class DataManager
 
     /**
      * this is untested and quite a lot of new code, it will probably fail several times. no way to bugfix currently. Just praying it works
-     * 
-     * @param oldVersion
      */
-    private void buildDB( int oldVersion )
+    private void buildDB()
     {
         try
         {
@@ -135,7 +115,7 @@ public class DataManager
             ResultSet rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'players';" );
             if ( !rs.next() )
             {
-                buildDB( 0 );
+                buildDB();
             }
 
             // check for update to skill deposits
@@ -205,8 +185,8 @@ public class DataManager
             {
                 System.out.println( "[DwarfCraft] Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
-                HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
-                HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
+                HashMap<UUID, String> dcplayers = new HashMap<>();
+                HashMap<UUID, Integer> ids = new HashMap<>();
 
                 try
                 {
@@ -268,7 +248,7 @@ public class DataManager
                     }
                 }
                 statement.execute( "DROP TABLE trainers" );
-                System.out.println( "[DwarfCraft] Finished Transfering the Trainers DB." );
+                System.out.println( "[DwarfCraft] Finished Transferring the Trainers DB." );
             }
             catch ( Exception e )
             {
@@ -364,7 +344,7 @@ public class DataManager
      * Used for creating and populating a dwarf with a null(off line) player
      * 
      * @param player
-     * @param name
+     * @param uuid
      */
     private boolean checkDwarfData( DwarfPlayer player, UUID uuid )
     {
@@ -416,11 +396,6 @@ public class DataManager
         }
     }
 
-    public DwarfGreeterMessage getGreeterMessage( String messageId )
-    {
-        return greeterMessageList.get( messageId );
-    }
-
     public DwarfTrainer getTrainer( NPC npc )
     {
         for ( Iterator<Map.Entry<Integer, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext(); )
@@ -461,18 +436,6 @@ public class DataManager
             }
         }
         return null;
-    }
-
-    protected void insertGreeterMessage( String messageId, DwarfGreeterMessage greeterMessage )
-    {
-        try
-        {
-            greeterMessageList.put( messageId, greeterMessage );
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
     }
 
     public DwarfTrainer getTrainerByName( String name )
