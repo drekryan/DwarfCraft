@@ -1,22 +1,28 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
-
-import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
-import com.Jessy1237.DwarfCraft.CommandException.Type;
-import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import org.bukkit.util.StringUtil;
 
+import com.Jessy1237.DwarfCraft.CommandException;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandInformation;
+import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+
+
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandSkillInfo extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
@@ -92,10 +98,13 @@ public class CommandSkillInfo extends Command implements TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) ) return null;
+    public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
 
-        if ( args.length == 2 ) {
+        if ( args.length == 2 )
+        {
             // Gets a list of all possible skill names
             Collection<DwarfSkill> skills = plugin.getConfigManager().getAllSkills().values();
             ArrayList<String> completions = new ArrayList<>();

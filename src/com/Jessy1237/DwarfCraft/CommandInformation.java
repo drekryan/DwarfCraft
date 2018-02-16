@@ -3,10 +3,6 @@ package com.Jessy1237.DwarfCraft;
 public class CommandInformation
 {
 
-    /**
-     * Authors: Jessy1237
-     */
-
     public enum Desc
     {
         DEBUG( "Sets the debug message threshold in console, from -10(everthing) to +10(critical only)." ),

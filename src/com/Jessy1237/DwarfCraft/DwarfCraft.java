@@ -3,6 +3,7 @@ package com.Jessy1237.DwarfCraft;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -352,8 +353,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( pm.getPlugin( "Vault" ) == null || pm.getPlugin( "Vault" ).isEnabled() == false )
         {
-            System.out.println( "[DwarfCraft] Couldn't find Vault!" );
-            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
+            getLogger().log( Level.WARNING, "Couldn't find Vault!" );
+            getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
             pm.disablePlugin( this );
             return;
         }
@@ -365,14 +366,14 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         }
         catch ( Exception e )
         {
-            System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
+            getLogger().log( Level.WARNING, "Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
 
         if ( !isPermissionEnabled() )
         {
-            System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
+            getLogger().log( Level.WARNING, "Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
@@ -391,12 +392,12 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
         {
-            System.out.println( "[DwarfCraft] Couldn't find Citizens!" );
-            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
+            getLogger().log( Level.WARNING, "Couldn't find Citizens!" );
+            getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
             pm.disablePlugin( this );
             return;
         }
-        System.out.println( "[DwarfCraft] Hooked into Citizens!" );
+        getLogger().log( Level.INFO, "Hooked into Citizens!" );
 
         npcr = CitizensAPI.getNPCRegistry();
         util = new Util( this );
@@ -429,11 +430,11 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         if ( pm.getPlugin( "LogBlock" ) != null )
         {
             consumer = ( ( LogBlock ) pm.getPlugin( "LogBlock" ) ).getConsumer();
-            System.out.println( "[DwarfCraft] Hooked into LogBlock!" );
+            getLogger().log( Level.INFO, "Hooked into LogBlock!" );
         }
         else
         {
-            System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
+            getLogger().log( Level.INFO, "Couldn't find LogBlock!" );
         }
 
         if ( pm.getPlugin( "PlaceholderAPI" ) != null )
@@ -451,6 +452,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         initCommands();
 
-        System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
+        getLogger().log( Level.INFO, getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
     }
 }

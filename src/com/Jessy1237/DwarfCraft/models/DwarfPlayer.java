@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.models;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +11,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfPlayer
 {
     private final DwarfCraft plugin;

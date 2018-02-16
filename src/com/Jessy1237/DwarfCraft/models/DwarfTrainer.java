@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.models;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +20,9 @@ import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public final class DwarfTrainer implements Comparable<DwarfTrainer>
 {
     private AbstractNPC mEntity;

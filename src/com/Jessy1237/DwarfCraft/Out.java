@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -16,6 +12,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class Out
 {
     /*

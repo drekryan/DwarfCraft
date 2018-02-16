@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +11,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public final class CommandParser
 {
     private final DwarfCraft plugin;
@@ -31,7 +30,7 @@ public final class CommandParser
 
     public List<Object> parse( List<Object> desiredArguments, boolean ignoreSize ) throws CommandException
     {
-        List<Object> output = new ArrayList<Object>();
+        List<Object> output = new ArrayList<>();
         int arrayIterator = 0;
         try
         {
@@ -55,8 +54,6 @@ public final class CommandParser
                     output.add( parseUniqueId( arrayIterator, false ) );
                 else if ( o instanceof String && ( ( String ) o ).equalsIgnoreCase( "Name" ) )
                     output.add( parseName( arrayIterator ) );
-                else if ( o instanceof String && ( ( String ) o ).equalsIgnoreCase( "GreeterMessage" ) )
-                    output.add( parseGreeterMessage( arrayIterator ) );
                 else if ( o instanceof String && ( ( String ) o ).equalsIgnoreCase( "Type" ) )
                     output.add( parseType( arrayIterator ) );
                 else if ( o instanceof Integer )
@@ -153,14 +150,6 @@ public final class CommandParser
         if ( effect == null )
             throw new CommandException( plugin, Type.PARSEEFFECTFAIL );
         return effect;
-    }
-
-    private String parseGreeterMessage( int arrayIterator ) throws CommandException
-    {
-        if ( plugin.getDataManager().getGreeterMessage( input[arrayIterator] ) == null )
-            throw new CommandException( plugin, Type.NOGREETERMESSAGE );
-        String greeterMessage = input[arrayIterator];
-        return greeterMessage;
     }
 
     private Object parseInteger( int argNumber ) throws CommandException

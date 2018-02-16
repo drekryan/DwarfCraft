@@ -1,10 +1,5 @@
 package com.Jessy1237.DwarfCraft.listeners;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
-import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
@@ -18,6 +13,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
@@ -25,6 +21,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfVehicleListener implements Listener
 {
     private final DwarfCraft plugin;

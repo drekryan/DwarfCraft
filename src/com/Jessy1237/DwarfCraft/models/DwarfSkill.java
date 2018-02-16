@@ -1,13 +1,12 @@
 package com.Jessy1237.DwarfCraft.models;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.List;
 
 import org.bukkit.Material;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfSkill implements Cloneable
 {
 

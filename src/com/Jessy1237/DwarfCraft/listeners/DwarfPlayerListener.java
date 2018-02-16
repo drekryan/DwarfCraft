@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.listeners;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.HashMap;
 
 import org.bukkit.Location;
@@ -36,6 +32,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfPlayerListener implements Listener
 {
     private final DwarfCraft plugin;

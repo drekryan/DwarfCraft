@@ -35,6 +35,9 @@ import com.Jessy1237.DwarfCraft.schedules.InitTrainerGUISchedule;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfEntityListener implements Listener
 {
     private final DwarfCraft plugin;

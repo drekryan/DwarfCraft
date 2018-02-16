@@ -1,27 +1,30 @@
 package com.Jessy1237.DwarfCraft.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-
-import com.Jessy1237.DwarfCraft.DwarfCraft;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
 
-import java.util.*;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 public class CommandHelp extends Command implements TabCompleter
 {
     // A list of all supported DwarfCraft commands
-    private static final String[] COMMANDS = new String[] { "debug", "help", "tutorial", "info", "skillsheet", "skillinfo", "effectinfo", "race", "setskill", "create", "list" };
+    private static final String[] COMMANDS = new String[] { "debug", "help", "tutorial", "info", "skillsheet", "skillinfo", "effectinfo", "race", "reload", "setskill", "create", "list" };
 
     @SuppressWarnings( "unused" )
     private final DwarfCraft plugin;
 
-    public CommandHelp(final DwarfCraft plugin )
+    public CommandHelp( final DwarfCraft plugin )
     {
         super( "dchelp" );
         this.plugin = plugin;

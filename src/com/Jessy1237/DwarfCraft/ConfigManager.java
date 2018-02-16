@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +11,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,6 +26,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public final class ConfigManager
 {
 
@@ -79,7 +79,7 @@ public final class ConfigManager
         {
             if ( !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() || !readBlockGroupsFile() )
             {
-                System.out.println( "[SEVERE] Failed to Enable DwarfCraft configs" );
+                plugin.getLogger().log( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
             }
             else
@@ -99,7 +99,7 @@ public final class ConfigManager
         catch ( Exception e )
         {
             e.printStackTrace();
-            System.out.println( "[SEVERE] Failed to Enable DwarfCraft configs" );
+            plugin.getLogger().log( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
             plugin.getServer().getPluginManager().disablePlugin( plugin );
         }
 
@@ -197,7 +197,7 @@ public final class ConfigManager
 
             if ( !readConfigFile() )
             {
-                System.out.println( "[SEVERE] Failed to Enable DwarfCraft configs" );
+                plugin.getLogger().log( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
             }
             getDefaultValues();
@@ -215,7 +215,7 @@ public final class ConfigManager
         }
         catch ( Exception e )
         {
-            System.out.println( "DC: ERROR: Could not verify files: " + e.toString() );
+            plugin.getLogger().log( Level.SEVERE, "Could not verify files: " + e.toString() );
             e.printStackTrace();
         }
     }
@@ -241,7 +241,7 @@ public final class ConfigManager
     {
         try
         {
-            System.out.println( "[DwarfCraft] Reading Config File: " + configDirectory + configMainFileName );
+            plugin.getLogger().log( Level.INFO, "Reading Config File: " + configDirectory + configMainFileName );
             getDefaultValues();
             FileReader fr = new FileReader( configDirectory + configMainFileName );
             BufferedReader br = new BufferedReader( fr );
@@ -320,7 +320,7 @@ public final class ConfigManager
     @SuppressWarnings( "resource" )
     private boolean readWorldFile()
     {
-        System.out.println( "[DwarfCraft] Reading world blacklist file: " + configDirectory + configWorldFileName );
+        plugin.getLogger().log( Level.INFO, "Reading world blacklist file: " + configDirectory + configWorldFileName );
 
         FileReader fr;
         try
@@ -368,7 +368,7 @@ public final class ConfigManager
 
     private boolean readEffectsFile()
     {
-        System.out.println( "[DwarfCraft] Reading effects file: " + configDirectory + "effects.csv" );
+        plugin.getLogger().log( Level.INFO, "Reading effects file: " + configDirectory + "effects.csv" );
         try
         {
             CSVReader csv = new CSVReader( configDirectory + "effects.csv" );
@@ -400,12 +400,12 @@ public final class ConfigManager
     @SuppressWarnings( "resource" )
     protected boolean readRacesFile()
     {
-        System.out.println( "[DwarfCraft] Reading races file: " + configDirectory + "races.config" );
+        plugin.getLogger().log( Level.INFO, "Reading races file: " + configDirectory + "races.config" );
 
         if ( vanilla )
         {
             raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all round balanced race (vanilla).", Material.GRASS ) );
-            System.out.println( "[DwarfCraft] Loaded vanilla race: Vanilla" );
+            plugin.getLogger().log( Level.INFO, "Loaded vanilla race: Vanilla" );
         }
 
         try
@@ -490,11 +490,11 @@ public final class ConfigManager
                         name = false;
                         desc = false;
                         skills = false;
-                        System.out.println( "[DwarfCraft] Loaded race: " + race.getName() );
+                        plugin.getLogger().log( Level.INFO, "Loaded race: " + race.getName() );
                     }
                     else
                     {
-                        System.out.println( "[DwarfCraft] Did not load race: " + race.getName() + " as already at cap of 9 races" );
+                        plugin.getLogger().log( Level.WARNING, "Did not load race: " + race.getName() + " as already at cap of 9 races" );
                     }
                     continue;
                 }
@@ -519,7 +519,7 @@ public final class ConfigManager
     @SuppressWarnings( { "resource", "null" } )
     private boolean readMessagesFile()
     {
-        System.out.println( "[DwarfCraft] Reading messages file: " + configDirectory + "messages.config" );
+        plugin.getLogger().log( Level.INFO, "Reading messages file: " + configDirectory + "messages.config" );
 
         // Loads the messages class after the config is read but before all the
         // messages are read.
@@ -707,28 +707,112 @@ public final class ConfigManager
                         if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
                         {
                             boolean foundEndTag = false;
-                            line = br.readLine();
-                            while ( !foundEndTag && line != null )
+                            boolean possibleTag = false;
+                            boolean backSlash = false;
+                            char c = ( char ) br.read();
+                            StringBuffer sb = new StringBuffer();
+                            StringBuffer endTag = new StringBuffer();
+                            while ( !foundEndTag && c != -1 )
                             {
+                                if ( c == '<' )
+                                    possibleTag = true;
 
-                                if ( !line.equals( "" ) )
-                                    tutorial.add( line );
+                                if ( backSlash )
+                                {
+                                    switch ( c )
+                                    {
+                                        case 'n':
+                                            sb.append( '\n' );
+                                            backSlash = false;
+                                            break;
+                                        case 'r':
+                                            sb.append( '\r' );
+                                            backSlash = false;
+                                            break;
+                                        case '"':
+                                            sb.append( '\"' );
+                                            backSlash = false;
+                                            break;
+                                        case '\\':
+                                            sb.append( '\\' );
+                                            c = ( char ) br.read();
+                                            if ( c == 'n' )
+                                            {
+                                                sb.append( '\n' );
+                                            }
+                                            else
+                                            {
+                                                sb.append( "" + '\\' + c );
+                                            }
 
-                                line = br.readLine().trim();
+                                        default:
+                                            sb.append( "\\" + c );
+                                            backSlash = false;
+                                            break;
+                                    }
+                                    c = ( char ) br.read();
+                                }
 
-                                if ( line.equalsIgnoreCase( "</TUTORIAL>" ) )
+                                if ( c == '\\' )
+                                    backSlash = true;
+
+                                if ( possibleTag )
+                                {
+                                    endTag.append( c );
+                                }
+                                else if ( !backSlash )
+                                {
+                                    sb.append( c );
+                                }
+
+                                if ( !"</TUTORIAL>".contains( endTag.toString() ) && possibleTag )
+                                {
+                                    possibleTag = false;
+                                    sb.append( endTag );
+                                    endTag = new StringBuffer();
+                                }
+                                else if ( possibleTag && endTag.toString().equalsIgnoreCase( "</TUTORIAL>" ) )
+                                {
                                     foundEndTag = true;
+                                }
+                                c = ( char ) br.read();
+                            }
+
+                            String pages = sb.toString();
+                            int numPages = 0;
+                            while ( pages != null )
+                            {
+                                int startIndex = pages.indexOf( "<PAGE>", 0 );
+                                int finalIndex = pages.indexOf( "</PAGE>", 0 );
+                                if ( startIndex == -1 || finalIndex == -1 )
+                                {
+                                    plugin.getLogger().log( Level.SEVERE, "Could not find the Page XML tags. Stopped adding tutorial pages after page number " + numPages );
+                                    break;
+                                }
+
+                                numPages++;
+
+                                tutorial.add( new String( pages.substring( startIndex + 6, finalIndex ) ) );
+
+                                if ( finalIndex + 9 >= pages.length() )
+                                {
+                                    pages = null;
+                                }
+                                else
+                                {
+                                    pages = pages.substring( finalIndex + 8 );
+                                }
                             }
 
                             if ( !foundEndTag )
                             {
                                 tutorial.clear();
-                                System.out.println( "[DwarfCraft] Unable to find the ending Tutorial XML tag. Using default tutorial." );
+                                plugin.getLogger().log( Level.SEVERE, "Unable to find the ending Tutorial XML tag. Using default tutorial." );
                             }
                         }
                         else
                         {
-                            System.out.println( "[DwarfCraft] Unable to find the opening Tutorial XML tag. Using default tutorial." );
+                            plugin.getLogger().log( Level.SEVERE, "Unable to find the opening Tutorial XML tag. Using default tutorial." );
                         }
 
                         if ( !tutorial.isEmpty() )
@@ -737,7 +821,7 @@ public final class ConfigManager
                 }
                 else
                 {
-                    System.out.println( "Null Message: " + name + ", " + message );
+                    plugin.getLogger().log( Level.WARNING, "Null Message: " + name + ", " + message );
                 }
                 line = br.readLine();
             }
@@ -756,7 +840,7 @@ public final class ConfigManager
 
     private boolean readSkillsFile()
     {
-        System.out.println( "[DwarfCraft] Reading skills file: " + configDirectory + "skills.csv" );
+        plugin.getLogger().log( Level.INFO, "Reading skills file: " + configDirectory + "skills.csv" );
         try
         {
             CSVReader csv = new CSVReader( configDirectory + "skills.csv" );
@@ -787,7 +871,7 @@ public final class ConfigManager
 
     private boolean readBlockGroupsFile()
     {
-        System.out.println( "[DwarfCraft] Reading Block Groups file: " + configDirectory + cfgBlockGroupsFile );
+        plugin.getLogger().log( Level.INFO, "Reading Block Groups file: " + configDirectory + cfgBlockGroupsFile );
 
         try
         {

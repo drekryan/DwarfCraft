@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.Collection;
 
 import org.bukkit.Location;
@@ -17,6 +13,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandList extends Command
 {
     private final DwarfCraft plugin;

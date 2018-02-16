@@ -1,8 +1,5 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +15,9 @@ import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.CommandParser;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class CommandDebug extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;

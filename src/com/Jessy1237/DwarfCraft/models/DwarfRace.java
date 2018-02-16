@@ -7,7 +7,6 @@ import org.bukkit.Material;
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
-
 public class DwarfRace
 {
 
