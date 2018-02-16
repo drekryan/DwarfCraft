@@ -36,11 +36,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import de.diddiz.LogBlock.Consumer;
 import de.diddiz.LogBlock.LogBlock;
-
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.TraitInfo;
