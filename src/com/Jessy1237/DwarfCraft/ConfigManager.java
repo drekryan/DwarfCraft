@@ -64,6 +64,7 @@ public final class ConfigManager
     public boolean announce = false;
     public boolean byID = true;
     public boolean softcore = false;
+    public boolean spawnTutorialBook = true;
 
     @SuppressWarnings( "unchecked" )
     protected ConfigManager( DwarfCraft plugin, String directory, String paramsFileName )
@@ -302,6 +303,8 @@ public final class ConfigManager
                     byID = Boolean.parseBoolean( theline[1].trim() );
                 if ( theline[0].equalsIgnoreCase( "Softcore race skill reset" ) )
                     softcore = Boolean.parseBoolean( theline[1].trim() );
+                if ( theline[0].equalsIgnoreCase( "Spawn Tutorial Book" ) )
+                    spawnTutorialBook = Boolean.parseBoolean( theline[1].trim() );
 
                 line = br.readLine();
             }

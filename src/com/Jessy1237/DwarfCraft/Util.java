@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
@@ -489,12 +490,13 @@ public class Util
         DwarfPlayer data = dm.find( player );
 
         if ( data == null )
-        {
             data = dm.createDwarf( player );
-            plugin.getOut().sendMessage( player, Messages.chooseARace );
-        }
         if ( !dm.checkDwarfData( data ) )
+        {
             dm.createDwarfData( data );
+            if ( plugin.getConfigManager().spawnTutorialBook )
+                new CommandTutorial( plugin ).execute( player, "", new String[] { "" } );
+        }
 
         if ( plugin.isChatEnabled() )
         {

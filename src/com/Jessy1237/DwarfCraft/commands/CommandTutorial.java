@@ -47,7 +47,7 @@ public class CommandTutorial extends Command
 
             // Set the BookMeta onto the Written Book
             BookMeta bookMeta = ( BookMeta ) book.getItemMeta();
-            bookMeta.setTitle( "Welcome to DwarfCraft" );
+            bookMeta.setTitle( "DwarfCraft Pocket Guide" );
             bookMeta.setAuthor( "Jessy1237" );
 
             for ( String readPage : Messages.tutorial )
