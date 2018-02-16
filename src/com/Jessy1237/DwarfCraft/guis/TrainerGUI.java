@@ -32,16 +32,7 @@ public class TrainerGUI extends DwarfGUI
     public void init()
     {
         DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
-
-        // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
-        int levelLimit = plugin.getConfigManager().getMaxSkillLevel();
-        if ( !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
-        {
-            levelLimit = plugin.getConfigManager().getRaceLevelLimit();
-        }
-
-        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut()
-                .parseColors( Messages.trainerGUITitle.replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() ).replaceAll( "%maxskilllevel%", "" + levelLimit ) ) );
+        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainerGUITitle, skill ) ) );
         inventory.clear();
 
         List<List<ItemStack>> costs = dwarfPlayer.calculateTrainingCost( skill );
@@ -142,16 +133,7 @@ public class TrainerGUI extends DwarfGUI
     {
         DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
         dwarfPlayer.getPlayer().closeInventory();
-
-        // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
-        int levelLimit = plugin.getConfigManager().getMaxSkillLevel();
-        if ( !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
-        {
-            levelLimit = plugin.getConfigManager().getRaceLevelLimit();
-        }
-
-        inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut()
-                .parseColors( Messages.trainerGUITitle.replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() ).replaceAll( "%maxskilllevel%", "" + levelLimit ) ) );
+        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainerGUITitle, skill ) ) );
         init();
         dwarfPlayer.getPlayer().updateInventory();
         openGUI();

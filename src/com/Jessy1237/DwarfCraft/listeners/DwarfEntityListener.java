@@ -22,6 +22,7 @@ import org.bukkit.projectiles.ProjectileSource;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
@@ -119,7 +120,7 @@ public class DwarfEntityListener implements Listener
 
                     if ( skill == null )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, Messages.trainSkillPrefix.replaceAll( "%skillid%", "" ) );
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill ) );
                         return true;
                     }
 
@@ -138,13 +139,13 @@ public class DwarfEntityListener implements Listener
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( "%racelevellimit%", "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
                         return true;
                     }
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
                         return true;
                     }
 

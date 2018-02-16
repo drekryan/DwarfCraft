@@ -100,7 +100,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         boolean deposited = false;
         final PlayerInventory oldInv = player.getInventory();
@@ -145,7 +145,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         final PlayerInventory oldInv = player.getInventory();
         boolean deposited = false;
@@ -186,7 +186,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         final PlayerInventory oldInv = player.getInventory();
         boolean hasMatsOrDeposits[] = { true, false };
@@ -410,17 +410,17 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
             else
             {
                 hasMatsOrDeposits[0] = false;
-                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
                 return hasMatsOrDeposits;
             }
 
             if ( costStack.getAmount() == 0 )
             {
-                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.noMoreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
             }
             else
             {
-                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
                 hasMatsOrDeposits[0] = false;
                 hasMatsOrDeposits[1] = true;
             }

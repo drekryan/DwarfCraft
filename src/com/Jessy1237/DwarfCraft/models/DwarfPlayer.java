@@ -175,7 +175,7 @@ public class DwarfPlayer
      * @param effect (does not have to be this dwarf's effect, only used for ID#)
      * @return DwarfSkill or null if none found
      */
-    protected DwarfSkill getSkill( DwarfEffect effect )
+    public DwarfSkill getSkill( DwarfEffect effect )
     {
         for ( DwarfSkill skill : skills.values() )
         {

@@ -146,7 +146,7 @@ public class DwarfEffect
         if ( output.equalsIgnoreCase( "AIR" ) )
             output = "None";
         double effectAmountLow = getEffectAmount( 0, dCPlayer );
-        double effectAmountHigh = getEffectAmount( 30, dCPlayer );
+        double effectAmountHigh = getEffectAmount( plugin.getConfigManager().getMaxSkillLevel(), dCPlayer );
         double minorAmount = getEffectAmount( -1, dCPlayer );
         String toolType = toolType();
 
@@ -174,97 +174,12 @@ public class DwarfEffect
             return "Failed"; // TODO add failure code
 
         String description = "no skill description";
-        // Variables used in skill descriptions
-        String initiator = plugin.getUtil().getCleanName( mInitiator );
-        String output = plugin.getUtil().getCleanName( mOutput );
-
-        double effectAmount = getEffectAmount( dCPlayer );
-        double minorAmount = getEffectAmount( mNormalLevel, null );
-        boolean moreThanOne = ( effectAmount > 1 );
-        String effectLevelColor = effectLevelColor( dCPlayer.getSkill( this ).getLevel() );
-        String toolType = toolType();
-
-        // TODO: use checkEquivalentBlocks to future proof the 1.13 changes
-        if ( mType == DwarfEffectType.SMELT )
-        {
-            if ( mInitiator.getType() == Material.IRON_INGOT )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.IRON_ORE ) );
-            }
-            else if ( mInitiator.getType() == Material.GOLD_INGOT )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.GOLD_ORE ) );
-            }
-            else if ( mInitiator.getType() == Material.GRILLED_PORK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.PORK ) );
-            }
-            else if ( mInitiator.getType() == Material.COOKED_FISH )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_FISH ) );
-            }
-            else if ( mInitiator.getType() == Material.COOKED_CHICKEN )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_CHICKEN ) );
-            }
-            else if ( mInitiator.getType() == Material.COOKED_RABBIT )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RABBIT ) );
-            }
-            else if ( mInitiator.getType() == Material.COOKED_MUTTON )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.MUTTON ) );
-            }
-            else if ( mInitiator.getType() == Material.COOKED_BEEF )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_BEEF ) );
-            }
-            else if ( mInitiator.getType() == Material.GLASS )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.SAND ) );
-            }
-            else if ( mInitiator.getType() == Material.BAKED_POTATO )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.POTATO_ITEM ) );
-            }
-            else if ( mInitiator.getType() == Material.COAL )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.LOG ) );
-            }
-            else if ( mInitiator.getType() == Material.STONE )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.COBBLESTONE ) );
-            }
-            else if ( mInitiator.getType() == Material.BRICK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY_BALL ) );
-            }
-            else if ( mInitiator.getType() == Material.NETHER_BRICK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.NETHERRACK ) );
-            }
-            else if ( mInitiator.getType() == Material.HARD_CLAY )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY ) );
-            }
-            else if ( mInitiator.getType() == Material.INK_SACK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CACTUS ) );
-            }
-
-            else if ( mInitiator.getType() == Material.WHITE_GLAZED_TERRACOTTA || plugin.getUtil().checkEquivalentBuildBlocks( mInitiator.getType(), Material.WHITE_GLAZED_TERRACOTTA ) != null )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.HARD_CLAY ) );
-            }
-
-        }
-
-        description = plugin.getOut().parseEffectLevel( mType, initiator, output, effectAmount, minorAmount, moreThanOne, effectLevelColor, toolType, mCreature, dCPlayer, mInitiator );
+        description = plugin.getOut().parseEffectLevel( dCPlayer, this );
 
         return description;
     }
 
-    private String effectLevelColor( int skillLevel )
+    public String effectLevelColor( int skillLevel )
     {
         if ( skillLevel > mNormalLevel )
             return Messages.effectLevelColorGreaterThanNormal;
@@ -325,12 +240,17 @@ public class DwarfEffect
 
     public Material getInitiatorMaterial()
     {
-        return mInitiator.getType();
+        return ( mInitiator == null ? null : mInitiator.getType() );
     }
 
     public Material getOutputMaterial()
     {
-        return mOutput.getType();
+        return ( mOutput == null ? null : mOutput.getType() );
+    }
+
+    public ItemStack getInitiator()
+    {
+        return mInitiator;
     }
 
     public ItemStack getOutput()
@@ -403,7 +323,7 @@ public class DwarfEffect
      * 
      * @return
      */
-    private String toolType()
+    public String toolType()
     {
         for ( Material mat : mTools )
         {
