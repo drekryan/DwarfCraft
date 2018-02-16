@@ -722,37 +722,8 @@ public final class ConfigManager
 
                                 if ( backSlash )
                                 {
-                                    switch ( c )
-                                    {
-                                        case 'n':
-                                            sb.append( '\n' );
-                                            backSlash = false;
-                                            break;
-                                        case 'r':
-                                            sb.append( '\r' );
-                                            backSlash = false;
-                                            break;
-                                        case '"':
-                                            sb.append( '\"' );
-                                            backSlash = false;
-                                            break;
-                                        case '\\':
-                                            sb.append( '\\' );
-                                            c = ( char ) br.read();
-                                            if ( c == 'n' )
-                                            {
-                                                sb.append( '\n' );
-                                            }
-                                            else
-                                            {
-                                                sb.append( "" + '\\' + c );
-                                            }
-
-                                        default:
-                                            sb.append( "\\" + c );
-                                            backSlash = false;
-                                            break;
-                                    }
+                                    checkSpecialChar( sb, br, c );
+                                    backSlash = false;
                                     c = ( char ) br.read();
                                 }
 
@@ -839,6 +810,37 @@ public final class ConfigManager
             e.printStackTrace();
         }
         return true;
+    }
+
+    /**
+     * Checks to see if the next read char would be able to combine with a '\' to become a special char
+     * 
+     * @param sb The String Buffer to add the special char to
+     * @param br The buffered reader in which the text is being read from
+     * @param c The most recent char that has been read
+     * @throws IOException if br.read() fails
+     */
+    private void checkSpecialChar( StringBuffer sb, BufferedReader br, char c ) throws IOException
+    {
+        switch ( c )
+        {
+            case 'n':
+                sb.append( '\n' );
+                break;
+            case 'r':
+                sb.append( '\r' );
+                break;
+            case '"':
+                sb.append( '\"' );
+                break;
+            case '\\':
+                sb.append( '\\' );
+                checkSpecialChar( sb, br, ( char ) br.read() );
+                break;
+            default:
+                sb.append( "\\" + c );
+                break;
+        }
     }
 
     private boolean readSkillsFile()
