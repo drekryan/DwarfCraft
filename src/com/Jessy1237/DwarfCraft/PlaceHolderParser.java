@@ -1,6 +1,7 @@
 package com.Jessy1237.DwarfCraft;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
@@ -8,10 +9,13 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
+import me.clip.placeholderapi.external.EZPlaceholderHook;
+
 public class PlaceHolderParser
 {
 
     private DwarfCraft plugin;
+    private PlaceholderHook placeholderHook;
 
     public PlaceHolderParser( DwarfCraft plugin )
     {
@@ -213,4 +217,38 @@ public class PlaceHolderParser
                 .replaceAll( PlaceHolder.SKILL_COST_AMOUNT.getPlaceHolder(), "" + costAmount ) );
     }
 
+    protected void hookAPI()
+    {
+        placeholderHook = new PlaceholderHook( plugin, "dwarfcraft" );
+        placeholderHook.hook();
+    }
+
+    public class PlaceholderHook extends EZPlaceholderHook
+    {
+        private DwarfCraft plugin;
+
+        public PlaceholderHook( DwarfCraft plugin, String identifier )
+        {
+            super( plugin, identifier );
+            this.plugin = plugin;
+        }
+
+        @Override
+        public String onPlaceholderRequest( Player player, String identifier )
+        {
+
+            String out = generalParse( identifier );
+
+            DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
+
+            if ( dwarfPlayer != null )
+                out = parseByDwarfPlayer( out, dwarfPlayer );
+
+            // If we didn't change the text then it wasn't out identifier so return null as per API wiki
+            if ( out.equals( identifier ) )
+                out = null;
+
+            return out;
+        }
+    }
 }

@@ -36,7 +36,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import de.diddiz.LogBlock.Consumer;
 import de.diddiz.LogBlock.LogBlock;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -67,7 +66,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private DataManager dm;
     private Out out;
     private Consumer consumer = null;
-    private PlaceholderAPIPlugin placeholderAPI;
     private Util util;
     private PlaceHolderParser placeHolderParser;
     private Permission perms = null;
@@ -111,11 +109,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     public PlaceHolderParser getPlaceHolderParser()
     {
         return placeHolderParser;
-    }
-    
-    public PlaceholderAPIPlugin getPlaceHolderAPI()
-    {
-        return placeholderAPI;
     }
 
     public DwarfEntityListener getDwarfEntityListener()
@@ -408,6 +401,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         out = new Out( this );
 
+        placeHolderParser = new PlaceHolderParser( this );
+        
         // Creates the citizen trait for the DwarfTrainers
         if ( !reload )
         {
@@ -439,16 +434,13 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( pm.getPlugin( "PlaceholderAPI" ) != null )
         {
-            placeholderAPI = ( ( PlaceholderAPIPlugin ) pm.getPlugin( "PlaceholderAPI" ) );
-
-            System.out.println( "[DwarfCraft] Hooked into PlaceholderAPI!" );
+            placeHolderParser.hookAPI();
+            getLogger().log( Level.INFO, "Hooked into PlaceholderAPI!" );
         }
         else
         {
-            System.out.println( "[DwarfCraft] Couldn't find PlaceholderAPI!" );
+            getLogger().log( Level.INFO, "Couldn't find PlaceholderAPI!" );
         }
-        
-        placeHolderParser = new PlaceHolderParser( this );
 
         initCommands();
 
