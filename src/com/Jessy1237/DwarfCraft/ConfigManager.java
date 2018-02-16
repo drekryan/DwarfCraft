@@ -709,79 +709,16 @@ public final class ConfigManager
                         ArrayList<String> tutorial = new ArrayList<String>();
                         if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
                         {
-                            boolean foundEndTag = false;
-                            boolean possibleTag = false;
-                            boolean backSlash = false;
-                            char c = ( char ) br.read();
                             StringBuffer sb = new StringBuffer();
-                            StringBuffer endTag = new StringBuffer();
-                            while ( !foundEndTag && c != -1 )
-                            {
-                                if ( c == '<' )
-                                    possibleTag = true;
-
-                                if ( backSlash )
-                                {
-                                    checkSpecialChar( sb, br, c );
-                                    backSlash = false;
-                                    c = ( char ) br.read();
-                                }
-
-                                if ( c == '\\' )
-                                    backSlash = true;
-
-                                if ( possibleTag )
-                                {
-                                    endTag.append( c );
-                                }
-                                else if ( !backSlash )
-                                {
-                                    sb.append( c );
-                                }
-
-                                if ( !"</TUTORIAL>".contains( endTag.toString() ) && possibleTag )
-                                {
-                                    possibleTag = false;
-                                    sb.append( endTag );
-                                    endTag = new StringBuffer();
-                                }
-                                else if ( possibleTag && endTag.toString().equalsIgnoreCase( "</TUTORIAL>" ) )
-                                {
-                                    foundEndTag = true;
-                                }
-                                c = ( char ) br.read();
-                            }
-
-                            String pages = sb.toString();
-                            int numPages = 0;
-                            while ( pages != null )
-                            {
-                                int startIndex = pages.indexOf( "<PAGE>", 0 );
-                                int finalIndex = pages.indexOf( "</PAGE>", 0 );
-                                if ( startIndex == -1 || finalIndex == -1 )
-                                {
-                                    plugin.getLogger().log( Level.SEVERE, "Could not find the Page XML tags. Stopped adding tutorial pages after page number " + numPages );
-                                    break;
-                                }
-
-                                numPages++;
-
-                                tutorial.add( new String( pages.substring( startIndex + 6, finalIndex ) ) );
-
-                                if ( finalIndex + 9 >= pages.length() )
-                                {
-                                    pages = null;
-                                }
-                                else
-                                {
-                                    pages = pages.substring( finalIndex + 8 );
-                                }
-                            }
+                            boolean foundEndTag = readTutorial( sb, br );
 
                             if ( !foundEndTag )
                             {
-                                tutorial.clear();
                                 plugin.getLogger().log( Level.SEVERE, "Unable to find the ending Tutorial XML tag. Using default tutorial." );
+                            }
+                            else
+                            {
+                                tutorial = parseTutorialPages( sb );
                             }
                         }
                         else
@@ -813,6 +750,61 @@ public final class ConfigManager
     }
 
     /**
+     * Reads the tutorial from the buffered reader by character and inputs them into the string buffer
+     * 
+     * @param sb String buffer to fill
+     * @param br The reader that is reading the config
+     * @return True if the ending tutorial tag was found otherwise returns fals
+     * @throws IOException when br.read fails
+     */
+    private boolean readTutorial( StringBuffer sb, BufferedReader br ) throws IOException
+    {
+        boolean foundEndTag = false;
+        boolean possibleTag = false;
+        boolean backSlash = false;
+        char c = ( char ) br.read();
+        StringBuffer endTag = new StringBuffer();
+        while ( !foundEndTag && c != -1 )
+        {
+            if ( c == '<' )
+                possibleTag = true;
+
+            if ( backSlash )
+            {
+                checkSpecialChar( sb, br, c );
+                backSlash = false;
+                c = ( char ) br.read();
+            }
+
+            if ( c == '\\' )
+                backSlash = true;
+
+            if ( possibleTag )
+            {
+                endTag.append( c );
+            }
+            else if ( !backSlash )
+            {
+                sb.append( c );
+            }
+
+            if ( !"</TUTORIAL>".contains( endTag.toString() ) && possibleTag )
+            {
+                possibleTag = false;
+                sb.append( endTag );
+                endTag = new StringBuffer();
+            }
+            else if ( possibleTag && endTag.toString().equalsIgnoreCase( "</TUTORIAL>" ) )
+            {
+                foundEndTag = true;
+            }
+            c = ( char ) br.read();
+        }
+
+        return foundEndTag;
+    }
+
+    /**
      * Checks to see if the next read char would be able to combine with a '\' to become a special char
      * 
      * @param sb The String Buffer to add the special char to
@@ -841,6 +833,44 @@ public final class ConfigManager
                 sb.append( "\\" + c );
                 break;
         }
+    }
+
+    /**
+     * Parses the String Buffer into an array list containing separate pages
+     * 
+     * @param sb The string buffer containing all the characters read from the config
+     * @return An array list containing separate pages
+     */
+    private ArrayList<String> parseTutorialPages( StringBuffer sb )
+    {
+        ArrayList<String> tutorial = new ArrayList<String>();
+        String pages = sb.toString();
+        int numPages = 0;
+        while ( pages != null )
+        {
+            int startIndex = pages.indexOf( "<PAGE>", 0 );
+            int finalIndex = pages.indexOf( "</PAGE>", 0 );
+            if ( startIndex == -1 || finalIndex == -1 )
+            {
+                plugin.getLogger().log( Level.SEVERE, "Could not find the Page XML tags. Stopped adding tutorial pages after page number " + numPages );
+                break;
+            }
+
+            numPages++;
+
+            tutorial.add( new String( pages.substring( startIndex + 6, finalIndex ) ) );
+
+            if ( finalIndex + 9 >= pages.length() )
+            {
+                pages = null;
+            }
+            else
+            {
+                pages = pages.substring( finalIndex + 8 );
+            }
+        }
+
+        return tutorial;
     }
 
     private boolean readSkillsFile()
