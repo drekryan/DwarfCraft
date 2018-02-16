@@ -101,7 +101,6 @@ public final class CommandParser
                 dCPlayer = plugin.getDataManager().find( player );
             else if ( player == null || !player.isOnline() )
             {
-                System.out.println( "looking for offline player" );
                 dCPlayer = plugin.getDataManager().findOffline( plugin.getServer().getOfflinePlayer( dwarf ).getUniqueId() );
             }
             if ( dCPlayer == null )
@@ -264,5 +263,10 @@ public final class CommandParser
         if ( plugin.getDataManager().getTrainer( uniqueId ) == null && !add )
             throw new CommandException( plugin, Type.NPCIDNOTFOUND );
         return uniqueId;
+    }
+
+    public void setTarget( DwarfPlayer player )
+    {
+        this.target = player;
     }
 }

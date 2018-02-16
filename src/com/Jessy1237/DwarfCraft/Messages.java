@@ -71,7 +71,7 @@ public final class Messages
     public static String changedRace = "You are now a %racename%";
     public static String confirmRace = "You need to confirm this command with confirm at the end. (Note: This will reset all their skills)";
     public static String raceDoesNotExist = "The race %racename% doesn't exist";
-    public static String chooseARace = "&cPlease choose a race!";
+    public static String chooseARace = "&cPlease choose a race! Use /dc race";
     public static String trainSkillPrefix = "&6[Train &b%skillid%&6] ";
     public static String raceDoesNotContainSkill = "&cYour race doesn't have this skill!";
     public static String raceDoesNotSpecialize = "&cYour race doesn't specialize in this skill! Max level is (%racelevellimit%)!";

@@ -12,6 +12,7 @@ import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.CommandParser;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 
 /**
@@ -39,7 +40,13 @@ public class CommandSkillSheet extends Command
 
             if ( args.length == 0 && sender instanceof Player )
             {
-                plugin.getOut().printSkillSheet( plugin.getDataManager().find( ( Player ) sender ), sender, ( ( Player ) sender ).getName(), printFull );
+                DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) sender );
+                if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                {
+                    plugin.getOut().sendMessage( sender, Messages.chooseARace );
+                    return true;
+                }
+                plugin.getOut().printSkillSheet( dCPlayer, sender, printFull );
                 return true;
             }
             else
@@ -60,7 +67,6 @@ public class CommandSkillSheet extends Command
 
             DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
             desiredArguments.add( dCPlayer );
-            String displayName = null;
 
             try
             {
@@ -69,24 +75,28 @@ public class CommandSkillSheet extends Command
                     dCPlayer = ( DwarfPlayer ) outputList.get( 1 );
                 else
                     dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
-                if ( dCPlayer.getPlayer() == null )
-                    displayName = ( printFull ? args[1] : args[0] );
-                else
-                    displayName = dCPlayer.getPlayer().getDisplayName();
             }
             catch ( CommandException dce )
             {
-                if ( dce.getType() == Type.PARSEDWARFFAIL )
+                if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS || dce.getType() == Type.EMPTYPLAYER )
                 {
                     if ( sender instanceof Player )
+                    {
                         dCPlayer = plugin.getDataManager().find( ( Player ) sender );
+                    }
                     else
                         throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                 }
                 else
                     throw dce;
             }
-            plugin.getOut().printSkillSheet( dCPlayer, sender, displayName, printFull );
+
+            if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+            {
+                plugin.getOut().sendMessage( sender, Messages.chooseARace );
+                return true;
+            }
+            plugin.getOut().printSkillSheet( dCPlayer, sender, printFull );
             return true;
         }
         catch ( CommandException e )

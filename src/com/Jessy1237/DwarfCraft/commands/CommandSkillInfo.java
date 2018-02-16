@@ -16,9 +16,9 @@ import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.CommandParser;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
-
 
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
@@ -71,7 +71,7 @@ public class CommandSkillInfo extends Command implements TabCompleter
                 }
                 catch ( CommandException dce )
                 {
-                    if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS )
+                    if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS || dce.getType() == Type.EMPTYPLAYER )
                     {
                         desiredArguments.remove( 0 );
                         outputList = parser.parse( desiredArguments, true );
@@ -79,6 +79,12 @@ public class CommandSkillInfo extends Command implements TabCompleter
                         if ( !( sender instanceof Player ) )
                             throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                         dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );
+
+                        if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                        {
+                            plugin.getOut().sendMessage( sender, Messages.chooseARace );
+                            return true;
+                        }
                     }
                     else
                         throw dce;

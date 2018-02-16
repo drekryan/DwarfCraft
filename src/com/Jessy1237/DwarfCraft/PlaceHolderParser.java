@@ -1,5 +1,7 @@
 package com.Jessy1237.DwarfCraft;
 
+import java.util.ArrayList;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -203,9 +205,13 @@ public class PlaceHolderParser
     {
         // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
         int levelLimit = plugin.getConfigManager().getMaxSkillLevel();
-        if ( !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
+        ArrayList<Integer> skills = plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() );
+        if ( skills != null )
         {
-            levelLimit = plugin.getConfigManager().getRaceLevelLimit();
+            if ( !skills.contains( skill.getId() ) )
+            {
+                levelLimit = plugin.getConfigManager().getRaceLevelLimit();
+            }
         }
 
         return parseByDwarfSkill( parseByDwarfPlayer( text.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + levelLimit ), dwarfPlayer ), skill );

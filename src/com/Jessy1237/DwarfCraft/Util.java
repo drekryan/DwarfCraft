@@ -489,7 +489,10 @@ public class Util
         DwarfPlayer data = dm.find( player );
 
         if ( data == null )
+        {
             data = dm.createDwarf( player );
+            plugin.getOut().sendMessage( player, Messages.chooseARace );
+        }
         if ( !dm.checkDwarfData( data ) )
             dm.createDwarfData( data );
 

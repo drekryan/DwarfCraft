@@ -161,7 +161,7 @@ public class Out
         return true;
     }
 
-    public void printSkillSheet( DwarfPlayer dCPlayer, CommandSender sender, String displayName, boolean printFull )
+    public void printSkillSheet( DwarfPlayer dCPlayer, CommandSender sender, boolean printFull )
     {
         String message1;
         String message2 = "";

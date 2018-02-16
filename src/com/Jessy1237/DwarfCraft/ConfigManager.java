@@ -159,13 +159,13 @@ public final class ConfigManager
 
     private void getDefaultValues()
     {
-        if ( configWorldFileName == null )
+        if ( configWorldFileName == null || configWorldFileName.equals( "" ) )
             configWorldFileName = "world-blacklist.config";
-        if ( dbpath == null )
+        if ( dbpath == null || dbpath.equals( "" ) )
             dbpath = "dwarfcraft.db";
-        if ( cfgBlockGroupsFile == null )
+        if ( cfgBlockGroupsFile == null || cfgBlockGroupsFile.equals( "" ) )
             cfgBlockGroupsFile = "block-groups.config";
-        if ( defaultRace == null )
+        if ( defaultRace == null || defaultRace.equals( "" ) )
             defaultRace = "NULL";
         if ( trainDelay == null )
             trainDelay = 2;
@@ -175,9 +175,9 @@ public final class ConfigManager
             raceLevelLimit = 5;
         if ( announcementInterval == null )
             announcementInterval = 5;
-        if ( prefixStr == null )
+        if ( prefixStr == null || prefixStr.equals( "" ) )
             prefixStr = "[%racename%]";
-        if ( announcementMessage == null )
+        if ( announcementMessage == null || announcementMessage.equals( "" ) )
             announcementMessage = "%playername% has just leveled %skillname% to level %level%!";
     }
 

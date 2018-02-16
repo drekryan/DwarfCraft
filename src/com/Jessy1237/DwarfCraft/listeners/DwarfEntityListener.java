@@ -93,6 +93,13 @@ public class DwarfEntityListener implements Listener
                 Player player = ( Player ) event.getClicker();
                 DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
                 DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+                
+                if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                {
+                    plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
+                    return true;
+                }
+                
                 plugin.getOut().printSkillInfo( player, skill, dCPlayer, trainer.getMaxSkill() );
 
             }

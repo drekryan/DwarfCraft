@@ -25,7 +25,17 @@ public class RaceGUI extends DwarfGUI
     @Override
     public void init()
     {
-        inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, "Race List || You're a " + plugin.getOut().parseColors( plugin.getConfigManager().getRace( dwarfPlayer.getRace().toLowerCase() ).getPrefixColour() ) + dwarfPlayer.getRace() );
+
+        DwarfRace playerRace = plugin.getConfigManager().getRace( dwarfPlayer.getRace().toLowerCase() );
+        if ( playerRace != null )
+        {
+            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, "Race List || You're a " + plugin.getOut().parseColors( playerRace.getPrefixColour() ) + dwarfPlayer.getRace() );
+        }
+        else
+        {
+            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, "Race List || " + ChatColor.RED + "You currently don't have a race!" );
+        }
+
         inventory.clear();
         int i = 0;
         for ( DwarfRace race : plugin.getConfigManager().getRaceList() )
@@ -88,7 +98,22 @@ public class RaceGUI extends DwarfGUI
                 race = event.getCurrentItem().getItemMeta().getDisplayName();
                 if ( !race.equals( ChatColor.RED + "WARNING" ) && race != null )
                 {
-                    confirmInit();
+                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                    {
+                        DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dwarfPlayer, plugin.getConfigManager().getRace( race.toLowerCase() ) );
+                        plugin.getServer().getPluginManager().callEvent( e );
+
+                        if ( !e.isCancelled() )
+                        {
+                            dwarfPlayer.getPlayer().closeInventory();
+                            plugin.getOut().changedRace( dwarfPlayer.getPlayer(), dwarfPlayer, e.getRace().getName() );
+                            dwarfPlayer.changeRace( e.getRace().getName() );
+                        }
+                    }
+                    else
+                    {
+                        confirmInit();
+                    }
                 }
             }
         }
