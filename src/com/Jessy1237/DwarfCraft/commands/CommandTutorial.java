@@ -56,7 +56,7 @@ public class CommandTutorial extends Command
                 Player player = ( Player ) sender;
                 DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
 
-                String page = plugin.getOut().parseColors( readPage.replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ).replaceAll( "%playername%", player.getDisplayName() ).replaceAll( "%playerrace%", dwarfPlayer.getRace() ) );
+                String page = plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfPlayer( readPage, dwarfPlayer ) );
 
                 if ( isOverPageLimit( bookMeta, sender ) )
                     break;
