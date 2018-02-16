@@ -46,6 +46,7 @@ public class CommandSkillSheet extends Command
                     plugin.getOut().sendMessage( sender, Messages.chooseARace );
                     return true;
                 }
+
                 plugin.getOut().printSkillSheet( dCPlayer, sender, printFull );
                 return true;
             }

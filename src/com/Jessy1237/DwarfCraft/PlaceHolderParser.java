@@ -242,8 +242,7 @@ public class PlaceHolderParser
         @Override
         public String onPlaceholderRequest( Player player, String identifier )
         {
-
-            String out = generalParse( identifier );
+            String out = generalParse( "%" + identifier + "%" );
 
             DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
 
