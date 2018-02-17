@@ -71,8 +71,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private Permission perms = null;
     private Chat chat = null;
     private TraitInfo trainerTrait;
-    private HashMap<String, Command> normCommands = new HashMap<String, Command>();
-    private HashMap<String, Command> opCommands = new HashMap<String, Command>();
+    private HashMap<String, Command> normCommands = new HashMap<>();
+    private HashMap<String, Command> opCommands = new HashMap<>();
 
     public static int debugMessagesThreshold = 10;
 
@@ -303,7 +303,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
             return null;
 
-        List<String> matches = new ArrayList<String>();
+        List<String> matches = new ArrayList<>();
 
         if ( args.length <= 1 || args[0].equalsIgnoreCase( "" ) )
         {

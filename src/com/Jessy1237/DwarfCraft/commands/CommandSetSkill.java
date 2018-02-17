@@ -53,8 +53,8 @@ public class CommandSetSkill extends Command implements TabCompleter
             try
             {
                 CommandParser parser = new CommandParser( plugin, sender, args );
-                List<Object> desiredArguments = new ArrayList<Object>();
-                List<Object> outputList = null;
+                List<Object> desiredArguments = new ArrayList<>();
+                List<Object> outputList;
 
                 DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
                 DwarfSkill skill = new DwarfSkill( 0, null, 0, null, null, null, null, null );
@@ -84,7 +84,7 @@ public class CommandSetSkill extends Command implements TabCompleter
                             dCPlayer = ( DwarfPlayer ) outputList.get( 2 );
                             skill = ( DwarfSkill ) outputList.get( 0 );
                             level = ( Integer ) outputList.get( 1 );
-                            name = ( ( Player ) sender ).getName();
+                            name = (sender).getName();
                         }
                         else
                             throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
@@ -116,7 +116,7 @@ public class CommandSetSkill extends Command implements TabCompleter
                             s.setLevel( oldLevel );
                         }
                     }
-                    plugin.getOut().sendMessage( sender, "&aAdmin: &eset all skills for player &9" + name + "&e to &3" + level );
+                    plugin.getOut().sendMessage(sender, "&aAdmin: &freset all skills for player &9" + name + "&e to &3" + level);
                     plugin.getDataManager().saveDwarfData( dCPlayer, skills );
                 }
                 else
@@ -133,7 +133,7 @@ public class CommandSetSkill extends Command implements TabCompleter
                         skill.setDeposit3( 0 );
                         DwarfSkill[] skills = new DwarfSkill[1];
                         skills[0] = skill;
-                        plugin.getOut().sendMessage( sender, "&aAdmin: &eset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level );
+                        plugin.getOut().sendMessage(sender, "&aAdmin: &freset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level);
                         plugin.getDataManager().saveDwarfData( dCPlayer, skills );
                     }
                     else
