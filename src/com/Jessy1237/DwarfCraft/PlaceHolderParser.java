@@ -50,7 +50,7 @@ public class PlaceHolderParser
         PLAYER_LEVEL( "%playerlevel%" ),
         PLAYER_NAME( "%playername%" ),
         PLAYER_RACE( "%playerrace%" ),
-        RACE_LEVEL_LIMIT( "racelevellimit%" ),
+        RACE_LEVEL_LIMIT("%racelevellimit%"),
         RACE_NAME( "%racename%" ),
         SKILL_COST_AMOUNT( "%costamount%" ),
         SKILL_DEPOSIT_AMOUNT( "%depositedamount%" ),

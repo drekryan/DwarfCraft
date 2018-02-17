@@ -32,7 +32,7 @@ public class TrainerGUI extends DwarfGUI
     public void init()
     {
         DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
-        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainerGUITitle, skill ) ) );
+        this.inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors(plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill(Messages.trainerGUITitle, dwarfPlayer, skill)));
         inventory.clear();
 
         List<List<ItemStack>> costs = dwarfPlayer.calculateTrainingCost( skill );
@@ -133,7 +133,7 @@ public class TrainerGUI extends DwarfGUI
     {
         DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
         dwarfPlayer.getPlayer().closeInventory();
-        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainerGUITitle, skill ) ) );
+        this.inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors(plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill(Messages.trainerGUITitle, dwarfPlayer, skill)));
         init();
         dwarfPlayer.getPlayer().updateInventory();
         openGUI();
