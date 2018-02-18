@@ -1,25 +1,27 @@
 package com.Jessy1237.DwarfCraft;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.Jessy1237.DwarfCraft.commands.CommandCreateGreeter;
-import com.Jessy1237.DwarfCraft.commands.CommandCreateTrainer;
-import com.Jessy1237.DwarfCraft.commands.CommandDCCommands;
-import com.Jessy1237.DwarfCraft.commands.CommandDMem;
+import com.Jessy1237.DwarfCraft.commands.CommandCreate;
 import com.Jessy1237.DwarfCraft.commands.CommandDebug;
 import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
+import com.Jessy1237.DwarfCraft.commands.CommandHelp;
 import com.Jessy1237.DwarfCraft.commands.CommandInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandListTrainers;
+import com.Jessy1237.DwarfCraft.commands.CommandList;
 import com.Jessy1237.DwarfCraft.commands.CommandRace;
-import com.Jessy1237.DwarfCraft.commands.CommandRaces;
 import com.Jessy1237.DwarfCraft.commands.CommandReload;
-import com.Jessy1237.DwarfCraft.commands.CommandRules;
 import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
 import com.Jessy1237.DwarfCraft.commands.CommandSkillSheet;
@@ -34,11 +36,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import de.diddiz.LogBlock.Consumer;
 import de.diddiz.LogBlock.LogBlock;
-
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -55,7 +52,7 @@ import net.milkbowl.vault.permission.Permission;
  * @OriginalAuthor LexManos
  * @CurrentAuthor Jessy1237
  */
-public class DwarfCraft extends JavaPlugin
+public class DwarfCraft extends JavaPlugin implements TabCompleter
 {
 
     private final DwarfBlockListener blockListener = new DwarfBlockListener( this );
@@ -70,9 +67,12 @@ public class DwarfCraft extends JavaPlugin
     private Out out;
     private Consumer consumer = null;
     private Util util;
+    private PlaceHolderParser placeHolderParser;
     private Permission perms = null;
     private Chat chat = null;
     private TraitInfo trainerTrait;
+    private HashMap<String, Command> normCommands = new HashMap<>();
+    private HashMap<String, Command> opCommands = new HashMap<>();
 
     public static int debugMessagesThreshold = 10;
 
@@ -104,6 +104,11 @@ public class DwarfCraft extends JavaPlugin
     public Util getUtil()
     {
         return util;
+    }
+
+    public PlaceHolderParser getPlaceHolderParser()
+    {
+        return placeHolderParser;
     }
 
     public DwarfEntityListener getDwarfEntityListener()
@@ -180,6 +185,48 @@ public class DwarfCraft extends JavaPlugin
         return true;
     }
 
+    private Command getSubCommand( String name )
+    {
+        return ( normCommands.get( name ) == null ? opCommands.get( name ) : normCommands.get( name ) );
+    }
+
+    private void initCommands()
+    {
+        normCommands.put( "skillsheet", new CommandSkillSheet( this ) );
+        normCommands.put( "tutorial", new CommandTutorial( this ) );
+        normCommands.put( "info", new CommandInfo( this ) );
+        normCommands.put( "skillinfo", new CommandSkillInfo( this ) );
+        normCommands.put( "race", new CommandRace( this ) );
+        normCommands.put( "effectinfo", new CommandEffectInfo( this ) );
+        opCommands.put( "debug", new CommandDebug( this ) );
+        opCommands.put( "list", new CommandList( this ) );
+        opCommands.put( "setskill", new CommandSetSkill( this ) );
+        opCommands.put( "create", new CommandCreate( this ) );
+        opCommands.put( "reload", new CommandReload( this ) );
+    }
+
+    /**
+     * Allows companion plugins to add sub commands that require normal permissions
+     * 
+     * @param name The name of the command
+     * @param cmd An instance of the command
+     */
+    public void addNormCommand( String name, Command cmd )
+    {
+        normCommands.put( name, cmd );
+    }
+
+    /**
+     * Allows companion plugins to add sub commands that require admin permissions
+     * 
+     * @param name The name of the command
+     * @param cmd An instance of the command
+     */
+    public void addOpCommand( String name, Command cmd )
+    {
+        opCommands.put( name, cmd );
+    }
+
     @Override
     public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
     {
@@ -188,21 +235,21 @@ public class DwarfCraft extends JavaPlugin
         boolean hasNorm = checkPermission( sender, name, "norm" );
         boolean hasOp = checkPermission( sender, name, "op" );
         boolean hasAll = checkPermission( sender, name, "all" );
-        boolean isCmd = true;
+        boolean isOp = false;
         String[] cArgs = new String[0];
 
-        if ( name.equalsIgnoreCase( "DwarfCraft" ) )
+        if ( name.equalsIgnoreCase( "dwarfcraft" ) )
         {
             if ( hasNorm || hasAll )
             {
                 if ( args.length == 0 )
                 {
-                    cmd = new CommandDCCommands( this );
+                    cmd = new CommandHelp( this );
                 }
                 else
                 {
                     // Converts the variables to work with the old command method
-                    name = getConfigManager().getAlias( args[0] );
+                    name = args[0].toLowerCase();
                     cArgs = new String[args.length - 1];
                     for ( int i = 1; i < args.length; i++ )
                     {
@@ -224,136 +271,54 @@ public class DwarfCraft extends JavaPlugin
             return false;
         }
 
-        if ( name.equalsIgnoreCase( "SkillSheet" ) )
+        cmd = normCommands.get( name );
+        if ( cmd == null )
         {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandSkillSheet( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Tutorial" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandTutorial( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Info" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandInfo( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Rules" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandRules( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "SkillInfo" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandSkillInfo( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Race" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandRace( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "EffectInfo" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandEffectInfo( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Debug" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandDebug( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "ListTrainers" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandListTrainers( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "SetSkill" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandSetSkill( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "CreateGreeter" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandCreateGreeter( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "CreateTrainer" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandCreateTrainer( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "DMem" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandDMem( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Races" ) )
-        {
-            if ( hasNorm || hasAll )
-            {
-                cmd = new CommandRaces( this );
-            }
-        }
-        else if ( name.equalsIgnoreCase( "Reload" ) )
-        {
-            if ( hasOp || hasAll )
-            {
-                cmd = new CommandReload( this );
-            }
-        }
-        else
-        {
-            isCmd = false;
+            cmd = opCommands.get( name );
+            isOp = true;
         }
 
         if ( cmd == null )
         {
-            if ( isCmd == false )
+            cmd = new CommandHelp( this );
+            return cmd.execute( sender, commandLabel, cArgs );
+        }
+        else
+        {
+            if ( ( ( hasNorm || hasAll ) && !isOp ) || ( isOp && ( hasAll || hasOp ) ) )
             {
-                cmd = new CommandDCCommands( this );
                 return cmd.execute( sender, commandLabel, cArgs );
             }
             else
             {
-                if ( hasNorm == false || hasOp == false )
-                {
-                    sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
-                }
+                sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
                 return true;
             }
         }
+    }
+
+    @Override
+    public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
+
+        List<String> matches = new ArrayList<>();
+
+        if ( args.length <= 1 || args[0].equalsIgnoreCase( "" ) )
+        {
+            matches = new CommandHelp( this ).onTabComplete( sender, command, alias, args );
+        }
         else
         {
-            return cmd.execute( sender, commandLabel, cArgs );
+            Command cmd = getSubCommand( args[0].toLowerCase() );
+            if ( cmd != null )
+                if ( cmd instanceof TabCompleter )
+                    matches = ( ( TabCompleter ) cmd ).onTabComplete( sender, command, alias, args );
+
         }
+
+        return matches;
     }
 
     /**
@@ -381,8 +346,8 @@ public class DwarfCraft extends JavaPlugin
 
         if ( pm.getPlugin( "Vault" ) == null || pm.getPlugin( "Vault" ).isEnabled() == false )
         {
-            System.out.println( "[DwarfCraft] Couldn't find Vault!" );
-            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
+            getLogger().log( Level.WARNING, "Couldn't find Vault!" );
+            getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
             pm.disablePlugin( this );
             return;
         }
@@ -394,14 +359,14 @@ public class DwarfCraft extends JavaPlugin
         }
         catch ( Exception e )
         {
-            System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
+            getLogger().log( Level.WARNING, "Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
 
         if ( !isPermissionEnabled() )
         {
-            System.out.println( "[DwarfCraft] Unable to find a permissions plugin." );
+            getLogger().log( Level.WARNING, "Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
@@ -420,12 +385,12 @@ public class DwarfCraft extends JavaPlugin
 
         if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
         {
-            System.out.println( "[DwarfCraft] Couldn't find Citizens!" );
-            System.out.println( "[DwarfCraft] DwarfCraft now disabling..." );
+            getLogger().log( Level.WARNING, "Couldn't find Citizens!" );
+            getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
             pm.disablePlugin( this );
             return;
         }
-        System.out.println( "[DwarfCraft] Hooked into Citizens!" );
+        getLogger().log( Level.INFO, "Hooked into Citizens!" );
 
         npcr = CitizensAPI.getNPCRegistry();
         util = new Util( this );
@@ -436,14 +401,8 @@ public class DwarfCraft extends JavaPlugin
 
         out = new Out( this );
 
-        // readGreeterMessagesfile() depends on datamanager existing, so this
-        // has to go here
-        if ( !getConfigManager().readGreeterMessagesfile() )
-        {
-            System.out.println( "[SEVERE] Failed to read DwarfCraft Greeter Messages)" );
-            pm.disablePlugin( this );
-        }
-
+        placeHolderParser = new PlaceHolderParser( this );
+        
         // Creates the citizen trait for the DwarfTrainers
         if ( !reload )
         {
@@ -466,13 +425,25 @@ public class DwarfCraft extends JavaPlugin
         if ( pm.getPlugin( "LogBlock" ) != null )
         {
             consumer = ( ( LogBlock ) pm.getPlugin( "LogBlock" ) ).getConsumer();
-            System.out.println( "[DwarfCraft] Hooked into LogBlock!" );
+            getLogger().log( Level.INFO, "Hooked into LogBlock!" );
         }
         else
         {
-            System.out.println( "[DwarfCraft] Couldn't find LogBlock!" );
+            getLogger().log( Level.INFO, "Couldn't find LogBlock!" );
         }
-        
-        System.out.println( "[DwarfCraft] " + getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
+
+        if ( pm.getPlugin( "PlaceholderAPI" ) != null )
+        {
+            placeHolderParser.hookAPI();
+            getLogger().log( Level.INFO, "Hooked into PlaceholderAPI!" );
+        }
+        else
+        {
+            getLogger().log( Level.INFO, "Couldn't find PlaceholderAPI!" );
+        }
+
+        initCommands();
+
+        getLogger().log( Level.INFO, getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
     }
 }

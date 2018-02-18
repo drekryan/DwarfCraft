@@ -26,38 +26,30 @@ public class DwarfTrainerTrait extends Trait
     private int mMaxLevel;
     @Persist( required = true )
     private int mMinLevel;
-    @Persist( required = true )
-    private boolean mIsGreeter;
-    @Persist( required = true )
-    private String mMsgID;
 
     @Override
     public void load( DataKey key )
     {
-        this.mSkillID = key.getInt( "mSkillID" );
-        this.mMaxLevel = key.getInt( "mMaxLevel" );
-        this.mMinLevel = key.getInt( "mMinLevel" );
-        this.mIsGreeter = key.getBoolean( "mIsGreeter" );
-        this.mMsgID = key.getString( "mMsgID" );
-        DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) getNPC() );
-        if ( isGreeter() )
-            this.mHeldItem = Material.AIR;
-        else
-            this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
+        if ( mSkillID == 0 )
+            this.mSkillID = key.getInt( "mSkillID" );
+        if ( mSkillID == 0 )
+            this.mMaxLevel = key.getInt( "mMaxLevel" );
+        if ( mSkillID == 0 )
+            this.mMinLevel = key.getInt( "mMinLevel" );
+        loadHeldItem();
 
-        if ( this.mHeldItem == null )
-        {
-            this.mHeldItem = Material.AIR;
-        }
-
-        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
+        // Adding the trainer to DwarfCraft DB
+        DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
+        plugin.getDataManager().trainerList.put( npc.getId(), trainer );
     }
-    
+
     @Override
     public void onSpawn()
     {
-        if ( this.mHeldItem != Material.AIR )
-            ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( mHeldItem, 1 ) );
+        if ( this.mHeldItem != Material.AIR && this.mHeldItem != null )
+        {
+            ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( this.mHeldItem, 1 ) );
+        }
     }
 
     @Override
@@ -72,15 +64,14 @@ public class DwarfTrainerTrait extends Trait
         this.plugin = ( DwarfCraft ) Bukkit.getServer().getPluginManager().getPlugin( "DwarfCraft" );
     }
 
-    public DwarfTrainerTrait( DwarfCraft plugin, Integer ID, Integer skillID, Integer maxLevel, Integer minLevel, boolean isGreeter, String msgID )
+    public DwarfTrainerTrait( DwarfCraft plugin, Integer ID, Integer skillID, Integer maxLevel, Integer minLevel )
     {
         super( "DwarfTrainer" );
         this.plugin = plugin;
         this.mSkillID = skillID;
         this.mMaxLevel = maxLevel;
         this.mMinLevel = minLevel;
-        this.mIsGreeter = isGreeter;
-        this.mMsgID = msgID;
+        loadHeldItem();
     }
 
     @EventHandler
@@ -111,16 +102,6 @@ public class DwarfTrainerTrait extends Trait
         return this.mMinLevel;
     }
 
-    public boolean isGreeter()
-    {
-        return this.mIsGreeter;
-    }
-
-    protected String getMessage()
-    {
-        return this.mMsgID;
-    }
-
     public int getSkillTrained()
     {
         return this.mSkillID;
@@ -132,5 +113,15 @@ public class DwarfTrainerTrait extends Trait
             return this.mHeldItem;
         else
             return Material.AIR;
+    }
+
+    private void loadHeldItem()
+    {
+        this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
+
+        if ( this.mHeldItem == null )
+        {
+            this.mHeldItem = Material.AIR;
+        }
     }
 }

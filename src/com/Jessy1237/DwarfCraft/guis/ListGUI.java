@@ -17,7 +17,7 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 
-public class ListTrainersGUI extends DwarfGUI
+public class ListGUI extends DwarfGUI
 {
 
     private ArrayList<DwarfTrainer[]> trainers = new ArrayList<DwarfTrainer[]>();
@@ -25,7 +25,7 @@ public class ListTrainersGUI extends DwarfGUI
     private final int inventorySize = 54;
     private int numPages = 0;
 
-    public ListTrainersGUI( DwarfCraft plugin, DwarfPlayer dwarfPlayer )
+    public ListGUI( DwarfCraft plugin, DwarfPlayer dwarfPlayer )
     {
         super( plugin, dwarfPlayer );
     }

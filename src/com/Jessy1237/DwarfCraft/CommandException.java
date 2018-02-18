@@ -1,11 +1,10 @@
 package com.Jessy1237.DwarfCraft;
 
+import org.bukkit.command.CommandSender;
+
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
-
-import org.bukkit.command.CommandSender;
-
 public class CommandException extends Throwable
 {
 

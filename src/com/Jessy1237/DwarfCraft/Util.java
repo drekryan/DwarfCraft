@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 
 import org.bukkit.Material;
@@ -14,12 +10,16 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.NPC;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class Util
 {
 
@@ -492,7 +492,11 @@ public class Util
         if ( data == null )
             data = dm.createDwarf( player );
         if ( !dm.checkDwarfData( data ) )
+        {
             dm.createDwarfData( data );
+            if ( plugin.getConfigManager().spawnTutorialBook )
+                new CommandTutorial( plugin ).execute( player, "", new String[] { "" } );
+        }
 
         if ( plugin.isChatEnabled() )
         {

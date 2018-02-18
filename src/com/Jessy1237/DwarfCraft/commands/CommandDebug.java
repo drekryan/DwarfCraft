@@ -1,22 +1,24 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.CommandParser;
-import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
-public class CommandDebug extends Command
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+public class CommandDebug extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
 
@@ -65,5 +67,26 @@ public class CommandDebug extends Command
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
+
+        if ( args[0].equalsIgnoreCase( "debug" ) && args.length >= 2 )
+        {
+            final List<String> completions = new ArrayList<>( Arrays.asList( "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ) );
+            List<String> matches = new ArrayList<>();
+
+            if ( args[1].equalsIgnoreCase( "" ) )
+            {
+                matches.addAll( completions );
+                return matches;
+            }
+        }
+
+        return Collections.emptyList();
     }
 }

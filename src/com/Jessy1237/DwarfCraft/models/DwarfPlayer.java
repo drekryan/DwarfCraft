@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.models;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +11,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfPlayer
 {
     private final DwarfCraft plugin;
@@ -176,7 +175,7 @@ public class DwarfPlayer
      * @param effect (does not have to be this dwarf's effect, only used for ID#)
      * @return DwarfSkill or null if none found
      */
-    protected DwarfSkill getSkill( DwarfEffect effect )
+    public DwarfSkill getSkill( DwarfEffect effect )
     {
         for ( DwarfSkill skill : skills.values() )
         {
@@ -277,25 +276,53 @@ public class DwarfPlayer
     {
         final String oldRace = this.race;
         this.race = race;
-        skills = plugin.getConfigManager().getAllSkills();
         DwarfSkill[] dCSkills = new DwarfSkill[skills.size()];
 
-        // Resets the players skills
         int I = 0;
+        // Resets the players skills
         for ( DwarfSkill skill : skills.values() )
         {
-            skill.setLevel( 0 );
-            skill.setDeposit1( 0 );
-            skill.setDeposit2( 0 );
-            skill.setDeposit3( 0 );
+            if ( !plugin.getConfigManager().softcore )
+            {
+                if ( race.equalsIgnoreCase( "Vanilla" ) )
+                {
+                    skill.setLevel( 5 );
+                }
+                else
+                {
+                    skill.setLevel( 0 );
+                }
+
+                skill.setDeposit1( 0 );
+                skill.setDeposit2( 0 );
+                skill.setDeposit3( 0 );
+            }
+            else
+            {
+                if ( race.equalsIgnoreCase( "Vanilla" ) )
+                {
+                    skill.setLevel( 5 );
+                }
+                else
+                {
+                    if ( !plugin.getConfigManager().getRace( race ).getSkills().contains( Integer.valueOf( skill.getId() ) ) && skill.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
+                    {
+                        skill.setLevel( plugin.getConfigManager().getRaceLevelLimit() );
+                        skill.setDeposit1( 0 );
+                        skill.setDeposit2( 0 );
+                        skill.setDeposit3( 0 );
+                    }
+                }
+            }
             dCSkills[I] = skill;
             I++;
         }
 
         // Resets the players prefix
         if ( plugin.isChatEnabled() )
-            if ( plugin.getChat().getPlayerPrefix( getPlayer() ).contains( plugin.getUtil().getPlayerPrefix( oldRace ) ) )
-                plugin.getChat().setPlayerPrefix( getPlayer(), plugin.getChat().getPlayerPrefix( getPlayer() ).replace( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
+            if ( !oldRace.equalsIgnoreCase( "NULL" ) )
+                if ( plugin.getChat().getPlayerPrefix( getPlayer() ).contains( plugin.getUtil().getPlayerPrefix( oldRace ) ) )
+                    plugin.getChat().setPlayerPrefix( getPlayer(), plugin.getChat().getPlayerPrefix( getPlayer() ).replace( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
 
         plugin.getDataManager().saveDwarfData( this, dCSkills );
     }

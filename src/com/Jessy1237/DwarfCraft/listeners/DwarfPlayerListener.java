@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.listeners;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.HashMap;
 
 import org.bukkit.Location;
@@ -29,6 +25,7 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.Util;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
@@ -36,6 +33,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfPlayerListener implements Listener
 {
     private final DwarfCraft plugin;
@@ -53,10 +53,14 @@ public class DwarfPlayerListener implements Listener
     {
         plugin.getUtil().setPlayerPrefix( event.getPlayer() );
 
+        DwarfPlayer dwarfPlayer = plugin.getDataManager().find( event.getPlayer() );
+        if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+            plugin.getOut().sendMessage( dwarfPlayer.getPlayer(), Messages.chooseARace );
+
         if ( !plugin.getConfigManager().sendGreeting )
             return;
 
-        plugin.getOut().welcome( plugin.getDataManager().find( event.getPlayer() ) );
+        plugin.getOut().welcome( dwarfPlayer );
     }
 
     /**

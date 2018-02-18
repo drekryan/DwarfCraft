@@ -1,23 +1,30 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.*;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandInformation;
+import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-public class CommandSetSkill extends Command
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+public class CommandSetSkill extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
 
@@ -46,8 +53,8 @@ public class CommandSetSkill extends Command
             try
             {
                 CommandParser parser = new CommandParser( plugin, sender, args );
-                List<Object> desiredArguments = new ArrayList<Object>();
-                List<Object> outputList = null;
+                List<Object> desiredArguments = new ArrayList<>();
+                List<Object> outputList;
 
                 DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
                 DwarfSkill skill = new DwarfSkill( 0, null, 0, null, null, null, null, null );
@@ -77,7 +84,7 @@ public class CommandSetSkill extends Command
                             dCPlayer = ( DwarfPlayer ) outputList.get( 2 );
                             skill = ( DwarfSkill ) outputList.get( 0 );
                             level = ( Integer ) outputList.get( 1 );
-                            name = ( ( Player ) sender ).getName();
+                            name = (sender).getName();
                         }
                         else
                             throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
@@ -109,7 +116,7 @@ public class CommandSetSkill extends Command
                             s.setLevel( oldLevel );
                         }
                     }
-                    plugin.getOut().sendMessage( sender, "&aAdmin: &eset all skills for player &9" + name + "&e to &3" + level );
+                    plugin.getOut().sendMessage(sender, "&aAdmin: &freset all skills for player &9" + name + "&e to &3" + level);
                     plugin.getDataManager().saveDwarfData( dCPlayer, skills );
                 }
                 else
@@ -126,7 +133,7 @@ public class CommandSetSkill extends Command
                         skill.setDeposit3( 0 );
                         DwarfSkill[] skills = new DwarfSkill[1];
                         skills[0] = skill;
-                        plugin.getOut().sendMessage( sender, "&aAdmin: &eset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level );
+                        plugin.getOut().sendMessage(sender, "&aAdmin: &freset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level);
                         plugin.getDataManager().saveDwarfData( dCPlayer, skills );
                     }
                     else
@@ -143,5 +150,46 @@ public class CommandSetSkill extends Command
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
+
+        ArrayList<String> completions = new ArrayList<>();
+        ArrayList<String> matches = new ArrayList<>();
+        if ( args.length == 2 )
+        {
+            completions.clear();
+            matches.clear();
+
+            for ( Player player : plugin.getServer().getOnlinePlayers() )
+            {
+                // Strip Colours from Display Names from silly plugins that add it to the Player Name instead of using prefixes
+                completions.add( ChatColor.stripColor( player.getDisplayName() ) );
+            }
+
+            return StringUtil.copyPartialMatches( args[1], completions, matches );
+        }
+        else if ( args.length == 3 )
+        {
+            completions.clear();
+            matches.clear();
+
+            // Gets a list of all possible skill names
+            Collection<DwarfSkill> skills = plugin.getConfigManager().getAllSkills().values();
+
+            for ( DwarfSkill skill : skills )
+            {
+                String skillName = skill.getDisplayName().replaceAll( " ", "_" );
+                completions.add( skillName.toLowerCase() );
+            }
+
+            return StringUtil.copyPartialMatches( args[2], completions, matches );
+        }
+
+        return Collections.emptyList();
     }
 }

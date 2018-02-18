@@ -1,22 +1,29 @@
 package com.Jessy1237.DwarfCraft.commands;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-import com.Jessy1237.DwarfCraft.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
+import com.Jessy1237.DwarfCraft.CommandException;
 import com.Jessy1237.DwarfCraft.CommandException.Type;
+import com.Jessy1237.DwarfCraft.CommandInformation;
+import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-public class CommandSkillInfo extends Command
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+public class CommandSkillInfo extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
 
@@ -64,7 +71,7 @@ public class CommandSkillInfo extends Command
                 }
                 catch ( CommandException dce )
                 {
-                    if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS )
+                    if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS || dce.getType() == Type.EMPTYPLAYER )
                     {
                         desiredArguments.remove( 0 );
                         outputList = parser.parse( desiredArguments, true );
@@ -72,6 +79,12 @@ public class CommandSkillInfo extends Command
                         if ( !( sender instanceof Player ) )
                             throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                         dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );
+
+                        if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                        {
+                            plugin.getOut().sendMessage( sender, Messages.chooseARace );
+                            return true;
+                        }
                     }
                     else
                         throw dce;
@@ -88,6 +101,30 @@ public class CommandSkillInfo extends Command
             }
         }
         return true;
+    }
 
+    @Override
+    public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
+    {
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+            return null;
+
+        if ( args.length == 2 )
+        {
+            // Gets a list of all possible skill names
+            Collection<DwarfSkill> skills = plugin.getConfigManager().getAllSkills().values();
+            ArrayList<String> completions = new ArrayList<>();
+            ArrayList<String> matches = new ArrayList<>();
+
+            for ( DwarfSkill skill : skills )
+            {
+                String skillName = skill.getDisplayName().replaceAll( " ", "_" );
+                completions.add( skillName.toLowerCase() );
+            }
+
+            return StringUtil.copyPartialMatches( args[1], completions, matches );
+        }
+
+        return Collections.emptyList();
     }
 }
