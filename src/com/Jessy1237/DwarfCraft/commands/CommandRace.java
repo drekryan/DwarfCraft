@@ -1,10 +1,16 @@
 package com.Jessy1237.DwarfCraft.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.Jessy1237.DwarfCraft.CommandException;
+import com.Jessy1237.DwarfCraft.CommandException.Type;
 import com.Jessy1237.DwarfCraft.CommandInformation;
+import com.Jessy1237.DwarfCraft.CommandParser;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfRaceChangeEvent;
 import com.Jessy1237.DwarfCraft.guis.RaceGUI;
@@ -16,7 +22,7 @@ public class CommandRace extends Command
 
     public CommandRace( final DwarfCraft plugin )
     {
-        super( "DwarfRace" );
+        super( "Race" );
         this.plugin = plugin;
     }
 
@@ -26,104 +32,86 @@ public class CommandRace extends Command
         if ( DwarfCraft.debugMessagesThreshold < 1 )
             System.out.println( "DC1: started command 'race'" );
 
-        if ( args.length == 0 && sender instanceof Player )
+        try
         {
-            Player p = ( Player ) sender;
-            RaceGUI gui = new RaceGUI( plugin, plugin.getDataManager().find( p ) );
-            plugin.getDwarfInventoryListener().addDwarfGUI( p, gui );
-        }
-        else if ( !( sender instanceof Player ) || plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
-        {
-            if ( args.length == 1 )
+            if ( args.length == 0 && sender instanceof Player )
             {
-                Player p = plugin.getServer().getPlayer( args[0] );
-                if ( p == null )
-                {
-                    plugin.getOut().sendMessage( sender, CommandInformation.Usage.RACE.getUsage() );
-                }
-                else
-                {
-                    plugin.getOut().adminRace( sender, p );
-                }
+                Player p = ( Player ) sender;
+                RaceGUI gui = new RaceGUI( plugin, plugin.getDataManager().find( p ) );
+                plugin.getDwarfInventoryListener().addDwarfGUI( p, gui );
+                return true;
+            }
+            else if ( args.length == 0 )
+            {
+                throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
             }
             else if ( args[0].equalsIgnoreCase( "?" ) )
             {
                 plugin.getOut().sendMessage( sender, CommandInformation.Desc.RACE.getDesc() );
+                return true;
             }
-            else if ( args.length == 3 )
+            else if ( !( sender instanceof Player ) || plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
             {
-                String newRace = args[1];
+                CommandParser parser = new CommandParser( plugin, sender, args );
+                List<Object> desiredArguments = new ArrayList<Object>();
+                List<Object> outputList = null;
 
-                Player p = plugin.getServer().getPlayer( args[0] );
-                DwarfPlayer dCPlayer = null;
-                if ( p == null )
+                DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
+                String newRace = "";
+                boolean confirm = false;
+                desiredArguments.add( dCPlayer );
+                desiredArguments.add( "Name" );
+                desiredArguments.add( new Boolean( false ) );
+
+                try
                 {
-                    plugin.getOut().sendMessage( sender, "Not a valid Player Name." );
-                    return true;
+                    outputList = parser.parse( desiredArguments, false );
+                    dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
+                    newRace = ( String ) outputList.get( 1 );
+                    confirm = ( ( Boolean ) outputList.get( 2 ) );
                 }
-                else
+                catch ( CommandException dce )
                 {
-                    dCPlayer = plugin.getDataManager().find( p );
-                }
 
-                if ( plugin.getConfigManager().getRace( newRace ) == null )
-                    plugin.getOut().dExistRace( sender, dCPlayer, newRace );
-
-                boolean confirmed = false;
-                if ( args[2].equalsIgnoreCase( "confirm" ) )
-                {
-                    confirmed = true;
-                }
-
-                if ( sender instanceof Player )
-                {
-                    if ( plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
+                    if ( dce.getType() == Type.TOOFEWARGS && args.length > 1 )
                     {
-                        race( newRace, confirmed, dCPlayer, ( CommandSender ) plugin.getServer().getPlayer( args[0] ) );
+                        desiredArguments.remove( 2 );
+                        outputList = parser.parse( desiredArguments, true );
+                        dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
+                        newRace = ( String ) outputList.get( 1 );
+                        plugin.getOut().confirmRace( sender, dCPlayer, newRace );
+                        return true;
                     }
-                }
-                else
-                {
-                    race( newRace, confirmed, dCPlayer, sender );
-                }
-            }
-            else if ( args.length == 2 )
-            {
-                String newRace = args[1];
-                Player p = plugin.getServer().getPlayer( args[0] );
-                DwarfPlayer dCPlayer = null;
-                if ( p == null )
-                {
-                    plugin.getOut().sendMessage( sender, "Not a valid Player Name." );
-                    return true;
-                }
-                else
-                {
-                    dCPlayer = plugin.getDataManager().find( p );
-                }
-
-                if ( plugin.getConfigManager().getRace( newRace ) == null )
-                    plugin.getOut().dExistRace( sender, dCPlayer, newRace );
-
-                boolean confirmed = false;
-                if ( sender instanceof Player )
-                {
-                    if ( plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
+                    else if ( dce.getType() == Type.TOOFEWARGS )
                     {
-                        race( newRace, confirmed, dCPlayer, ( CommandSender ) plugin.getServer().getPlayer( args[0] ) );
+                        desiredArguments.remove( 2 );
+                        desiredArguments.remove( 1 );
+                        outputList = parser.parse( desiredArguments, true );
+                        dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
+                        plugin.getOut().adminRace( sender, dCPlayer );
+                        return true;
+
                     }
+                    else
+                        throw dce;
                 }
-                else
-                {
-                    race( newRace, confirmed, dCPlayer, sender );
-                }
+
+                race( newRace, confirm, dCPlayer, sender );
+                return true;
             }
             else
             {
                 plugin.getOut().sendMessage( sender, CommandInformation.Usage.RACE.getUsage() );
+                return true;
             }
+
         }
-        return true;
+        catch ( CommandException e )
+        {
+            e.describe( sender );
+            sender.sendMessage( CommandInformation.Usage.RACE.getUsage() );
+            return false;
+        }
     }
 
     private void race( String newRace, boolean confirm, DwarfPlayer dCPlayer, CommandSender sender )

@@ -113,14 +113,7 @@ public final class CommandParser
         catch ( ArrayIndexOutOfBoundsException e )
         {
             if ( sender instanceof Player )
-            {
-                String[] fakeInput = new String[input.length + 1];
-                for ( int i = 0; i < input.length; i++ )
-                    fakeInput[i] = input[i];
-                input = fakeInput;
-                this.target = plugin.getDataManager().find( ( Player ) sender );
-                return target;
-            }
+                throw new CommandException( plugin, Type.PARSEDWARFFAIL );
             else
                 throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
         }

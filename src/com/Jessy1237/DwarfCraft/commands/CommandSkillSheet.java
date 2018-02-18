@@ -50,55 +50,61 @@ public class CommandSkillSheet extends Command
                 plugin.getOut().printSkillSheet( dCPlayer, sender, printFull );
                 return true;
             }
-            else
+            else if ( args.length == 0 )
             {
-                if ( args.length == 0 )
-                    throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
+                throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
             }
-
-            CommandParser parser = new CommandParser( plugin, sender, args );
-            List<Object> desiredArguments = new ArrayList<Object>();
-            List<Object> outputList = null;
-
-            if ( args[0].equalsIgnoreCase( "-f" ) || args[0].equalsIgnoreCase( "full" ) )
+            else if ( args[0].equalsIgnoreCase( "?" ) )
             {
-                printFull = true;
-                desiredArguments.add( args[0] );
-            }
-
-            DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
-            desiredArguments.add( dCPlayer );
-
-            try
-            {
-                outputList = parser.parse( desiredArguments, false );
-                if ( outputList.get( 0 ) instanceof String )
-                    dCPlayer = ( DwarfPlayer ) outputList.get( 1 );
-                else
-                    dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
-            }
-            catch ( CommandException dce )
-            {
-                if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS || dce.getType() == Type.EMPTYPLAYER )
-                {
-                    if ( sender instanceof Player )
-                    {
-                        dCPlayer = plugin.getDataManager().find( ( Player ) sender );
-                    }
-                    else
-                        throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
-                }
-                else
-                    throw dce;
-            }
-
-            if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
-            {
-                plugin.getOut().sendMessage( sender, Messages.chooseARace );
+                plugin.getOut().sendMessage( sender, CommandInformation.Desc.SKILLSHEET.getDesc() );
                 return true;
             }
-            plugin.getOut().printSkillSheet( dCPlayer, sender, printFull );
-            return true;
+            else
+            {
+                CommandParser parser = new CommandParser( plugin, sender, args );
+                List<Object> desiredArguments = new ArrayList<Object>();
+                List<Object> outputList = null;
+
+                if ( args[0].equalsIgnoreCase( "-f" ) || args[0].equalsIgnoreCase( "full" ) )
+                {
+                    printFull = true;
+                    desiredArguments.add( args[0] );
+                }
+
+                DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
+                desiredArguments.add( dCPlayer );
+
+                try
+                {
+                    outputList = parser.parse( desiredArguments, false );
+                    if ( outputList.get( 0 ) instanceof String )
+                        dCPlayer = ( DwarfPlayer ) outputList.get( 1 );
+                    else
+                        dCPlayer = ( DwarfPlayer ) outputList.get( 0 );
+                }
+                catch ( CommandException dce )
+                {
+                    if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS || dce.getType() == Type.EMPTYPLAYER )
+                    {
+                        if ( sender instanceof Player )
+                        {
+                            dCPlayer = plugin.getDataManager().find( ( Player ) sender );
+                        }
+                        else
+                            throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
+                    }
+                    else
+                        throw dce;
+                }
+
+                if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                {
+                    plugin.getOut().sendMessage( sender, Messages.chooseARace );
+                    return true;
+                }
+                plugin.getOut().printSkillSheet( dCPlayer, sender, printFull );
+                return true;
+            }
         }
         catch ( CommandException e )
         {

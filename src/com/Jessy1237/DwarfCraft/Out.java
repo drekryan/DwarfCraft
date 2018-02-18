@@ -319,9 +319,9 @@ public class Out
         sendMessage( sender, parseRace( Messages.raceCheck, plugin.getDataManager().find( player ), null ) );
     }
 
-    public void adminRace( CommandSender sender, Player player )
+    public void adminRace( CommandSender sender, DwarfPlayer player )
     {
-        sendMessage( sender, parseRace( Messages.adminRaceCheck, plugin.getDataManager().find( player ), null ) );
+        sendMessage( sender, parseRace( Messages.adminRaceCheck, player, null ) );
     }
 
     public void alreadyRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
