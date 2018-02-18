@@ -519,7 +519,6 @@ public final class ConfigManager
         return true;
     }
 
-    @SuppressWarnings( { "resource", "null" } )
     private boolean readMessagesFile()
     {
         plugin.getLogger().log( Level.INFO, "Reading messages file: " + configDirectory + "messages.config" );
@@ -563,176 +562,183 @@ public final class ConfigManager
                 String name = split[0];
                 String message = split[1];
 
-                if ( message != null || !message.trim().equals( "" ) || !message.equals( null ) )
+                if ( message == null )
                 {
-                    if ( name.equalsIgnoreCase( "Welcome prefix" ) )
-                        Messages.welcomePrefix = message;
-                    if ( name.equalsIgnoreCase( "Welcome" ) )
-                        Messages.welcome = message;
-                    if ( name.equalsIgnoreCase( "SkillSheet prefix" ) )
-                        Messages.skillSheetPrefix = message;
-                    if ( name.equalsIgnoreCase( "SkillSheet header" ) )
-                        Messages.skillSheetHeader = message;
-                    if ( name.equalsIgnoreCase( "SkillSheet skill line" ) )
-                        Messages.skillSheetSkillLine = message;
-                    if ( name.equalsIgnoreCase( "SkillSheet untrained skill header" ) )
-                        Messages.skillSheetUntrainedSkillHeader = message;
-                    if ( name.equalsIgnoreCase( "SkillSheet untrained skill line" ) )
-                        Messages.skillSheetUntrainedSkillLine = message;
-
-                    if ( name.equalsIgnoreCase( "SkillInfo header" ) )
-                        Messages.skillInfoHeader = message;
-                    if ( name.equalsIgnoreCase( "SkillInfo minor header" ) )
-                        Messages.skillInfoMinorHeader = message;
-                    if ( name.equalsIgnoreCase( "SkillInfo EffectID Prefix" ) )
-                        Messages.skillInfoEffectIDPrefix = message;
-                    if ( name.equalsIgnoreCase( "SkillInfo max skill level" ) )
-                        Messages.skillInfoMaxSkillLevel = message;
-                    if ( name.equalsIgnoreCase( "SkillInfo at trainer level" ) )
-                        Messages.skillInfoAtTrainerLevel = message;
-                    if ( name.equalsIgnoreCase( "SkillInfo train cost header" ) )
-                        Messages.skillInfoTrainCostHeader = message;
-                    if ( name.equalsIgnoreCase( "SkillInfo train cost" ) )
-                        Messages.skillInfoTrainCost = message;
-
-                    if ( name.equalsIgnoreCase( "EffectInfo prefix" ) )
-                        Messages.effectInfoPrefix = message;
-
-                    if ( name.equalsIgnoreCase( "Race check" ) )
-                        Messages.raceCheck = message;
-                    if ( name.equalsIgnoreCase( "Admin race check" ) )
-                        Messages.adminRaceCheck = message;
-                    if ( name.equalsIgnoreCase( "Already race" ) )
-                        Messages.alreadyRace = message;
-                    if ( name.equalsIgnoreCase( "Changed race" ) )
-                        Messages.changedRace = message;
-                    if ( name.equalsIgnoreCase( "Confirm race" ) )
-                        Messages.confirmRace = message;
-                    if ( name.equalsIgnoreCase( "Race does not exist" ) )
-                        Messages.raceDoesNotExist = message;
-
-                    if ( name.equalsIgnoreCase( "Choose a race" ) )
-                        Messages.chooseARace = message;
-                    if ( name.equalsIgnoreCase( "Train skill prefix" ) )
-                        Messages.trainSkillPrefix = message;
-                    if ( name.equalsIgnoreCase( "Race does not contain skill" ) )
-                        Messages.raceDoesNotContainSkill = message;
-                    if ( name.equalsIgnoreCase( "Race does not specialize" ) )
-                        Messages.raceDoesNotSpecialize = message;
-                    if ( name.equalsIgnoreCase( "Max skill level" ) )
-                        Messages.maxSkillLevel = message;
-                    if ( name.equalsIgnoreCase( "Trainer max level" ) )
-                        Messages.trainerMaxLevel = message;
-                    if ( name.equalsIgnoreCase( "Trainer level too high" ) )
-                        Messages.trainerLevelTooHigh = message;
-                    if ( name.equalsIgnoreCase( "No more item needed" ) )
-                        Messages.noMoreItemNeeded = message;
-                    if ( name.equalsIgnoreCase( "More item needed" ) )
-                        Messages.moreItemNeeded = message;
-                    if ( name.equalsIgnoreCase( "Training successful" ) )
-                        Messages.trainingSuccessful = message;
-                    if ( name.equalsIgnoreCase( "Deposit successful" ) )
-                        Messages.depositSuccessful = message;
-                    if ( name.equalsIgnoreCase( "Trainer GUI Title" ) )
-                        Messages.trainerGUITitle = message;
-                    if ( name.equalsIgnoreCase( "Trainer occupied" ) )
-                        Messages.trainerOccupied = message;
-                    if ( name.equalsIgnoreCase( "Trainer cooldown" ) )
-                        Messages.trainerCooldown = message;
-
-                    if ( name.equalsIgnoreCase( "Describe general" ) )
-                        Messages.describeGeneral = message;
-                    if ( name.equalsIgnoreCase( "Describe level blockdrop" ) )
-                        Messages.describeLevelBlockdrop = message;
-                    if ( name.equalsIgnoreCase( "Describe level mobdrop" ) )
-                        Messages.describeLevelMobdrop = message;
-                    if ( name.equalsIgnoreCase( "Describe level mobdrop no creature" ) )
-                        Messages.describeLevelMobdropNoCreature = message;
-                    if ( name.equalsIgnoreCase( "Describe level sword durability" ) )
-                        Messages.describeLevelSwordDurability = message;
-                    if ( name.equalsIgnoreCase( "Describe level pvp damage" ) )
-                        Messages.describeLevelPVPDamage = message;
-                    if ( name.equalsIgnoreCase( "Describe level pve damage" ) )
-                        Messages.describeLevelPVEDamage = message;
-                    if ( name.equalsIgnoreCase( "Describe level explosion damage more" ) )
-                        Messages.describeLevelExplosionDamageMore = message;
-                    if ( name.equalsIgnoreCase( "Describe level explosion damage less" ) )
-                        Messages.describeLevelExplosionDamageLess = message;
-                    if ( name.equalsIgnoreCase( "Describe level fire damage more" ) )
-                        Messages.describeLevelFireDamageMore = message;
-                    if ( name.equalsIgnoreCase( "Describe level fire damage less" ) )
-                        Messages.describeLevelFireDamageLess = message;
-                    if ( name.equalsIgnoreCase( "Describe level falling damage more" ) )
-                        Messages.describeLevelFallingDamageMore = message;
-                    if ( name.equalsIgnoreCase( "Describe level falling damage less" ) )
-                        Messages.describeLevelFallingDamageLess = message;
-                    if ( name.equalsIgnoreCase( "Describe level fall threshold" ) )
-                        Messages.describeLevelFallThreshold = message;
-                    if ( name.equalsIgnoreCase( "Describe level plow durability" ) )
-                        Messages.describeLevelPlowDurability = message;
-                    if ( name.equalsIgnoreCase( "Describe level tool durability" ) )
-                        Messages.describeLevelToolDurability = message;
-                    if ( name.equalsIgnoreCase( "Describe level rod durability" ) )
-                        Messages.describeLevelRodDurability = message;
-                    if ( name.equalsIgnoreCase( "Describe level eat" ) )
-                        Messages.describeLevelEat = message;
-                    if ( name.equalsIgnoreCase( "Describe level craft" ) )
-                        Messages.describeLevelCraft = message;
-                    if ( name.equalsIgnoreCase( "Describe level plow" ) )
-                        Messages.describeLevelPlow = message;
-                    if ( name.equalsIgnoreCase( "Describle level fish" ) )
-                        Messages.describeLevelFish = message;
-                    if ( name.equalsIgnoreCase( "Describe level brew" ) )
-                        Messages.describeLevelBrew = message;
-                    if ( name.equalsIgnoreCase( "Describe level dig time" ) )
-                        Messages.describeLevelDigTime = message;
-                    if ( name.equalsIgnoreCase( "Describe level bow attack" ) )
-                        Messages.describeLevelBowAttack = message;
-                    if ( name.equalsIgnoreCase( "Describe level vehicle drop" ) )
-                        Messages.describeLevelVehicleDrop = message;
-                    if ( name.equalsIgnoreCase( "Describe level vehicle move" ) )
-                        Messages.describeLevelVehicleMove = message;
-                    if ( name.equalsIgnoreCase( "Describe level smelt" ) )
-                        Messages.describeLevelSmelt = message;
-                    if ( name.equalsIgnoreCase( "Describe level shear" ) )
-                        Messages.describeLevelShear = message;
-                    if ( name.equalsIgnoreCase( "Effect level color greater than normal" ) )
-                        Messages.effectLevelColorGreaterThanNormal = message;
-                    if ( name.equalsIgnoreCase( "Effect level color equal to normal" ) )
-                        Messages.effectLevelColorEqualToNormal = message;
-                    if ( name.equalsIgnoreCase( "Effect level color less than normal" ) )
-                        Messages.effectLevelColorLessThanNormal = message;
-                    if ( name.equalsIgnoreCase( "Vanilla Race Message" ) )
-                        Messages.vanillaRace = message;
-                    if ( name.equalsIgnoreCase( "Tutorial Messages" ) )
-                    {
-                        ArrayList<String> tutorial = new ArrayList<String>();
-                        if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
-                        {
-                            StringBuffer sb = new StringBuffer();
-                            boolean foundEndTag = readTutorial( sb, br );
-
-                            if ( !foundEndTag )
-                            {
-                                plugin.getLogger().log( Level.SEVERE, "Unable to find the ending Tutorial XML tag. Using default tutorial." );
-                            }
-                            else
-                            {
-                                tutorial = parseTutorialPages( sb );
-                            }
-                        }
-                        else
-                        {
-                            plugin.getLogger().log( Level.SEVERE, "Unable to find the opening Tutorial XML tag. Using default tutorial." );
-                        }
-
-                        if ( !tutorial.isEmpty() )
-                            Messages.tutorial = tutorial;
-                    }
+                    plugin.getLogger().log( Level.WARNING, "Null Message: " + name + ", " + message );
                 }
                 else
                 {
-                    plugin.getLogger().log( Level.WARNING, "Null Message: " + name + ", " + message );
+                    if ( !message.trim().equals( "" ) || !message.equals( null ) )
+                    {
+                        if ( name.equalsIgnoreCase( "Welcome prefix" ) )
+                            Messages.welcomePrefix = message;
+                        if ( name.equalsIgnoreCase( "Welcome" ) )
+                            Messages.welcome = message;
+                        if ( name.equalsIgnoreCase( "SkillSheet prefix" ) )
+                            Messages.skillSheetPrefix = message;
+                        if ( name.equalsIgnoreCase( "SkillSheet header" ) )
+                            Messages.skillSheetHeader = message;
+                        if ( name.equalsIgnoreCase( "SkillSheet skill line" ) )
+                            Messages.skillSheetSkillLine = message;
+                        if ( name.equalsIgnoreCase( "SkillSheet untrained skill header" ) )
+                            Messages.skillSheetUntrainedSkillHeader = message;
+                        if ( name.equalsIgnoreCase( "SkillSheet untrained skill line" ) )
+                            Messages.skillSheetUntrainedSkillLine = message;
+
+                        if ( name.equalsIgnoreCase( "SkillInfo header" ) )
+                            Messages.skillInfoHeader = message;
+                        if ( name.equalsIgnoreCase( "SkillInfo minor header" ) )
+                            Messages.skillInfoMinorHeader = message;
+                        if ( name.equalsIgnoreCase( "SkillInfo EffectID Prefix" ) )
+                            Messages.skillInfoEffectIDPrefix = message;
+                        if ( name.equalsIgnoreCase( "SkillInfo max skill level" ) )
+                            Messages.skillInfoMaxSkillLevel = message;
+                        if ( name.equalsIgnoreCase( "SkillInfo at trainer level" ) )
+                            Messages.skillInfoAtTrainerLevel = message;
+                        if ( name.equalsIgnoreCase( "SkillInfo train cost header" ) )
+                            Messages.skillInfoTrainCostHeader = message;
+                        if ( name.equalsIgnoreCase( "SkillInfo train cost" ) )
+                            Messages.skillInfoTrainCost = message;
+
+                        if ( name.equalsIgnoreCase( "EffectInfo prefix" ) )
+                            Messages.effectInfoPrefix = message;
+
+                        if ( name.equalsIgnoreCase( "Race check" ) )
+                            Messages.raceCheck = message;
+                        if ( name.equalsIgnoreCase( "Admin race check" ) )
+                            Messages.adminRaceCheck = message;
+                        if ( name.equalsIgnoreCase( "Already race" ) )
+                            Messages.alreadyRace = message;
+                        if ( name.equalsIgnoreCase( "Changed race" ) )
+                            Messages.changedRace = message;
+                        if ( name.equalsIgnoreCase( "Confirm race" ) )
+                            Messages.confirmRace = message;
+                        if ( name.equalsIgnoreCase( "Race does not exist" ) )
+                            Messages.raceDoesNotExist = message;
+
+                        if ( name.equalsIgnoreCase( "Choose a race" ) )
+                            Messages.chooseARace = message;
+                        if ( name.equalsIgnoreCase( "Train skill prefix" ) )
+                            Messages.trainSkillPrefix = message;
+                        if ( name.equalsIgnoreCase( "Race does not contain skill" ) )
+                            Messages.raceDoesNotContainSkill = message;
+                        if ( name.equalsIgnoreCase( "Race does not specialize" ) )
+                            Messages.raceDoesNotSpecialize = message;
+                        if ( name.equalsIgnoreCase( "Max skill level" ) )
+                            Messages.maxSkillLevel = message;
+                        if ( name.equalsIgnoreCase( "Trainer max level" ) )
+                            Messages.trainerMaxLevel = message;
+                        if ( name.equalsIgnoreCase( "Trainer level too high" ) )
+                            Messages.trainerLevelTooHigh = message;
+                        if ( name.equalsIgnoreCase( "No more item needed" ) )
+                            Messages.noMoreItemNeeded = message;
+                        if ( name.equalsIgnoreCase( "More item needed" ) )
+                            Messages.moreItemNeeded = message;
+                        if ( name.equalsIgnoreCase( "Training successful" ) )
+                            Messages.trainingSuccessful = message;
+                        if ( name.equalsIgnoreCase( "Deposit successful" ) )
+                            Messages.depositSuccessful = message;
+                        if ( name.equalsIgnoreCase( "Trainer GUI Title" ) )
+                            Messages.trainerGUITitle = message;
+                        if ( name.equalsIgnoreCase( "Trainer occupied" ) )
+                            Messages.trainerOccupied = message;
+                        if ( name.equalsIgnoreCase( "Trainer cooldown" ) )
+                            Messages.trainerCooldown = message;
+
+                        if ( name.equalsIgnoreCase( "Describe general" ) )
+                            Messages.describeGeneral = message;
+                        if ( name.equalsIgnoreCase( "Describe level blockdrop" ) )
+                            Messages.describeLevelBlockdrop = message;
+                        if ( name.equalsIgnoreCase( "Describe level mobdrop" ) )
+                            Messages.describeLevelMobdrop = message;
+                        if ( name.equalsIgnoreCase( "Describe level mobdrop no creature" ) )
+                            Messages.describeLevelMobdropNoCreature = message;
+                        if ( name.equalsIgnoreCase( "Describe level sword durability" ) )
+                            Messages.describeLevelSwordDurability = message;
+                        if ( name.equalsIgnoreCase( "Describe level pvp damage" ) )
+                            Messages.describeLevelPVPDamage = message;
+                        if ( name.equalsIgnoreCase( "Describe level pve damage" ) )
+                            Messages.describeLevelPVEDamage = message;
+                        if ( name.equalsIgnoreCase( "Describe level explosion damage more" ) )
+                            Messages.describeLevelExplosionDamageMore = message;
+                        if ( name.equalsIgnoreCase( "Describe level explosion damage less" ) )
+                            Messages.describeLevelExplosionDamageLess = message;
+                        if ( name.equalsIgnoreCase( "Describe level fire damage more" ) )
+                            Messages.describeLevelFireDamageMore = message;
+                        if ( name.equalsIgnoreCase( "Describe level fire damage less" ) )
+                            Messages.describeLevelFireDamageLess = message;
+                        if ( name.equalsIgnoreCase( "Describe level falling damage more" ) )
+                            Messages.describeLevelFallingDamageMore = message;
+                        if ( name.equalsIgnoreCase( "Describe level falling damage less" ) )
+                            Messages.describeLevelFallingDamageLess = message;
+                        if ( name.equalsIgnoreCase( "Describe level fall threshold" ) )
+                            Messages.describeLevelFallThreshold = message;
+                        if ( name.equalsIgnoreCase( "Describe level plow durability" ) )
+                            Messages.describeLevelPlowDurability = message;
+                        if ( name.equalsIgnoreCase( "Describe level tool durability" ) )
+                            Messages.describeLevelToolDurability = message;
+                        if ( name.equalsIgnoreCase( "Describe level rod durability" ) )
+                            Messages.describeLevelRodDurability = message;
+                        if ( name.equalsIgnoreCase( "Describe level eat" ) )
+                            Messages.describeLevelEat = message;
+                        if ( name.equalsIgnoreCase( "Describe level craft" ) )
+                            Messages.describeLevelCraft = message;
+                        if ( name.equalsIgnoreCase( "Describe level plow" ) )
+                            Messages.describeLevelPlow = message;
+                        if ( name.equalsIgnoreCase( "Describle level fish" ) )
+                            Messages.describeLevelFish = message;
+                        if ( name.equalsIgnoreCase( "Describe level brew" ) )
+                            Messages.describeLevelBrew = message;
+                        if ( name.equalsIgnoreCase( "Describe level dig time" ) )
+                            Messages.describeLevelDigTime = message;
+                        if ( name.equalsIgnoreCase( "Describe level bow attack" ) )
+                            Messages.describeLevelBowAttack = message;
+                        if ( name.equalsIgnoreCase( "Describe level vehicle drop" ) )
+                            Messages.describeLevelVehicleDrop = message;
+                        if ( name.equalsIgnoreCase( "Describe level vehicle move" ) )
+                            Messages.describeLevelVehicleMove = message;
+                        if ( name.equalsIgnoreCase( "Describe level smelt" ) )
+                            Messages.describeLevelSmelt = message;
+                        if ( name.equalsIgnoreCase( "Describe level shear" ) )
+                            Messages.describeLevelShear = message;
+                        if ( name.equalsIgnoreCase( "Effect level color greater than normal" ) )
+                            Messages.effectLevelColorGreaterThanNormal = message;
+                        if ( name.equalsIgnoreCase( "Effect level color equal to normal" ) )
+                            Messages.effectLevelColorEqualToNormal = message;
+                        if ( name.equalsIgnoreCase( "Effect level color less than normal" ) )
+                            Messages.effectLevelColorLessThanNormal = message;
+                        if ( name.equalsIgnoreCase( "Vanilla Race Message" ) )
+                            Messages.vanillaRace = message;
+                        if ( name.equalsIgnoreCase( "Tutorial Messages" ) )
+                        {
+                            ArrayList<String> tutorial = new ArrayList<String>();
+                            if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
+                            {
+                                StringBuffer sb = new StringBuffer();
+                                boolean foundEndTag = readTutorial( sb, br );
+
+                                if ( !foundEndTag )
+                                {
+                                    plugin.getLogger().log( Level.SEVERE, "Unable to find the ending Tutorial XML tag. Using default tutorial." );
+                                }
+                                else
+                                {
+                                    tutorial = parseTutorialPages( sb );
+                                }
+                            }
+                            else
+                            {
+                                plugin.getLogger().log( Level.SEVERE, "Unable to find the opening Tutorial XML tag. Using default tutorial." );
+                            }
+
+                            if ( !tutorial.isEmpty() )
+                                Messages.tutorial = tutorial;
+                        }
+                    }
+                    else
+                    {
+                        plugin.getLogger().log( Level.WARNING, "Null Message: " + name + ", " + message );
+                    }
                 }
                 line = br.readLine();
             }
@@ -754,7 +760,7 @@ public final class ConfigManager
      * 
      * @param sb String buffer to fill
      * @param br The reader that is reading the config
-     * @return True if the ending tutorial tag was found otherwise returns fals
+     * @return True if the ending tutorial tag was found otherwise returns fails
      * @throws IOException when br.read fails
      */
     private boolean readTutorial( StringBuffer sb, BufferedReader br ) throws IOException

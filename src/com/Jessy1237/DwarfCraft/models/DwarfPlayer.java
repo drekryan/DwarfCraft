@@ -320,8 +320,9 @@ public class DwarfPlayer
 
         // Resets the players prefix
         if ( plugin.isChatEnabled() )
-            if ( plugin.getChat().getPlayerPrefix( getPlayer() ).contains( plugin.getUtil().getPlayerPrefix( oldRace ) ) )
-                plugin.getChat().setPlayerPrefix( getPlayer(), plugin.getChat().getPlayerPrefix( getPlayer() ).replace( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
+            if ( !oldRace.equalsIgnoreCase( "NULL" ) )
+                if ( plugin.getChat().getPlayerPrefix( getPlayer() ).contains( plugin.getUtil().getPlayerPrefix( oldRace ) ) )
+                    plugin.getChat().setPlayerPrefix( getPlayer(), plugin.getChat().getPlayerPrefix( getPlayer() ).replace( plugin.getUtil().getPlayerPrefix( oldRace ), plugin.getUtil().getPlayerPrefix( this ) ) );
 
         plugin.getDataManager().saveDwarfData( this, dCSkills );
     }

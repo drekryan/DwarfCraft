@@ -33,7 +33,7 @@ public class RaceGUI extends DwarfGUI
         }
         else
         {
-            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, "Race List || " + ChatColor.RED + "You currently don't have a race!" );
+            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, "Race List || " + ChatColor.RED + "Please pick a race!" );
         }
 
         inventory.clear();
