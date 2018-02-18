@@ -1,5 +1,15 @@
+# Generated Files
 *.class
 *.MF
+
+# Common build file locations
+build/
+bin/
+target/
+out/
+
+# macOS File System dust
+.DS_Store
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -22,7 +32,6 @@ hs_err_pid*
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
-target/
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
@@ -44,8 +53,7 @@ target/
 
 ## Plugin-specific files:
 
-# IntelliJ
-/out/
+# IntelliJ IDEA IDE
 *.iml
 
 # mpeltonen/sbt-idea plugin
@@ -60,10 +68,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# Eclipse
-
+# Eclipse IDE
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak

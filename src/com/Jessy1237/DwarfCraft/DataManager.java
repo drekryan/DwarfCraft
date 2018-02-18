@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -24,7 +21,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
-import com.Jessy1237.DwarfCraft.models.DwarfGreeterMessage;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
@@ -34,13 +30,15 @@ import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DataManager
 {
 
     private List<DwarfPlayer> dwarves = new ArrayList<DwarfPlayer>();
     public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<Integer, DwarfVehicle>();
     public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<Integer, DwarfTrainer>();
-    private HashMap<String, DwarfGreeterMessage> greeterMessageList = new HashMap<String, DwarfGreeterMessage>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
@@ -61,7 +59,7 @@ public class DataManager
      * 
      * @param oldVersion
      */
-    private void buildDB( int oldVersion )
+    private void buildDB()
     {
         try
         {
@@ -84,7 +82,7 @@ public class DataManager
         }
         catch ( SQLException e )
         {
-            System.out.println( "[SEVERE]DB not built successfully" );
+            plugin.getLogger().log( Level.SEVERE, "DB not built successfully" );
             e.printStackTrace();
             plugin.getServer().getPluginManager().disablePlugin( plugin );
         }
@@ -135,7 +133,7 @@ public class DataManager
             ResultSet rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'players';" );
             if ( !rs.next() )
             {
-                buildDB( 0 );
+                buildDB();
             }
 
             // check for update to skill deposits
@@ -157,7 +155,7 @@ public class DataManager
             }
             catch ( Exception e )
             {
-                System.out.println( "[DwarfCraft] Converting Player DB (may lag a little wait for completion message)." );
+                plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
                 HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
                 HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
@@ -193,7 +191,7 @@ public class DataManager
                         prep.close();
                     }
                 }
-                System.out.println( "[DwarfCraft] Finished Converting the Players DB." );
+                plugin.getLogger().log( Level.INFO, "Finished Converting the Players DB." );
             }
 
             // Adds raceMaster arg to the player table
@@ -203,7 +201,7 @@ public class DataManager
             }
             catch ( Exception e )
             {
-                System.out.println( "[DwarfCraft] Converting Player DB (may lag a little wait for completion message)." );
+                plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
                 HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
                 HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
@@ -239,7 +237,7 @@ public class DataManager
                         prep.close();
                     }
                 }
-                System.out.println( "[DwarfCraft] Finished Converting the Players DB." );
+                plugin.getLogger().log( Level.INFO, "Finished Converting the Players DB." );
             }
 
             try
@@ -247,7 +245,7 @@ public class DataManager
                 rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'trainers';" );
                 if ( rs.next() )
                 {
-                    System.out.println( "[DwarfCraft] Transfering Trainer DB to citizens  (may lag a little wait for completion message)." );
+                    plugin.getLogger().log( Level.INFO, "Transfering Trainer DB to citizens  (may lag a little wait for completion message)." );
 
                     rs = statement.executeQuery( "select * from trainers;" );
 
@@ -263,12 +261,12 @@ public class DataManager
                             npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
                         }
                         npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
-                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ), rs.getBoolean( "isGreeter" ), rs.getString( "messageId" ) ) );
+                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
                         npc1.setProtected( true );
                     }
                 }
                 statement.execute( "DROP TABLE trainers" );
-                System.out.println( "[DwarfCraft] Finished Transfering the Trainers DB." );
+                plugin.getLogger().log( Level.INFO, "Finished Transfering the Trainers DB." );
             }
             catch ( Exception e )
             {
@@ -416,11 +414,6 @@ public class DataManager
         }
     }
 
-    public DwarfGreeterMessage getGreeterMessage( String messageId )
-    {
-        return greeterMessageList.get( messageId );
-    }
-
     public DwarfTrainer getTrainer( NPC npc )
     {
         for ( Iterator<Map.Entry<Integer, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext(); )
@@ -461,18 +454,6 @@ public class DataManager
             }
         }
         return null;
-    }
-
-    protected void insertGreeterMessage( String messageId, DwarfGreeterMessage greeterMessage )
-    {
-        try
-        {
-            greeterMessageList.put( messageId, greeterMessage );
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
     }
 
     public DwarfTrainer getTrainerByName( String name )
@@ -521,7 +502,7 @@ public class DataManager
         }
         catch ( Exception e )
         {
-            System.out.println( "DC: Failed to get player ID: " + uuid.toString() );
+            plugin.getLogger().log( Level.WARNING, "Failed to get player ID: " + uuid.toString() );
         }
         return -1;
     }

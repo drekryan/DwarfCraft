@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft.models;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -25,7 +20,10 @@ import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-public final class DwarfTrainer
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+public final class DwarfTrainer implements Comparable<DwarfTrainer>
 {
     private AbstractNPC mEntity;
     private final DwarfCraft plugin;
@@ -45,8 +43,8 @@ public final class DwarfTrainer
     {
         if ( this == that )
             return true;
-        else if ( that instanceof HumanEntity )
-            return ( mEntity.getId() == ( ( HumanEntity ) that ).getEntityId() );
+        else if ( that instanceof DwarfTrainer )
+            return ( getUniqueId() == ( ( DwarfTrainer ) that ).getUniqueId() );
         return false;
     }
 
@@ -80,11 +78,6 @@ public final class DwarfTrainer
         return mEntity.getTrait( DwarfTrainerTrait.class ).getMinSkill();
     }
 
-    protected String getMessage()
-    {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).getMessage();
-    }
-
     public String getName()
     {
         return mEntity.getName();
@@ -100,36 +93,6 @@ public final class DwarfTrainer
         return mEntity.getId();
     }
 
-    public boolean isGreeter()
-    {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).isGreeter();
-    }
-
-    public void printLeftClick( Player player )
-    {
-        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
-        if ( msg != null )
-        {
-            plugin.getOut().sendMessage( player, msg.getLeftClickMessage() );
-        }
-        else
-        {
-            System.out.println( String.format( "[DC] Error: Greeter %s has no left click message. Check your configuration file for message ID %d", getUniqueId(), getMessage() ) );
-        }
-        return;
-    }
-
-    public void printRightClick( Player player )
-    {
-        DwarfGreeterMessage msg = plugin.getDataManager().getGreeterMessage( getMessage() );
-        if ( msg != null )
-        {
-            plugin.getOut().sendMessage( player, msg.getRightClickMessage() );
-        }
-
-        return;
-    }
-
     public void depositOne( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
@@ -137,7 +100,7 @@ public final class DwarfTrainer
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         boolean deposited = false;
         final PlayerInventory oldInv = player.getInventory();
@@ -182,7 +145,7 @@ public final class DwarfTrainer
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         final PlayerInventory oldInv = player.getInventory();
         boolean deposited = false;
@@ -217,13 +180,13 @@ public final class DwarfTrainer
         }
     }
 
-    public void trainSkill( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public boolean trainSkill( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
+        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         final PlayerInventory oldInv = player.getInventory();
         boolean hasMatsOrDeposits[] = { true, false };
@@ -261,7 +224,7 @@ public final class DwarfTrainer
                     player.getInventory().setContents( oldInv.getContents() );
                     player.getInventory().setExtraContents( oldInv.getExtraContents() );
 
-                    return;
+                    return hasMatsOrDeposits[0];
                 }
                 else
                 {
@@ -275,6 +238,8 @@ public final class DwarfTrainer
             trainerGUI.updateTitle();
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
+
+        return hasMatsOrDeposits[0];
 
     }
 
@@ -445,22 +410,31 @@ public final class DwarfTrainer
             else
             {
                 hasMatsOrDeposits[0] = false;
-                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
                 return hasMatsOrDeposits;
             }
 
             if ( costStack.getAmount() == 0 )
             {
-                plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.noMoreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
             }
             else
             {
-                plugin.getOut().sendMessage( player, Messages.moreItemNeeded.replaceAll( "%costamount%", "" + costStack.getAmount() ).replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
                 hasMatsOrDeposits[0] = false;
                 hasMatsOrDeposits[1] = true;
             }
         }
 
         return hasMatsOrDeposits;
+    }
+
+    /**
+     * Compares the trainers by unique ID if configured to true otherwise compares by name
+     */
+    @Override
+    public int compareTo( DwarfTrainer trainer )
+    {
+        return plugin.getConfigManager().byID ? ( getUniqueId() - trainer.getUniqueId() ) : ( getName().compareTo( trainer.getName() ) == 0 ? ( getUniqueId() - trainer.getUniqueId() ) : getName().compareTo( trainer.getName() ) );
     }
 }

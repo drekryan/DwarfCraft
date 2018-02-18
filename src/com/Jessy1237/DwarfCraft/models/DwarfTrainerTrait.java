@@ -1,11 +1,5 @@
 package com.Jessy1237.DwarfCraft.models;
 
-import net.citizensnpcs.api.event.NPCLeftClickEvent;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
-import net.citizensnpcs.api.npc.AbstractNPC;
-import net.citizensnpcs.api.persistence.Persist;
-import net.citizensnpcs.api.trait.Trait;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -13,6 +7,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.npc.AbstractNPC;
+import net.citizensnpcs.api.persistence.Persist;
+import net.citizensnpcs.api.trait.Trait;
+import net.citizensnpcs.api.util.DataKey;
 
 public class DwarfTrainerTrait extends Trait
 {
@@ -25,32 +26,36 @@ public class DwarfTrainerTrait extends Trait
     private int mMaxLevel;
     @Persist( required = true )
     private int mMinLevel;
-    @Persist( required = true )
-    private boolean mIsGreeter;
-    @Persist( required = true )
-    private String mMsgID;
+
+    @Override
+    public void load( DataKey key )
+    {
+        if ( mSkillID == 0 )
+            this.mSkillID = key.getInt( "mSkillID" );
+        if ( mSkillID == 0 )
+            this.mMaxLevel = key.getInt( "mMaxLevel" );
+        if ( mSkillID == 0 )
+            this.mMinLevel = key.getInt( "mMinLevel" );
+        loadHeldItem();
+
+        // Adding the trainer to DwarfCraft DB
+        DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
+        plugin.getDataManager().trainerList.put( npc.getId(), trainer );
+    }
 
     @Override
     public void onSpawn()
     {
-        DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) getNPC() );
-        if ( isGreeter() )
-            this.mHeldItem = Material.AIR;
-        else
-            this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
-
-        assert ( this.mHeldItem != null );
-
-        if ( this.mHeldItem != Material.AIR )
-            ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( mHeldItem, 1 ) );
-
-        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
+        if ( this.mHeldItem != Material.AIR && this.mHeldItem != null )
+        {
+            ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( this.mHeldItem, 1 ) );
+        }
     }
 
     @Override
-    public void onDespawn()
+    public void onRemove()
     {
-        plugin.getDataManager().trainerList.remove( getNPC().getId() );
+        plugin.getDataManager().trainerList.remove( this.npc.getId() );
     }
 
     public DwarfTrainerTrait()
@@ -59,15 +64,14 @@ public class DwarfTrainerTrait extends Trait
         this.plugin = ( DwarfCraft ) Bukkit.getServer().getPluginManager().getPlugin( "DwarfCraft" );
     }
 
-    public DwarfTrainerTrait( DwarfCraft plugin, Integer ID, Integer skillID, Integer maxLevel, Integer minLevel, boolean isGreeter, String msgID )
+    public DwarfTrainerTrait( DwarfCraft plugin, Integer ID, Integer skillID, Integer maxLevel, Integer minLevel )
     {
         super( "DwarfTrainer" );
         this.plugin = plugin;
         this.mSkillID = skillID;
         this.mMaxLevel = maxLevel;
         this.mMinLevel = minLevel;
-        this.mIsGreeter = isGreeter;
-        this.mMsgID = msgID;
+        loadHeldItem();
     }
 
     @EventHandler
@@ -98,16 +102,6 @@ public class DwarfTrainerTrait extends Trait
         return this.mMinLevel;
     }
 
-    public boolean isGreeter()
-    {
-        return this.mIsGreeter;
-    }
-
-    protected String getMessage()
-    {
-        return this.mMsgID;
-    }
-
     public int getSkillTrained()
     {
         return this.mSkillID;
@@ -119,5 +113,15 @@ public class DwarfTrainerTrait extends Trait
             return this.mHeldItem;
         else
             return Material.AIR;
+    }
+
+    private void loadHeldItem()
+    {
+        this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
+
+        if ( this.mHeldItem == null )
+        {
+            this.mHeldItem = Material.AIR;
+        }
     }
 }

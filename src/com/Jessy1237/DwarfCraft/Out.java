@@ -1,22 +1,20 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
-import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class Out
 {
     /*
@@ -121,15 +119,14 @@ public class Out
     public boolean printSkillInfo( CommandSender sender, DwarfSkill skill, DwarfPlayer dCPlayer, int maxTrainLevel )
     {
         // general line
-        sendMessage( sender, Messages.skillInfoHeader.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ).replaceAll( "%skillid%", "" + skill.getId() ).replaceAll( "%skillname%", "" + skill.getDisplayName() ).replaceAll( "%skilllevel%", "" + skill.getLevel() )
-                .replaceAll( "%maxskilllevel%", "" + plugin.getConfigManager().getMaxSkillLevel() ) );
+        sendMessage( sender, plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill( Messages.skillInfoHeader, dCPlayer, skill ) );
 
         // effects lines
-        sendMessage( sender, Messages.skillInfoMinorHeader );
+        // sendMessage( sender, Messages.skillInfoMinorHeader ); // TODO: Remove this possibly? Not Needed. Adds clutter
         for ( DwarfEffect effect : skill.getEffects() )
         {
             if ( effect != null )
-                sendMessage( sender, effect.describeLevel( dCPlayer ), Messages.skillInfoEffectIDPrefix.replaceAll( "%effectid%", "" + effect.getId() ) );
+                sendMessage( sender, effect.describeLevel( dCPlayer ), plugin.getPlaceHolderParser().parseByDwarfEffect( Messages.skillInfoEffectIDPrefix, effect ) );
         }
 
         // training lines
@@ -145,7 +142,7 @@ public class Out
             return true;
         }
 
-        sendMessage( sender, Messages.skillInfoTrainCostHeader.replaceAll( "%nextskilllevel%", "" + ( skill.getLevel() + 1 ) ) );
+        sendMessage( sender, plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.skillInfoTrainCostHeader, skill ) );
         List<List<ItemStack>> costsTurnins = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> remaining = costsTurnins.get( 0 );
         List<ItemStack> total = costsTurnins.get( 1 );
@@ -157,36 +154,36 @@ public class Out
             {
                 int totalCost = t.getAmount();
                 int deposited = t.getAmount() - r.getAmount();
-                sendMessage( sender, Messages.skillInfoTrainCost.replaceAll( "%depositedamount%", "" + deposited ).replaceAll( "%totalcost%", "" + totalCost ).replaceAll( "%itemtype%", plugin.getUtil().getCleanName( r ) ) );
+                sendMessage( sender, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.skillInfoTrainCost, deposited, r.getAmount(), totalCost, plugin.getUtil().getCleanName( r ) ) );
             }
 
         }
         return true;
     }
 
-    public void printSkillSheet( DwarfPlayer dCPlayer, CommandSender sender, String displayName, boolean printFull )
+    public void printSkillSheet( DwarfPlayer dCPlayer, CommandSender sender, boolean printFull )
     {
         String message1;
         String message2 = "";
         String prefix = Messages.skillSheetPrefix;
 
-        message1 = parseSkillSheet( Messages.skillSheetHeader, dCPlayer, displayName, null );
+        message1 = parseSkillSheet( Messages.skillSheetHeader, dCPlayer, null );
         sendMessage( sender, message1, prefix );
 
         boolean odd = true;
-        String untrainedSkills = Messages.skillSheetUntrainedSkillHeader;
+        String untrainedSkills = plugin.getPlaceHolderParser().generalParse( Messages.skillSheetUntrainedSkillHeader );
         for ( DwarfSkill s : dCPlayer.getSkills().values() )
         {
             if ( s.getLevel() == 0 )
             {
-                untrainedSkills = untrainedSkills.concat( parseSkillSheet( Messages.skillSheetUntrainedSkillLine, dCPlayer, displayName, s ) );
+                untrainedSkills = untrainedSkills.concat( parseSkillSheet( Messages.skillSheetUntrainedSkillLine, dCPlayer, s ) );
                 continue;
             }
             odd = !odd;
             // the goal here is for every skill sheet line to be 60 characters
             // long.
             // each skill should take 30 characters - no more, no less
-            String interim = parseSkillSheet( Messages.skillSheetSkillLine, dCPlayer, displayName, s );
+            String interim = parseSkillSheet( Messages.skillSheetSkillLine, dCPlayer, s );
 
             if ( !odd )
             {
@@ -218,11 +215,6 @@ public class Out
             sendMessage( sender, message2, prefix );
         if ( printFull )
             sendMessage( sender, untrainedSkills, prefix );
-    }
-
-    public void rules( CommandSender sender )
-    {
-        sendMessage( sender, Messages.serverRules, Messages.serverRulesPrefix );
     }
 
     /**
@@ -304,31 +296,6 @@ public class Out
         return lastColor;
     }
 
-    public void tutorial( CommandSender sender, int page )
-    {
-        switch ( page )
-        {
-            case 1:
-                sendMessage( sender, Messages.Fixed.TUTORIAL1.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 2:
-                sendMessage( sender, Messages.Fixed.TUTORIAL2.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 3:
-                sendMessage( sender, Messages.Fixed.TUTORIAL3.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 4:
-                sendMessage( sender, Messages.Fixed.TUTORIAL4.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 5:
-                sendMessage( sender, Messages.Fixed.TUTORIAL5.getMessage(), Messages.tutorialPrefix );
-                break;
-            case 6:
-                sendMessage( sender, Messages.Fixed.TUTORIAL6.getMessage(), Messages.tutorialPrefix );
-                break;
-        }
-    }
-
     /**
      * Sends a welcome message based on race of player joining. Broadcasts to the whole server
      *
@@ -339,7 +306,7 @@ public class Out
         try
         {
             if ( plugin.getConfigManager().sendGreeting )
-                sendBroadcast( Messages.welcome.replaceAll( "%playerrace%", dCPlayer.getRace() ).replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() ), Messages.welcomePrefix );
+                sendBroadcast( plugin.getPlaceHolderParser().parseByDwarfPlayer( Messages.welcome, dCPlayer ), Messages.welcomePrefix );
         }
         catch ( Exception e )
         {
@@ -352,19 +319,14 @@ public class Out
         sendMessage( sender, parseRace( Messages.raceCheck, plugin.getDataManager().find( player ), null ) );
     }
 
-    public void adminRace( CommandSender sender, Player player )
+    public void adminRace( CommandSender sender, DwarfPlayer player )
     {
-        sendMessage( sender, parseRace( Messages.adminRaceCheck, plugin.getDataManager().find( player ), null ) );
+        sendMessage( sender, parseRace( Messages.adminRaceCheck, player, null ) );
     }
 
     public void alreadyRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
     {
         sendMessage( sender, parseRace( Messages.alreadyRace, dCPlayer, newRace ) );
-    }
-
-    public void resetRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
-    {
-        sendMessage( sender, parseRace( Messages.resetRace, dCPlayer, newRace ) );
     }
 
     public void changedRace( CommandSender sender, DwarfPlayer dCPlayer, String newRace )
@@ -384,40 +346,35 @@ public class Out
 
     public String parseRace( String message, DwarfPlayer dCPlayer, String newRace )
     {
-        String out = message;
-
-        out = out.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() );
-        out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
+        String out = plugin.getPlaceHolderParser().parseByDwarfPlayer( message, dCPlayer );
         if ( newRace != null )
-            out = out.replaceAll( "%racename%", newRace );
+            out = out.replaceAll( PlaceHolder.RACE_NAME.getPlaceHolder(), newRace );
 
         return out;
     }
 
-    public String parseSkillSheet( String message, DwarfPlayer dCPlayer, String displayName, DwarfSkill skill )
+    public String parseSkillSheet( String message, DwarfPlayer dCPlayer, DwarfSkill skill )
     {
-        String out = message.replace( "%playername%", ( displayName == null ? dCPlayer.getPlayer().getName() : displayName ) );
-        out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
-        out = out.replaceAll( "%playerlevel%", "" + dCPlayer.getDwarfLevel() );
+        String out = plugin.getPlaceHolderParser().parseByDwarfPlayer( message, dCPlayer );
         if ( skill != null )
         {
-            out = out.replaceAll( "%skilllevel%", String.format( "%02d", skill.getLevel() ) );
-            out = out.replaceAll( "%skillname%", String.format( "%.18s", skill.getDisplayName() ) );
+            out = out.replaceAll( PlaceHolder.SKILL_LEVEL.getPlaceHolder(), String.format( "%02d", skill.getLevel() ) );
+            out = out.replaceAll( PlaceHolder.SKILL_NAME.getPlaceHolder(), String.format( "%.18s", skill.getDisplayName() ) );
         }
         return out;
     }
 
-    public String parseEffectLevel( DwarfEffectType type, String initiator, String output, double effectAmount, double minorAmount, boolean moreThanOne, String effectLevelColor, String toolType, EntityType creature, DwarfPlayer dCPlayer, ItemStack mInitiator )
+    public String parseEffectLevel( DwarfPlayer dCPlayer, DwarfEffect effect )
     {
         String out = "";
 
-        switch ( type )
+        switch ( effect.getEffectType() )
         {
             case BLOCKDROP:
                 out = Messages.describeLevelBlockdrop;
                 break;
             case MOBDROP:
-                if ( creature != null )
+                if ( effect.getCreature() != null )
                 {
                     out = Messages.describeLevelMobdrop;
                     break;
@@ -434,7 +391,7 @@ public class Out
                 out = Messages.describeLevelPVEDamage;
                 break;
             case EXPLOSIONDAMAGE:
-                if ( moreThanOne )
+                if ( effect.getEffectAmount( dCPlayer ) > 1 )
                 {
                     out = Messages.describeLevelExplosionDamageMore;
                     break;
@@ -445,7 +402,7 @@ public class Out
                     break;
                 }
             case FIREDAMAGE:
-                if ( moreThanOne )
+                if ( effect.getEffectAmount( dCPlayer ) > 1 )
                 {
                     out = Messages.describeLevelFireDamageMore;
                     break;
@@ -456,7 +413,7 @@ public class Out
                     break;
                 }
             case FALLDAMAGE:
-                if ( moreThanOne )
+                if ( effect.getEffectAmount( dCPlayer ) > 1 )
                 {
                     out = Messages.describeLevelFallingDamageMore;
                     break;
@@ -513,37 +470,10 @@ public class Out
                 break;
             case SPECIAL:
             default:
-                out = "&6This Effect description is not yet implemented: " + type.toString();
+                out = "&6This Effect description is not yet implemented: " + effect.getEffectType().toString();
         }
 
-        out = out.replaceAll( "%playername%", dCPlayer.getPlayer().getDisplayName() );
-        out = out.replaceAll( "%playerrace%", dCPlayer.getRace() );
-        out = out.replaceAll( "%playerlevel%", "" + dCPlayer.getDwarfLevel() );
-        out = out.replaceAll( "%initiator%", initiator );
-        out = out.replaceAll( "%effectlevelcolor%", effectLevelColor );
-        out = out.replaceAll( "%effectamount%", String.format( "%.2f", effectAmount ) );
-        out = out.replaceAll( "%output%", output );
-        out = out.replaceAll( "%creaturename%", plugin.getUtil().getCleanName( creature ) );
-        out = out.replaceAll( "%tooltype%", toolType );
-        out = out.replaceAll( "%effectdamage%", "" + ( int ) ( effectAmount * 100 ) );
-        out = out.replaceAll( "%effecttakedamage%", "" + ( int ) ( effectAmount * 100 ) );
-        out = out.replaceAll( "%effectamountint%", "" + ( int ) effectAmount );
-        out = out.replaceAll( "%effectamountfood%", String.format( "%.2f", ( effectAmount / 2.0 ) ) );
-        if ( type == DwarfEffectType.CRAFT )
-        {
-            out = out.replaceAll( "%minoramount%", String.format( "%.0f", minorAmount ) );
-        }
-        else
-        {
-            out = out.replaceAll( "%minoramount%", String.format( "%.2f", minorAmount ) );
-        }
-        out = out.replaceAll( "%effectamountdig%", String.format( "%.0f", +( effectAmount * 100 ) ) );
-        out = out.replaceAll( "%effectbowdamage%", String.format( "%.0f", ( effectAmount + 2 ) ) );
-        if ( mInitiator != null )
-            out = out.replaceAll( "%originalfoodlevel%", String.format( "%.2f", ( ( double ) Util.FoodLevel.getLvl( mInitiator.getType() ) ) / 2.0 ) );
-        out = out.replaceAll( "%colon%", ":" );
-
-        return out;
+        return plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfEffect( out, dCPlayer, effect );
     }
 
 }

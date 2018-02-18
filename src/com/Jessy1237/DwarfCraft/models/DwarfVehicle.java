@@ -2,6 +2,9 @@ package com.Jessy1237.DwarfCraft.models;
 
 import org.bukkit.entity.Vehicle;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class DwarfVehicle
 {
     private Vehicle vehicle;

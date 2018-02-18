@@ -1,9 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
-
 import java.util.ArrayList;
 
 import org.bukkit.Material;
@@ -14,12 +10,16 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.NPC;
 
+/**
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
 public class Util
 {
 
@@ -406,17 +406,11 @@ public class Util
         {
             if ( blocks != null && blocks.size() > 0 )
             {
-                for ( Material m : blocks )
+                if ( blocks.contains( mat ) )
                 {
-                    if ( mat == m )
+                    if ( blocks.contains( compareMat ) || compareMat == null )
                     {
-                        for ( Material m1 : blocks )
-                        {
-                            if ( compareMat == m1 || compareMat == null )
-                            {
-                                return blocks;
-                            }
-                        }
+                        return blocks;
                     }
                 }
             }
@@ -449,23 +443,38 @@ public class Util
         // players with the old colours method and new colours method.
         for ( OfflinePlayer op : plugin.getServer().getOfflinePlayers() )
         {
+            if ( op == null )
+                continue;
+
             if ( plugin.isChatEnabled() )
             {
                 for ( World w : plugin.getServer().getWorlds() )
                 {
+                    if ( w == null )
+                        continue;
+
                     for ( DwarfRace race : plugin.getConfigManager().getRaceList() )
                     {
+                        if ( race == null )
+                            continue;
+
                         String raceStr = race.getName();
+                        String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+
+                        if ( prefix == null )
+                            continue;
+                        if ( prefix.equals( "" ) )
+                            continue;
                         while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefix( raceStr ) ) )
                         {
-                            String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+                            prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
                             prefix = prefix.replace( getPlayerPrefix( raceStr ) + " ", "" );
                             plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
                         }
 
                         while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefixOldColours( raceStr ) ) )
                         {
-                            String prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
+                            prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
                             prefix = prefix.replace( getPlayerPrefixOldColours( raceStr ) + " ", "" );
                             plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
                         }
@@ -483,33 +492,49 @@ public class Util
         if ( data == null )
             data = dm.createDwarf( player );
         if ( !dm.checkDwarfData( data ) )
+        {
             dm.createDwarfData( data );
+            if ( plugin.getConfigManager().spawnTutorialBook )
+                new CommandTutorial( plugin ).execute( player, "", new String[] { "" } );
+        }
 
         if ( plugin.isChatEnabled() )
         {
             if ( plugin.getConfigManager().prefix )
             {
 
-                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    String prefix = plugin.getChat().getPlayerPrefix( player );
-                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
-                    plugin.getChat().setPlayerPrefix( player, prefix );
-                }
+                String prefix = plugin.getChat().getPlayerPrefix( player );
 
-                if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                if ( prefix != null )
                 {
-                    plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
+                    if ( !prefix.equals( "" ) )
+                    {
+                        while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                        {
+                            prefix = plugin.getChat().getPlayerPrefix( player );
+                            prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                            plugin.getChat().setPlayerPrefix( player, prefix );
+                        }
+
+                        if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                        {
+                            plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
+                        }
+                    }
                 }
             }
             else
             {
-                while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    String prefix = plugin.getChat().getPlayerPrefix( player );
-                    prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
-                    plugin.getChat().setPlayerPrefix( player, prefix );
-                }
+                String prefix = plugin.getChat().getPlayerPrefix( player );
+
+                if ( prefix != null )
+                    if ( !prefix.equals( "" ) )
+                        while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                        {
+                            prefix = plugin.getChat().getPlayerPrefix( player );
+                            prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
+                            plugin.getChat().setPlayerPrefix( player, prefix );
+                        }
             }
         }
     }

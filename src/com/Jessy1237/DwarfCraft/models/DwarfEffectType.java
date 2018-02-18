@@ -3,7 +3,6 @@ package com.Jessy1237.DwarfCraft.models;
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
-
 public enum DwarfEffectType
 {
     // IMPLEMENTATION PRIORITY ORDER

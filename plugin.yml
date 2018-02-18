@@ -1,13 +1,13 @@
-name: DwarfCraft
+name: ${project.name}
 description: A skills and progression plugin for character development in RPG worlds.
 author: Jessy1237
 main: com.Jessy1237.DwarfCraft.DwarfCraft
-version: 3.2
+version: ${project.version}
 depend: [Vault, Citizens]
-softdepend: [LogBlock]
+softdepend: [LogBlock, PlaceholderAPI]
 commands: 
-   DwarfCraft: 
-      description: The base command for all DwarfCraft commands. The old commands are now args to this command
+   dwarfcraft:
+      description: The base command for DwarfCraft
       usage: |
-           /DwarfCraft
+           /dwarfcraft
       aliases: [dc]

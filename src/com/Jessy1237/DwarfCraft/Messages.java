@@ -1,58 +1,57 @@
 package com.Jessy1237.DwarfCraft;
 
+import java.util.ArrayList;
+
 /**
  * Original Authors: smartaleq, LexManos and RCarretta
  */
-
 public final class Messages
 {
 
-    private static DwarfCraft plugin;
-
-    public Messages( DwarfCraft plugin )
+    public Messages()
     {
-        Messages.plugin = plugin;
+        Messages.tutorial.clear();
+        Messages.tutorial.add( "&5&lWelcome to DwarfCraft!\n\n&0You have a set of skills that let you do certain tasks better. When you first start things may be more difficult than you're used to, but as you level your skills up you will be much more productive." );
+        Messages.tutorial.add( "&5The Races of DwarfCraft\n\n&0There are four basic races in DwarfCraft. It is up to you to choose a race that best fits your play style. You will not be able to level any skills in DwarfCraft until you pick a race.\n" );
+        Messages.tutorial.add( "{\"text\":\"Read about the four races on the pages that follow, then type '/dc race' or click here to begin your journey.\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc race\"}}" );
+        Messages.tutorial.add( "&3The Dwarf\n\n&0The Dwarf race specializes in mining. The skills in this race will allow you to mine more efficiently, gather additional ores, and excavate terrain. The Dwarf plays an important role in providing resources for tools and equipment needed by the other races. Their race relies on you providing resources. If you enjoy mining, this race would be great for you." );
+        Messages.tutorial.add( "&9The Gnome\n\n&0The Gnome race specializes in crafting and building. They will provide structures for you, craft your tools and equipment, and are all around masters of the crafting table. If you enjoy casually and creatively building or are a  master in redstone contraptions, this race would be great for you." );
+        Messages.tutorial.add( "&4The Elf\n\n&0The Elf race specializes in all things combat. They deal extra damage to animals and mobs and get extra drops. They are great at gaining experience levels and protecting your fellow members. They are also great archers and have great exploration skills whether it be on foot or boat. If you enjoy combat and exploring, the elven race is all about you." );
+        Messages.tutorial.add( "&8The Human\n\n&0The Human race specializes in various support and utility skills such as smelting, cooking, fishing, and farming. They are great lumberjacks and are great for gathering wood and processing resources from the Dwarf for the Gnome and Elf. If you enjoy playing a casual support role, the Human race best fits you." );
+        Messages.tutorial.add( "&5Skilling in DwarfCraft\n\n&0Now that you have learned about the various races to choose from and hopefully found one that fits you, it is time to learn how you can advance your character in that race. If you want to become the best of your class you will need to train by visiting trainers in the world. We will learn more about trainers in a bit. First lets talk about your skills and skillsheet." );
+        Messages.tutorial.add( "&0At first your skills will be very poor which means you will perform tasks worse than normal gameplay. You will find your low level skills dropping less resources, crafting less items, taking longer, or requiring more tools. As you level you will begin to exceed the normal rates and excel in some tasks. Normal gameplay rates take effect around level %racelevellimit%. You also wont be able to excel in every skill to the highest level. " +
+                "The skills in which your race specializes in can be levelled to level %maxskilllevel% while all other skills outside your race specialty will cap out at the normal rates." );
+        Messages.tutorial.add( "[{\"text\":\"You can access your current skill levels at anytime with '/dc skillsheet'.\\n\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc skillsheet\"}},{\"text\":\"\\nYou can find all the skills which your character has yet to train by typing '/dc skillsheet full'.\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/dc skillsheet full\"}}]" );
+        Messages.tutorial.add( "&0Now that you know the basics of how skilling works in DwarfCraft. Lets discuss the final topic in DwarfCraft, which is how you train those skills." );
+        Messages.tutorial.add( "&5DwarfCraft Trainers\n\n&0Trainers (NPCs) are experts in the skill they teach. They will share their knowledge with you in return for specific resources related to that skill and can be found in various places throughout the world." );
+        Messages.tutorial.add( "&0As they teach you, the requirements will become increasingly harder to meet. Also, the more skill levels you gain as a player the harder the difficulty. So the skills you choose early on will be easier than the ones you put aside. Each level up affects all other skills you have yet to master. You achieve mastery in a skill when you have reached the maximum level." );
+        Messages.tutorial.add( "&0You may also find some trainers that simply have limits to what they can teach you. Some trainers will only be able to teach you up to a certain level in that skill and you may have to look elsewhere to train further. Exploring to find trainers in the world is a must to fully master every skill." );
+        Messages.tutorial.add( "&5Working Together\n\n&0DwarfCraft was designed in a way in which players have to interact and work with each other to accomplish goals. Each race needs the other three races in order to be as effective. You will find that not working together or trying to be a Jack of All Trades will greatly hinder progression. Find other players that need the skills and services you provide. They will need you.\n\nLastly, remember to have fun. We hope you enjoy DwarfCraft." );
     }
 
     // String messages fixed for DwarfCraft, and backup messages when loading
     // fails.
-    public enum Fixed
+    protected enum Fixed
     {
-        SERVERRULESMESSAGE( "This is a dummy Server Rules Message, please place a message in your messages.config" ),
-
-        TUTORIAL1( "&fWelcome to the dwarfcraft tutorial. To get started, type &4/skillsheet full&f. Afterwards, type &4/tutorial 2&f to continue." ),
-        TUTORIAL2( "&fYour Skillshset lists all skills that are affecting you and their level. Lets find out more about the Demolitionist skill. Type &4/skillinfo Demolit&f or" + " &4/skillinfo 63&f. Continue with &4/tutorial 3&f" ),
-        TUTORIAL3(
-                "&fThe skillinfo shows that your low level demotionist skill allows you to craft a normal amount of TNT. If you increase this skill enough, you'll get 2 or even more TNT per craft. The skill also affects damage you take from explosions. Below that, it shows how to train the skill. Find a nearby trainer and left click them to get more information about the skill. Right click to attempt training"
-                        + ", then continue with &4/tutorial 4&f" ),
-        TUTORIAL4( "&fWhen you tried to train the skill, it showed what training cost was missing. All skills train for a cost in relevant materials. The first few levels cost little," + "but becoming a master is very challenging. Continue with &4/tutorial 5&f" ),
-        TUTORIAL5(
-                "&fMost trainers can only take you to a limited level, you'll need to seek out the " + "best trainers in the world to eventually reach level " + plugin.getConfigManager().getMaxSkillLevel()
-                        + " in a skill. Go gathersome dirt, stone, or logs and try to train up a relevant skill, using what" + "you have learned, then continue with &4/tutorial 6&f" ),
-        TUTORIAL6( "&fYou now know the basic commands you need to succeed and develop. To find out more, use &4/dchelp&f and &4/dchelp <command>&f." ),
-        WELCOME( "Welcome to a DwarfCraft world, first time player!" ),
-        GENERALINFO(
-                "&dWelcome to DwarfCraft. You are a player with a set of skills that let you do minecraft tasks better. When you first start, things may be more difficult than you are used to, but as you level your skills up you will be much more productive. Each of the skills listed in your skillsheet(&4/skillsheet full&d) has multiple effects. You can find out more about training a skill and its effects with &4/skillinfo <skillname or id>&d.         Original Authors: smartaleq, LexManos and RCarretta Authors: Jessy1237" );
+        WELCOME( "Welcome to a DwarfCraft world! Things are bit different here as this world focuses heavily on skilling. To learn more about what you can do here, type '&4/dc tutorial&2' to get started." ),
+        GENERALINFO( "&dWelcome to DwarfCraft. You are a player with a set of skills that let you do certain tasks better. For more information see &4/dc tutorial&d. Original Authors: smartaleq, LexManos and RCarretta Authors: Jessy1237" );
 
         private String message;
 
-        private Fixed( String message )
+        Fixed( String message )
         {
             this.message = message;
         }
 
-        protected String getMessage()
+        public String getMessage()
         {
             return message;
         }
     }
 
     // String messages loaded from messages.config
-    public static String serverRules = null;
-    public static String serverRulesPrefix = "&6[&dRules&6] ";
-    public static String welcomePrefix = "&6[DC]         ";
+    public static String welcomePrefix = "&6[DwarfCraft] ";
     public static String welcome = "&fWelcome, &9%playerrace% &6%playername%";
-    public static String tutorialPrefix = "&6[&dDC&6] &f";
     public static String skillSheetPrefix = "&6[&dSS&6] ";
     public static String skillSheetHeader = "&6Skill Sheet for &9%playername% &6[&9%playerrace% &6- &6Lvl &3%playerlevel%&6]";
     public static String skillSheetSkillLine = "&6[&3%skilllevel%&6] &b%skillname%";
@@ -69,11 +68,10 @@ public final class Messages
     public static String raceCheck = "You are a %playerrace%";
     public static String adminRaceCheck = "%playername% is a %playerrace%";
     public static String alreadyRace = "You are already a %playerrace%";
-    public static String resetRace = "You are once again a fresh new %racename%";
     public static String changedRace = "You are now a %racename%";
-    public static String confirmRace = "You need to confirm this command with confirm at the end. (Note: This will reset all your skills)";
+    public static String confirmRace = "You need to confirm this command with confirm at the end. (Note: This will reset all their skills)";
     public static String raceDoesNotExist = "The race %racename% doesn't exist";
-    public static String chooseARace = "&cPlease choose a race!";
+    public static String chooseARace = "&cPlease choose a race! Use /dc race";
     public static String trainSkillPrefix = "&6[Train &b%skillid%&6] ";
     public static String raceDoesNotContainSkill = "&cYour race doesn't have this skill!";
     public static String raceDoesNotSpecialize = "&cYour race doesn't specialize in this skill! Max level is (%racelevellimit%)!";
@@ -118,4 +116,6 @@ public final class Messages
     public static String effectLevelColorGreaterThanNormal = "&a";
     public static String effectLevelColorEqualToNormal = "&e";
     public static String effectLevelColorLessThanNormal = "&c";
+    public static String vanillaRace = "Sorry but you are the vanilla race. Change your race to use DwarfCraft";
+    public static ArrayList<String> tutorial = new ArrayList<>();
 }

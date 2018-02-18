@@ -5,6 +5,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
+import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
@@ -20,7 +22,7 @@ public class DwarfListener implements Listener
     }
 
     @EventHandler( priority = EventPriority.NORMAL, ignoreCancelled = true )
-    public void onDwarfCraftLevelUp( DwarfLevelUpEvent event )
+    public void onDwarfLevelUp( DwarfLevelUpEvent event )
     {
         DwarfPlayer player = event.getDwarfPlayer();
         DwarfSkill skill = event.getSkill();
@@ -28,7 +30,20 @@ public class DwarfListener implements Listener
         if ( skill.getLevel() % plugin.getConfigManager().getAnnouncementInterval() == 0 && plugin.getConfigManager().announce )
         {
             String name = plugin.getChat().getPlayerPrefix( player.getPlayer() ) + player.getPlayer().getName() + plugin.getChat().getPlayerSuffix( player.getPlayer() );
-            plugin.getOut().sendBroadcast( plugin.getConfigManager().getAnnouncementMessage().replace( "%playername%", name ).replace( "%skillname%", skill.getDisplayName() ).replace( "%level%", "" + skill.getLevel() ) );
+            plugin.getOut()
+                    .sendBroadcast( plugin.getConfigManager().getAnnouncementMessage().replace( PlaceHolder.PLAYER_NAME.getPlaceHolder(), name ).replace( PlaceHolder.SKILL_NAME.getPlaceHolder(), skill.getDisplayName() ).replace( PlaceHolder.SKILL_LEVEL.getPlaceHolder(), "" + skill.getLevel() ) );
+        }
+    }
+
+    public void onDwarfEffectEvent( DwarfEffectEvent event )
+    {
+        DwarfPlayer player = event.getDwarfPlayer();
+        if ( player == null )
+            return;
+
+        if ( player.getRace().equalsIgnoreCase( "Vanilla" ) )
+        {
+            event.setCancelled( true );
         }
     }
 }
