@@ -13,8 +13,10 @@ import org.bukkit.inventory.ItemStack;
 import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
+import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
 /**
@@ -724,11 +726,10 @@ public class Util
 
                         if ( npc.hasTrait( DwarfTrainerTrait.class ) )
                         {
-                            DwarfTrainerTrait dtt = npc.getTrait( DwarfTrainerTrait.class );
-
                             // Reruns the code that registers the CitizensNPC
                             // into DwarfCraft
-                            dtt.onSpawn();
+                            DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
+                            plugin.getDataManager().trainerList.put( npc.getId(), trainer );
                         }
                     }
                 }
