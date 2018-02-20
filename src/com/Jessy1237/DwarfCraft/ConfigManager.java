@@ -496,14 +496,14 @@ public final class ConfigManager
                 if ( name && desc && skills && prefix && hasIcon )
                 {
                     int maxAllowed = vanilla ? 44 : 45;
-                    if (raceList.size() < maxAllowed)
+                    if ( raceList.size() < maxAllowed )
                     {
                         raceList.add( race );
                         plugin.getLogger().log( Level.INFO, "Loaded race: " + race.getName() );
                     }
                     else
                     {
-                        plugin.getLogger().log(Level.WARNING, "Did not load race: " + race.getName() + " as already at cap of " + maxAllowed + " races");
+                        plugin.getLogger().log( Level.WARNING, "Did not load race: " + race.getName() + " as already at cap of " + maxAllowed + " races" );
                     }
 
                     name = false;

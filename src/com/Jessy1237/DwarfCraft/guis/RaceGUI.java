@@ -26,20 +26,22 @@ public class RaceGUI extends DwarfGUI
     public void init()
     {
         int numRaces = plugin.getConfigManager().getRaceList().size();
-        if (numRaces > 0) {
-            if (numRaces > 45) numRaces = 45;
-            int numRows = Math.max(1, (int) Math.ceil(numRaces / 9.0));
-            this.inventorySize = (numRows * 9) + 9;
+        if ( numRaces > 0 )
+        {
+            if ( numRaces > 45 )
+                numRaces = 45;
+            int numRows = Math.max( 1, ( int ) Math.ceil( numRaces / 9.0 ) );
+            this.inventorySize = ( numRows * 9 ) + 9;
         }
 
         DwarfRace playerRace = plugin.getConfigManager().getRace( dwarfPlayer.getRace().toLowerCase() );
         if ( playerRace != null )
         {
-            inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), this.inventorySize, "Change Race || Currently: " + plugin.getOut().parseColors(playerRace.getPrefixColour()) + dwarfPlayer.getRace());
+            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), this.inventorySize, "Change Race || Currently: " + plugin.getOut().parseColors( playerRace.getPrefixColour() ) + dwarfPlayer.getRace() );
         }
         else
         {
-            inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), this.inventorySize, "Choose a race...");
+            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), this.inventorySize, "Choose a race..." );
         }
 
         inventory.clear();
@@ -53,14 +55,12 @@ public class RaceGUI extends DwarfGUI
             ArrayList<String> lore = new ArrayList<>();
             lore.add( ChatColor.GOLD + "Description:" );
             lore.addAll( parseStringToLore( race.getDesc(), "" + ChatColor.WHITE ) );
-            lore.add("");
-            lore.add(ChatColor.LIGHT_PURPLE + "Left click to change to " + race.getName());
+            lore.add( "" );
+            lore.add( ChatColor.LIGHT_PURPLE + "Left click to change to " + race.getName() );
             addItem( race.getName(), lore, i++, item );
         }
 
-        dwarfPlayer.getPlayer().sendMessage("" + inventorySize);
-
-        for (i = this.inventorySize - 9; i < this.inventorySize; i++)
+        for ( i = this.inventorySize - 9; i < this.inventorySize; i++ )
             addItem( "Cancel", null, i, new ItemStack( Material.BARRIER ) );
     }
 
@@ -73,7 +73,7 @@ public class RaceGUI extends DwarfGUI
     @Override
     public void click( InventoryClickEvent event )
     {
-        if (event.isLeftClick() && event.getRawSlot() <= this.inventorySize)
+        if ( event.isLeftClick() && event.getRawSlot() <= this.inventorySize )
         {
             if ( event.getCurrentItem() == null )
                 return;
@@ -128,12 +128,12 @@ public class RaceGUI extends DwarfGUI
         inventory.clear();
         addItem( ChatColor.RED + "WARNING", parseStringToLore( "Are you sure you want to change race to " + race + ". All your skills will be reset.", "" ), 0, new ItemStack( Material.PAPER ) );
 
-        for (int i = this.inventorySize - 9; i < this.inventorySize; i++)
+        for ( int i = this.inventorySize - 9; i < this.inventorySize; i++ )
         {
             addItem( "Cancel", null, i, new ItemStack( Material.BARRIER ) );
         }
 
-        addItem( "Confirm", null, ( this.inventorySize - 9 ) + 4, new ItemStack(Material.INK_SACK, 1, ( short ) 10 ) );
+        addItem( "Confirm", null, ( this.inventorySize - 9 ) + 4, new ItemStack( Material.INK_SACK, 1, ( short ) 10 ) );
         dwarfPlayer.getPlayer().updateInventory();
     }
 }
