@@ -1,7 +1,6 @@
 package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,6 +15,7 @@ import com.Jessy1237.DwarfCraft.models.DwarfRace;
 public class RaceGUI extends DwarfGUI
 {
     private String race = null;
+    int inventorySize = 18;
 
     public RaceGUI( DwarfCraft plugin, DwarfPlayer player )
     {
@@ -25,15 +25,21 @@ public class RaceGUI extends DwarfGUI
     @Override
     public void init()
     {
+        int numRaces = plugin.getConfigManager().getRaceList().size();
+        if (numRaces > 0) {
+            if (numRaces > 45) numRaces = 45;
+            int numRows = Math.max(1, (int) Math.ceil(numRaces / 9.0));
+            this.inventorySize = (numRows * 9) + 9;
+        }
 
         DwarfRace playerRace = plugin.getConfigManager().getRace( dwarfPlayer.getRace().toLowerCase() );
         if ( playerRace != null )
         {
-            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, "Race List || You're a " + plugin.getOut().parseColors( playerRace.getPrefixColour() ) + dwarfPlayer.getRace() );
+            inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), this.inventorySize, "Change Race || Currently: " + plugin.getOut().parseColors(playerRace.getPrefixColour()) + dwarfPlayer.getRace());
         }
         else
         {
-            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, "Race List || " + ChatColor.RED + "Please pick a race!" );
+            inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), this.inventorySize, "Choose a race...");
         }
 
         inventory.clear();
@@ -44,32 +50,30 @@ public class RaceGUI extends DwarfGUI
                 continue;
 
             ItemStack item = new ItemStack( race.getIcon() );
-            ArrayList<String> lore = new ArrayList<String>();
+            ArrayList<String> lore = new ArrayList<>();
             lore.add( ChatColor.GOLD + "Description:" );
             lore.addAll( parseStringToLore( race.getDesc(), "" + ChatColor.WHITE ) );
-            lore.add( ChatColor.GOLD + "Specialised Skills:" );
-
-            ArrayList<Integer> skills = race.getSkills();
-            Collections.sort( skills );
-
-            lore.addAll( parseStringToLore( skills.toString().replaceAll( "\\[", "" ).replaceAll( "\\]", "" ), "" + ChatColor.WHITE ) );
-            lore.add( ChatColor.LIGHT_PURPLE + "Pick a race to change to" );
+            lore.add("");
+            lore.add(ChatColor.LIGHT_PURPLE + "Left click to change to " + race.getName());
             addItem( race.getName(), lore, i++, item );
         }
 
-        for ( i = 9; i < 18; i++ )
+        dwarfPlayer.getPlayer().sendMessage("" + inventorySize);
+
+        for (i = this.inventorySize - 9; i < this.inventorySize; i++)
             addItem( "Cancel", null, i, new ItemStack( Material.BARRIER ) );
     }
 
     @Override
     public void remove()
     {
+
     }
 
     @Override
     public void click( InventoryClickEvent event )
     {
-        if ( event.isLeftClick() && event.getRawSlot() <= 17 )
+        if (event.isLeftClick() && event.getRawSlot() <= this.inventorySize)
         {
             if ( event.getCurrentItem() == null )
                 return;
@@ -124,12 +128,12 @@ public class RaceGUI extends DwarfGUI
         inventory.clear();
         addItem( ChatColor.RED + "WARNING", parseStringToLore( "Are you sure you want to change race to " + race + ". All your skills will be reset.", "" ), 0, new ItemStack( Material.PAPER ) );
 
-        for ( int i = 9; i < 18; i++ )
+        for (int i = this.inventorySize - 9; i < this.inventorySize; i++)
         {
             addItem( "Cancel", null, i, new ItemStack( Material.BARRIER ) );
         }
 
-        addItem( "Confirm", null, 13, new ItemStack( Material.INK_SACK, 1, ( short ) 10 ) );
+        addItem( "Confirm", null, ( this.inventorySize - 9 ) + 4, new ItemStack(Material.INK_SACK, 1, ( short ) 10 ) );
         dwarfPlayer.getPlayer().updateInventory();
     }
 }
