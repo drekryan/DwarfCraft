@@ -241,7 +241,7 @@ public final class CommandParser
         {
             throw new CommandException( plugin, Type.PARSELEVELFAIL );
         }
-        if ( level > 30 || level < -1 )
+        if ( level > plugin.getConfigManager().getMaxSkillLevel() || level < -1 )
         {
             throw new CommandException( plugin, Type.LEVELOUTOFBOUNDS );
         }

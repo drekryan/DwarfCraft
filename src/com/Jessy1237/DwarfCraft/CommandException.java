@@ -10,6 +10,7 @@ public class CommandException extends Throwable
 
     public enum Type
     {
+        
         TOOFEWARGS( "You did not provide enough arguments for that command" ),
         TOOMANYARGS( "You gave too many arguments for that command" ),
         PARSEDWARFFAIL( "Could not locate the player you named" ),
@@ -18,7 +19,7 @@ public class CommandException extends Throwable
         PARSEEFFECTFAIL( "Could not understand your effect input (Use an ID)" ),
         EMPTYPLAYER( "Player argument was empty" ),
         COMMANDUNRECOGNIZED( "Could not understand what command you were trying to use" ),
-        LEVELOUTOFBOUNDS( "Skill level must be between -1 and 30" ),
+        LEVELOUTOFBOUNDS( "Skill level must be between -1 and " + plugin.getConfigManager().getMaxSkillLevel() ),
         PARSEINTFAIL( "Could not understand some input as a number" ),
         PAGENUMBERNOTFOUND( "Could not find the page number provided" ),
         CONSOLECANNOTUSE( "Either the console cannot use this command, or a player must be provided as a target." ),
@@ -32,6 +33,7 @@ public class CommandException extends Throwable
 
         String errorMsg;
 
+        
         Type( String errorMsg )
         {
             this.errorMsg = errorMsg;
@@ -39,17 +41,17 @@ public class CommandException extends Throwable
     }
 
     private Type type;
-    private final DwarfCraft plugin;
+    private static DwarfCraft plugin;
     private static final long serialVersionUID = 7319961775971310701L;
 
     protected CommandException( final DwarfCraft plugin )
     {
-        this.plugin = plugin;
+        CommandException.plugin = plugin;
     }
 
     public CommandException( final DwarfCraft plugin, Type type )
     {
-        this.plugin = plugin;
+        CommandException.plugin = plugin;
         this.type = type;
     }
 
