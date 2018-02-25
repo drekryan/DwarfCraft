@@ -50,7 +50,7 @@ public class PlaceHolderParser
         PLAYER_LEVEL( "%playerlevel%" ),
         PLAYER_NAME( "%playername%" ),
         PLAYER_RACE( "%playerrace%" ),
-        RACE_LEVEL_LIMIT("%racelevellimit%"),
+        RACE_LEVEL_LIMIT( "%racelevellimit%" ),
         RACE_NAME( "%racename%" ),
         SKILL_COST_AMOUNT( "%costamount%" ),
         SKILL_DEPOSIT_AMOUNT( "%depositedamount%" ),
@@ -220,7 +220,7 @@ public class PlaceHolderParser
     public String parseForTrainCosts( String text, int deposited, int costAmount, int totalCost, String itemType )
     {
         return generalParse( text.replaceAll( PlaceHolder.SKILL_DEPOSIT_AMOUNT.getPlaceHolder(), "" + deposited ).replaceAll( PlaceHolder.SKILL_TOTAL_COST.getPlaceHolder(), "" + totalCost ).replaceAll( PlaceHolder.SKILL_ITEM_TYPE.getPlaceHolder(), itemType )
-                .replaceAll( PlaceHolder.SKILL_COST_AMOUNT.getPlaceHolder(), "" + costAmount ) );
+                .replaceAll( PlaceHolder.SKILL_COST_AMOUNT.getPlaceHolder(), "" + costAmount ).replaceAll( PlaceHolder.ITEM_NAME.getPlaceHolder(), itemType ) );
     }
 
     protected void hookAPI()
