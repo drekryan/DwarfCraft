@@ -40,7 +40,7 @@ public class DwarfTrainerTrait extends Trait
 
         // Adding the trainer to DwarfCraft DB
         DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
-        plugin.getDataManager().trainerList.put( npc.getId(), trainer );
+        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DwarfTrainerTrait extends Trait
     @Override
     public void onRemove()
     {
-        plugin.getDataManager().trainerList.remove( this.npc.getId() );
+        plugin.getDataManager().trainerList.remove( this.getNPC().getId() );
     }
 
     public DwarfTrainerTrait()
@@ -121,11 +121,14 @@ public class DwarfTrainerTrait extends Trait
             this.mHeldItem = Material.AIR;
         }
 
-        if ( npc.isSpawned() )
+        if ( getNPC() != null )
         {
-            if ( this.mHeldItem != Material.AIR && this.mHeldItem != null )
+            if ( getNPC().isSpawned() )
             {
-                ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( this.mHeldItem, 1 ) );
+                if ( this.mHeldItem != Material.AIR && this.mHeldItem != null )
+                {
+                    ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( this.mHeldItem, 1 ) );
+                }
             }
         }
     }
