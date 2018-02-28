@@ -39,12 +39,6 @@ public class CommandSkillInfo extends Command implements TabCompleter
         if ( DwarfCraft.debugMessagesThreshold < 1 )
             System.out.println( "DC1: started command 'skillinfo'" );
 
-        if ( !(sender instanceof Player) )
-        {
-            sender.sendMessage( "Error: This command requires a player and must be run from in-game" );
-            return true;
-        }
-
         if ( args.length == 0 || args == null )
         {
             plugin.getOut().sendMessage( sender, CommandInformation.Usage.SKILLINFO.getUsage() );
@@ -79,11 +73,12 @@ public class CommandSkillInfo extends Command implements TabCompleter
                 {
                     if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS || dce.getType() == Type.EMPTYPLAYER )
                     {
+                        if ( !( sender instanceof Player ) )
+                            throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
+                        
                         desiredArguments.remove( 0 );
                         outputList = parser.parse( desiredArguments, true );
                         skill = ( DwarfSkill ) outputList.get( 0 );
-                        if ( !( sender instanceof Player ) )
-                            throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                         dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );
 
                         if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
