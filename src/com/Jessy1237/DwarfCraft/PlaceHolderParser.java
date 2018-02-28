@@ -186,7 +186,7 @@ public class PlaceHolderParser
                 .replaceAll( PlaceHolder.EFFECT_AMOUNT_INT.getPlaceHolder(), "" + ( int ) effectAmount ).replaceAll( PlaceHolder.EFFECT_DAMAGE.getPlaceHolder(), "" + ( int ) ( effectAmount * 100 ) ).replaceAll( PlaceHolder.EFFECT_DAMAGE_TAKEN.getPlaceHolder(), "" + ( int ) ( effectAmount * 100 ) )
                 .replaceAll( PlaceHolder.EFFECT_LEVEL_COLOR.getPlaceHolder(), effectLevelColor ).replaceAll( PlaceHolder.EFFECT_AMOUNT_MINOR.getPlaceHolder(), minorAmountStr ).replaceAll( PlaceHolder.EFFECT_AMOUNT_FOOD.getPlaceHolder(), String.format( "%.2f", ( effectAmount / 2.0 ) ) )
                 .replaceAll( PlaceHolder.EFFECT_AMOUNT_LOW.getPlaceHolder(), String.format( "%.2f", effectAmountLow ) ).replaceAll( PlaceHolder.EFFECT_AMOUNT_HIGH.getPlaceHolder(), String.format( "%.2f", effectAmountHigh ) )
-                .replaceAll( PlaceHolder.EFFECT_AMOUNT.getPlaceHolder(), String.format( "%.2f", effectAmount ) ), effect );
+                .replaceAll( PlaceHolder.EFFECT_AMOUNT.getPlaceHolder(), String.format( "%.2f", effectAmount ) ).replaceAll( PlaceHolder.EFFECT_CREATURE_NAME.getPlaceHolder(), plugin.getUtil().getCleanName( effect.getCreature() ) ), effect );
     }
 
     public String parseByDwarfSkill( String text, DwarfSkill skill )
