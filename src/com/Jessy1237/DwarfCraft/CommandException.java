@@ -19,7 +19,7 @@ public class CommandException extends Throwable
         PARSEEFFECTFAIL( "Could not understand your effect input (Use an ID)" ),
         EMPTYPLAYER( "Player argument was empty" ),
         COMMANDUNRECOGNIZED( "Could not understand what command you were trying to use" ),
-        LEVELOUTOFBOUNDS( "Skill level must be between -1 and " + plugin.getConfigManager().getMaxSkillLevel() ),
+        LEVELOUTOFBOUNDS( "Skill level must be between -1 and 30" ),
         PARSEINTFAIL( "Could not understand some input as a number" ),
         PAGENUMBERNOTFOUND( "Could not find the page number provided" ),
         CONSOLECANNOTUSE( "Either the console cannot use this command, or a player must be provided as a target." ),
@@ -53,6 +53,10 @@ public class CommandException extends Throwable
     {
         CommandException.plugin = plugin;
         this.type = type;
+
+        // This cant be done beforehand as the plugin will be null and cannot access the config value
+        // This caused the initialization of the CommandException to fail due to a null max skill level
+        Type.LEVELOUTOFBOUNDS.errorMsg = "Skill level must be between -1 and " + plugin.getConfigManager().getMaxSkillLevel();
     }
 
     public void describe( CommandSender sender )
