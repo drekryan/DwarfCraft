@@ -113,7 +113,7 @@ public final class CommandParser
         catch ( ArrayIndexOutOfBoundsException e )
         {
             if ( sender instanceof Player )
-                throw new CommandException( plugin, Type.PARSEDWARFFAIL );
+                throw new CommandException( plugin, Type.TOOFEWARGS );
             else
                 throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
         }

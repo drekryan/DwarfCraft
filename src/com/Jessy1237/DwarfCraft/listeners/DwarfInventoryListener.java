@@ -36,6 +36,7 @@ public class DwarfInventoryListener implements Listener
     private DwarfCraft plugin;
     private HashMap<Location, BrewerInventory> stands = new HashMap<>();
     private HashMap<Player, DwarfGUI> dwarfGUIs = new HashMap<>();
+    static HashMap<HumanEntity, Integer> amountEffectsFired = new HashMap<>();
 
     public DwarfInventoryListener( final DwarfCraft plugin )
     {
@@ -174,7 +175,9 @@ public class DwarfInventoryListener implements Listener
                                     {
                                         if ( item.getType() == output.getType() )
                                         {
-                                            plugin.getServer().getScheduler().runTaskLater( plugin, new ShiftClickTask( plugin, dCPlayer, item, check, held, modifier, e ), 5 );
+                                            int num = ( amountEffectsFired.get( player ) == null ? 0 : amountEffectsFired.get( player ) ) + 1;
+                                            amountEffectsFired.put( player, num );
+                                            plugin.getServer().getScheduler().runTaskLater( plugin, new ShiftClickTask( plugin, dCPlayer, item, check, held, modifier ), 5 );
                                         }
                                         else
                                         {
@@ -232,6 +235,7 @@ public class DwarfInventoryListener implements Listener
                                         }
                                     }
                                 }
+                                player.setCanPickupItems( true );
                             }
                         }
                     }
@@ -307,7 +311,9 @@ public class DwarfInventoryListener implements Listener
                                 {
                                     if ( item.getType() == output.getType() )
                                     {
-                                        plugin.getServer().getScheduler().runTaskLater( plugin, new ShiftClickTask( plugin, dCPlayer, item, check, held, modifier, effect ), 5 );
+                                        int num = ( amountEffectsFired.get( player ) == null ? 0 : amountEffectsFired.get( player ) ) + 1;
+                                        amountEffectsFired.put( player, num );
+                                        plugin.getServer().getScheduler().runTaskLater( plugin, new ShiftClickTask( plugin, dCPlayer, item, check, held, modifier ), 5 );
                                     }
                                     else
                                     {
@@ -348,8 +354,8 @@ public class DwarfInventoryListener implements Listener
         dwarfGUI.remove();
         dwarfGUIs.remove( ( Player ) event.getPlayer() );
     }
-    
-    public void addDwarfGUI(Player player, DwarfGUI gui)
+
+    public void addDwarfGUI( Player player, DwarfGUI gui )
     {
         dwarfGUIs.put( player, gui );
         gui.init();
@@ -526,10 +532,9 @@ class ShiftClickTask implements Runnable
     private ItemStack item;
     private ItemStack check;
     private float modifier;
-    private DwarfEffect e;
     private DwarfCraft plugin;
 
-    public ShiftClickTask( DwarfCraft plugin, DwarfPlayer p, final ItemStack item, ItemStack check, int init, float modifier, DwarfEffect e )
+    public ShiftClickTask( DwarfCraft plugin, DwarfPlayer p, final ItemStack item, ItemStack check, int init, float modifier )
     {
         this.p = p;
         this.item = item;
@@ -543,7 +548,6 @@ class ShiftClickTask implements Runnable
         }
         this.init = init;
         this.modifier = modifier;
-        this.e = e;
         this.plugin = plugin;
     }
 
@@ -599,15 +603,16 @@ class ShiftClickTask implements Runnable
             int amount = plugin.getUtil().randomAmount( ( difference - modifier * difference ) );
             p.getPlayer().getInventory().removeItem( new ItemStack( item.getType(), amount, item.getDurability() ) );
         }
-        for ( DwarfSkill s : p.getSkills().values() )
+
+        // Checks to see if this was the last crafting effect that was fired.
+        int num = ( DwarfInventoryListener.amountEffectsFired.get( p.getPlayer() ) == null ? 1 : DwarfInventoryListener.amountEffectsFired.get( p.getPlayer() ) ) - 1;
+        if ( num == 0 )
         {
-            if ( s.getEffects().contains( e ) )
-            {
-                if ( s.getEffects().indexOf( e ) + 1 < s.getEffects().size() )
-                {
-                    p.getPlayer().setCanPickupItems( true );
-                }
-            }
+            p.getPlayer().setCanPickupItems( true );
+        }
+        else
+        {
+            DwarfInventoryListener.amountEffectsFired.put( p.getPlayer(), num );
         }
     }
 }
