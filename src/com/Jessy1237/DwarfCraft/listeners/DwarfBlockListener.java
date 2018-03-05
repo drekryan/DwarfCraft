@@ -25,6 +25,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
@@ -200,7 +201,7 @@ public class DwarfBlockListener implements Listener
                             final int i = r.nextInt( 100 );
                             if ( i == 0 || i == 1 )
                             {
-                                loc.getWorld().dropItemNaturally( loc, new ItemStack( Material.POISONOUS_POTATO, 1 ) );
+                                loc.getWorld().dropItem( loc, new ItemStack( Material.POISONOUS_POTATO, 1 ) );
                             }
                         }
 
@@ -417,7 +418,7 @@ public class DwarfBlockListener implements Listener
                             {
                                 if ( i.getAmount() > 0 )
                                 {
-                                    loc.getWorld().dropItemNaturally( loc, i );
+                                    loc.getWorld().dropItem( loc.add( 0.5, 0, 0.5 ), i ).setVelocity( new Vector( 0, 0.15, 0 ) );
                                 }
                             }
                         }
