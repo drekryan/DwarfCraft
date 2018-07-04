@@ -32,7 +32,7 @@ public class TrainerGUI extends DwarfGUI
     public void init()
     {
         DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
-        this.inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors(plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill(Messages.trainerGUITitle, dwarfPlayer, skill)));
+        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill( Messages.trainerGUITitle, dwarfPlayer, skill ) ) );
         inventory.clear();
 
         List<List<ItemStack>> costs = dwarfPlayer.calculateTrainingCost( skill );
@@ -88,14 +88,22 @@ public class TrainerGUI extends DwarfGUI
                 return;
             }
 
-            long currentTime = System.currentTimeMillis();
-            if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
+            //Allows for the cancel option to fire without a delay
+            if ( event.getCurrentItem().getType().equals( Material.BARRIER ) && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase( "Cancel" ) )
             {
-                plugin.getOut().sendMessage( event.getWhoClicked(), Messages.trainerCooldown );
+                dwarfPlayer.getPlayer().closeInventory();
             }
             else
             {
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, event.getCurrentItem(), this ), 2 );
+                long currentTime = System.currentTimeMillis();
+                if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
+                {
+                    plugin.getOut().sendMessage( event.getWhoClicked(), Messages.trainerCooldown );
+                }
+                else
+                {
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, event.getCurrentItem(), this ), 2 );
+                }
             }
         }
 
@@ -133,10 +141,7 @@ public class TrainerGUI extends DwarfGUI
     {
         DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
         dwarfPlayer.getPlayer().closeInventory();
-        this.inventory = plugin.getServer().createInventory(dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors(plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill(Messages.trainerGUITitle, dwarfPlayer, skill)));
-        init();
-        dwarfPlayer.getPlayer().updateInventory();
-        openGUI();
+        this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill( Messages.trainerGUITitle, dwarfPlayer, skill ) ) );
         plugin.getDwarfInventoryListener().addDwarfGUI( dwarfPlayer.getPlayer(), this );
     }
 }

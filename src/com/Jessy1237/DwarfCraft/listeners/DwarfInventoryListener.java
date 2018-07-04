@@ -284,10 +284,10 @@ public class DwarfInventoryListener implements Listener
 
     public void addDwarfGUI( Player player, DwarfGUI gui )
     {
-        dwarfGUIs.put( player, gui );
         gui.init();
         gui.openGUI();
         player.updateInventory();
+        dwarfGUIs.put( player, gui );
     }
 
     @EventHandler( priority = EventPriority.NORMAL )

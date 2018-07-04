@@ -46,6 +46,7 @@ public class PlaceHolderParser
         EFFECT_TOOL_TYPE( "%tooltype%" ),
         EFFECT_LEVEL_COLOR( "%effectlevelcolor%" ),
         ITEM_NAME( "%itemname%" ),
+        LEVEL("%level%"),
         MAX_SKILL_LEVEL( "%maxskilllevel%" ),
         PLAYER_LEVEL( "%playerlevel%" ),
         PLAYER_NAME( "%playername%" ),
