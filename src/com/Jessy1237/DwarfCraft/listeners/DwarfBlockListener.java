@@ -24,7 +24,9 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
@@ -113,6 +115,9 @@ public class DwarfBlockListener implements Listener
     public void onBlockBreak( BlockBreakEvent event )
     {
         if ( !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
+            return;
+
+        if ( event.getBlock().hasMetadata( "playerPlaced" ) )
             return;
 
         if ( event.isCancelled() )
@@ -511,6 +516,14 @@ public class DwarfBlockListener implements Listener
                 }
             }
         }
+    }
+
+    @EventHandler( priority = EventPriority.HIGH )
+    public void onBlockPlace( BlockPlaceEvent event )
+    {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        block.setMetadata( "playerPlaced", new FixedMetadataValue( plugin, player.getUniqueId() ) );
     }
 
     // Code to check for farm automation i.e. (breaking the
