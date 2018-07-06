@@ -205,16 +205,7 @@ public class PlaceHolderParser
     public String parseByDwarfPlayerAndDwarfSkill( String text, DwarfPlayer dwarfPlayer, DwarfSkill skill )
     {
         // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
-        int levelLimit = plugin.getConfigManager().getMaxSkillLevel();
-        ArrayList<Integer> skills = plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() );
-        if ( skills != null )
-        {
-            if ( !skills.contains( skill.getId() ) )
-            {
-                levelLimit = plugin.getConfigManager().getRaceLevelLimit();
-            }
-        }
-
+        int levelLimit = plugin.getUtil().getMaxLevelForSkill( dwarfPlayer, skill );
         return parseByDwarfSkill( parseByDwarfPlayer( text.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + levelLimit ), dwarfPlayer ), skill );
     }
 

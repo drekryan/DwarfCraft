@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
@@ -446,6 +447,18 @@ public class Util
         if ( !race.equalsIgnoreCase( "NULL" ) )
             prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f";
+    }
+
+    public int getMaxLevelForSkill( DwarfPlayer dcPlayer, DwarfSkill skill )
+    {
+        int maxLevel = plugin.getConfigManager().getMaxSkillLevel();
+        ArrayList<Integer> skills = plugin.getConfigManager().getAllSkills( dcPlayer.getRace() );
+        if ( !skills.contains( skill.getId() ) )
+        {
+            maxLevel = plugin.getConfigManager().getRaceLevelLimit();
+        }
+
+        return  maxLevel;
     }
 
     public void removePlayerPrefixes()

@@ -117,9 +117,6 @@ public class DwarfBlockListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
             return;
 
-        if ( event.getBlock().hasMetadata( "playerPlaced" ) )
-            return;
-
         if ( event.isCancelled() )
             return;
 
@@ -150,8 +147,12 @@ public class DwarfBlockListener implements Listener
         {
             for ( DwarfEffect effect : s.getEffects() )
             {
-                if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && effect.checkInitiator( blockMat, meta ) )
+                if ( ( effect.getEffectType() == DwarfEffectType.BLOCKDROP || effect.getEffectType() == DwarfEffectType.BLOCKDROPDUPE ) && effect.checkInitiator( blockMat, meta ) )
                 {
+                    // Check if the block was placed by a player and prevent additional drops if the effect type is not "BLOCKDROPDUPE"
+                    if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) ) {
+                        return;
+                    }
 
                     // Crops special line:
                     if ( effect.getInitiatorMaterial() == Material.CROPS || effect.getInitiatorMaterial() == Material.CARROT || effect.getInitiatorMaterial() == Material.POTATO )
