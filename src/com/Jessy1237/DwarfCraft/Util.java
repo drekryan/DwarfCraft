@@ -13,8 +13,11 @@ import org.bukkit.inventory.ItemStack;
 import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
+import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
+import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
 /**
@@ -422,19 +425,40 @@ public class Util
     public String getPlayerPrefix( DwarfPlayer player )
     {
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
-        return plugin.getOut().parseColors( plugin.getConfigManager().getRace( race ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f" );
+        String prefix = "";
+        if ( !player.getRace().equalsIgnoreCase( "NULL" ) )
+            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f" );
     }
 
     public String getPlayerPrefix( String race )
     {
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        return plugin.getOut().parseColors( plugin.getConfigManager().getRace( raceStr ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f" );
+        String prefix = "";
+        if ( !race.equalsIgnoreCase( "NULL" ) )
+            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f" );
     }
 
     public String getPlayerPrefixOldColours( String race )
     {
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        return plugin.getConfigManager().getRace( raceStr ).getPrefixColour() + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f";
+        String prefix = "";
+        if ( !race.equalsIgnoreCase( "NULL" ) )
+            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        return prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f";
+    }
+
+    public int getMaxLevelForSkill( DwarfPlayer dcPlayer, DwarfSkill skill )
+    {
+        int maxLevel = plugin.getConfigManager().getMaxSkillLevel();
+        ArrayList<Integer> skills = plugin.getConfigManager().getAllSkills( dcPlayer.getRace() );
+        if ( !skills.contains( skill.getId() ) )
+        {
+            maxLevel = plugin.getConfigManager().getRaceLevelLimit();
+        }
+
+        return  maxLevel;
     }
 
     public void removePlayerPrefixes()
@@ -715,11 +739,11 @@ public class Util
 
                         if ( npc.hasTrait( DwarfTrainerTrait.class ) )
                         {
-                            DwarfTrainerTrait dtt = npc.getTrait( DwarfTrainerTrait.class );
-
                             // Reruns the code that registers the CitizensNPC
                             // into DwarfCraft
-                            dtt.onSpawn();
+                            npc.getTrait( DwarfTrainerTrait.class ).loadHeldItem();
+                            DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
+                            plugin.getDataManager().trainerList.put( npc.getId(), trainer );
                         }
                     }
                 }

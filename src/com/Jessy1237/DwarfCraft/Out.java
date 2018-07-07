@@ -130,13 +130,13 @@ public class Out
         }
 
         // training lines
-        if ( skill.getLevel() == plugin.getConfigManager().getMaxSkillLevel() )
+        if ( skill.getLevel() >= plugin.getUtil().getMaxLevelForSkill( dCPlayer, skill ) )
         {
             sendMessage( sender, Messages.skillInfoMaxSkillLevel );
             return true;
         }
 
-        if ( skill.getLevel() > maxTrainLevel )
+        if ( skill.getLevel() >= maxTrainLevel )
         {
             sendMessage( sender, Messages.skillInfoAtTrainerLevel );
             return true;
@@ -371,6 +371,7 @@ public class Out
         switch ( effect.getEffectType() )
         {
             case BLOCKDROP:
+            case BLOCKDROPDUPE:
                 out = Messages.describeLevelBlockdrop;
                 break;
             case MOBDROP:

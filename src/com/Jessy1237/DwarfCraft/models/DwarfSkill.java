@@ -81,6 +81,7 @@ public class DwarfSkill implements Cloneable
     @Override
     public String toString()
     {
+        if ( mName == null ) return "";
         return mName.toUpperCase().replaceAll( " ", "_" );
     }
 

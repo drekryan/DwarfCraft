@@ -73,11 +73,12 @@ public class CommandSkillInfo extends Command implements TabCompleter
                 {
                     if ( dce.getType() == Type.PARSEDWARFFAIL || dce.getType() == Type.TOOFEWARGS || dce.getType() == Type.EMPTYPLAYER )
                     {
+                        if ( !( sender instanceof Player ) )
+                            throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
+                        
                         desiredArguments.remove( 0 );
                         outputList = parser.parse( desiredArguments, true );
                         skill = ( DwarfSkill ) outputList.get( 0 );
-                        if ( !( sender instanceof Player ) )
-                            throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
                         dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );
 
                         if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
@@ -89,9 +90,8 @@ public class CommandSkillInfo extends Command implements TabCompleter
                     else
                         throw dce;
                 }
-                plugin.getOut().printSkillInfo( sender, skill, dwarfPlayer, 30 );
+                plugin.getOut().printSkillInfo( sender, skill, dwarfPlayer, plugin.getConfigManager().getMaxSkillLevel() );
                 return true;
-
             }
             catch ( CommandException e )
             {
