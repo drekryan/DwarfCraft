@@ -442,6 +442,11 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             getLogger().log( Level.INFO, "Couldn't find PlaceholderAPI!" );
         }
 
+        if ( pm.getPlugin( "FastCraft" ) != null )
+        {
+            getLogger().log( Level.INFO, "Found FastCraft! Patching Crafting..." );
+        }
+
         initCommands();
 
         getLogger().log( Level.INFO, getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );

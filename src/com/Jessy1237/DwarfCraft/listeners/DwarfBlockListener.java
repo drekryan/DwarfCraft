@@ -461,8 +461,8 @@ public class DwarfBlockListener implements Listener
 
         if ( blockDropChange )
         {
-            event.getBlock().setType( Material.AIR );
-            event.setCancelled( true );
+            event.setDropItems( false );
+            event.setExpToDrop( 0 );
         }
     }
 
