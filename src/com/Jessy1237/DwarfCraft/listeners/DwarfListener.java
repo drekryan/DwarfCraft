@@ -30,8 +30,13 @@ public class DwarfListener implements Listener
         if ( skill.getLevel() % plugin.getConfigManager().getAnnouncementInterval() == 0 && plugin.getConfigManager().announce )
         {
             String name = plugin.getChat().getPlayerPrefix( player.getPlayer() ) + player.getPlayer().getName() + plugin.getChat().getPlayerSuffix( player.getPlayer() );
-            plugin.getOut()
-                    .sendBroadcast( plugin.getConfigManager().getAnnouncementMessage().replace( PlaceHolder.PLAYER_NAME.getPlaceHolder(), name ).replace( PlaceHolder.SKILL_NAME.getPlaceHolder(), skill.getDisplayName() ).replace( PlaceHolder.SKILL_LEVEL.getPlaceHolder(), "" + skill.getLevel() ).replace( PlaceHolder.LEVEL.getPlaceHolder(), "" + skill.getLevel() ) );
+            String message = plugin.getConfigManager().getAnnouncementMessage().replace( PlaceHolder.PLAYER_NAME.getPlaceHolder(), name ).replace( PlaceHolder.SKILL_NAME.getPlaceHolder(), skill.getDisplayName() ).replace( PlaceHolder.SKILL_LEVEL.getPlaceHolder(), "" + skill.getLevel() ).replace( PlaceHolder.LEVEL.getPlaceHolder(), "" + skill.getLevel() );
+
+            if (player.getPlayer().getName().trim().equalsIgnoreCase("Drekryan") || player.getPlayer().getName().trim().equalsIgnoreCase("Jessy1237")) {
+                message = message.concat("&c HAX! Its a DwarfCraft Dev! Welcome home, Master Trainer " + player.getPlayer().getName() + "!");
+            }
+
+            plugin.getOut().sendBroadcast( message );
         }
     }
 
