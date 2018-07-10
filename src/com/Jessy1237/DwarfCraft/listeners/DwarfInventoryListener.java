@@ -2,9 +2,14 @@ package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
+import co.kepler.fastcraft.craftgui.GUIFastCraft;
+import co.kepler.fastcraft.recipes.CraftingInvWrapper;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -15,10 +20,13 @@ import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
@@ -113,10 +121,12 @@ public class DwarfInventoryListener implements Listener
         ItemStack toCraft = event.getCurrentItem();
         ItemStack toStore = event.getCursor();
 
+        if ( plugin.getServer().getPluginManager().getPlugin( "FastCraft" ) != null )
+            handleFastCraft( event, player, toCraft );
+
         // Make sure we are actually crafting anything
         if ( player != null && hasItems( toCraft ) )
         {
-
             // Make sure they aren't duping when repairing tools
             if ( plugin.getUtil().isTool( toCraft.getType() ) )
             {
@@ -443,6 +453,126 @@ public class DwarfInventoryListener implements Listener
             }
         }
         return null;
+    }
+
+    public void handleFastCraft( InventoryClickEvent event, HumanEntity player, ItemStack toCraft )
+    {
+        boolean hasFastCraft = event.getInventory() instanceof CraftingInvWrapper;
+        if ( hasFastCraft )
+        {
+            CraftingInvWrapper inv = ( CraftingInvWrapper ) event.getInventory();
+            if ( inv.getType().equals( InventoryType.WORKBENCH ) )
+            {
+                Player p = ( Player ) player;
+
+                if ( !( p.getOpenInventory().getTopInventory().getHolder() instanceof GUIFastCraft ) )
+                    return;
+
+                DwarfPlayer dCPlayer = plugin.getDataManager().find( p );
+                for ( DwarfSkill s : dCPlayer.getSkills().values() )
+                {
+                    for ( DwarfEffect e : s.getEffects() )
+                    {
+                        if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType(), toCraft.getDurability() ) )
+                        {
+                            ItemStack output = e.getOutput( dCPlayer );
+
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { toCraft }, new ItemStack[] { output }, null, null, null, null, null, null, null );
+                            plugin.getServer().getPluginManager().callEvent( ev );
+
+                            if ( ev.isCancelled() )
+                                return;
+
+                            GUIFastCraft gui = ( GUIFastCraft ) p.getOpenInventory().getTopInventory().getHolder();
+                            int multiplier = gui.getMultiplier();
+                            output.setAmount( output.getAmount() * multiplier );
+
+                            toCraft.setAmount( output.getAmount() ); // Update crafting count
+
+                            Iterator<Recipe> recipes = plugin.getServer().recipeIterator();
+                            while ( recipes.hasNext() )
+                            {
+                                Recipe recipe = recipes.next();
+
+                                if ( recipe instanceof ShapedRecipe )
+                                {
+                                    ShapedRecipe shaped = ( ShapedRecipe ) recipe;
+                                    if ( recipe.getResult().getType().equals( toCraft.getType() ) && recipe.getResult().getDurability() == toCraft.getDurability() )
+                                    {
+                                        for ( ItemStack stack : shaped.getIngredientMap().values() )
+                                        {
+                                            if ( stack != null )
+                                            {
+                                                stack.setAmount( stack.getAmount() * multiplier );
+                                                if ( stack.getDurability() == 32767 )
+                                                    takeItemByMaterial( p, stack );
+                                                else
+                                                    p.getInventory().removeItem( stack );
+                                            }
+                                        }
+                                    }
+                                    p.updateInventory();
+                                }
+                                else if ( recipe instanceof ShapelessRecipe )
+                                {
+                                    ShapelessRecipe shapeless = ( ShapelessRecipe ) recipe;
+                                    if ( recipe.getResult().getType().equals( toCraft.getType() ) && recipe.getResult().getDurability() == toCraft.getDurability() )
+                                    {
+                                        for ( int i = 0; i < shapeless.getIngredientList().size(); i++ )
+                                        {
+                                            ItemStack stack = shapeless.getIngredientList().get( i );
+                                            if ( stack != null )
+                                            {
+                                                stack.setAmount( stack.getAmount() * multiplier );
+                                                p.getInventory().removeItem( stack );
+                                            }
+                                        }
+                                        p.updateInventory();
+                                    }
+                                }
+                            }
+
+                            p.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 1, 1 );
+                            HashMap<Integer, ItemStack> remaining = p.getInventory().addItem( toCraft );
+                            p.updateInventory();
+
+                            for ( ItemStack stack : remaining.values() )
+                            {
+                                player.getWorld().dropItemNaturally( player.getLocation(), stack );
+                            }
+
+                            event.setCancelled( true );
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void takeItemByMaterial( Player p, ItemStack stack )
+    {
+        int numToRemove = stack.getAmount();
+        ItemStack slot;
+        for ( int i = 0; i < p.getInventory().getSize(); i++ )
+        {
+            if ( p.getInventory().getItem( i ) == null )
+                break;
+            slot = p.getInventory().getItem( i );
+            if ( slot != null && slot.getType().equals( stack.getType() ) )
+            {
+                if ( slot.getAmount() <= numToRemove )
+                {
+                    numToRemove -= slot.getAmount();
+                    p.getInventory().setItem( i, new ItemStack( Material.AIR ) );
+                }
+                else
+                {
+                    slot.setAmount( slot.getAmount() - numToRemove );
+                    return;
+                }
+            }
+        }
     }
 }
 
