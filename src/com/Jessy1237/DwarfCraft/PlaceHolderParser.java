@@ -1,7 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -70,6 +70,9 @@ public class DwarfSkill implements Cloneable
 
     protected Material getTrainerHeldMaterial()
     {
+        if (mHeldItem == null)
+            return Material.AIR;
+
         return mHeldItem;
     }
 

@@ -3,6 +3,7 @@ package com.Jessy1237.DwarfCraft.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -208,6 +209,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
             e = new DwarfLevelUpEvent( dCPlayer, this, skill );
 
             plugin.getServer().getPluginManager().callEvent( e );
+            dCPlayer.runLevelUpCommands( skill );
         }
         if ( hasMatsOrDeposits[1] || hasMatsOrDeposits[0] )
         {
@@ -236,7 +238,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
             dCSkills[0] = skill;
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             trainerGUI.updateTitle();
-            player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
+            player.getWorld().playSound( player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
 
         return hasMatsOrDeposits[0];

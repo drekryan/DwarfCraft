@@ -112,22 +112,18 @@ public class DwarfTrainerTrait extends Trait
             return Material.AIR;
     }
 
-    public void loadHeldItem()
-    {
-        this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
-
-        if ( this.mHeldItem == null )
-        {
-            this.mHeldItem = Material.AIR;
+    public void loadHeldItem() {
+        try {
+            this.mHeldItem = plugin.getConfigManager().getGenericSkill(getSkillTrained()).getTrainerHeldMaterial();
+        }
+        catch (NullPointerException e) {
+            // NOP
         }
 
-        if ( getNPC() != null )
-        {
-            if ( getNPC().isSpawned() )
-            {
-                if ( this.mHeldItem != Material.AIR && this.mHeldItem != null )
-                {
-                    ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( this.mHeldItem, 1 ) );
+        if (getNPC() != null) {
+            if (getNPC().isSpawned()) {
+                if (this.mHeldItem != Material.AIR && this.mHeldItem != null) {
+                    ((LivingEntity) getNPC().getEntity()).getEquipment().setItemInMainHand(new ItemStack(this.mHeldItem, 1));
                 }
             }
         }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -282,7 +283,7 @@ public class DwarfPlayer
         // Resets the players skills
         for ( DwarfSkill skill : skills.values() )
         {
-            if ( !plugin.getConfigManager().softcore )
+            if ( plugin.getConfigManager().hardcorePenalty )
             {
                 if ( race.equalsIgnoreCase( "Vanilla" ) )
                 {
@@ -345,5 +346,58 @@ public class DwarfPlayer
     public void setRaceMaster( boolean raceMaster )
     {
         this.raceMaster = raceMaster;
+    }
+
+    public boolean isMax()
+    {
+        boolean isMax = true;
+        for ( DwarfSkill s : skills.values() )
+        {
+            if ( s.getLevel() < plugin.getUtil().getMaxLevelForSkill( this, s ) )
+            {
+                isMax = false;
+            }
+        }
+
+        return isMax;
+    }
+
+    public boolean isDwarfCraftDev()
+    {
+        return player.getPlayer().getName().trim().equalsIgnoreCase("Drekryan") || player.getPlayer().getName().trim().equalsIgnoreCase("Jessy1237");
+    }
+
+    public void runLevelUpCommands(DwarfSkill skill) {
+        if (plugin.getConfigManager().getSkillLevelCommands().size() > 0) {
+            ArrayList<String> commands;
+
+            if (!plugin.getConfigManager().getAllSkills().values().contains(skill)) {
+                return;
+            }
+
+            if ( isMax() )
+            {
+                commands = plugin.getConfigManager().getSkillMaxCapeCommands();
+            }
+            else if ( skill.getLevel() >= plugin.getUtil().getMaxLevelForSkill( this, skill ) )
+            {
+                commands = plugin.getConfigManager().getSkillMasteryCommands();
+            }
+            else
+            {
+                commands = plugin.getConfigManager().getSkillLevelCommands();
+            }
+
+            for (String command : commands) {
+                String playerPosition = player.getLocation().getX() + " " + player.getLocation().getY() + " " + player.getLocation().getZ();
+
+                command = command.replaceAll("%playerpos%", playerPosition).replaceAll("%world%", player.getWorld().getName() );
+                command = plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill(command, this, skill);
+                System.out.println(command);
+                command = ChatColor.translateAlternateColorCodes('&', command);
+
+                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+            }
+        }
     }
 }

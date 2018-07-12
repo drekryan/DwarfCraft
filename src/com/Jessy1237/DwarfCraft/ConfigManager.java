@@ -43,6 +43,9 @@ public final class ConfigManager
     private Integer trainDelay;
     private Integer announcementInterval;
     private String announcementMessage;
+    private ArrayList<String> skillLevelCommands = new ArrayList<>();
+    private ArrayList<String> skillMasteryCommands = new ArrayList<>();
+    private ArrayList<String> skillMaxCapeCommands = new ArrayList<>();
     private Integer maxLevel;
     private Integer raceLevelLimit;
     private String prefixStr;
@@ -63,7 +66,7 @@ public final class ConfigManager
     public boolean prefix = false;
     public boolean announce = false;
     public boolean byID = true;
-    public boolean softcore = false;
+    public boolean hardcorePenalty = true;
     public boolean spawnTutorialBook = true;
 
     @SuppressWarnings( "unchecked" )
@@ -262,9 +265,28 @@ public final class ConfigManager
                 String[] theline = line.split( ":" );
                 if ( theline.length != 2 )
                 {
-                    line = br.readLine();
-                    continue;
+                    // Read the level commands from the config file
+                    if ( theline[0].equalsIgnoreCase( "Skill Level Commands" ) )
+                    {
+                        addConfigListToArrayList( br, skillLevelCommands );
+                        br.readLine();
+                    } else if ( theline[0].equalsIgnoreCase( "Skill Mastery Commands" ) )
+                    {
+                        addConfigListToArrayList( br, skillMasteryCommands );
+                        br.readLine();
+                    }
+                    else if ( theline[0].equalsIgnoreCase( "Max Cape Commands" ) )
+                    {
+                        addConfigListToArrayList( br, skillMaxCapeCommands );
+                        br.readLine();
+                    }
+                    else
+                    {
+                        line = br.readLine();
+                        continue;
+                    }
                 }
+
                 if ( theline[0].equalsIgnoreCase( "Database File Name" ) )
                     dbpath = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Debug Level" ) )
@@ -291,7 +313,7 @@ public final class ConfigManager
                     prefixStr = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Max Skill Level" ) )
                     maxLevel = Integer.parseInt( theline[1].trim() );
-                if ( theline[0].equalsIgnoreCase( "Race Level Limit" ) )
+                if ( theline[0].equalsIgnoreCase( "Non-Racial Level Limit" ) )
                     raceLevelLimit = Integer.parseInt( theline[1].trim() );
                 if ( theline[0].equalsIgnoreCase( "Announce Level Up" ) )
                     announce = Boolean.parseBoolean( theline[1].trim() );
@@ -301,8 +323,8 @@ public final class ConfigManager
                     announcementMessage = theline[1].trim();
                 if ( theline[0].equalsIgnoreCase( "Sort DwarfTrainers by Unique ID" ) )
                     byID = Boolean.parseBoolean( theline[1].trim() );
-                if ( theline[0].equalsIgnoreCase( "Softcore race skill reset" ) )
-                    softcore = Boolean.parseBoolean( theline[1].trim() );
+                if ( theline[0].equalsIgnoreCase( "Hardcore Race Change Penalty" ) )
+                    hardcorePenalty = Boolean.parseBoolean( theline[1].trim() );
                 if ( theline[0].equalsIgnoreCase( "Spawn Tutorial Book" ) )
                     spawnTutorialBook = Boolean.parseBoolean( theline[1].trim() );
 
@@ -993,6 +1015,31 @@ public final class ConfigManager
         return false;
     }
 
+    private void addConfigListToArrayList(BufferedReader br, ArrayList<String> stringArrayList)
+    {
+        try {
+            String commandline = br.readLine();
+            while ( commandline.startsWith( "-" ) || commandline.startsWith("#") ) {
+                String command = commandline.split("-")[1].trim();
+                if (commandline.startsWith( "#" )) {
+                    commandline = br.readLine();
+                } else {
+                    if (command.length() > 0) {
+                        stringArrayList.add(command);
+                        commandline = br.readLine();
+                    } else {
+                        br.readLine();
+                    }
+                }
+            }
+
+            System.out.println( stringArrayList );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public String getDefaultRace()
     {
         return defaultRace;
@@ -1046,6 +1093,21 @@ public final class ConfigManager
     public String getAnnouncementMessage()
     {
         return announcementMessage;
+    }
+
+    public ArrayList<String> getSkillLevelCommands()
+    {
+        return skillLevelCommands;
+    }
+
+    public ArrayList<String> getSkillMasteryCommands()
+    {
+        return skillMasteryCommands;
+    }
+
+    public ArrayList<String> getSkillMaxCapeCommands()
+    {
+        return skillMaxCapeCommands;
     }
 
     public HashMap<String, ArrayList<Material>> getBlockGroups()
