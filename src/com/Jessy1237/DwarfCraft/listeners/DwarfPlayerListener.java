@@ -3,6 +3,7 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.HashMap;
 
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -63,8 +64,6 @@ public class DwarfPlayerListener implements Listener
             plugin.getOut().welcome( dwarfPlayer );
 
         if (event.getPlayer().getName().trim().equalsIgnoreCase("Drekryan") || event.getPlayer().getName().trim().equalsIgnoreCase("Jessy1237")) {
-            System.out.println("developer detected. playing particles");
-
             plugin.getServer().getScheduler().runTaskLater( plugin, new AuraSpawnTask( plugin ), 10 );
         }
     }
@@ -387,6 +386,25 @@ class AuraSpawnTask implements Runnable {
     public void run() {
         for (DwarfTrainer trainer : plugin.getDataManager().trainerList.values()) {
             trainer.getWorld().spawnParticle( Particle.ENCHANTMENT_TABLE, trainer.getLocation(), 100 );
+        }
+    }
+
+}
+
+class CancelAuraTask implements Runnable {
+
+    private DwarfCraft plugin;
+
+    CancelAuraTask( DwarfCraft plugin )
+    {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void run() {
+        if (plugin.isAuraActive) {
+            plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&cThe aura boosting trainers has ended..."));
+            plugin.isAuraActive = false;
         }
     }
 

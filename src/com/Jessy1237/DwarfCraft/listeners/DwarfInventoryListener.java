@@ -121,8 +121,9 @@ public class DwarfInventoryListener implements Listener
         ItemStack toCraft = event.getCurrentItem();
         ItemStack toStore = event.getCursor();
 
-        if ( plugin.getServer().getPluginManager().getPlugin( "FastCraft" ) != null )
-            handleFastCraft( event, player, toCraft );
+        //TODO: This code has bugs in it.. fix me
+        //if ( plugin.getServer().getPluginManager().getPlugin( "FastCraft" ) != null )
+            //handleFastCraft( event, player, toCraft );
 
         // Make sure we are actually crafting anything
         if ( player != null && hasItems( toCraft ) )

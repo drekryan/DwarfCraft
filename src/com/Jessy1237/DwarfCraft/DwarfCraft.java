@@ -73,6 +73,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private TraitInfo trainerTrait;
     private HashMap<String, Command> normCommands = new HashMap<>();
     private HashMap<String, Command> opCommands = new HashMap<>();
+    public boolean isAuraActive = false;
 
     public static int debugMessagesThreshold = 10;
 
@@ -440,11 +441,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         else
         {
             getLogger().log( Level.INFO, "Couldn't find PlaceholderAPI!" );
-        }
-
-        if ( pm.getPlugin( "FastCraft" ) != null )
-        {
-            getLogger().log( Level.INFO, "Found FastCraft! Patching Crafting..." );
         }
 
         initCommands();

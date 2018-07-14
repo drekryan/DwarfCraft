@@ -93,6 +93,17 @@ public class DwarfPlayer
         int item1Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item1.Base * multiplier - .01 ), skill.Item1.Max ) ), item2Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item2.Base * multiplier - .01 ), skill.Item2.Max ) ),
                 item3Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item3.Base * multiplier - .01 ), skill.Item3.Max ) );
 
+        if ( plugin.isAuraActive )
+        {
+            double item1Decrease = Math.ceil( item1Amount * 0.10 );
+            double item2Decrease = Math.ceil( item2Amount * 0.10 );
+            double item3Decrease = Math.ceil( item3Amount * 0.10 );
+
+            item1Amount = ( int ) ( item1Amount - item1Decrease );
+            item2Amount = ( int ) ( item2Amount - item2Decrease );
+            item3Amount = ( int ) ( item3Amount - item3Decrease );
+        }
+
         totalCostStack.add( 0, new ItemStack( skill.Item1.Item.getType(), item1Amount, skill.Item1.Item.getDurability() ) );
         costToLevelStack.add( 0, new ItemStack( skill.Item1.Item.getType(), item1Amount - skill.getDeposit1(), skill.Item1.Item.getDurability() ) );
 
@@ -107,6 +118,7 @@ public class DwarfPlayer
             costToLevelStack.add( 2, new ItemStack( skill.Item3.Item.getType(), item3Amount - skill.getDeposit3(), skill.Item3.Item.getDurability() ) );
         }
         List<List<ItemStack>> costs = new ArrayList<List<ItemStack>>();
+
         costs.add( 0, costToLevelStack );
         costs.add( 1, totalCostStack );
         return costs;
@@ -364,14 +376,17 @@ public class DwarfPlayer
 
     public boolean isDwarfCraftDev()
     {
-        return player.getPlayer().getName().trim().equalsIgnoreCase("Drekryan") || player.getPlayer().getName().trim().equalsIgnoreCase("Jessy1237");
+        return player.getPlayer().getName().trim().equalsIgnoreCase( "Drekryan" ) || player.getPlayer().getName().trim().equalsIgnoreCase( "Jessy1237" );
     }
 
-    public void runLevelUpCommands(DwarfSkill skill) {
-        if (plugin.getConfigManager().getSkillLevelCommands().size() > 0) {
+    public void runLevelUpCommands( DwarfSkill skill )
+    {
+        if ( plugin.getConfigManager().getSkillLevelCommands().size() > 0 )
+        {
             ArrayList<String> commands;
 
-            if (!plugin.getConfigManager().getAllSkills().values().contains(skill)) {
+            if ( !plugin.getConfigManager().getAllSkills().values().contains( skill ) )
+            {
                 return;
             }
 
@@ -388,15 +403,15 @@ public class DwarfPlayer
                 commands = plugin.getConfigManager().getSkillLevelCommands();
             }
 
-            for (String command : commands) {
+            for ( String command : commands )
+            {
                 String playerPosition = player.getLocation().getX() + " " + player.getLocation().getY() + " " + player.getLocation().getZ();
 
-                command = command.replaceAll("%playerpos%", playerPosition).replaceAll("%world%", player.getWorld().getName() );
-                command = plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill(command, this, skill);
-                System.out.println(command);
-                command = ChatColor.translateAlternateColorCodes('&', command);
+                command = command.replaceAll( "%playerpos%", playerPosition ).replaceAll( "%world%", player.getWorld().getName() );
+                command = plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill( command, this, skill );
+                command = ChatColor.translateAlternateColorCodes( '&', command );
 
-                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+                plugin.getServer().dispatchCommand( plugin.getServer().getConsoleSender(), command );
             }
         }
     }

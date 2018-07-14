@@ -37,7 +37,7 @@ public class DwarfListener implements Listener
 
             plugin.getOut().sendBroadcast( message );
 
-            if (player.isDwarfCraftDev()) {
+            if (player.isDwarfCraftDev() && !plugin.isAuraActive) {
                 plugin.getOut().sendBroadcast("&c[Trainer] I sense a strong presence of knowledge... It can't be! A DwarfCraft developer roams this world...");
                 plugin.getOut().sendBroadcast("&d&oThe trainers around the world get a burst of knowledge");
 
@@ -48,6 +48,9 @@ public class DwarfListener implements Listener
                         trainer.getWorld().playSound( trainer.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 0.08f, 1.0f );
                     }
                 }
+
+                plugin.isAuraActive = true;
+                plugin.getServer().getScheduler().runTaskLater( plugin, new CancelAuraTask( plugin ),1200 );
             } else {
                 player.getPlayer().getWorld().spawnParticle( Particle.ENCHANTMENT_TABLE, player.getPlayer().getLocation(), 100 );
             }

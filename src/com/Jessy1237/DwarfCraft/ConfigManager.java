@@ -1032,8 +1032,6 @@ public final class ConfigManager
                     }
                 }
             }
-
-            System.out.println( stringArrayList );
         } catch (Exception e) {
             e.printStackTrace();
         }
