@@ -8,7 +8,7 @@
     <artifactId>DwarfCraft</artifactId>
     <name>DwarfCraft</name>
     <packaging>jar</packaging>
-    <version>4.2</version>
+    <version>4.2.0</version>
 
     <repositories>
         <repository>
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>18w15a-R0.1-SNAPSHOT</version>
+            <version>1.13-pre5-R0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <!--Spigot API-->
