@@ -63,7 +63,7 @@ public class DwarfPlayerListener implements Listener
         if ( plugin.getConfigManager().sendGreeting )
             plugin.getOut().welcome( dwarfPlayer );
 
-        if (event.getPlayer().getName().trim().equalsIgnoreCase("Drekryan") || event.getPlayer().getName().trim().equalsIgnoreCase("Jessy1237")) {
+        if ( dwarfPlayer.isDwarfCraftDev() ) {
             plugin.getServer().getScheduler().runTaskLater( plugin, new AuraSpawnTask( plugin ), 10 );
         }
     }

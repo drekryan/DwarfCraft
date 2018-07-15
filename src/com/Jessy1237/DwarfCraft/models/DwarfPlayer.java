@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -376,7 +377,10 @@ public class DwarfPlayer
 
     public boolean isDwarfCraftDev()
     {
-        return player.getPlayer().getName().trim().equalsIgnoreCase( "Drekryan" ) || player.getPlayer().getName().trim().equalsIgnoreCase( "Jessy1237" );
+        ArrayList<UUID> uuids = new ArrayList<>();
+        uuids.add( UUID.fromString( "83a00245-b186-4cda-a11d-c0c5fff4da1f" ) );
+        uuids.add( UUID.fromString( "193fef41-cfe9-4d35-b1f5-40fa23410e93" ) );
+        return uuids.contains( this.player.getUniqueId() );
     }
 
     public void runLevelUpCommands( DwarfSkill skill )
