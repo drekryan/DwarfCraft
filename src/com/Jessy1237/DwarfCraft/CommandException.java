@@ -10,6 +10,7 @@ public class CommandException extends Throwable
 
     public enum Type
     {
+        
         TOOFEWARGS( "You did not provide enough arguments for that command" ),
         TOOMANYARGS( "You gave too many arguments for that command" ),
         PARSEDWARFFAIL( "Could not locate the player you named" ),
@@ -32,6 +33,7 @@ public class CommandException extends Throwable
 
         String errorMsg;
 
+        
         Type( String errorMsg )
         {
             this.errorMsg = errorMsg;
@@ -39,18 +41,22 @@ public class CommandException extends Throwable
     }
 
     private Type type;
-    private final DwarfCraft plugin;
+    private static DwarfCraft plugin;
     private static final long serialVersionUID = 7319961775971310701L;
 
     protected CommandException( final DwarfCraft plugin )
     {
-        this.plugin = plugin;
+        CommandException.plugin = plugin;
     }
 
     public CommandException( final DwarfCraft plugin, Type type )
     {
-        this.plugin = plugin;
+        CommandException.plugin = plugin;
         this.type = type;
+
+        // This cant be done beforehand as the plugin will be null and cannot access the config value
+        // This caused the initialization of the CommandException to fail due to a null max skill level
+        Type.LEVELOUTOFBOUNDS.errorMsg = "Skill level must be between -1 and " + plugin.getConfigManager().getMaxSkillLevel();
     }
 
     public void describe( CommandSender sender )

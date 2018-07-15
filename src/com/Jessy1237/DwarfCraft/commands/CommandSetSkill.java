@@ -103,6 +103,8 @@ public class CommandSetSkill extends Command implements TabCompleter
 
                         DwarfLevelUpEvent event = new DwarfLevelUpEvent( dCPlayer, null, s );
                         plugin.getServer().getPluginManager().callEvent( event );
+                        dCPlayer.runLevelUpCommands( skill );
+
                         if ( !event.isCancelled() )
                         {
                             s.setDeposit1( 0 );
@@ -116,7 +118,7 @@ public class CommandSetSkill extends Command implements TabCompleter
                             s.setLevel( oldLevel );
                         }
                     }
-                    plugin.getOut().sendMessage(sender, "&aAdmin: &freset all skills for player &9" + name + "&e to &3" + level);
+                    plugin.getOut().sendMessage(sender, "&eAll skills for player &9" + name + "&e have been set to level &3" + level);
                     plugin.getDataManager().saveDwarfData( dCPlayer, skills );
                 }
                 else
@@ -126,6 +128,8 @@ public class CommandSetSkill extends Command implements TabCompleter
 
                     DwarfLevelUpEvent event = new DwarfLevelUpEvent( dCPlayer, null, skill );
                     plugin.getServer().getPluginManager().callEvent( event );
+                    dCPlayer.runLevelUpCommands( skill );
+
                     if ( !event.isCancelled() )
                     {
                         skill.setDeposit1( 0 );
@@ -133,7 +137,7 @@ public class CommandSetSkill extends Command implements TabCompleter
                         skill.setDeposit3( 0 );
                         DwarfSkill[] skills = new DwarfSkill[1];
                         skills[0] = skill;
-                        plugin.getOut().sendMessage(sender, "&aAdmin: &freset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level);
+                        plugin.getOut().sendMessage(sender, "&b" + skill.getDisplayName() + " &eskill for player &9" + name + "&e has been set to level &3" + level);
                         plugin.getDataManager().saveDwarfData( dCPlayer, skills );
                     }
                     else

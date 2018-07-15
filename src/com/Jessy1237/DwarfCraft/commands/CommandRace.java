@@ -3,6 +3,7 @@ package com.Jessy1237.DwarfCraft.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class CommandRace extends Command
                 plugin.getOut().sendMessage( sender, CommandInformation.Desc.RACE.getDesc() );
                 return true;
             }
-            else if ( !( sender instanceof Player ) || plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
+            else
             {
                 CommandParser parser = new CommandParser( plugin, sender, args );
                 List<Object> desiredArguments = new ArrayList<Object>();
@@ -92,19 +93,55 @@ public class CommandRace extends Command
                         return true;
 
                     }
+                    else if ( dce.getType() == Type.PARSEDWARFFAIL && sender instanceof Player )
+                    {
+                        desiredArguments.remove( 0 );
+                        outputList = parser.parse( desiredArguments, true );
+                        newRace = ( String ) outputList.get( 0 );
+                        confirm = ( ( Boolean ) outputList.get( 1 ) );
+                        dCPlayer = plugin.getDataManager().find( ( Player ) sender );
+
+                        if ( plugin.getConfigManager().checkRace( newRace ) )
+                        {
+                            if ( plugin.getPermission().has( sender, "dwarfcraft.norm.race." + newRace.toLowerCase() ) )
+                            {
+                                race( newRace, confirm, dCPlayer, sender );
+                                return true;
+                            }
+                            else
+                            {
+                                sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            plugin.getOut().dExistRace( sender, dCPlayer, newRace );
+                            return true;
+                        }
+                    }
                     else
                         throw dce;
                 }
 
-                race( newRace, confirm, dCPlayer, sender );
-                return true;
+                if ( !( sender instanceof Player ) || plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
+                {
+                    if ( plugin.getConfigManager().checkRace( newRace ) )
+                    {
+                        race( newRace, confirm, dCPlayer, sender );
+                    }
+                    else
+                    {
+                        plugin.getOut().dExistRace( sender, dCPlayer, newRace );
+                        return true;
+                    }
+                }
+                else
+                {
+                    sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
+                    return true;
+                }
             }
-            else
-            {
-                plugin.getOut().sendMessage( sender, CommandInformation.Usage.RACE.getUsage() );
-                return true;
-            }
-
         }
         catch ( CommandException e )
         {
@@ -112,6 +149,7 @@ public class CommandRace extends Command
             sender.sendMessage( CommandInformation.Usage.RACE.getUsage() );
             return false;
         }
+        return true;
     }
 
     private void race( String newRace, boolean confirm, DwarfPlayer dCPlayer, CommandSender sender )

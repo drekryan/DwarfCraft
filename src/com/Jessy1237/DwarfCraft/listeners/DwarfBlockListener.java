@@ -24,7 +24,10 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
@@ -144,8 +147,12 @@ public class DwarfBlockListener implements Listener
         {
             for ( DwarfEffect effect : s.getEffects() )
             {
-                if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && effect.checkInitiator( blockMat, meta ) )
+                if ( ( effect.getEffectType() == DwarfEffectType.BLOCKDROP || effect.getEffectType() == DwarfEffectType.BLOCKDROPDUPE ) && effect.checkInitiator( blockMat, meta ) )
                 {
+                    // Check if the block was placed by a player and prevent additional drops if the effect type is not "BLOCKDROPDUPE"
+                    if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) ) {
+                        return;
+                    }
 
                     // Crops special line:
                     if ( effect.getInitiatorMaterial() == Material.CROPS || effect.getInitiatorMaterial() == Material.CARROT || effect.getInitiatorMaterial() == Material.POTATO )
@@ -200,7 +207,7 @@ public class DwarfBlockListener implements Listener
                             final int i = r.nextInt( 100 );
                             if ( i == 0 || i == 1 )
                             {
-                                loc.getWorld().dropItemNaturally( loc, new ItemStack( Material.POISONOUS_POTATO, 1 ) );
+                                loc.getWorld().dropItem( loc, new ItemStack( Material.POISONOUS_POTATO, 1 ) );
                             }
                         }
 
@@ -417,7 +424,7 @@ public class DwarfBlockListener implements Listener
                             {
                                 if ( i.getAmount() > 0 )
                                 {
-                                    loc.getWorld().dropItemNaturally( loc, i );
+                                    loc.getWorld().dropItem( loc.add( 0.5, 0, 0.5 ), i ).setVelocity( new Vector( 0, 0.15, 0 ) );
                                 }
                             }
                         }
@@ -454,8 +461,8 @@ public class DwarfBlockListener implements Listener
 
         if ( blockDropChange )
         {
-            event.getBlock().setType( Material.AIR );
-            event.setCancelled( true );
+            event.setDropItems( false );
+            event.setExpToDrop( 0 );
         }
     }
 
@@ -510,6 +517,14 @@ public class DwarfBlockListener implements Listener
                 }
             }
         }
+    }
+
+    @EventHandler( priority = EventPriority.HIGH )
+    public void onBlockPlace( BlockPlaceEvent event )
+    {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        block.setMetadata( "playerPlaced", new FixedMetadataValue( plugin, player.getUniqueId() ) );
     }
 
     // Code to check for farm automation i.e. (breaking the

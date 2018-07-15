@@ -70,6 +70,9 @@ public class DwarfSkill implements Cloneable
 
     protected Material getTrainerHeldMaterial()
     {
+        if (mHeldItem == null)
+            return Material.AIR;
+
         return mHeldItem;
     }
 
@@ -81,6 +84,7 @@ public class DwarfSkill implements Cloneable
     @Override
     public String toString()
     {
+        if ( mName == null ) return "";
         return mName.toUpperCase().replaceAll( " ", "_" );
     }
 

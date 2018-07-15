@@ -1,7 +1,5 @@
 package com.Jessy1237.DwarfCraft;
 
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -46,11 +44,12 @@ public class PlaceHolderParser
         EFFECT_TOOL_TYPE( "%tooltype%" ),
         EFFECT_LEVEL_COLOR( "%effectlevelcolor%" ),
         ITEM_NAME( "%itemname%" ),
+        LEVEL("%level%"),
         MAX_SKILL_LEVEL( "%maxskilllevel%" ),
         PLAYER_LEVEL( "%playerlevel%" ),
         PLAYER_NAME( "%playername%" ),
         PLAYER_RACE( "%playerrace%" ),
-        RACE_LEVEL_LIMIT("%racelevellimit%"),
+        RACE_LEVEL_LIMIT( "%racelevellimit%" ),
         RACE_NAME( "%racename%" ),
         SKILL_COST_AMOUNT( "%costamount%" ),
         SKILL_DEPOSIT_AMOUNT( "%depositedamount%" ),
@@ -186,7 +185,7 @@ public class PlaceHolderParser
                 .replaceAll( PlaceHolder.EFFECT_AMOUNT_INT.getPlaceHolder(), "" + ( int ) effectAmount ).replaceAll( PlaceHolder.EFFECT_DAMAGE.getPlaceHolder(), "" + ( int ) ( effectAmount * 100 ) ).replaceAll( PlaceHolder.EFFECT_DAMAGE_TAKEN.getPlaceHolder(), "" + ( int ) ( effectAmount * 100 ) )
                 .replaceAll( PlaceHolder.EFFECT_LEVEL_COLOR.getPlaceHolder(), effectLevelColor ).replaceAll( PlaceHolder.EFFECT_AMOUNT_MINOR.getPlaceHolder(), minorAmountStr ).replaceAll( PlaceHolder.EFFECT_AMOUNT_FOOD.getPlaceHolder(), String.format( "%.2f", ( effectAmount / 2.0 ) ) )
                 .replaceAll( PlaceHolder.EFFECT_AMOUNT_LOW.getPlaceHolder(), String.format( "%.2f", effectAmountLow ) ).replaceAll( PlaceHolder.EFFECT_AMOUNT_HIGH.getPlaceHolder(), String.format( "%.2f", effectAmountHigh ) )
-                .replaceAll( PlaceHolder.EFFECT_AMOUNT.getPlaceHolder(), String.format( "%.2f", effectAmount ) ), effect );
+                .replaceAll( PlaceHolder.EFFECT_AMOUNT.getPlaceHolder(), String.format( "%.2f", effectAmount ) ).replaceAll( PlaceHolder.EFFECT_CREATURE_NAME.getPlaceHolder(), plugin.getUtil().getCleanName( effect.getCreature() ) ), effect );
     }
 
     public String parseByDwarfSkill( String text, DwarfSkill skill )
@@ -204,23 +203,14 @@ public class PlaceHolderParser
     public String parseByDwarfPlayerAndDwarfSkill( String text, DwarfPlayer dwarfPlayer, DwarfSkill skill )
     {
         // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
-        int levelLimit = plugin.getConfigManager().getMaxSkillLevel();
-        ArrayList<Integer> skills = plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() );
-        if ( skills != null )
-        {
-            if ( !skills.contains( skill.getId() ) )
-            {
-                levelLimit = plugin.getConfigManager().getRaceLevelLimit();
-            }
-        }
-
+        int levelLimit = plugin.getUtil().getMaxLevelForSkill( dwarfPlayer, skill );
         return parseByDwarfSkill( parseByDwarfPlayer( text.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + levelLimit ), dwarfPlayer ), skill );
     }
 
     public String parseForTrainCosts( String text, int deposited, int costAmount, int totalCost, String itemType )
     {
         return generalParse( text.replaceAll( PlaceHolder.SKILL_DEPOSIT_AMOUNT.getPlaceHolder(), "" + deposited ).replaceAll( PlaceHolder.SKILL_TOTAL_COST.getPlaceHolder(), "" + totalCost ).replaceAll( PlaceHolder.SKILL_ITEM_TYPE.getPlaceHolder(), itemType )
-                .replaceAll( PlaceHolder.SKILL_COST_AMOUNT.getPlaceHolder(), "" + costAmount ) );
+                .replaceAll( PlaceHolder.SKILL_COST_AMOUNT.getPlaceHolder(), "" + costAmount ).replaceAll( PlaceHolder.ITEM_NAME.getPlaceHolder(), itemType ) );
     }
 
     protected void hookAPI()

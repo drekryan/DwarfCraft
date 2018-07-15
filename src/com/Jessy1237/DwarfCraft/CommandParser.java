@@ -113,7 +113,7 @@ public final class CommandParser
         catch ( ArrayIndexOutOfBoundsException e )
         {
             if ( sender instanceof Player )
-                throw new CommandException( plugin, Type.PARSEDWARFFAIL );
+                throw new CommandException( plugin, Type.TOOFEWARGS );
             else
                 throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
         }
@@ -241,7 +241,7 @@ public final class CommandParser
         {
             throw new CommandException( plugin, Type.PARSELEVELFAIL );
         }
-        if ( level > 30 || level < -1 )
+        if ( level > plugin.getConfigManager().getMaxSkillLevel() || level < -1 )
         {
             throw new CommandException( plugin, Type.LEVELOUTOFBOUNDS );
         }

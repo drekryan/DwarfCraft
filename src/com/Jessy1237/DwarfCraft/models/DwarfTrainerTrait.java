@@ -40,22 +40,19 @@ public class DwarfTrainerTrait extends Trait
 
         // Adding the trainer to DwarfCraft DB
         DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
-        plugin.getDataManager().trainerList.put( npc.getId(), trainer );
+        plugin.getDataManager().trainerList.put( getNPC().getId(), trainer );
     }
 
     @Override
     public void onSpawn()
     {
-        if ( this.mHeldItem != Material.AIR && this.mHeldItem != null )
-        {
-            ( ( LivingEntity ) getNPC().getEntity() ).getEquipment().setItemInMainHand( new ItemStack( this.mHeldItem, 1 ) );
-        }
+        loadHeldItem();
     }
 
     @Override
     public void onRemove()
     {
-        plugin.getDataManager().trainerList.remove( this.npc.getId() );
+        plugin.getDataManager().trainerList.remove( this.getNPC().getId() );
     }
 
     public DwarfTrainerTrait()
@@ -115,13 +112,20 @@ public class DwarfTrainerTrait extends Trait
             return Material.AIR;
     }
 
-    private void loadHeldItem()
-    {
-        this.mHeldItem = plugin.getConfigManager().getGenericSkill( getSkillTrained() ).getTrainerHeldMaterial();
+    public void loadHeldItem() {
+        try {
+            this.mHeldItem = plugin.getConfigManager().getGenericSkill(getSkillTrained()).getTrainerHeldMaterial();
+        }
+        catch (NullPointerException e) {
+            // NOP
+        }
 
-        if ( this.mHeldItem == null )
-        {
-            this.mHeldItem = Material.AIR;
+        if (getNPC() != null) {
+            if (getNPC().isSpawned()) {
+                if (this.mHeldItem != Material.AIR && this.mHeldItem != null) {
+                    ((LivingEntity) getNPC().getEntity()).getEquipment().setItemInMainHand(new ItemStack(this.mHeldItem, 1));
+                }
+            }
         }
     }
 }

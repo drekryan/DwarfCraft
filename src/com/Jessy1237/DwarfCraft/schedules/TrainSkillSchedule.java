@@ -76,14 +76,10 @@ public class TrainSkillSchedule implements Runnable
                 }
             }
         }
-        else if ( clickedItem.getType().equals( Material.BARRIER ) && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Cancel" ) )
-        {
-            dCPlayer.getPlayer().closeInventory();
-        }
         else
         {
 
-            // Checks if after a level up if any of the limitting constraints have changed. i.e. player may have levelled up past the trainers ability while the inventory was open
+            // Checks if after a level up if any of the limiting constraints have changed. i.e. player may have leveled up past the trainers ability while the inventory was open
             if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
             {
                 plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );

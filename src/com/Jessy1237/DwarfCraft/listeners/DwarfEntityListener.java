@@ -59,9 +59,8 @@ public class DwarfEntityListener implements Listener
             return;
 
         if ( ( event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.SUFFOCATION || event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK
-                || event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.DROWNING ) )
+                || event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.DROWNING || event.getCause() == DamageCause.CONTACT || event.getCause() == DamageCause.FALLING_BLOCK ) )
         {
-
             if ( DwarfCraft.debugMessagesThreshold < -1 && !event.isCancelled() )
             {
                 System.out.println( "DC-1: Damage Event: " + event.getCause() );

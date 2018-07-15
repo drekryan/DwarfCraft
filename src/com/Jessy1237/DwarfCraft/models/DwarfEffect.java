@@ -131,6 +131,20 @@ public class DwarfEffect
         this.plugin = plugin;
     }
 
+    @Override
+    public boolean equals( Object o )
+    {
+        boolean equals = false;
+
+        if ( o instanceof DwarfEffect )
+        {
+            DwarfEffect e = ( DwarfEffect ) o;
+            equals = e.getId() == getId();
+        }
+
+        return equals;
+    }
+
     /**
      * General description of a benefit including minimum and maximum benefit
      * 
