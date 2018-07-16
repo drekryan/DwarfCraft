@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
@@ -42,16 +52,6 @@ import net.citizensnpcs.api.trait.TraitInfo;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
-/**
- * DwarfCraft is a RPG-like plugin for minecraft (via Spigot) that allows players to improve their characters. Players may pay materials to a trainer to improve a skill level, which will provide
- * benefits such as increased weapon damage, decreased tool durability drop, increased drops from blocks or mobs, etc. Data used for this plugin comes from two places: On each load, a list of skills
- * and effects is pulled from flatfiles. Dwarf's skill levels (currently supports only sqlite)
- * 
- * @OriganlAuthor smartaleq
- * @OriginalAuthor RCarretta
- * @OriginalAuthor LexManos
- * @CurrentAuthor Jessy1237
- */
 public class DwarfCraft extends JavaPlugin implements TabCompleter
 {
 
@@ -345,7 +345,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     {
         PluginManager pm = getServer().getPluginManager();
 
-        if ( pm.getPlugin( "Vault" ) == null || pm.getPlugin( "Vault" ).isEnabled() == false )
+        if ( pm.getPlugin( "Vault" ) == null || !pm.getPlugin( "Vault" ).isEnabled() )
         {
             getLogger().log( Level.WARNING, "Couldn't find Vault!" );
             getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
@@ -384,7 +384,14 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         pm.registerEvents( dwarfListener, this );
 
-        if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
+        if (reload) {
+            this.getConfigManager().clearCommands();
+        }
+
+        util = new Util( this );
+        cm = new ConfigManager( this, getDataFolder().getAbsolutePath() );
+
+        if ( pm.getPlugin( "Citizens" ) == null || !pm.getPlugin( "Citizens" ).isEnabled() )
         {
             getLogger().log( Level.WARNING, "Couldn't find Citizens!" );
             getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
@@ -392,18 +399,15 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             return;
         }
         getLogger().log( Level.INFO, "Hooked into Citizens!" );
-
         npcr = CitizensAPI.getNPCRegistry();
-        util = new Util( this );
-        cm = new ConfigManager( this, getDataFolder().getAbsolutePath(), "DwarfCraft.config" );
-        dm = new DataManager( this, cm );
 
+        dm = new DataManager( this, cm );
         dm.dbInitialize();
 
         out = new Out( this );
 
         placeHolderParser = new PlaceHolderParser( this );
-        
+
         // Creates the citizen trait for the DwarfTrainers
         if ( !reload )
         {

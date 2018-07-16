@@ -1,10 +1,17 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public final class Messages
 {
 
@@ -52,6 +59,7 @@ public final class Messages
     // String messages loaded from messages.config
     public static String welcomePrefix = "&6[DwarfCraft] ";
     public static String welcome = "&fWelcome, &9%playerrace% &6%playername%";
+    public static String announcementMessage = "%playername% has just leveled %skillname% to level %skilllevel%!";
     public static String skillSheetPrefix = "&6[&dSS&6] ";
     public static String skillSheetHeader = "&6Skill Sheet for &9%playername% &6[&9%playerrace% &6- &6Lvl &3%playerlevel%&6]";
     public static String skillSheetSkillLine = "&6[&3%skilllevel%&6] &b%skillname%";

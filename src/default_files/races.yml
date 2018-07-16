@@ -1,0 +1,44 @@
+# DwarfCraft Race Configuration
+
+# Races allow players to specialize in certain skills which allow them to train them past the vanilla level.
+# i.e. Human's (smithing, cooking and farming), Elves (combat and hunting), Dwarves (mining and excavating)
+# and Gnomes (brewery and crafting)
+
+# Skill IDs: are the skills that the race excels in compared to other races.
+# NOTE: If the race doesn't specialize in a skill then they can't train it further than the vanilla player level (Generally level 5).
+# Description: is used on the Race GUI (/dc race) to explain the race to players to guide them towards choosing a race for their play style.
+# Prefix Colour:  will be used to color the races prefix tag in chat to distinguish the races
+# Material Icon: The ID of a block/item used to display in the Race GUI for that race
+
+# Use the following format for defining races. If no race name, icon, or skill IDs are provided
+# the race will be skipped and will not be loaded by DwarfCraft. Providing no description, an empty description will be used.
+# A default prefix colour of white will be used if no prefix colour if given.
+# <RaceName>:
+#   SkillIDs: 11,12,13,14,21,22,23,65,75
+#   Description: A Dwarven race.
+#   Prefix Colour: "&f"
+#   Material Icon: STONE_PICKAXE
+
+Dwarf:
+  SkillIDs: 11,12,13,14,21,22,23,75,63,65,1,2,99,101,17
+  Description: Dwarves excel in mining and excavating based skills.
+  Prefix Colour: "&f"
+  Material Icon: IRON_PICKAXE
+
+Elf:
+  SkillIDs: 67,85,81,82,87,73,72,86,83,84,76
+  Description: Elves excel in combat and hunting based skills.
+  Prefix Colour: "&f"
+  Material Icon: BOW
+
+Gnome:
+  SkillIDs: 32,51,53,61,7,9,10,15,16,86,88,89,91,52
+  Description: Gnomes excel in crafting based skills and redstone contraptions.
+  Prefix Colour: "&f"
+  Material Icon: CRAFTING_TABLE
+
+Human:
+  SkillIDs: 62,66,71,4,5,6,41,42,74,31,8,3,43,80,68
+  Description: Humans excel in utility/support skills such as smithing, cooking, and farming.
+  Prefix Colour: "&f"
+  Material Icon: IRON_HOE

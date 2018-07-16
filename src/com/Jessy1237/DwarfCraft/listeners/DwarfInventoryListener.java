@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.Collection;
@@ -77,7 +87,7 @@ public class DwarfInventoryListener implements Listener
                     // This event fires after the item is added to inventory when shift clicked
                     held -= extract.getAmount();
 
-                    ItemStack output = effect.getOutput( dCPlayer, extract.getDurability() );
+                    ItemStack output = effect.getResult( dCPlayer );
 
                     // All Furnace recipes make 1 result item by default
                     float modifier = ( float ) ( output.getAmount() + 1 ) / 1.0f;
@@ -152,7 +162,7 @@ public class DwarfInventoryListener implements Listener
                 {
                     for ( DwarfEffect e : s.getEffects() )
                     {
-                        if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType(), toCraft.getDurability() ) )
+                        if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType() ) )
                         {
                             // Shift Click HotFix, checks inv for result item
                             // before and then compares to after to modify the
@@ -163,7 +173,7 @@ public class DwarfInventoryListener implements Listener
                                 held += i.getAmount();
                             }
 
-                            final ItemStack output = e.getOutput( dCPlayer, toCraft.getDurability() );
+                            final ItemStack output = e.getResult( dCPlayer );
 
                             float modifier = ( float ) output.getAmount() / ( float ) toCraft.getAmount();
 
@@ -211,10 +221,10 @@ public class DwarfInventoryListener implements Listener
                     {
                         for ( DwarfEffect e : s.getEffects() )
                         {
-                            if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType(), toCraft.getDurability() ) )
+                            if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType() ) )
                             {
 
-                                final ItemStack output = e.getOutput( dCPlayer, toCraft.getDurability() );
+                                final ItemStack output = e.getResult( dCPlayer );
 
                                 DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { toCraft }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                                 plugin.getServer().getPluginManager().callEvent( ev );
@@ -474,9 +484,9 @@ public class DwarfInventoryListener implements Listener
                 {
                     for ( DwarfEffect e : s.getEffects() )
                     {
-                        if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType(), toCraft.getDurability() ) )
+                        if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType() ) )
                         {
-                            ItemStack output = e.getOutput( dCPlayer );
+                            ItemStack output = e.getResult( dCPlayer );
 
                             DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { toCraft }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );

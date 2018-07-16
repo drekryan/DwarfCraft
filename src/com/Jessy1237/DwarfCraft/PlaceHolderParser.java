@@ -1,8 +1,20 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
-import org.bukkit.Material;
+import java.util.List;
+
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.Recipe;
 
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
@@ -44,7 +56,7 @@ public class PlaceHolderParser
         EFFECT_TOOL_TYPE( "%tooltype%" ),
         EFFECT_LEVEL_COLOR( "%effectlevelcolor%" ),
         ITEM_NAME( "%itemname%" ),
-        LEVEL("%level%"),
+        LEVEL( "%level%" ),
         MAX_SKILL_LEVEL( "%maxskilllevel%" ),
         PLAYER_LEVEL( "%playerlevel%" ),
         PLAYER_NAME( "%playername%" ),
@@ -89,78 +101,19 @@ public class PlaceHolderParser
         // TODO: use checkEquivalentBlocks to future proof the 1.13 changes
         if ( effect.getEffectType() == DwarfEffectType.SMELT )
         {
-            if ( effect.getInitiatorMaterial() == Material.IRON_INGOT )
+            List<Recipe> recipes = plugin.getServer().getRecipesFor( effect.getInitiator() );
+            if (recipes.iterator().hasNext() && recipes.iterator().next() instanceof FurnaceRecipe )
             {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.IRON_ORE ) );
+                FurnaceRecipe recipe = ( FurnaceRecipe ) recipes.iterator().next();
+                initiator = recipe.getInput().toString();
             }
-            else if ( effect.getInitiatorMaterial() == Material.GOLD_INGOT )
+            else
             {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.GOLD_ORE ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.GRILLED_PORK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.PORK ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.COOKED_FISH )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_FISH ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.COOKED_CHICKEN )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_CHICKEN ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.COOKED_RABBIT )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RABBIT ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.COOKED_MUTTON )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.MUTTON ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.COOKED_BEEF )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.RAW_BEEF ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.GLASS )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.SAND ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.BAKED_POTATO )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.POTATO_ITEM ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.COAL )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.LOG ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.STONE )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.COBBLESTONE ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.BRICK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY_BALL ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.NETHER_BRICK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.NETHERRACK ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.HARD_CLAY )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CLAY ) );
-            }
-            else if ( effect.getInitiatorMaterial() == Material.INK_SACK )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.CACTUS ) );
-            }
-
-            else if ( effect.getInitiatorMaterial() == Material.WHITE_GLAZED_TERRACOTTA || plugin.getUtil().checkEquivalentBuildBlocks( effect.getInitiatorMaterial(), Material.WHITE_GLAZED_TERRACOTTA ) != null )
-            {
-                initiator = plugin.getUtil().getCleanName( new ItemStack( Material.HARD_CLAY ) );
+                initiator = "";
             }
         }
 
-        return generalParse( text.replaceAll( PlaceHolder.EFFECT_AMOUNT_FOOD_ORIGINAL.getPlaceHolder(), origFoodLevel ).replaceAll( PlaceHolder.EFFECT_INITIATOR.getPlaceHolder(), initiator ).replaceAll( PlaceHolder.EFFECT_OUTPUT.getPlaceHolder(), plugin.getUtil().getCleanName( effect.getOutput() ) )
+        return generalParse( text.replaceAll( PlaceHolder.EFFECT_AMOUNT_FOOD_ORIGINAL.getPlaceHolder(), origFoodLevel ).replaceAll( PlaceHolder.EFFECT_INITIATOR.getPlaceHolder(), initiator ).replaceAll( PlaceHolder.EFFECT_OUTPUT.getPlaceHolder(), plugin.getUtil().getCleanName( effect.getResult() ) )
                 .replaceAll( PlaceHolder.EFFECT_TOOL_TYPE.getPlaceHolder(), effect.toolType() ).replaceAll( PlaceHolder.EFFECT_AMOUNT_NORMAL.getPlaceHolder(), "" + effect.getNormalLevel() ).replaceAll( PlaceHolder.EFFECT_ID.getPlaceHolder(), "" + effect.getId() ) );
     }
 

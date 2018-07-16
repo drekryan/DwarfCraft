@@ -1,13 +1,24 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,15 +26,13 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
+import com.Jessy1237.DwarfCraft.Util;
 import com.Jessy1237.DwarfCraft.events.DwarfDepositEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public final class DwarfTrainer implements Comparable<DwarfTrainer>
 {
     private AbstractNPC mEntity;
@@ -97,7 +106,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
     public void depositOne( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
-        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        final int dep1 = skill.getDeposit( 1 ), dep2 = skill.getDeposit( 2 ), dep3 = skill.getDeposit( 3 );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
@@ -119,9 +128,9 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( e.isCancelled() )
         {
-            skill.setDeposit1( dep1 );
-            skill.setDeposit2( dep2 );
-            skill.setDeposit3( dep3 );
+            skill.setDeposit( dep1, 1 );
+            skill.setDeposit( dep2, 2 );
+            skill.setDeposit( dep3, 3 );
 
             player.getInventory().setContents( oldInv.getContents() );
             player.getInventory().setExtraContents( oldInv.getExtraContents() );
@@ -142,7 +151,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
     public void depositAll( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
-        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        final int dep1 = skill.getDeposit( 1 ), dep2 = skill.getDeposit( 2 ), dep3 = skill.getDeposit( 3 );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
@@ -161,9 +170,9 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( e.isCancelled() )
         {
-            skill.setDeposit1( dep1 );
-            skill.setDeposit2( dep2 );
-            skill.setDeposit3( dep3 );
+            skill.setDeposit( dep1, 1 );
+            skill.setDeposit( dep2, 2 );
+            skill.setDeposit( dep3, 3 );
 
             player.getInventory().setContents( oldInv.getContents() );
             player.getInventory().setExtraContents( oldInv.getExtraContents() );
@@ -198,13 +207,13 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         }
 
         DwarfLevelUpEvent e = null;
-        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        final int dep1 = skill.getDeposit( 1 ), dep2 = skill.getDeposit( 2 ), dep3 = skill.getDeposit( 3 );
         if ( hasMatsOrDeposits[0] )
         {
             skill.setLevel( skill.getLevel() + 1 );
-            skill.setDeposit1( 0 );
-            skill.setDeposit2( 0 );
-            skill.setDeposit3( 0 );
+            skill.setDeposit( 0, 1 );
+            skill.setDeposit( 0, 2 );
+            skill.setDeposit( 0, 3 );
 
             e = new DwarfLevelUpEvent( dCPlayer, this, skill );
 
@@ -219,9 +228,9 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 if ( e.isCancelled() )
                 {
                     skill.setLevel( skill.getLevel() - 1 );
-                    skill.setDeposit1( dep1 );
-                    skill.setDeposit2( dep2 );
-                    skill.setDeposit3( dep3 );
+                    skill.setDeposit( dep1, 1 );
+                    skill.setDeposit( dep2, 2 );
+                    skill.setDeposit( dep3, 3 );
 
                     player.getInventory().setContents( oldInv.getContents() );
                     player.getInventory().setExtraContents( oldInv.getExtraContents() );
@@ -304,7 +313,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 return true;
         }
 
-        ArrayList<Material> equivs = plugin.getUtil().checkEquivalentBuildBlocks( costStack.getType(), null );
+        ArrayList<Material> equivs = plugin.getUtil().getEquivalentBlocks( costStack.getType() );
 
         if ( equivs != null )
         {
@@ -338,7 +347,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
             if ( invStack == null )
                 continue;
             if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
-                    || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getType(), costStack.getType() ) != null )
+                    || plugin.getUtil().isEquivalentBlock( invStack.getType(), costStack.getType() ) )
             {
                 int inv = invStack.getAmount();
                 int cost = costStack.getAmount();
@@ -396,17 +405,17 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 // TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
                 trainerGUI.updateItem( costStack, origCost - amountTaken );
 
-                if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
+                if ( plugin.getUtil().isEquivalentBlock( skill.getItem( 1 ).getItemStack().getType(), costStack.getType() ) )
                 {
-                    skill.setDeposit1( skill.getDeposit1() + amountTaken );
+                    skill.setDeposit( skill.getDeposit( 1 ) + amountTaken, 1 );
                 }
-                else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
+                else if ( plugin.getUtil().isEquivalentBlock( skill.getItem( 2 ).getItemStack().getType(), costStack.getType() ) )
                 {
-                    skill.setDeposit2( skill.getDeposit1() + amountTaken );
+                    skill.setDeposit( skill.getDeposit( 2 ) + amountTaken, 2);
                 }
-                else if ( costStack.getType().equals( skill.Item3.Item.getType() ) )
+                else if ( plugin.getUtil().isEquivalentBlock( skill.getItem( 3 ).getItemStack().getType(), costStack.getType() ) )
                 {
-                    skill.setDeposit3( skill.getDeposit1() + amountTaken );
+                    skill.setDeposit( skill.getDeposit( 3 ) + amountTaken, 3 );
                 }
             }
             else

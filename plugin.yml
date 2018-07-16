@@ -3,6 +3,7 @@ description: A skills and progression plugin for character development in RPG wo
 author: Jessy1237
 main: com.Jessy1237.DwarfCraft.DwarfCraft
 version: ${project.version}
+api-version: 1.13
 depend: [Vault, Citizens]
 softdepend: [LogBlock, PlaceholderAPI]
 commands: 

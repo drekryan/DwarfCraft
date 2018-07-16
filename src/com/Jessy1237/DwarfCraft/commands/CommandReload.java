@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.commands;
 
 import org.bukkit.command.Command;
@@ -36,7 +46,9 @@ public class CommandReload extends Command
                 plugin.getOut().sendMessage( sender, "&aReloading DwarfCraft..." );
             System.out.println( "[DwarfCraft] Reloading..." );
 
+            plugin.getConfigManager().clearCommands();
             plugin.onDisable();
+            plugin.reloadConfig();
             plugin.onEnable( true );
 
             if ( sender instanceof Player )

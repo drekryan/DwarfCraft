@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.events;
 
 import org.bukkit.block.Block;
@@ -31,12 +41,12 @@ public class DwarfEffectEvent extends Event implements Cancellable
      * The event for when an DwarfEffect is fired. This event is fired after the effect is fired but before any of the stats are applied to the player/game.
      * 
      * @param player The player that fired the effect
-     * @param Effect The effect that was fired
-     * @param orig The original itemstack contains the original drops/smelted/crafted/etc
-     * @param altered The altered itemstack contains all items that the effect alters/adds
+     * @param effect The effect that was fired
+     * @param orig The original ItemStack contains the original drops/smelted/crafted/etc
+     * @param altered The altered ItemStack contains all items that the effect alters/adds
      * @param origHunger The original hunger added to the player before the effect. Put null if the players hunger is not altered
      * @param newHunger The altered hunger added to the player. Put null if the players hunger is not altered
-     * @param orgDmg The original Damgage taken by or given by the player before the event, can also be damage done to a tool. Null if the damage is not altered. Can also be the original boat speed
+     * @param origDmg The original Damage taken by or given by the player before the event, can also be damage done to a tool. Null if the damage is not altered. Can also be the original boat speed
      * @param newDmg The altered damage taken by or given by the player, can also be damage done to a tool. Put null if the damage is not altered. Can also be the altered boat speed
      * @param entity The Entity that is involved with the effect. Put null if no entity other than the player is involved.
      * @param block The block that is involved with the effect. i.e the block broken or the block that contains the inventory used. Put null if no block is involved in the event.
@@ -57,13 +67,7 @@ public class DwarfEffectEvent extends Event implements Cancellable
         this.itemInHand = itemInHand;
     }
 
-    @Override
     public HandlerList getHandlers()
-    {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList()
     {
         return handlers;
     }

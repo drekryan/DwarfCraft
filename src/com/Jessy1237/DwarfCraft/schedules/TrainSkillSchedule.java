@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.schedules;
 
 import org.bukkit.Material;
@@ -36,7 +46,7 @@ public class TrainSkillSchedule implements Runnable
         DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
         String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
 
-        if ( clickedItem.getType().equals( Material.INK_SACK ) )
+        if ( clickedItem.getType().equals( Material.INK_SAC ) )
         {
             // Checks if after a level up if any of the limitting constraints have changed. i.e. player may have levelled up past the trainers ability while the inventory was open
             if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )

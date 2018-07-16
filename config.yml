@@ -1,31 +1,37 @@
 #This is the default configuration setup for DwarfCraft
 
+#Use MySQL
+UseMySQL: false
+
+MySQL Hostname: "127.0.0.1"
+MySQL Port: 3306
+MySQL Database: "dwarfcraft"
+MySQL Username: "root"
+MySQL Password: ""
+
 #Manually set the DwarfCraft database to another database file, if you are using multiple sqlite plugins this should work.
-Database File Name: dwarfcraft.db
+Database File Name: "dwarfcraft.db"
 
 #Affects debug level on restart
 Debug Level: 7
 
 #If we should greet every player as they come online
-Send Login Greet: True
+Send Login Greet: true
 
 #Stop Cacti and other crops from being farmed through automation.
-Disable Farm Exploits: True
+Disable Farm Exploits: true
 
 #If we should prevent DwarfCraft from being activated in all worlds
-World Blacklist: False
+World Blacklist: false
 
 #This is the delay between each time a trainer can train a skill for any player. So if your trainer needs to "recuperate". Also allows some time for your server to recover from the training lag. (In Seconds).
 Train Delay: 2
 
 #If we should allow Silk Touch to take effect on DwarfCraft Drops, If false only vanilla items are dropped.
-Silk Touch: True
-
-#If true than blocks/items that are equivalent of each other will be treated as the same. i.e. all wool blocks will be seen as the same for checks on drops, same with logs, wood, fences, stained glass, most building blocks of same materials.
-Group Equivalent Building Blocks: True
+Silk Touch: true
 
 #The Default Race of DwarfCraft (Has to be a race from races.config)
-Default Race: 
+Default Race: ""
 
 #If we should have a vanilla race on the server
 Vanilla Race Enabled: false
@@ -34,7 +40,7 @@ Vanilla Race Enabled: false
 Prefix Enabled: true
 
 #The prefix for the race of a player. The prefix must contain '%racename%' in it as that will be replaced by the actual players race ingame
-Prefix: [%racename%]
+Prefix: "[%racename%]"
 
 #This is the Max Skill Level someone can level a skill for non-racial skills. Keeping this at level 5 is strongly recommended.
 Non-Racial Level Limit: 5
@@ -47,10 +53,6 @@ Announce Level Up: true
 
 #This is the interval of levels that the announcements go off for when a player successfully levels up a skill. i.e. If its set to 5 then at every 5 levels an announcement will go out.
 Announcement Interval: 5
-
-#This is the message that is broadcasted to every player when they successfully level up a skill.
-#'%playername%', '%skillname%' and '%skilllevel%' will be replaced.
-Announcement Message: %playername% has just leveled %skillname% to level %skilllevel%!
 
 #This decides how to sort the DwarfTrainers for the "/dc listtrainers" command. If true it will sort by Unique IDs otherwise if false it will sort by Name
 Sort DwarfTrainers by Unique ID: true

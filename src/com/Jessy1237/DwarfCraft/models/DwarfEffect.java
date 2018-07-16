@@ -1,6 +1,17 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.models;
 
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -70,8 +81,7 @@ public class DwarfEffect
     private double mBase;
     private double mLevelIncrease;
     private double mLevelIncreaseNovice;
-    private double mMin;
-    private double mMax;
+    private double mMin, mMax;
     private boolean mException;
     private double mExceptionLow;
     private double mExceptionHigh;
@@ -79,7 +89,7 @@ public class DwarfEffect
     private int mNormalLevel;
     private DwarfEffectType mType;
     private ItemStack mInitiator;
-    private ItemStack mOutput;
+    private ItemStack mResult;
     private boolean mRequireTool;
     private Material[] mTools;
     private boolean mFloorResult;
@@ -110,7 +120,7 @@ public class DwarfEffect
         {
             mCreature = EntityType.valueOf( record.getString( "OriginMaterial" ) );
         }
-        mOutput = plugin.getUtil().parseItem( record.getString( "OutputMaterial" ) );
+        mResult = plugin.getUtil().parseItem( record.getString( "OutputMaterial" ) );
         mRequireTool = record.getBool( "RequireTool" );
         mFloorResult = record.getBool( "Floor" );
 
@@ -122,7 +132,7 @@ public class DwarfEffect
             mTools = new Material[stools.length];
             for ( int x = 0; x < stools.length; x++ )
             {
-                Material mat = Material.matchMaterial( stools[x] );
+                Material mat = Material.getMaterial( stools[x] );
                 if ( mat != null )
                     mTools[x] = mat;
             }
@@ -156,7 +166,7 @@ public class DwarfEffect
         String initiator = plugin.getUtil().getCleanName( mInitiator );
         if ( initiator.equalsIgnoreCase( "AIR" ) )
             initiator = "None";
-        String output = plugin.getUtil().getCleanName( mOutput );
+        String output = plugin.getUtil().getCleanName( mResult );
         if ( output.equalsIgnoreCase( "AIR" ) )
             output = "None";
         double effectAmountLow = getEffectAmount( 0, dCPlayer );
@@ -259,7 +269,7 @@ public class DwarfEffect
 
     public Material getOutputMaterial()
     {
-        return ( mOutput == null ? null : mOutput.getType() );
+        return ( mResult == null ? null : mResult.getType() );
     }
 
     public ItemStack getInitiator()
@@ -267,37 +277,27 @@ public class DwarfEffect
         return mInitiator;
     }
 
-    public ItemStack getOutput()
+    public ItemStack getResult()
     {
-        return mOutput;
+        return mResult;
     }
 
-    public ItemStack getOutput( DwarfPlayer player )
+    public ItemStack getResult( DwarfPlayer player )
     {
-        return getOutput( player, ( short ) 0, Material.AIR );
+        return getResult( player, Material.AIR );
     }
 
-    public ItemStack getOutput( DwarfPlayer player, Short oldData )
+    public ItemStack getResult( DwarfPlayer player, Material oldMat )
     {
-        return getOutput( player, oldData, Material.AIR );
-    }
-
-    public ItemStack getOutput( DwarfPlayer player, Short oldData, Material oldMat )
-    {
-        short data = mOutput.getDurability();
-
-        if ( data == 0 )
-            data = oldData;
-
         final int count = plugin.getUtil().randomAmount( getEffectAmount( player ) );
-        ItemStack item = null;
-        if ( plugin.getUtil().checkEquivalentBuildBlocks( mOutput.getType(), oldMat ) == null || oldMat == null || oldMat == Material.AIR )
+        ItemStack item;
+        if ( !plugin.getUtil().isEquivalentBlock( mResult.getType(), oldMat ) || oldMat == null || oldMat == Material.AIR )
         {
-            item = new ItemStack( mOutput.getType(), count, data );
+            item = new ItemStack( mResult.getType(), count );
         }
         else
         {
-            item = new ItemStack( oldMat, count, data );
+            item = new ItemStack( oldMat, count );
         }
         return item;
     }
@@ -315,20 +315,15 @@ public class DwarfEffect
     public boolean checkInitiator( ItemStack item )
     {
         if ( item == null )
-            return checkInitiator( Material.AIR, ( short ) 0 );
+            return checkInitiator( Material.AIR );
         else
-            return checkInitiator( item.getType(), item.getDurability() );
+            return checkInitiator( item.getType() );
     }
 
-    public boolean checkInitiator( Material mat, Short data )
+    public boolean checkInitiator( Material mat )
     {
-        if ( mInitiator.getType() != mat && plugin.getUtil().checkEquivalentBuildBlocks( mat, mInitiator.getType() ) == null )
+        if ( mInitiator.getType() != mat && !plugin.getUtil().isEquivalentBlock( mat, mInitiator.getType() ) )
             return false;
-
-        if ( mInitiator.getDurability() != 0 )
-        {
-            return mInitiator.getDurability() == data;
-        }
         return true;
     }
 
@@ -347,13 +342,13 @@ public class DwarfEffect
                 return "hoes";
             if ( mat == Material.IRON_AXE )
                 return "axes";
-            if ( mat == Material.WOOD_PICKAXE )
+            if ( mat == Material.WOODEN_PICKAXE )
                 return "pickaxes";
             if ( mat == Material.IRON_PICKAXE )
                 return "most picks";
             if ( mat == Material.DIAMOND_PICKAXE )
                 return "high picks";
-            if ( mat == Material.IRON_SPADE )
+            if ( mat == Material.IRON_SHOVEL )
                 return "shovels";
             if ( mat == Material.FISHING_ROD )
                 return "fishing rod";

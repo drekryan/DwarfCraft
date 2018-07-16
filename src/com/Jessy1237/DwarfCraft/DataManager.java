@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.sql.Connection;
@@ -30,15 +40,12 @@ import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DataManager
 {
 
-    private List<DwarfPlayer> dwarves = new ArrayList<DwarfPlayer>();
-    public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<Integer, DwarfVehicle>();
-    public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<Integer, DwarfTrainer>();
+    private List<DwarfPlayer> dwarves = new ArrayList<>();
+    public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<>();
+    public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
@@ -54,11 +61,6 @@ public class DataManager
         vehicleMap.put( v.getVehicle().getEntityId(), v );
     }
 
-    /**
-     * this is untested and quite a lot of new code, it will probably fail several times. no way to bugfix currently. Just praying it works
-     * 
-     * @param oldVersion
-     */
     private void buildDB()
     {
         try
@@ -112,9 +114,9 @@ public class DataManager
         for ( DwarfSkill skill : newDwarf.getSkills().values() )
         {
             skill.setLevel( 0 );
-            skill.setDeposit1( 0 );
-            skill.setDeposit2( 0 );
-            skill.setDeposit3( 0 );
+            skill.setDeposit( 0, 1 );
+            skill.setDeposit( 0, 2 );
+            skill.setDeposit( 0, 3 );
         }
 
         if ( player != null )
@@ -251,18 +253,19 @@ public class DataManager
 
                     while ( rs.next() )
                     {
-                        AbstractNPC npc1;
-                        if ( rs.getString( "type" ).equalsIgnoreCase( "PLAYER" ) )
-                        {
-                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
-                        }
-                        else
-                        {
-                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
-                        }
-                        npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
-                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
-                        npc1.setProtected( true );
+                        //TODO 1.13: Renable when Citizens is working on 1.13
+//                        AbstractNPC npc1;
+//                        if ( rs.getString( "type" ).equalsIgnoreCase( "PLAYER" ) )
+//                        {
+//                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
+//                        }
+//                        else
+//                        {
+//                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
+//                        }
+//                        npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
+//                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
+//                        npc1.setProtected( true );
                     }
                 }
                 statement.execute( "DROP TABLE trainers" );
@@ -362,7 +365,7 @@ public class DataManager
      * Used for creating and populating a dwarf with a null(off line) player
      * 
      * @param player
-     * @param name
+     * @param uuid
      */
     private boolean checkDwarfData( DwarfPlayer player, UUID uuid )
     {
@@ -394,9 +397,9 @@ public class DataManager
                 if ( skill != null )
                 {
                     skill.setLevel( level );
-                    skill.setDeposit1( rs.getInt( "deposit1" ) );
-                    skill.setDeposit2( rs.getInt( "deposit2" ) );
-                    skill.setDeposit3( rs.getInt( "deposit3" ) );
+                    skill.setDeposit( rs.getInt( "deposit1" ), 1 );
+                    skill.setDeposit( rs.getInt( "deposit2" ), 2 );
+                    skill.setDeposit( rs.getInt( "deposit3" ), 3 );
                 }
             }
             rs.close();
@@ -531,9 +534,9 @@ public class DataManager
                 prep.setInt( 1, id );
                 prep.setInt( 2, skill.getId() );
                 prep.setInt( 3, skill.getLevel() );
-                prep.setInt( 4, skill.getDeposit1() );
-                prep.setInt( 5, skill.getDeposit2() );
-                prep.setInt( 6, skill.getDeposit3() );
+                prep.setInt( 4, skill.getDeposit( 1 ) );
+                prep.setInt( 5, skill.getDeposit( 2 ) );
+                prep.setInt( 6, skill.getDeposit( 3 ) );
                 prep.addBatch();
             }
             prep.executeBatch();

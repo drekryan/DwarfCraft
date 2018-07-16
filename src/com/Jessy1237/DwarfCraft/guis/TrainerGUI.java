@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
@@ -55,13 +65,13 @@ public class TrainerGUI extends DwarfGUI
             addItem( "Cancel", null, 10 + ( i - 1 ), guiItem );
         }
 
-        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 12 );
+        guiItem = new ItemStack( Material.INK_SAC, 1, ( short ) 12 );
         addItem( "Deposit All", null, 12, guiItem );
 
-        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 10 );
+        guiItem = new ItemStack( Material.INK_SAC, 1, ( short ) 10 );
         addItem( "Train Skill", null, 13, guiItem );
 
-        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 2 );
+        guiItem = new ItemStack( Material.INK_SAC, 1, ( short ) 2 );
         addItem( "Train & Deposit Skill", null, 14, guiItem );
     }
 

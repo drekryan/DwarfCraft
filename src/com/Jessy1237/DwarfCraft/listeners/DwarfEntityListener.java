@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.HashMap;
@@ -93,7 +103,7 @@ public class DwarfEntityListener implements Listener
                 DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
                 DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
                 
-                if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                if ( dCPlayer.getRace().equalsIgnoreCase( "" ) )
                 {
                     plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
                     return true;
@@ -131,7 +141,7 @@ public class DwarfEntityListener implements Listener
                     }
 
                     String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
-                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
                     {
                         plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
                         return true;
@@ -464,9 +474,9 @@ public class DwarfEntityListener implements Listener
                     {
                         if ( effect.checkMob( deadThing ) )
                         {
-                            ItemStack output = effect.getOutput( killer );
+                            ItemStack output = effect.getResult( killer );
 
-                            if ( deadThing instanceof Sheep && output.getType() == Material.WOOL )
+                            if ( deadThing instanceof Sheep && output.getType() == Material.WHITE_WOOL )
                                 output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
@@ -494,9 +504,9 @@ public class DwarfEntityListener implements Listener
                         }
                         else if ( effect.getCreature() == null )
                         {
-                            ItemStack output = effect.getOutput( killer );
+                            ItemStack output = effect.getResult( killer );
 
-                            if ( deadThing instanceof Sheep && output.getType() == Material.WOOL )
+                            if ( deadThing instanceof Sheep && output.getType() == Material.WHITE_WOOL )
                                 output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )

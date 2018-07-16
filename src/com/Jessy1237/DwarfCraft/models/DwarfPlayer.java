@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.models;
 
 import java.util.ArrayList;
@@ -8,6 +18,7 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -54,13 +65,12 @@ public class DwarfPlayer
         int quartileSize = Math.min( 4, highSkills / 4 );
         int quartileNumber = 1; // 1 = top, 2 = 2nd, etc.
         int[] levelList = new int[highSkills + 1];
-        List<ItemStack> costToLevelStack = new ArrayList<ItemStack>();
-        List<ItemStack> totalCostStack = new ArrayList<ItemStack>();
+        List<ItemStack> costToLevelStack = new ArrayList<>();
+        List<ItemStack> totalCostStack = new ArrayList<>();
         int i = 0;
 
         // Creates an ordered list of skill levels and finds where in that
-        // list
-        // the skill is (what quartile)
+        // list the skill is (what quartile)
         if ( DwarfCraft.debugMessagesThreshold < 0 )
             System.out.println( "DC0: starting skill ordering for quartiles" );
         for ( DwarfSkill s : getSkills().values() )
@@ -91,34 +101,24 @@ public class DwarfPlayer
             multiplier *= ( 1 + 3 * dwarfLevel / ( 100 + 3 * dwarfLevel ) );
 
         // create output item stack of new items
-        int item1Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item1.Base * multiplier - .01 ), skill.Item1.Max ) ), item2Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item2.Base * multiplier - .01 ), skill.Item2.Max ) ),
-                item3Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.Item3.Base * multiplier - .01 ), skill.Item3.Max ) );
+        int item1Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.getItem( 1 ).getBase() * multiplier - .01 ), skill.getItem( 1 ).getMax() ) );
+        int item2Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.getItem( 2 ).getBase() * multiplier - .01 ), skill.getItem( 2 ).getMax() ) );
+        int item3Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.getItem( 3 ).getBase() * multiplier - .01 ), skill.getItem( 3 ).getMax() ) );
 
-        if ( plugin.isAuraActive )
+        totalCostStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount ) );
+        costToLevelStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount - skill.getDeposit( 1 ) ) );
+
+        if ( skill.getItem( 2 ).getItemStack().getType() != Material.AIR )
         {
-            double item1Decrease = Math.ceil( item1Amount * 0.10 );
-            double item2Decrease = Math.ceil( item2Amount * 0.10 );
-            double item3Decrease = Math.ceil( item3Amount * 0.10 );
-
-            item1Amount = ( int ) ( item1Amount - item1Decrease );
-            item2Amount = ( int ) ( item2Amount - item2Decrease );
-            item3Amount = ( int ) ( item3Amount - item3Decrease );
+            totalCostStack.add( 1, new ItemStack( skill.getItem( 2 ).getItemStack().getType(), item2Amount ) );
+            costToLevelStack.add( 1, new ItemStack( skill.getItem( 2 ).getItemStack().getType(), item2Amount - skill.getDeposit( 2 ) ) );
         }
-
-        totalCostStack.add( 0, new ItemStack( skill.Item1.Item.getType(), item1Amount, skill.Item1.Item.getDurability() ) );
-        costToLevelStack.add( 0, new ItemStack( skill.Item1.Item.getType(), item1Amount - skill.getDeposit1(), skill.Item1.Item.getDurability() ) );
-
-        if ( skill.Item2.Item.getType() != Material.AIR )
+        if ( skill.getItem( 3 ).getItemStack().getType() != Material.AIR )
         {
-            totalCostStack.add( 1, new ItemStack( skill.Item2.Item.getType(), item2Amount, skill.Item2.Item.getDurability() ) );
-            costToLevelStack.add( 1, new ItemStack( skill.Item2.Item.getType(), item2Amount - skill.getDeposit2(), skill.Item2.Item.getDurability() ) );
+            totalCostStack.add( 2, new ItemStack( skill.getItem( 3 ).getItemStack().getType(), item3Amount ) );
+            costToLevelStack.add( 2, new ItemStack( skill.getItem( 3 ).getItemStack().getType(), item3Amount - skill.getDeposit( 3 ) ) );
         }
-        if ( skill.Item3.Item.getType() != Material.AIR )
-        {
-            totalCostStack.add( 2, new ItemStack( skill.Item3.Item.getType(), item3Amount, skill.Item3.Item.getDurability() ) );
-            costToLevelStack.add( 2, new ItemStack( skill.Item3.Item.getType(), item3Amount - skill.getDeposit3(), skill.Item3.Item.getDurability() ) );
-        }
-        List<List<ItemStack>> costs = new ArrayList<List<ItemStack>>();
+        List<List<ItemStack>> costs = new ArrayList<>();
 
         costs.add( 0, costToLevelStack );
         costs.add( 1, totalCostStack );
@@ -307,9 +307,9 @@ public class DwarfPlayer
                     skill.setLevel( 0 );
                 }
 
-                skill.setDeposit1( 0 );
-                skill.setDeposit2( 0 );
-                skill.setDeposit3( 0 );
+                skill.setDeposit( 0, 1 );
+                skill.setDeposit( 0, 2 );
+                skill.setDeposit( 0, 3 );
             }
             else
             {
@@ -322,9 +322,9 @@ public class DwarfPlayer
                     if ( !plugin.getConfigManager().getRace( race ).getSkills().contains( Integer.valueOf( skill.getId() ) ) && skill.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
                     {
                         skill.setLevel( plugin.getConfigManager().getRaceLevelLimit() );
-                        skill.setDeposit1( 0 );
-                        skill.setDeposit2( 0 );
-                        skill.setDeposit3( 0 );
+                        skill.setDeposit( 0, 1 );
+                        skill.setDeposit( 0, 2 );
+                        skill.setDeposit( 0, 3 );
                     }
                 }
             }
@@ -417,6 +417,8 @@ public class DwarfPlayer
 
                 plugin.getServer().dispatchCommand( plugin.getServer().getConsoleSender(), command );
             }
+
+            commands.clear();
         }
     }
 }

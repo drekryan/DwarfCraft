@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
@@ -21,9 +31,6 @@ import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class CommandSetSkill extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
@@ -107,9 +114,9 @@ public class CommandSetSkill extends Command implements TabCompleter
 
                         if ( !event.isCancelled() )
                         {
-                            s.setDeposit1( 0 );
-                            s.setDeposit2( 0 );
-                            s.setDeposit3( 0 );
+                            s.setDeposit( 0, 1 );
+                            s.setDeposit( 0, 2 );
+                            s.setDeposit( 0, 3 );
                             skills[i] = s;
                             i++;
                         }
@@ -132,9 +139,9 @@ public class CommandSetSkill extends Command implements TabCompleter
 
                     if ( !event.isCancelled() )
                     {
-                        skill.setDeposit1( 0 );
-                        skill.setDeposit2( 0 );
-                        skill.setDeposit3( 0 );
+                        skill.setDeposit( 0, 1 );
+                        skill.setDeposit( 0, 2 );
+                        skill.setDeposit( 0, 3 );
                         DwarfSkill[] skills = new DwarfSkill[1];
                         skills[0] = skill;
                         plugin.getOut().sendMessage(sender, "&b" + skill.getDisplayName() + " &eskill for player &9" + name + "&e has been set to level &3" + level);
