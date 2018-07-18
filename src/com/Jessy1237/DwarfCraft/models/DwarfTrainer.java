@@ -402,11 +402,11 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 }
                 else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
                 {
-                    skill.setDeposit2( skill.getDeposit1() + amountTaken );
+                    skill.setDeposit2( skill.getDeposit2() + amountTaken );
                 }
                 else if ( costStack.getType().equals( skill.Item3.Item.getType() ) )
                 {
-                    skill.setDeposit3( skill.getDeposit1() + amountTaken );
+                    skill.setDeposit3( skill.getDeposit3() + amountTaken );
                 }
             }
             else
