@@ -46,7 +46,7 @@ public class TrainSkillSchedule implements Runnable
         DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
         String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
 
-        if ( clickedItem.getType().equals( Material.INK_SAC ) )
+        if ( clickedItem.getType().equals( Material.LIGHT_BLUE_DYE ) || clickedItem.getType().equals( Material.LIME_DYE ) || clickedItem.getType().equals( Material.CACTUS_GREEN ))
         {
             // Checks if after a level up if any of the limitting constraints have changed. i.e. player may have levelled up past the trainers ability while the inventory was open
             if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
@@ -70,15 +70,15 @@ public class TrainSkillSchedule implements Runnable
                 return;
             }
 
-            if ( clickedItem.getDurability() == 12 && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Deposit All" ) )
+            if ( clickedItem.getType() == Material.LIGHT_BLUE_DYE && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Deposit All" ) )
             {
                 trainer.depositAll( dCPlayer, clickedItem, trainerGUI );
             }
-            else if ( clickedItem.getDurability() == 10 && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train Skill" ) )
+            else if ( clickedItem.getType() == Material.LIME_DYE && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train Skill" ) )
             {
                 trainer.trainSkill( dCPlayer, clickedItem, trainerGUI );
             }
-            else if ( clickedItem.getDurability() == 2 && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train & Deposit Skill" ) )
+            else if ( clickedItem.getType() == Material.CACTUS_GREEN && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train & Deposit Skill" ) )
             {
                 if ( trainer.trainSkill( dCPlayer, clickedItem, trainerGUI ) )
                 {

@@ -65,13 +65,13 @@ public class TrainerGUI extends DwarfGUI
             addItem( "Cancel", null, 10 + ( i - 1 ), guiItem );
         }
 
-        guiItem = new ItemStack( Material.INK_SAC, 1, ( short ) 12 );
+        guiItem = new ItemStack( Material.LIGHT_BLUE_DYE, 1 );
         addItem( "Deposit All", null, 12, guiItem );
 
-        guiItem = new ItemStack( Material.INK_SAC, 1, ( short ) 10 );
+        guiItem = new ItemStack( Material.LIME_DYE, 1 );
         addItem( "Train Skill", null, 13, guiItem );
 
-        guiItem = new ItemStack( Material.INK_SAC, 1, ( short ) 2 );
+        guiItem = new ItemStack( Material.CACTUS_GREEN, 1 );
         addItem( "Train & Deposit Skill", null, 14, guiItem );
     }
 
