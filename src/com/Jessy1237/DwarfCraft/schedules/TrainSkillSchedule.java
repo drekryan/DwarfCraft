@@ -72,17 +72,17 @@ public class TrainSkillSchedule implements Runnable
 
             if ( clickedItem.getType() == Material.LIGHT_BLUE_DYE && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Deposit All" ) )
             {
-                trainer.depositAll( dCPlayer, clickedItem, trainerGUI );
+                trainer.depositAll( dCPlayer, trainerGUI );
             }
             else if ( clickedItem.getType() == Material.LIME_DYE && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train Skill" ) )
             {
-                trainer.trainSkill( dCPlayer, clickedItem, trainerGUI );
+                trainer.trainSkill( dCPlayer, trainerGUI );
             }
             else if ( clickedItem.getType() == Material.CACTUS_GREEN && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train & Deposit Skill" ) )
             {
-                if ( trainer.trainSkill( dCPlayer, clickedItem, trainerGUI ) )
+                if ( trainer.trainSkill( dCPlayer, trainerGUI ) )
                 {
-                    trainer.depositAll( dCPlayer, clickedItem, trainerGUI );
+                    trainer.depositAll( dCPlayer, trainerGUI );
                 }
             }
         }

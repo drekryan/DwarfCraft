@@ -10,53 +10,69 @@
 
 package com.Jessy1237.DwarfCraft.models;
 
+import java.util.Collections;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 
 public class DwarfTrainingItem
 {
-
     private final ItemStack itemStack;
-    private final Tag tag;
     private final double base;
     private final int max;
+    private final String tag;
 
-    public DwarfTrainingItem( ItemStack item, double base, int max )
+    public DwarfTrainingItem( ItemStack item, double base, int max, String tag )
     {
         this.itemStack = item;
-        this.tag = null;
         this.base = base;
         this.max = max;
-    }
-
-    public DwarfTrainingItem( Tag tag, double base, int max )
-    {
         this.tag = tag;
-        this.itemStack = null;
-        this.base = base;
-        this.max = max;
     }
 
     public boolean isTag() {
-        return (this.itemStack == null && this.tag != null);
+        return ( this.tag != null && !this.tag.isEmpty() );
+    }
+
+    public Tag getTag()
+    {
+        //TODO: Support for checking the REGISTRY_ITEMS IF REGISTRY_BLOCKS FAILS
+        if ( isTag() )
+            return Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( this.tag ), Material.class );
+
+        return null;
     }
 
     public ItemStack getItemStack()
     {
-        if (isTag()) {
-            if ( tag != null && tag.getValues().iterator().hasNext()) {
-                return new ItemStack( (Material) tag.getValues().iterator().next() );
-            } else {
-                return new ItemStack( Material.AIR );
-            }
+        //TODO: Support for checking the REGISTRY_ITEMS IF REGISTRY_BLOCKS FAILS
+        if ( isTag() ) {
+            Tag tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( this.tag ), Material.class );
+            return new ItemStack( (Material) tag.getValues().iterator().next() );
         }
 
         return this.itemStack;
     }
 
-    public Tag getTag() {
-        return this.tag;
+    public Set<Material> getMatchingMaterials()
+    {
+        if ( this.tag.equals( "" ) ) return Collections.emptySet();
+
+        // TODO 1.13: Check REGISTRY_ITEMS too!
+        Tag<Material> tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( this.tag ), Material.class );
+        return tag.getValues();
+    }
+
+    public boolean matchesTag( Material mat )
+    {
+        Set<Material> mats = getMatchingMaterials( );
+        if ( mats == null || mats.size() <= 0 )
+            return false;
+        return mats.contains( mat );
     }
 
     public double getBase()

@@ -24,9 +24,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfPlayer
 {
     private final DwarfCraft plugin;
@@ -105,8 +102,12 @@ public class DwarfPlayer
         int item2Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.getItem( 2 ).getBase() * multiplier - .01 ), skill.getItem( 2 ).getMax() ) );
         int item3Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.getItem( 3 ).getBase() * multiplier - .01 ), skill.getItem( 3 ).getMax() ) );
 
-        totalCostStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount ) );
-        costToLevelStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount - skill.getDeposit( 1 ) ) );
+        if ( skill.getItem( 1 ).getItemStack().getType() != Material.AIR )
+        {
+            System.out.println( skill.getItem( 1 ).getItemStack().getType() );
+            totalCostStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount ) );
+            costToLevelStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount - skill.getDeposit( 1 ) ) );
+        }
 
         if ( skill.getItem( 2 ).getItemStack().getType() != Material.AIR )
         {

@@ -26,9 +26,12 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVReader;
 import org.jbls.LexManos.CSV.CSVRecord;
 
@@ -761,10 +764,25 @@ public final class ConfigManager
             {
                 CSVRecord item = records.next();
 
-                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<>(), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item1" ) ), item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) ), new DwarfTrainingItem( plugin
-                        .getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) ), new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) ), Material
-                                .matchMaterial( item.getString( "Held" ) ) );
+                //TODO 1.13: Finishing supporting tags for deposit2 and deposit3 after code has been cleaned up
+                Tag tag = null;
+                ItemStack itemStack1;
+                if ( item.getString( "Item1" ).startsWith( "#" ) )
+                {
+                    System.out.println( item.getString( "Item1" ).substring( 1 ).toLowerCase());
+                    tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( "Item1" ).substring( 1 ).toLowerCase() ), Material.class );
+                    itemStack1 = new ItemStack( (Material) tag.getValues().iterator().next() );
+                } else {
+                    itemStack1 = plugin.getUtil().parseItem( item.getString( "Item1" ) );
+                }
 
+                boolean isTag = tag != null;
+                DwarfTrainingItem item1 = new DwarfTrainingItem( itemStack1, item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ), isTag ? item.getString( "Item1" ).substring( 1 ).toLowerCase() : "" );
+
+                DwarfTrainingItem item2 = new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ), "" );
+                DwarfTrainingItem item3 = new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ), "" );
+
+                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<>(), item1, item2, item3, Material.matchMaterial( item.getString( "Held" ) ) );
                 skillsArray.put( skill.getId(), skill );
 
             }

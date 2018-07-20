@@ -12,11 +12,17 @@ package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -30,6 +36,7 @@ import com.Jessy1237.DwarfCraft.schedules.TrainSkillSchedule;
 public class TrainerGUI extends DwarfGUI
 {
     private DwarfTrainer trainer;
+    public int timer;
 
     public TrainerGUI( DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dwarfPlayer )
     {
@@ -53,9 +60,27 @@ public class TrainerGUI extends DwarfGUI
         {
             ArrayList<String> lore = new ArrayList<>();
             lore.add( ChatColor.RED + "" + ( costStack.getAmount() != 0 ? "" + costStack.getAmount() + " needed to level" : "No more is required" ) );
-            costStack.setAmount( 1 );
-            addItem( null, lore, guiIndex, costStack );
-            guiIndex++;
+
+            Tag tag;
+            for (int i = 0; i < 3; i++)
+            {
+                if ( skill.getItem( 1 ).isTag() )
+                {
+                    tag = skill.getItem( 1 ).getTag();
+                    if ( tag.getValues().contains( costStack.getType() ) )
+                    {
+                        timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask(dwarfPlayer.getPlayer(), costStack, lore, guiIndex, tag), 1, 15 );
+                        guiIndex++;
+                        break;
+                    }
+                }
+                else if ( skill.getItem( i ).getItemStack().getType() == costStack.getType() )
+                {
+                    costStack.setAmount( 1 );
+                    addItem( null, lore, guiIndex, costStack );
+                    guiIndex++;
+                }
+            }
         }
 
         ItemStack guiItem;
@@ -153,5 +178,70 @@ public class TrainerGUI extends DwarfGUI
         dwarfPlayer.getPlayer().closeInventory();
         this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill( Messages.trainerGUITitle, dwarfPlayer, skill ) ) );
         plugin.getDwarfInventoryListener().addDwarfGUI( dwarfPlayer.getPlayer(), this );
+    }
+
+    class CycleSlotTask implements Runnable
+    {
+
+        private Player player;
+        private ItemStack itemStack;
+        private ArrayList<String> lore;
+        private int index;
+        private Tag tag;
+
+        CycleSlotTask( Player player, ItemStack stack, ArrayList<String> lore, int index, Tag tag )
+        {
+            this.player = player;
+            this.itemStack = stack;
+            this.lore = lore;
+            this.index = index;
+            this.tag = tag;
+        }
+
+        @Override
+        public void run()
+        {
+            if (player.getOpenInventory().getTopInventory().getType() == InventoryType.CRAFTING)
+            {
+                Bukkit.getScheduler().cancelTask( timer );
+                return;
+            }
+
+            int tagIndex = 0;
+            for ( Object value : tag.getValues() )
+            {
+                Material mat = (Material)value;
+                if ( mat.equals( itemStack.getType() ) )
+                {
+                    break;
+                }
+                tagIndex++;
+            }
+
+            int newIndex = tagIndex + 1;
+            if ( newIndex == tag.getValues().size())
+            {
+                newIndex = 0;
+            }
+
+            Material newMat = (Material)tag.getValues().toArray()[newIndex];
+
+            this.itemStack = new ItemStack( newMat );
+            ItemStack item = new ItemStack( newMat );
+            ItemMeta meta = item.getItemMeta();
+
+            if ( lore != null ) meta.setLore( lore );
+            meta.addItemFlags( ItemFlag.HIDE_ATTRIBUTES );
+            meta.addItemFlags( ItemFlag.HIDE_ENCHANTS );
+            meta.addItemFlags( ItemFlag.HIDE_DESTROYS );
+            meta.addItemFlags( ItemFlag.HIDE_PLACED_ON );
+            meta.addItemFlags( ItemFlag.HIDE_POTION_EFFECTS );
+            meta.addItemFlags( ItemFlag.HIDE_UNBREAKABLE );
+            item.setItemMeta( meta );
+
+            player.getOpenInventory().getTopInventory().setItem( index, item );
+            player.updateInventory();
+        }
+
     }
 }

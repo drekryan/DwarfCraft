@@ -141,37 +141,6 @@ public class Util
         return false;
     }
 
-    /**
-     * Checks the supplied itemID and sees if it is equivalent to the comparable itemID. The equivalent blocks are set in a config file as a list.
-     * 
-     * @param mat The main Material to obtain the list of comparable Materials
-     * @return A list of all the equivalent Materials if the comparableMaterial is equivalent to the Material. If the compareMat is null then the list of equivalent Materials to the main Material is
-     *         returned. Otherwise null is returned
-     */
-    public ArrayList<Material> getEquivalentBlocks( Material mat )
-    {
-        Tag<Material> tag = plugin.getServer().getTag( Tag.REGISTRY_BLOCKS, mat.getKey(), Material.class );
-
-        if ( tag == null ) return null;
-        return new ArrayList<>( tag.getValues() );
-    }
-
-    /**
-     * Checks the supplied itemID and sees if it is equivalent to the comparable itemID. The equivalent blocks are set in a config file as a list.
-     *
-     * @param mat        The main Material to obtain the list of comparable Materials
-     * @param compareMat The Material to check if it is in the list of comparableMaterials
-     * @return whether the compareMat is contained in the same tag as mat
-     */
-    public boolean isEquivalentBlock( Material mat, Material compareMat )
-    {
-        ArrayList<Material> blocks = getEquivalentBlocks( mat );
-
-        if ( blocks == null )
-            return false;
-        return blocks.contains( compareMat );
-    }
-
     public String getPlayerPrefix( DwarfPlayer player )
     {
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );

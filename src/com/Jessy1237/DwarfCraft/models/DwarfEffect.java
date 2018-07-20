@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Blaze;
@@ -71,9 +72,6 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfEffect
 {
     private DwarfCraft plugin;
@@ -291,7 +289,9 @@ public class DwarfEffect
     {
         final int count = plugin.getUtil().randomAmount( getEffectAmount( player ) );
         ItemStack item;
-        if ( !plugin.getUtil().isEquivalentBlock( mResult.getType(), oldMat ) || oldMat == null || oldMat == Material.AIR )
+
+        //TODO: 1.13 Check Tags
+        if ( oldMat == Material.AIR )
         {
             item = new ItemStack( mResult.getType(), count );
         }
@@ -322,9 +322,9 @@ public class DwarfEffect
 
     public boolean checkInitiator( Material mat )
     {
-        if ( mInitiator.getType() != mat && !plugin.getUtil().isEquivalentBlock( mat, mInitiator.getType() ) )
-            return false;
-        return true;
+        //TODO 1.13 Support Tags
+
+        return mInitiator.getType() == mat;
     }
 
     /**
