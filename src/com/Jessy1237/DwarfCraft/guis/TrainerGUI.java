@@ -29,6 +29,7 @@ import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
 import com.Jessy1237.DwarfCraft.schedules.TrainSkillSchedule;
 
 public class TrainerGUI extends DwarfGUI
@@ -59,18 +60,23 @@ public class TrainerGUI extends DwarfGUI
             ArrayList<String> lore = new ArrayList<>();
             lore.add( ChatColor.RED + "" + ( costStack.getAmount() != 0 ? "" + costStack.getAmount() + " needed to level" : "No more is required" ) );
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 1; i <= 3; i++)
             {
-                if ( skill.getItem( i ).isTag() )
+                DwarfTrainingItem item = skill.getItem( i );
+                if ( item == null || item.getItemStack() == null || item.getItemStack().getType() == Material.AIR ) continue;
+
+                if ( item.isTag() )
                 {
-                    if ( skill.getItem( i ).getMaterials().contains( costStack.getType() ) )
+                    if ( item.getMaterials().contains( costStack.getType() ) )
                     {
-                        timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask(dwarfPlayer.getPlayer(), costStack, lore, guiIndex, skill.getItem( i ).getMaterials()), 1, 15 );
+                        costStack.setAmount( 1 );
+                        addItem( null, lore, guiIndex, costStack );
+                        timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask(dwarfPlayer, skill, costStack, guiIndex, skill.getItem( i ).getMaterials()), 10, 25 );
                         guiIndex++;
                         break;
                     }
                 }
-                else if ( skill.getItem( i ).getItemStack().getType() == costStack.getType() )
+                else if ( item.getItemStack().getType() == costStack.getType() )
                 {
                     costStack.setAmount( 1 );
                     addItem( null, lore, guiIndex, costStack );
@@ -179,17 +185,17 @@ public class TrainerGUI extends DwarfGUI
     class CycleSlotTask implements Runnable
     {
 
-        private Player player;
+        private DwarfPlayer player;
+        private DwarfSkill skill;
         private ItemStack itemStack;
-        private ArrayList<String> lore;
         private int index;
         private Set<Material> mats;
 
-        CycleSlotTask( Player player, ItemStack stack, ArrayList<String> lore, int index, Set<Material> mats )
+        CycleSlotTask( DwarfPlayer player, DwarfSkill skill, ItemStack stack, int index, Set<Material> mats )
         {
             this.player = player;
+            this.skill = skill;
             this.itemStack = stack;
-            this.lore = lore;
             this.index = index;
             this.mats = mats;
         }
@@ -197,7 +203,7 @@ public class TrainerGUI extends DwarfGUI
         @Override
         public void run()
         {
-            if (player.getOpenInventory().getTopInventory().getType() == InventoryType.CRAFTING)
+            if (player.getPlayer().getOpenInventory().getTopInventory().getType() == InventoryType.CRAFTING)
             {
                 Bukkit.getScheduler().cancelTask( timer );
                 return;
@@ -208,24 +214,35 @@ public class TrainerGUI extends DwarfGUI
             {
                 if ( mat.equals( itemStack.getType() ) )
                 {
+                    if ( (tagIndex + 1) >= mats.size() )
+                    {
+                        tagIndex = 0;
+                    }
                     break;
                 }
                 tagIndex++;
             }
 
-            int newIndex = tagIndex + 1;
-            if ( newIndex == mats.size())
-            {
-                newIndex = 0;
-            }
-
-            Material newMat = (Material)mats.toArray()[newIndex];
-
-            this.itemStack = new ItemStack( newMat );
+            Material newMat = (Material)mats.toArray()[tagIndex + 1];
             ItemStack item = new ItemStack( newMat );
             ItemMeta meta = item.getItemMeta();
+            itemStack = item;
 
-            if ( lore != null ) meta.setLore( lore );
+            List<List<ItemStack>> costs = player.calculateTrainingCost( skill );
+            List<ItemStack> trainingCostsToLevel = costs.get( 0 );
+            int amount = itemStack.getAmount();
+            for ( ItemStack costStack : trainingCostsToLevel )
+            {
+                if ( mats.contains( costStack.getType() ) )
+                {
+                    amount = costStack.getAmount();
+                }
+            }
+
+            ArrayList<String> lore = new ArrayList<>();
+            lore.add( ChatColor.RED + "" + ( amount != 0 ? "" + amount + " needed to level" : "No more is required" ) );
+
+            meta.setLore( lore );
             meta.addItemFlags( ItemFlag.HIDE_ATTRIBUTES );
             meta.addItemFlags( ItemFlag.HIDE_ENCHANTS );
             meta.addItemFlags( ItemFlag.HIDE_DESTROYS );
@@ -234,8 +251,7 @@ public class TrainerGUI extends DwarfGUI
             meta.addItemFlags( ItemFlag.HIDE_UNBREAKABLE );
             item.setItemMeta( meta );
 
-            player.getOpenInventory().getTopInventory().setItem( index, item );
-            player.updateInventory();
+            player.getPlayer().getOpenInventory().getTopInventory().setItem( index, item );
         }
 
     }
