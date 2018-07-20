@@ -10,15 +10,12 @@
 
 package com.Jessy1237.DwarfCraft.listeners;
 
-import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;

@@ -25,19 +25,15 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 
-import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
 public class DataManager

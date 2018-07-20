@@ -23,6 +23,7 @@ import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 
+@SuppressWarnings( "deprecation" )
 public class PlaceHolderParser
 {
 

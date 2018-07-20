@@ -1,11 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft;
@@ -20,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
@@ -31,7 +27,6 @@ import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVReader;
 import org.jbls.LexManos.CSV.CSVRecord;
 
@@ -345,10 +340,12 @@ public final class ConfigManager
         }
 
         FileConfiguration racesConfig = YamlConfiguration.loadConfiguration( new File( plugin.getDataFolder(), "races.yml" ) );
-        Set<String> raceNames = racesConfig.getKeys(false );
+        Set<String> raceNames = racesConfig.getKeys( false );
 
-        for (String name : raceNames) {
-            if ( name == null || name.equals( "" ) ) continue;
+        for ( String name : raceNames )
+        {
+            if ( name == null || name.equals( "" ) )
+                continue;
 
             DwarfRace race = new DwarfRace( name );
             String[] raceIds = racesConfig.getString( name + ".SkillIDs" ).trim().split( "," );
@@ -753,6 +750,36 @@ public final class ConfigManager
         return tutorial;
     }
 
+    /**
+     * Gets the set of Materials for the DwarfTrainingItem. The set contains all materials that are accepted for training (equivalent items from the tag)
+     * 
+     * @param item The CSVRecord being read from
+     * @param name The name of the Item being found
+     * @return Set of materials that are accepted for training or an empty set if an error occurred finding the tag.
+     */
+    private Set<Material> getMaterials( CSVRecord item, String name )
+    {
+        Set<Material> mats = new HashSet<Material>();
+
+        if ( item.getString( name ).startsWith( "#" ) )
+        {
+            System.out.println( item.getString( name ).substring( 1 ).toLowerCase() );
+            Tag<Material> tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+
+            if ( tag == null )
+                tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+
+            if ( tag != null )
+                mats = tag.getValues();
+        }
+        else
+        {
+            mats.add( plugin.getUtil().parseItem( item.getString( name ) ).getType() );
+        }
+
+        return mats;
+    }
+
     private boolean readSkillsFile()
     {
         plugin.getLogger().log( Level.INFO, "Reading skills file: " + configDirectory + "skills.csv" );
@@ -763,24 +790,19 @@ public final class ConfigManager
             while ( records.hasNext() )
             {
                 CSVRecord item = records.next();
+                Set<Material> mats1 = getMaterials( item, "Item1" );
+                Set<Material> mats2 = getMaterials( item, "Item2" );
+                Set<Material> mats3 = getMaterials( item, "Item3" );
 
-                //TODO 1.13: Finishing supporting tags for deposit2 and deposit3 after code has been cleaned up
-                Tag tag = null;
-                ItemStack itemStack1;
-                if ( item.getString( "Item1" ).startsWith( "#" ) )
+                if ( mats1.isEmpty() || mats2.isEmpty() || mats3.isEmpty() ) //Skip the Skill if the tag reading fails TODO: Improve the error msg
                 {
-                    System.out.println( item.getString( "Item1" ).substring( 1 ).toLowerCase());
-                    tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( "Item1" ).substring( 1 ).toLowerCase() ), Material.class );
-                    itemStack1 = new ItemStack( (Material) tag.getValues().iterator().next() );
-                } else {
-                    itemStack1 = plugin.getUtil().parseItem( item.getString( "Item1" ) );
+                    plugin.getLogger().log( Level.INFO, "Skipping skill " + item.getString( "Name" + " as couldn't find one of the tags" ));
+                    continue;
                 }
 
-                boolean isTag = tag != null;
-                DwarfTrainingItem item1 = new DwarfTrainingItem( itemStack1, item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ), isTag ? item.getString( "Item1" ).substring( 1 ).toLowerCase() : "" );
-
-                DwarfTrainingItem item2 = new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item2" ) ), item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ), "" );
-                DwarfTrainingItem item3 = new DwarfTrainingItem( plugin.getUtil().parseItem( item.getString( "Item3" ) ), item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ), "" );
+                DwarfTrainingItem item1 = new DwarfTrainingItem( mats1, item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) );
+                DwarfTrainingItem item2 = new DwarfTrainingItem( mats2, item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) );
+                DwarfTrainingItem item3 = new DwarfTrainingItem( mats3, item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) );
 
                 DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<>(), item1, item2, item3, Material.matchMaterial( item.getString( "Held" ) ) );
                 skillsArray.put( skill.getId(), skill );
@@ -860,7 +882,8 @@ public final class ConfigManager
         return this.skillMaxCapeCommands;
     }
 
-    public void clearCommands() {
+    public void clearCommands()
+    {
         this.skillLevelCommands = new ArrayList<>();
         this.skillMasteryCommands = new ArrayList<>();
         this.skillMaxCapeCommands = new ArrayList<>();

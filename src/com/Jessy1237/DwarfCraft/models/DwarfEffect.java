@@ -11,10 +11,8 @@
 package com.Jessy1237.DwarfCraft.models;
 
 import java.util.Random;
-import java.util.logging.Level;
 
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Blaze;

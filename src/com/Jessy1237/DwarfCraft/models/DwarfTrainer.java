@@ -1,16 +1,10 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft.models;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +12,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +19,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.Util;
 import com.Jessy1237.DwarfCraft.events.DwarfDepositEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
@@ -118,8 +110,8 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         {
             for ( int i = 0; i < 3; i++ )
             {
-                boolean isTag = skill.getItem( i ).isTag() && skill.getItem( i ).matchesTag( clickedItemStack.getType() );
-                if (isTag || clickedItemStack.getType().equals( costStack.getType() ) )
+                boolean isTag = skill.getItem( i ).isTag() && skill.getItem( i ).getMaterials().contains( clickedItemStack.getType() );
+                if ( isTag || clickedItemStack.getType().equals( costStack.getType() ) )
                 {
                     deposited = depositItem( costStack, dCPlayer, trainerGUI, skill )[1];
                     break;
@@ -153,7 +145,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
     public void depositAll( DwarfPlayer dCPlayer, TrainerGUI trainerGUI )
     {
-        //TODO 1.13: Update method to support tags
+        // TODO 1.13: Update method to support tags
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         final int dep1 = skill.getDeposit( 1 ), dep2 = skill.getDeposit( 2 ), dep3 = skill.getDeposit( 3 );
         Player player = dCPlayer.getPlayer();
@@ -195,7 +187,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
     public boolean trainSkill( DwarfPlayer dCPlayer, TrainerGUI trainerGUI )
     {
-        //TODO 1.13: Update method to support tags
+        // TODO 1.13: Update method to support tags
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
@@ -305,11 +297,12 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
     {
         for ( int i = 0; i < 3; i++ )
         {
-            boolean isTag = skill.getItem( i ).isTag() && skill.getItem( i ).matchesTag( costStack.getType() );
+            boolean isTag = skill.getItem( i ).isTag() && skill.getItem( i ).getMaterials().contains( costStack.getType() );
             if ( isTag )
             {
-                Set<Material> matches = skill.getItem( i ).getMatchingMaterials();
-                for (Material mat : matches) {
+                Set<Material> matches = skill.getItem( i ).getMaterials();
+                for ( Material mat : matches )
+                {
                     if ( player.getInventory().contains( mat, costStack.getAmount() ) )
                     {
                         return true;
@@ -318,7 +311,8 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
             }
             else
             {
-                if ( player.getInventory().containsAtLeast( costStack, costStack.getAmount() ) ) {
+                if ( player.getInventory().containsAtLeast( costStack, costStack.getAmount() ) )
+                {
                     return true;
                 }
             }
@@ -345,7 +339,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
             for ( int i = 0; i < 3; i++ )
             {
-                boolean isTag = skill.getItem( i ).isTag() && skill.getItem( i ).matchesTag( costStack.getType() );
+                boolean isTag = skill.getItem( i ).isTag() && skill.getItem( i ).getMaterials().contains( costStack.getType() );
                 if ( isTag || invStack.getType().equals( costStack.getType() ) || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) )
                 {
                     int inv = invStack.getAmount();
@@ -383,7 +377,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
      */
     private boolean[] depositItem( ItemStack costStack, DwarfPlayer dCPlayer, TrainerGUI trainerGUI, DwarfSkill skill )
     {
-        //TODO 1.13: Update method to support tags
+        // TODO 1.13: Update method to support tags
         boolean[] hasMatsOrDeposits = { true, false };
         final int origCost = costStack.getAmount();
         Player player = dCPlayer.getPlayer();
@@ -408,17 +402,16 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 // For now the method will only take the required amount otherwise it won't take any items
                 // TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
                 trainerGUI.updateItem( costStack, origCost - amountTaken );
-                boolean isEquiv = false; // HACK: This is hardcoded not to support tags. Fix for 1.13
 
-                if ( isEquiv || skill.getItem( 1 ).getItemStack().getType().equals( costStack.getType() ) )
+                if ( skill.getItem( 1 ).getMaterials().contains( costStack.getType() ) )
                 {
                     skill.setDeposit( skill.getDeposit( 1 ) + amountTaken, 1 );
                 }
-                else if ( isEquiv || skill.getItem( 2 ).getItemStack().getType().equals( costStack.getType() ) )
+                else if ( skill.getItem( 2 ).getMaterials().contains( costStack.getType() ) )
                 {
-                    skill.setDeposit( skill.getDeposit( 2 ) + amountTaken, 2);
+                    skill.setDeposit( skill.getDeposit( 2 ) + amountTaken, 2 );
                 }
-                else if ( isEquiv || skill.getItem( 3 ).getItemStack().getType().equals( costStack.getType() ) )
+                else if ( skill.getItem( 3 ).getMaterials().contains( costStack.getType() ) )
                 {
                     skill.setDeposit( skill.getDeposit( 3 ) + amountTaken, 3 );
                 }

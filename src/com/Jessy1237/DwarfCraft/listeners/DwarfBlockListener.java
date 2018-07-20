@@ -1,11 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft.listeners;
@@ -149,7 +144,8 @@ public class DwarfBlockListener implements Listener
                 if ( ( effect.getEffectType() == DwarfEffectType.BLOCKDROP || effect.getEffectType() == DwarfEffectType.BLOCKDROPDUPE ) && effect.checkInitiator( blockMat ) )
                 {
                     // Check if the block was placed by a player and prevent additional drops if the effect type is not "BLOCKDROPDUPE"
-                    if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) ) {
+                    if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) )
+                    {
                         return;
                     }
 
@@ -208,7 +204,7 @@ public class DwarfBlockListener implements Listener
                             }
                         }
 
-                        //TODO 1.13 Verify how silk touch is supposed to work in DwarfCraft especially on Gold and Iron Ore.
+                        // TODO 1.13 Verify how silk touch is supposed to work in DwarfCraft especially on Gold and Iron Ore.
                         if ( tool.containsEnchantment( Enchantment.SILK_TOUCH ) )
                         {
                             // If enabled in the config, silk touch block
@@ -290,7 +286,8 @@ public class DwarfBlockListener implements Listener
                         // Checks for Fortune tools and adds it to the
                         // Dwarfcraft drops
                         Material type = block.getType();
-                        if ( type == Material.DIAMOND_ORE || type == Material.COAL_ORE || type == Material.REDSTONE_ORE || type == Material.EMERALD_ORE || type == Material.NETHER_QUARTZ_ORE || type == Material.GRASS || type == Material.STONE || type == Material.LAPIS_ORE || type == Material.GLOWSTONE )
+                        if ( type == Material.DIAMOND_ORE || type == Material.COAL_ORE || type == Material.REDSTONE_ORE || type == Material.EMERALD_ORE || type == Material.NETHER_QUARTZ_ORE || type == Material.GRASS || type == Material.STONE || type == Material.LAPIS_ORE
+                                || type == Material.GLOWSTONE )
                         {
                             if ( tool.containsEnchantment( Enchantment.LOOT_BONUS_BLOCKS ) )
                             {
@@ -405,8 +402,6 @@ public class DwarfBlockListener implements Listener
     /**
      * onBlockDamage used to accelerate how quickly blocks are destroyed. setDamage() not implemented yet
      */
-
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onBlockDamage( BlockDamageEvent event )
     {

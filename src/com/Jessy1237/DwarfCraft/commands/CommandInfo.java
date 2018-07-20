@@ -1,11 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft.commands;
@@ -30,6 +25,8 @@ public class CommandInfo extends Command
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
             System.out.println( "DC1: started command 'info'" );
+
+        plugin.getOut().info( sender );
         return true;
     }
 }

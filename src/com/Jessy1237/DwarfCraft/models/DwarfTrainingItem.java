@@ -10,69 +10,36 @@
 
 package com.Jessy1237.DwarfCraft.models;
 
-import java.util.Collections;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 
 public class DwarfTrainingItem
 {
-    private final ItemStack itemStack;
+    private final Set<Material> mats;
     private final double base;
     private final int max;
-    private final String tag;
 
-    public DwarfTrainingItem( ItemStack item, double base, int max, String tag )
+    public DwarfTrainingItem( Set<Material> mats, double base, int max )
     {
-        this.itemStack = item;
+        this.mats = mats;
         this.base = base;
         this.max = max;
-        this.tag = tag;
     }
 
     public boolean isTag() {
-        return ( this.tag != null && !this.tag.isEmpty() );
-    }
-
-    public Tag getTag()
-    {
-        //TODO: Support for checking the REGISTRY_ITEMS IF REGISTRY_BLOCKS FAILS
-        if ( isTag() )
-            return Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( this.tag ), Material.class );
-
-        return null;
+        return mats.size() > 1;
     }
 
     public ItemStack getItemStack()
     {
-        //TODO: Support for checking the REGISTRY_ITEMS IF REGISTRY_BLOCKS FAILS
-        if ( isTag() ) {
-            Tag tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( this.tag ), Material.class );
-            return new ItemStack( (Material) tag.getValues().iterator().next() );
-        }
-
-        return this.itemStack;
+        return new ItemStack(mats.iterator().next());
     }
-
-    public Set<Material> getMatchingMaterials()
+    
+    public Set<Material> getMaterials()
     {
-        if ( this.tag.equals( "" ) ) return Collections.emptySet();
-
-        // TODO 1.13: Check REGISTRY_ITEMS too!
-        Tag<Material> tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( this.tag ), Material.class );
-        return tag.getValues();
-    }
-
-    public boolean matchesTag( Material mat )
-    {
-        Set<Material> mats = getMatchingMaterials( );
-        if ( mats == null || mats.size() <= 0 )
-            return false;
-        return mats.contains( mat );
+        return mats;
     }
 
     public double getBase()
