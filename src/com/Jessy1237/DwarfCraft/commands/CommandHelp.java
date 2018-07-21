@@ -40,9 +40,7 @@ public class CommandHelp extends Command implements TabCompleter
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-        {
             System.out.println( "DC1: started command 'dchelp'" );
-        }
 
         sender.sendMessage( "Available Commands: " + String.join( ", ", COMMANDS ) );
         return true;
@@ -51,7 +49,7 @@ public class CommandHelp extends Command implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !plugin.isEnabled() )
             return null;
 
         final List<String> completions = new ArrayList<>( Arrays.asList( COMMANDS ) );

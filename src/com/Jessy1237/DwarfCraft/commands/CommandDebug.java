@@ -79,7 +79,7 @@ public class CommandDebug extends Command implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !plugin.isEnabled() )
             return null;
 
         if ( args[0].equalsIgnoreCase( "debug" ) && args.length >= 2 )

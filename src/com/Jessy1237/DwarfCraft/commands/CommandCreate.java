@@ -148,7 +148,7 @@ public class CommandCreate extends Command implements TabCompleter
                 npc.getTrait( DwarfTrainerTrait.class ).onSpawn();
 
                 // Adding the trainer to DwarfCraft DB
-                DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
+                DwarfTrainer trainer = new DwarfTrainer( plugin, npc );
                 plugin.getDataManager().trainerList.put( npc.getId(), trainer );
             }
             catch ( CommandException e )
@@ -163,7 +163,7 @@ public class CommandCreate extends Command implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !plugin.isEnabled() )
             return null;
 
         ArrayList<String> matches = new ArrayList<>();

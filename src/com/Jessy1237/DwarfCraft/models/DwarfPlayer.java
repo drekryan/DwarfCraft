@@ -103,7 +103,6 @@ public class DwarfPlayer
 
         if ( skill.getItem( 1 ).getItemStack().getType() != Material.AIR )
         {
-            System.out.println( skill.getItem( 1 ).getItemStack().getType() );
             totalCostStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount ) );
             costToLevelStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount - skill.getDeposit( 1 ) ) );
         }

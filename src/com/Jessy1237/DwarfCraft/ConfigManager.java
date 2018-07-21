@@ -763,7 +763,6 @@ public final class ConfigManager
 
         if ( item.getString( name ).startsWith( "#" ) )
         {
-            System.out.println( item.getString( name ).substring( 1 ).toLowerCase() );
             Tag<Material> tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
 
             if ( tag == null )
@@ -806,7 +805,6 @@ public final class ConfigManager
 
                 DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<>(), item1, item2, item3, Material.matchMaterial( item.getString( "Held" ) ) );
                 skillsArray.put( skill.getId(), skill );
-
             }
             return true;
         }

@@ -38,12 +38,11 @@ public class CommandSkillSheet extends Command
     @Override
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
+        if ( DwarfCraft.debugMessagesThreshold < 1 )
+            System.out.println( "DC1: started command 'skillsheet'" );
+
         try
         {
-            if ( DwarfCraft.debugMessagesThreshold < 1 )
-                System.out.println( "DC1: started command 'skillsheet'" );
-
-
             if ( args.length == 0 && sender instanceof Player )
             {
                 DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) sender );
