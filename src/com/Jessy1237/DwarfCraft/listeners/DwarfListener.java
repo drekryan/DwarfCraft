@@ -36,24 +36,7 @@ public class DwarfListener implements Listener
             String message = plugin.getConfigManager().getAnnouncementMessage().replace( PlaceHolder.PLAYER_NAME.getPlaceHolder(), name ).replace( PlaceHolder.SKILL_NAME.getPlaceHolder(), skill.getDisplayName() ).replace( PlaceHolder.SKILL_LEVEL.getPlaceHolder(), "" + skill.getLevel() ).replace( PlaceHolder.LEVEL.getPlaceHolder(), "" + skill.getLevel() );
 
             plugin.getOut().sendBroadcast( message );
-
-            if (player.isDwarfCraftDev() && !plugin.isAuraActive) {
-                plugin.getOut().sendBroadcast("&c[Trainer] I sense a strong presence of knowledge... It can't be! A DwarfCraft developer roams this world...");
-                plugin.getOut().sendBroadcast("&d&oThe trainers around the world get a burst of knowledge");
-
-                for (DwarfTrainer trainer : plugin.getDataManager().trainerList.values())
-                {
-                    if ( trainer != null && trainer.getLocation() != null ) {
-                        plugin.getServer().getScheduler().runTask( plugin, new AuraSpawnTask( plugin ) );
-                        trainer.getWorld().playSound( trainer.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 0.08f, 1.0f );
-                    }
-                }
-
-                plugin.isAuraActive = true;
-                plugin.getServer().getScheduler().runTaskLater( plugin, new CancelAuraTask( plugin ),1200 );
-            } else {
-                player.getPlayer().getWorld().spawnParticle( Particle.ENCHANTMENT_TABLE, player.getPlayer().getLocation(), 100 );
-            }
+            player.getPlayer().getWorld().spawnParticle( Particle.ENCHANTMENT_TABLE, player.getPlayer().getLocation(), 100 );
         }
     }
 

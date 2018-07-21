@@ -2,6 +2,7 @@ package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.HashMap;
 
+import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -62,6 +63,9 @@ public class DwarfPlayerListener implements Listener
 
         if ( plugin.getConfigManager().sendGreeting )
             plugin.getOut().welcome( dwarfPlayer );
+
+        if ( !event.getPlayer().hasPlayedBefore() && plugin.getConfigManager().spawnTutorialBook )
+            new CommandTutorial( plugin ).execute( event.getPlayer(), "", new String[] { "" } );
 
         if ( dwarfPlayer.isDwarfCraftDev() ) {
             plugin.getServer().getScheduler().runTaskLater( plugin, new AuraSpawnTask( plugin ), 10 );
