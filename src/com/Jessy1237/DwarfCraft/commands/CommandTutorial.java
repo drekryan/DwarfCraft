@@ -50,7 +50,7 @@ public class CommandTutorial extends Command
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'tutorial'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'tutorial'" );
 
         try
         {

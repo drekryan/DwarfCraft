@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -84,7 +85,7 @@ public final class ConfigManager
         {
             if ( !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() )
             {
-                plugin.getLogger().log( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
+                plugin.getUtil().consoleLog( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
             }
             else
@@ -104,7 +105,7 @@ public final class ConfigManager
         catch ( Exception e )
         {
             e.printStackTrace();
-            plugin.getLogger().log( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
+            plugin.getUtil().consoleLog( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
             plugin.getServer().getPluginManager().disablePlugin( plugin );
         }
 
@@ -173,7 +174,7 @@ public final class ConfigManager
             plugin.saveDefaultConfig();
             if ( !readConfigFile() )
             {
-                plugin.getLogger().log( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
+                plugin.getUtil().consoleLog( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
             }
 
@@ -191,7 +192,7 @@ public final class ConfigManager
         }
         catch ( Exception e )
         {
-            plugin.getLogger().log( Level.SEVERE, "Could not verify files: " + e.toString() );
+            plugin.getUtil().consoleLog( Level.SEVERE, "Could not verify files: " + e.toString() );
             e.printStackTrace();
         }
     }
@@ -214,7 +215,7 @@ public final class ConfigManager
 
     private boolean readConfigFile()
     {
-        plugin.getLogger().log( Level.INFO, "Reading config File: " + configDirectory + "config.yml" );
+        plugin.getUtil().consoleLog( Level.INFO, "Reading config File: " + ChatColor.AQUA + configDirectory + "config.yml" );
 
         skillLevelCommands = new ArrayList<>();
         skillMasteryCommands = new ArrayList<>();
@@ -252,7 +253,7 @@ public final class ConfigManager
     @SuppressWarnings( "resource" )
     private boolean readWorldFile()
     {
-        plugin.getLogger().log( Level.INFO, "Reading world blacklist file: " + configDirectory + "world-blacklist.config" );
+        plugin.getUtil().consoleLog( Level.INFO, "Reading world blacklist file: " + ChatColor.AQUA + configDirectory + "world-blacklist.config" );
 
         FileReader fr;
         try
@@ -300,7 +301,7 @@ public final class ConfigManager
 
     private boolean readEffectsFile()
     {
-        plugin.getLogger().log( Level.INFO, "Reading effects file: " + configDirectory + "effects.csv" );
+        plugin.getUtil().consoleLog( Level.INFO, "Reading effects file: " + ChatColor.AQUA + configDirectory + "effects.csv" );
         try
         {
             CSVReader csv = new CSVReader( configDirectory + "effects.csv" );
@@ -331,12 +332,12 @@ public final class ConfigManager
 
     private boolean readRacesFile()
     {
-        plugin.getLogger().log( Level.INFO, "Reading races file: " + configDirectory + "races.yml" );
+        plugin.getUtil().consoleLog( Level.INFO, "Reading races file: " + ChatColor.AQUA + configDirectory + "races.yml" );
 
         if ( vanilla )
         {
             raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all around balanced race (vanilla).", Material.GRASS ) );
-            plugin.getLogger().log( Level.INFO, "Loaded vanilla race: Vanilla" );
+            plugin.getUtil().consoleLog( Level.INFO, "Loaded vanilla race: Vanilla" );
         }
 
         FileConfiguration racesConfig = YamlConfiguration.loadConfiguration( new File( plugin.getDataFolder(), "races.yml" ) );
@@ -368,11 +369,11 @@ public final class ConfigManager
             if ( raceList.size() < maxAllowed )
             {
                 raceList.add( race );
-                plugin.getLogger().log( Level.INFO, "Loaded race: " + race.getName() );
+                plugin.getUtil().consoleLog( Level.INFO, "Loaded race: " + ChatColor.AQUA + race.getName() );
             }
             else
             {
-                plugin.getLogger().log( Level.WARNING, "Did not load race: " + race.getName() + " as already at cap of " + maxAllowed + " races" );
+                plugin.getUtil().consoleLog( Level.WARNING, "Did not load race: " + race.getName() + " as already at cap of " + maxAllowed + " races" );
             }
         }
 
@@ -391,7 +392,7 @@ public final class ConfigManager
 
     private boolean readMessagesFile()
     {
-        plugin.getLogger().log( Level.INFO, "Reading messages file: " + configDirectory + "messages.config" );
+        plugin.getUtil().consoleLog( Level.INFO, "Reading messages file: " + ChatColor.AQUA + configDirectory + "messages.config" );
 
         // Loads the messages class after the config is read but before all the
         // messages are read.
@@ -433,7 +434,7 @@ public final class ConfigManager
 
                 if ( message == null )
                 {
-                    plugin.getLogger().log( Level.WARNING, "Null Message: " + name + ", " + message );
+                    plugin.getUtil().consoleLog( Level.WARNING, "Null Message: " + name + ", " + message );
                 }
                 else
                 {
@@ -590,7 +591,7 @@ public final class ConfigManager
 
                                 if ( !foundEndTag )
                                 {
-                                    plugin.getLogger().log( Level.SEVERE, "Unable to find the ending Tutorial XML tag. Using default tutorial." );
+                                    plugin.getUtil().consoleLog( Level.SEVERE, "Unable to find the ending Tutorial XML tag. Using default tutorial." );
                                 }
                                 else
                                 {
@@ -599,7 +600,7 @@ public final class ConfigManager
                             }
                             else
                             {
-                                plugin.getLogger().log( Level.SEVERE, "Unable to find the opening Tutorial XML tag. Using default tutorial." );
+                                plugin.getUtil().consoleLog( Level.SEVERE, "Unable to find the opening Tutorial XML tag. Using default tutorial." );
                             }
 
                             if ( !tutorial.isEmpty() )
@@ -608,7 +609,7 @@ public final class ConfigManager
                     }
                     else
                     {
-                        plugin.getLogger().log( Level.WARNING, "Null Message: " + name + ", " + message );
+                        plugin.getUtil().consoleLog( Level.WARNING, "Null Message: " + name + ", " + message );
                     }
                 }
                 line = br.readLine();
@@ -729,7 +730,7 @@ public final class ConfigManager
             int finalIndex = pages.indexOf( "</PAGE>", 0 );
             if ( startIndex == -1 || finalIndex == -1 )
             {
-                plugin.getLogger().log( Level.SEVERE, "Could not find the Page XML tags. Stopped adding tutorial pages after page number " + numPages );
+                plugin.getUtil().consoleLog( Level.SEVERE, "Could not find the Page XML tags. Stopped adding tutorial pages after page number " + numPages );
                 break;
             }
 
@@ -781,7 +782,7 @@ public final class ConfigManager
 
     private boolean readSkillsFile()
     {
-        plugin.getLogger().log( Level.INFO, "Reading skills file: " + configDirectory + "skills.csv" );
+        plugin.getUtil().consoleLog( Level.INFO, "Reading skills file: " + ChatColor.AQUA + configDirectory + "skills.csv" );
         try
         {
             CSVReader csv = new CSVReader( configDirectory + "skills.csv" );
@@ -795,7 +796,7 @@ public final class ConfigManager
 
                 if ( mats1.isEmpty() || mats2.isEmpty() || mats3.isEmpty() ) //Skip the Skill if the tag reading fails TODO: Improve the error msg
                 {
-                    plugin.getLogger().log( Level.INFO, "Skipping skill " + item.getString( "Name" + " as couldn't find one of the tags" ));
+                    plugin.getUtil().consoleLog( Level.INFO, "Skipping skill " + item.getString( "Name" + " as couldn't find one of the tags" ));
                     continue;
                 }
 

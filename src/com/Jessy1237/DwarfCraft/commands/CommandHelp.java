@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,7 @@ public class CommandHelp extends Command implements TabCompleter
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'dchelp'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'dchelp'" );
 
         sender.sendMessage( "Available Commands: " + String.join( ", ", COMMANDS ) );
         return true;

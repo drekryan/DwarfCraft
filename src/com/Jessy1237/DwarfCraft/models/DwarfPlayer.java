@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -68,7 +69,7 @@ public class DwarfPlayer
         // Creates an ordered list of skill levels and finds where in that
         // list the skill is (what quartile)
         if ( DwarfCraft.debugMessagesThreshold < 0 )
-            System.out.println( "DC0: starting skill ordering for quartiles" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC0: starting skill ordering for quartiles" );
         for ( DwarfSkill s : getSkills().values() )
         {
             if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )

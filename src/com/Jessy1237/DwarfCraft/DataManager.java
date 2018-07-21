@@ -476,7 +476,7 @@ public class DataManager
             {
                 id = i;
                 if ( DwarfCraft.debugMessagesThreshold < 5 )
-                    System.out.println( "DC5:Removed DwarfVehicle from vehicleList" );
+                    plugin.getUtil().consoleLog( Level.FINE, "DC5:Removed DwarfVehicle from vehicleList" );
             }
         }
         if ( id != -1 )

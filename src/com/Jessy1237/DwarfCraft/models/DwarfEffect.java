@@ -11,6 +11,7 @@
 package com.Jessy1237.DwarfCraft.models;
 
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -237,7 +238,7 @@ public class DwarfEffect
 
         if ( DwarfCraft.debugMessagesThreshold < 1 )
         {
-            System.out.println( String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
+            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
                     + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
         }
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
@@ -501,7 +502,7 @@ public class DwarfEffect
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
 
         if ( DwarfCraft.debugMessagesThreshold < 2 )
-            System.out.println( String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, tool.getDurability(), base, wear ) );
+            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, tool.getDurability(), base, wear ) );
 
         // Some code taken from net.minecraft.server.ItemStack line 165.
         // Checks to see if damage should be skipped.

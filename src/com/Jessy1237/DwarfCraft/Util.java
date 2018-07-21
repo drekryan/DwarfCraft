@@ -11,7 +11,9 @@
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -38,6 +40,20 @@ public class Util
     public Util( DwarfCraft plugin )
     {
         this.plugin = plugin;
+    }
+
+    public void consoleLog( Level logLevel, String message )
+    {
+        ChatColor color = ChatColor.WHITE;
+
+        if ( logLevel == Level.SEVERE )
+            color = ChatColor.RED;
+        else if ( logLevel == Level.WARNING )
+            color = ChatColor.GOLD;
+        else if ( logLevel == Level.FINE )
+            color = ChatColor.LIGHT_PURPLE;
+
+        plugin.getServer().getConsoleSender().sendMessage( ChatColor.YELLOW + "[" + plugin.getName() + "] " + color + message );
     }
 
     // Stolen from nossr50

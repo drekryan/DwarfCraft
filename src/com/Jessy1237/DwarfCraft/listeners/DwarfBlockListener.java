@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -349,7 +350,7 @@ public class DwarfBlockListener implements Listener
                             return;
 
                         if ( DwarfCraft.debugMessagesThreshold < 6 )
-                            System.out.println( "Debug: dropped " + item.toString() );
+                            plugin.getUtil().consoleLog( Level.FINE, "Debug: dropped " + item.toString() );
 
                         for ( ItemStack i : e.getAlteredItems() )
                         {
@@ -426,13 +427,13 @@ public class DwarfBlockListener implements Listener
                 if ( e.getEffectType() == DwarfEffectType.DIGTIME && e.checkInitiator( mat ) && e.checkTool( tool ) )
                 {
                     if ( DwarfCraft.debugMessagesThreshold < 2 )
-                        System.out.println( "DC2: started instamine check" );
+                        plugin.getUtil().consoleLog( Level.FINE, "DC2: started instamine check" );
 
                     if ( plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) ) == 0 )
                         return;
 
                     if ( DwarfCraft.debugMessagesThreshold < 3 )
-                        System.out.println( "DC3: Insta-mine occured. Block: " + mat );
+                        plugin.getUtil().consoleLog( Level.FINE, "DC3: Insta-mine occured. Block: " + mat );
 
                     DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, null, null, null, null, null, null, null, event.getBlock(), null );
                     plugin.getServer().getPluginManager().callEvent( ev );

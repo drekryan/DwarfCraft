@@ -10,6 +10,8 @@
 
 package com.Jessy1237.DwarfCraft.listeners;
 
+import java.util.logging.Level;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
@@ -81,7 +83,7 @@ public class DwarfVehicleListener implements Listener
                                 return;
 
                             if ( DwarfCraft.debugMessagesThreshold < 6 )
-                                System.out.println( "Debug: dropped " + drop.toString() );
+                                plugin.getUtil().consoleLog( Level.FINE, "Debug: dropped " + drop.toString() );
 
                             for ( ItemStack i : ev.getAlteredItems() )
                             {
@@ -118,7 +120,7 @@ public class DwarfVehicleListener implements Listener
             return;
         plugin.getDataManager().addVehicle( new DwarfVehicle( event.getVehicle() ) );
         if ( DwarfCraft.debugMessagesThreshold < 6 )
-            System.out.println( "DC6:Added DwarfVehicle to vehicleList" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC6:Added DwarfVehicle to vehicleList" );
     }
 
     @EventHandler( priority = EventPriority.NORMAL )

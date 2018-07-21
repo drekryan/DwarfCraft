@@ -12,6 +12,7 @@ package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -73,7 +74,7 @@ public class DwarfEntityListener implements Listener
         {
             if ( DwarfCraft.debugMessagesThreshold < -1 && !event.isCancelled() )
             {
-                System.out.println( "DC-1: Damage Event: " + event.getCause() );
+                plugin.getUtil().consoleLog( Level.FINE, "DC-1: Damage Event: " + event.getCause() );
             }
             onEntityDamagedByEnvirons( event );
 
@@ -213,12 +214,12 @@ public class DwarfEntityListener implements Listener
         {
             victim = ( LivingEntity ) event.getEntity();
             if ( DwarfCraft.debugMessagesThreshold < 0 )
-                System.out.println( "DC0: victim is living " );
+                plugin.getUtil().consoleLog( Level.FINE, "DC0: victim is living " );
         }
         else
         {
             if ( DwarfCraft.debugMessagesThreshold < 0 )
-                System.out.println( "DC0: victim is unliving " );
+                plugin.getUtil().consoleLog( Level.FINE, "DC0: victim is unliving " );
             return;
         }
 
@@ -229,7 +230,7 @@ public class DwarfEntityListener implements Listener
         {
             isPVP = true;
             if ( DwarfCraft.debugMessagesThreshold < 1 )
-                System.out.println( "DC1: EDBE is PVP" );
+                plugin.getUtil().consoleLog( Level.FINE, "DC1: EDBE is PVP" );
         }
 
         double damage = event.getDamage();
@@ -243,7 +244,7 @@ public class DwarfEntityListener implements Listener
         else
         {// EvP no effects, EvE no effects
             if ( DwarfCraft.debugMessagesThreshold < 4 )
-                System.out.println( String.format( "DC4: EVP %s attacked %s for %lf of %d\r\n", damager.getClass().getSimpleName(), victim.getClass().getSimpleName(), damage, hp ) );
+                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC4: EVP %s attacked %s for %lf of %d\r\n", damager.getClass().getSimpleName(), victim.getClass().getSimpleName(), damage, hp ) );
             if ( !( event.getEntity() instanceof Player ) )
             {
                 event.setDamage( Origdamage );
@@ -294,7 +295,7 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        System.out.println( String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
 
@@ -313,7 +314,7 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        System.out.println( String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
             }
@@ -413,7 +414,7 @@ public class DwarfEntityListener implements Listener
                         if ( event.getDamage() <= e.getEffectAmount( dCPlayer ) )
                         {
                             if ( DwarfCraft.debugMessagesThreshold < 1 )
-                                System.out.println( "DC1: Damage less than fall threshold" );
+                                plugin.getUtil().consoleLog( Level.FINE, "DC1: Damage less than fall threshold" );
                             event.setCancelled( true );
                         }
                     }
@@ -432,7 +433,7 @@ public class DwarfEntityListener implements Listener
             }
             if ( DwarfCraft.debugMessagesThreshold < 1 )
             {
-                System.out.println( String.format( "DC1: environment damage type: %s base damage: %lf new damage: %.2lf\r\n", event.getCause(), event.getDamage(), damage ) );
+                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: environment damage type: %s base damage: %lf new damage: %.2lf\r\n", event.getCause(), event.getDamage(), damage ) );
             }
             event.setDamage( damage );
             if ( damage == 0 )
@@ -478,7 +479,7 @@ public class DwarfEntityListener implements Listener
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
                             {
-                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
+                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
                             }
 
                             if ( changed == false )
@@ -508,7 +509,7 @@ public class DwarfEntityListener implements Listener
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
                             {
-                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
+                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
                             }
 
                             boolean added = false;

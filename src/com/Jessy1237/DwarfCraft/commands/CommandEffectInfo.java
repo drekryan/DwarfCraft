@@ -12,6 +12,7 @@ package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,7 @@ public class CommandEffectInfo extends Command
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'effectinfo'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'effectinfo'" );
 
         if ( args.length == 0 )
         {

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -47,7 +48,7 @@ public class CommandCreate extends Command implements TabCompleter
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'create'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'create'" );
 
         if ( args.length == 0 || args[0].equals( null ) )
         {

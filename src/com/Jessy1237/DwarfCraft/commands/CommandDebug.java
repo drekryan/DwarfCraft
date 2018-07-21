@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -55,14 +56,14 @@ public class CommandDebug extends Command implements TabCompleter
                 List<Object> outputList = null;
 
                 if ( DwarfCraft.debugMessagesThreshold < 1 )
-                    System.out.println( "DC1: started command 'debug'" );
+                    plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'debug'" );
 
                 Integer i = 0;
                 desiredArguments.add( i );
                 outputList = parser.parse( desiredArguments, false );
 
                 DwarfCraft.debugMessagesThreshold = ( Integer ) outputList.get( 0 );
-                System.out.println( "*** DC DEBUG LEVEL CHANGED TO " + DwarfCraft.debugMessagesThreshold + " ***" );
+                plugin.getUtil().consoleLog( Level.FINE, "*** DC DEBUG LEVEL CHANGED TO " + DwarfCraft.debugMessagesThreshold + " ***" );
                 if ( sender instanceof Player )
                     plugin.getOut().sendMessage( sender, "Debug messaging level set to " + DwarfCraft.debugMessagesThreshold );
             }

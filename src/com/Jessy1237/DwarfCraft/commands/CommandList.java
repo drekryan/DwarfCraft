@@ -11,6 +11,7 @@
 package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.Collection;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -38,7 +39,7 @@ public class CommandList extends Command
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'list'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'list'" );
 
         int page = 1;
 

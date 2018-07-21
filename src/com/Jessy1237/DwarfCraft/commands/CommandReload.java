@@ -10,6 +10,8 @@
 
 package com.Jessy1237.DwarfCraft.commands;
 
+import java.util.logging.Level;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,11 +42,11 @@ public class CommandReload extends Command
         else
         {
             if ( DwarfCraft.debugMessagesThreshold < 1 )
-                System.out.println( "DC1: started command 'reload'" );
+                plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'reload'" );
 
             if ( sender instanceof Player )
                 plugin.getOut().sendMessage( sender, "&aReloading DwarfCraft..." );
-            System.out.println( "[DwarfCraft] Reloading..." );
+            plugin.getUtil().consoleLog( Level.FINE, "[DwarfCraft] Reloading..." );
 
             plugin.getConfigManager().clearCommands();
             plugin.onDisable();
@@ -53,7 +55,7 @@ public class CommandReload extends Command
 
             if ( sender instanceof Player )
                 plugin.getOut().sendMessage( sender, "&aReload complete" );
-            System.out.println( "[DwarfCraft] Reload complete" );
+            plugin.getUtil().consoleLog( Level.FINE, "[DwarfCraft] Reload complete" );
         }
         return true;
     }

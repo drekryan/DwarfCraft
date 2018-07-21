@@ -241,7 +241,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( name.equalsIgnoreCase( "dwarfcraft" ) && this.isEnabled() )
         {
-            System.out.println("UH OH CALLED");
             if ( hasNorm || hasAll )
             {
                 if ( args.length == 0 )
@@ -348,8 +347,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( pm.getPlugin( "Vault" ) == null || !pm.getPlugin( "Vault" ).isEnabled() )
         {
-            getLogger().log( Level.SEVERE, "Something went wrong! Couldn't find Vault!" );
-            getLogger().log( Level.SEVERE, "Disabling DwarfCraft..." );
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Vault!" );
+            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
             pm.disablePlugin( this );
             return;
         }
@@ -361,14 +360,14 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         }
         catch ( Exception e )
         {
-            getLogger().log( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
 
         if ( !isPermissionEnabled() )
         {
-            getLogger().log( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
@@ -377,12 +376,12 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( pm.getPlugin( "Citizens" ) == null || !pm.getPlugin( "Citizens" ).isEnabled() )
         {
-            getLogger().log( Level.SEVERE, "Something went wrong! Couldn't find Citizens!" );
-            getLogger().log( Level.SEVERE, "Disabling DwarfCraft..." );
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Citizens!" );
+            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
             pm.disablePlugin( this );
             return;
         }
-        getLogger().log( Level.INFO, "Success! Hooked into Citizens!" );
+        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into Citizens!" );
         npcr = CitizensAPI.getNPCRegistry();
 
         dm = new DataManager( this, cm );
@@ -427,17 +426,17 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         if ( pm.getPlugin( "LogBlock" ) != null )
         {
             consumer = ( ( LogBlock ) pm.getPlugin( "LogBlock" ) ).getConsumer();
-            getLogger().log( Level.INFO, "Hooked into LogBlock!" );
+            getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into LogBlock!" );
         }
 
         if ( pm.getPlugin( "PlaceholderAPI" ) != null )
         {
             placeHolderParser.hookAPI();
-            getLogger().log( Level.INFO, "Hooked into PlaceholderAPI!" );
+            getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into PlaceholderAPI!" );
         }
 
         if ( isEnabled() ) initCommands();
 
-        getLogger().log( Level.INFO, getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
+        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + getDescription().getName() + " " + getDescription().getVersion() + " is enabled!" );
     }
 }

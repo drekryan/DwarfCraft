@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -45,7 +46,7 @@ public class CommandSetSkill extends Command implements TabCompleter
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'setskill'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'setskill'" );
 
         if ( args.length == 0 )
         {
