@@ -106,13 +106,13 @@ public class DwarfEffect
         mType = DwarfEffectType.getEffectType( record.getString( "Type" ) );
         if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR || record.getString( "OriginMaterial" ).equalsIgnoreCase( "AIR" ) )
         {
-            mInitiator = plugin.getConfigManager().getDwarfItemHolder( record, "OriginMaterial" );
+            mInitiator = plugin.getUtil().getDwarfItemHolder( record, "OriginMaterial" );
         }
         else
         {
             mCreature = EntityType.valueOf( record.getString( "OriginMaterial" ) );
         }
-        mResult = plugin.getConfigManager().getDwarfItemHolder( record, "OutputMaterial" );
+        mResult = plugin.getUtil().getDwarfItemHolder( record, "OutputMaterial" );
         mRequireTool = record.getBool( "RequireTool" );
         mFloorResult = record.getBool( "Floor" );
 

@@ -6,16 +6,22 @@
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jbls.LexManos.CSV.CSVRecord;
 
 import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfItemHolder;
@@ -107,6 +113,38 @@ public class Util
                 retval = retval + str.charAt( i );
         }
         return retval;
+    }
+
+    /**
+     * Gets the DwarfItemHolder from the csv record item data.
+     * 
+     * @param item The CSVRecord being read from
+     * @param name The name of the Item being found
+     * @return A dwarf item holder but can return an empty dwarf item holder
+     */
+    public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
+    {
+        Set<Material> mats = new HashSet<>();
+        Tag<Material> tag = null;
+
+        if ( item.getString( name ).startsWith( "#" ) )
+        {
+            tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+
+            if ( tag == null )
+            {
+                tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+            }
+
+            if ( tag != null )
+                mats = tag.getValues();
+        }
+        else
+        {
+            mats.add( parseItem( item.getString( name ) ).getType() );
+        }
+
+        return new DwarfItemHolder( mats, tag );
     }
 
     public ItemStack parseItem( String info )

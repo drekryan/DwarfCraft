@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
@@ -23,8 +22,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -752,38 +749,6 @@ public final class ConfigManager
         return tutorial;
     }
 
-    /**
-     * Gets the DwarfItemHolder from the csv record item data.
-     * 
-     * @param item The CSVRecord being read from
-     * @param name The name of the Item being found
-     * @return A dwarf item holder but can return an empty dwarf item holder
-     */
-    public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
-    {
-        Set<Material> mats = new HashSet<>();
-        Tag<Material> tag = null;
-
-        if ( item.getString( name ).startsWith( "#" ) )
-        {
-            tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
-
-            if ( tag == null )
-            {
-                tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
-            }
-
-            if ( tag != null )
-                mats = tag.getValues();
-        }
-        else
-        {
-            mats.add( plugin.getUtil().parseItem( item.getString( name ) ).getType() );
-        }
-
-        return new DwarfItemHolder(mats, tag);
-    }
-
     private boolean readSkillsFile()
     {
         plugin.getUtil().consoleLog( Level.INFO, "Reading skills file: " + ChatColor.AQUA + configDirectory + "skills.csv" );
@@ -794,9 +759,9 @@ public final class ConfigManager
             while ( records.hasNext() )
             {
                 CSVRecord item = records.next();
-                DwarfItemHolder dih1 = getDwarfItemHolder( item, "Item1" );
-                DwarfItemHolder dih2 = getDwarfItemHolder( item, "Item2" );
-                DwarfItemHolder dih3 = getDwarfItemHolder( item, "Item3" );
+                DwarfItemHolder dih1 = plugin.getUtil().getDwarfItemHolder( item, "Item1" );
+                DwarfItemHolder dih2 = plugin.getUtil().getDwarfItemHolder( item, "Item2" );
+                DwarfItemHolder dih3 = plugin.getUtil().getDwarfItemHolder( item, "Item3" );
 
                 if ( dih1.getMaterials().isEmpty() || dih1.getMaterials().isEmpty() || dih1.getMaterials().isEmpty() ) // Skip the Skill if the tag reading fails TODO: Improve the error msg
                 {
