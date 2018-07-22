@@ -34,6 +34,7 @@ import org.jbls.LexManos.CSV.CSVRecord;
 import com.Jessy1237.DwarfCraft.events.DwarfLoadRacesEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLoadSkillsEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
+import com.Jessy1237.DwarfCraft.models.DwarfItemHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
@@ -752,22 +753,24 @@ public final class ConfigManager
     }
 
     /**
-     * Gets the set of Materials for the DwarfTrainingItem. The set contains all materials that are accepted for training (equivalent items from the tag)
+     * Gets the DwarfItemHolder from the csv record item data.
      * 
      * @param item The CSVRecord being read from
      * @param name The name of the Item being found
-     * @return Set of materials that are accepted for training or an empty set if an error occurred finding the tag.
+     * @return A dwarf item holder but can return an empty dwarf item holder
      */
-    private Set<Material> getMaterials( CSVRecord item, String name )
+    public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
     {
         Set<Material> mats = new HashSet<>();
+        Tag<Material> tag = null;
 
         if ( item.getString( name ).startsWith( "#" ) )
         {
-            Tag<Material> tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+            tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
 
-            if ( tag == null ) {
-                tag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft(item.getString(name).substring(1).toLowerCase()), Material.class);
+            if ( tag == null )
+            {
+                tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
             }
 
             if ( tag != null )
@@ -778,7 +781,7 @@ public final class ConfigManager
             mats.add( plugin.getUtil().parseItem( item.getString( name ) ).getType() );
         }
 
-        return mats;
+        return new DwarfItemHolder(mats, tag);
     }
 
     private boolean readSkillsFile()
@@ -791,19 +794,19 @@ public final class ConfigManager
             while ( records.hasNext() )
             {
                 CSVRecord item = records.next();
-                Set<Material> mats1 = getMaterials( item, "Item1" );
-                Set<Material> mats2 = getMaterials( item, "Item2" );
-                Set<Material> mats3 = getMaterials( item, "Item3" );
+                DwarfItemHolder dih1 = getDwarfItemHolder( item, "Item1" );
+                DwarfItemHolder dih2 = getDwarfItemHolder( item, "Item2" );
+                DwarfItemHolder dih3 = getDwarfItemHolder( item, "Item3" );
 
-                if ( mats1.isEmpty() || mats2.isEmpty() || mats3.isEmpty() ) //Skip the Skill if the tag reading fails TODO: Improve the error msg
+                if ( dih1.getMaterials().isEmpty() || dih1.getMaterials().isEmpty() || dih1.getMaterials().isEmpty() ) // Skip the Skill if the tag reading fails TODO: Improve the error msg
                 {
-                    plugin.getUtil().consoleLog( Level.INFO, "Skipping skill " + item.getString( "Name" + " as couldn't find one of the tags" ));
+                    plugin.getUtil().consoleLog( Level.INFO, "Skipping skill " + item.getString( "Name" + " as couldn't find one of the tags" ) );
                     continue;
                 }
 
-                DwarfTrainingItem item1 = new DwarfTrainingItem( mats1, item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) );
-                DwarfTrainingItem item2 = new DwarfTrainingItem( mats2, item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) );
-                DwarfTrainingItem item3 = new DwarfTrainingItem( mats3, item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) );
+                DwarfTrainingItem item1 = new DwarfTrainingItem( dih1, item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) );
+                DwarfTrainingItem item2 = new DwarfTrainingItem( dih2, item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) );
+                DwarfTrainingItem item3 = new DwarfTrainingItem( dih3, item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) );
 
                 DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<>(), item1, item2, item3, Material.matchMaterial( item.getString( "Held" ) ) );
                 skillsArray.put( skill.getId(), skill );

@@ -63,20 +63,20 @@ public class TrainerGUI extends DwarfGUI
             for (int i = 1; i <= 3; i++)
             {
                 DwarfTrainingItem item = skill.getItem( i );
-                if ( item == null || item.getItemStack() == null || item.getItemStack().getType() == Material.AIR ) continue;
+                if ( item == null || item.getDwarfItemHolder().getItemStack() == null || item.getDwarfItemHolder().getItemStack().getType() == Material.AIR ) continue;
 
-                if ( item.isTag() )
+                if ( item.getDwarfItemHolder().isTagged() )
                 {
-                    if ( item.getMaterials().contains( costStack.getType() ) )
+                    if ( item.getDwarfItemHolder().getMaterials().contains( costStack.getType() ) )
                     {
                         costStack.setAmount( 1 );
                         addItem( null, lore, guiIndex, costStack );
-                        timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask(dwarfPlayer, skill, costStack, guiIndex, skill.getItem( i ).getMaterials()), 10, 25 );
+                        timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask(dwarfPlayer, skill, costStack, guiIndex, skill.getItem( i ).getDwarfItemHolder().getMaterials()), 10, 25 );
                         guiIndex++;
                         break;
                     }
                 }
-                else if ( item.getItemStack().getType() == costStack.getType() )
+                else if ( item.getDwarfItemHolder().getItemStack().getType() == costStack.getType() )
                 {
                     costStack.setAmount( 1 );
                     addItem( null, lore, guiIndex, costStack );

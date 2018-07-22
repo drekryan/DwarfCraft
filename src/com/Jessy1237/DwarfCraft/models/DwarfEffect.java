@@ -1,11 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft.models;
@@ -85,8 +80,8 @@ public class DwarfEffect
     private double mExceptionValue;
     private int mNormalLevel;
     private DwarfEffectType mType;
-    private ItemStack mInitiator;
-    private ItemStack mResult;
+    private DwarfItemHolder mInitiator;
+    private DwarfItemHolder mResult;
     private boolean mRequireTool;
     private Material[] mTools;
     private boolean mFloorResult;
@@ -111,13 +106,13 @@ public class DwarfEffect
         mType = DwarfEffectType.getEffectType( record.getString( "Type" ) );
         if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR || record.getString( "OriginMaterial" ).equalsIgnoreCase( "AIR" ) )
         {
-            mInitiator = plugin.getUtil().parseItem( record.getString( "OriginMaterial" ) );
+            mInitiator = plugin.getConfigManager().getDwarfItemHolder( record, "OriginMaterial" );
         }
         else
         {
             mCreature = EntityType.valueOf( record.getString( "OriginMaterial" ) );
         }
-        mResult = plugin.getUtil().parseItem( record.getString( "OutputMaterial" ) );
+        mResult = plugin.getConfigManager().getDwarfItemHolder( record, "OutputMaterial" );
         mRequireTool = record.getBool( "RequireTool" );
         mFloorResult = record.getBool( "Floor" );
 
@@ -261,20 +256,20 @@ public class DwarfEffect
 
     public Material getInitiatorMaterial()
     {
-        return ( mInitiator == null ? null : mInitiator.getType() );
+        return ( mInitiator.getItemStack() == null ? null : mInitiator.getItemStack().getType() );
     }
 
     public Material getOutputMaterial()
     {
-        return ( mResult == null ? null : mResult.getType() );
+        return ( mResult.getItemStack() == null ? null : mResult.getItemStack().getType() );
     }
 
-    public ItemStack getInitiator()
+    public DwarfItemHolder getInitiator()
     {
         return mInitiator;
     }
 
-    public ItemStack getResult()
+    public DwarfItemHolder getResult()
     {
         return mResult;
     }
@@ -289,10 +284,17 @@ public class DwarfEffect
         final int count = plugin.getUtil().randomAmount( getEffectAmount( player ) );
         ItemStack item;
 
-        //TODO: 1.13 Check Tags
+        // TODO: Double check this method works
         if ( oldMat == Material.AIR )
         {
-            item = new ItemStack( mResult.getType(), count );
+            if ( mResult.getMaterials().contains( oldMat ) && mResult.isTagged() )
+            {
+                item = new ItemStack( oldMat, count );
+            }
+            else
+            {
+                item = new ItemStack( mResult.getMaterials().iterator().next(), count );
+            }
         }
         else
         {
@@ -321,9 +323,9 @@ public class DwarfEffect
 
     public boolean checkInitiator( Material mat )
     {
-        //TODO 1.13 Support Tags
+        // TODO 1.13 Support Tags
 
-        return mInitiator.getType() == mat;
+        return mInitiator.isTagged() ? ( mInitiator.getMaterials().contains( mat ) ) : ( mInitiator.getItemStack().getType() == mat );
     }
 
     /**

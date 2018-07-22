@@ -1,45 +1,26 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft.models;
 
-import java.util.Set;
-
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
 public class DwarfTrainingItem
 {
-    private final Set<Material> mats;
+    private final DwarfItemHolder dih;
     private final double base;
     private final int max;
 
-    public DwarfTrainingItem( Set<Material> mats, double base, int max )
+    public DwarfTrainingItem( DwarfItemHolder dih, double base, int max )
     {
-        this.mats = mats;
+        this.dih = dih;
         this.base = base;
         this.max = max;
     }
 
-    public boolean isTag() {
-        return mats.size() > 1;
-    }
-
-    public ItemStack getItemStack()
+    public DwarfItemHolder getDwarfItemHolder()
     {
-        return new ItemStack(mats.iterator().next());
-    }
-    
-    public Set<Material> getMaterials()
-    {
-        return mats;
+        return dih;
     }
 
     public double getBase()

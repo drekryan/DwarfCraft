@@ -102,21 +102,21 @@ public class DwarfPlayer
         int item2Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.getItem( 2 ).getBase() * multiplier - .01 ), skill.getItem( 2 ).getMax() ) );
         int item3Amount = ( ( int ) Math.min( Math.ceil( ( skill.getLevel() + 1 ) * skill.getItem( 3 ).getBase() * multiplier - .01 ), skill.getItem( 3 ).getMax() ) );
 
-        if ( skill.getItem( 1 ).getItemStack().getType() != Material.AIR )
+        if ( skill.getItem( 1 ).getDwarfItemHolder().getItemStack().getType() != Material.AIR )
         {
-            totalCostStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount ) );
-            costToLevelStack.add( 0, new ItemStack( skill.getItem( 1 ).getItemStack().getType(), item1Amount - skill.getDeposit( 1 ) ) );
+            totalCostStack.add( 0, new ItemStack( skill.getItem( 1 ).getDwarfItemHolder().getItemStack().getType(), item1Amount ) );
+            costToLevelStack.add( 0, new ItemStack( skill.getItem( 1 ).getDwarfItemHolder().getItemStack().getType(), item1Amount - skill.getDeposit( 1 ) ) );
         }
 
-        if ( skill.getItem( 2 ).getItemStack().getType() != Material.AIR )
+        if ( skill.getItem( 2 ).getDwarfItemHolder().getItemStack().getType() != Material.AIR )
         {
-            totalCostStack.add( 1, new ItemStack( skill.getItem( 2 ).getItemStack().getType(), item2Amount ) );
-            costToLevelStack.add( 1, new ItemStack( skill.getItem( 2 ).getItemStack().getType(), item2Amount - skill.getDeposit( 2 ) ) );
+            totalCostStack.add( 1, new ItemStack( skill.getItem( 2 ).getDwarfItemHolder().getItemStack().getType(), item2Amount ) );
+            costToLevelStack.add( 1, new ItemStack( skill.getItem( 2 ).getDwarfItemHolder().getItemStack().getType(), item2Amount - skill.getDeposit( 2 ) ) );
         }
-        if ( skill.getItem( 3 ).getItemStack().getType() != Material.AIR )
+        if ( skill.getItem( 3 ).getDwarfItemHolder().getItemStack().getType() != Material.AIR )
         {
-            totalCostStack.add( 2, new ItemStack( skill.getItem( 3 ).getItemStack().getType(), item3Amount ) );
-            costToLevelStack.add( 2, new ItemStack( skill.getItem( 3 ).getItemStack().getType(), item3Amount - skill.getDeposit( 3 ) ) );
+            totalCostStack.add( 2, new ItemStack( skill.getItem( 3 ).getDwarfItemHolder().getItemStack().getType(), item3Amount ) );
+            costToLevelStack.add( 2, new ItemStack( skill.getItem( 3 ).getDwarfItemHolder().getItemStack().getType(), item3Amount - skill.getDeposit( 3 ) ) );
         }
         List<List<ItemStack>> costs = new ArrayList<>();
 

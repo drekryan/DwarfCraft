@@ -1,11 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft;
@@ -23,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
+import com.Jessy1237.DwarfCraft.models.DwarfItemHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
@@ -124,6 +120,17 @@ public class Util
     }
 
     /**
+     * Gets the official clean name of the Item Holder
+     * 
+     * @param dih The DwarfItemHolder to get the clean name of
+     * @return A clean name for the Dwarf Item Holder
+     */
+    public String getCleanName( DwarfItemHolder dih )
+    {
+        return dih.isTagged() ? ( cleanEnumString( dih.getTag().toString() ) ) : ( getCleanName( dih.getItemStack() ) );
+    }
+
+    /**
      * Gets the official clean name of the item
      * 
      * @param item The item to get the clean name of
@@ -131,7 +138,8 @@ public class Util
      */
     public String getCleanName( ItemStack item )
     {
-        if ( item == null ) item = new ItemStack( Material.AIR );
+        if ( item == null )
+            item = new ItemStack( Material.AIR );
         return cleanEnumString( item.getType().toString() );
     }
 
@@ -144,8 +152,8 @@ public class Util
     public boolean isTool( Material mat )
     {
         if ( mat == Material.IRON_SHOVEL || mat == Material.IRON_AXE || mat == Material.IRON_PICKAXE || mat == Material.IRON_SWORD || mat == Material.WOODEN_SWORD || mat == Material.WOODEN_SHOVEL || mat == Material.WOODEN_PICKAXE || mat == Material.WOODEN_AXE || mat == Material.STONE_SWORD
-                || mat == Material.STONE_SHOVEL || mat == Material.STONE_PICKAXE || mat == Material.STONE_AXE || mat == Material.DIAMOND_SWORD || mat == Material.DIAMOND_SHOVEL || mat == Material.DIAMOND_PICKAXE || mat == Material.DIAMOND_AXE || mat == Material.GOLDEN_SWORD || mat == Material.GOLDEN_SHOVEL
-                || mat == Material.GOLDEN_PICKAXE || mat == Material.GOLDEN_AXE || mat == Material.WOODEN_HOE || mat == Material.STONE_HOE || mat == Material.IRON_HOE || mat == Material.DIAMOND_HOE || mat == Material.GOLDEN_HOE || mat == Material.SHEARS )
+                || mat == Material.STONE_SHOVEL || mat == Material.STONE_PICKAXE || mat == Material.STONE_AXE || mat == Material.DIAMOND_SWORD || mat == Material.DIAMOND_SHOVEL || mat == Material.DIAMOND_PICKAXE || mat == Material.DIAMOND_AXE || mat == Material.GOLDEN_SWORD
+                || mat == Material.GOLDEN_SHOVEL || mat == Material.GOLDEN_PICKAXE || mat == Material.GOLDEN_AXE || mat == Material.WOODEN_HOE || mat == Material.STONE_HOE || mat == Material.IRON_HOE || mat == Material.DIAMOND_HOE || mat == Material.GOLDEN_HOE || mat == Material.SHEARS )
         {
             return true;
         }
@@ -188,7 +196,7 @@ public class Util
             maxLevel = plugin.getConfigManager().getRaceLevelLimit();
         }
 
-        return  maxLevel;
+        return maxLevel;
     }
 
     public void removePlayerPrefixes()
@@ -301,7 +309,8 @@ public class Util
      */
     public String getCleanName( EntityType mCreature )
     {
-        if ( mCreature == null ) return "";
+        if ( mCreature == null )
+            return "";
 
         return cleanEnumString( mCreature.toString() );
     }

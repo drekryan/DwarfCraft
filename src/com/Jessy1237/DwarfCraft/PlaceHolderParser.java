@@ -102,7 +102,7 @@ public class PlaceHolderParser
         // TODO: use checkEquivalentBlocks to future proof the 1.13 changes
         if ( effect.getEffectType() == DwarfEffectType.SMELT )
         {
-            List<Recipe> recipes = plugin.getServer().getRecipesFor( effect.getInitiator() );
+            List<Recipe> recipes = plugin.getServer().getRecipesFor( effect.getInitiator().getItemStack() );
             if (recipes.iterator().hasNext() && recipes.iterator().next() instanceof FurnaceRecipe )
             {
                 FurnaceRecipe recipe = ( FurnaceRecipe ) recipes.iterator().next();
