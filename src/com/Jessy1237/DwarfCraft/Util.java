@@ -126,14 +126,16 @@ public class Util
     {
         Set<Material> mats = new HashSet<>();
         Tag<Material> tag = null;
+        String tagName = "";
 
         if ( item.getString( name ).startsWith( "#" ) )
         {
-            tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+            tagName = item.getString( name ).substring( 1 ).toLowerCase();
+            tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( tagName ), Material.class );
 
             if ( tag == null )
             {
-                tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+                tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( tagName ), Material.class );
             }
 
             if ( tag != null )
@@ -144,7 +146,7 @@ public class Util
             mats.add( parseItem( item.getString( name ) ).getType() );
         }
 
-        return new DwarfItemHolder( mats, tag );
+        return new DwarfItemHolder( mats, tag, tagName );
     }
 
     public ItemStack parseItem( String info )
@@ -165,7 +167,7 @@ public class Util
      */
     public String getCleanName( DwarfItemHolder dih )
     {
-        return dih.isTagged() ? ( cleanEnumString( dih.getTag().toString() ) ) : ( getCleanName( dih.getItemStack() ) );
+        return dih == null ? getCleanName( new ItemStack( Material.AIR ) ) : ( dih.isTagged() ? ( cleanEnumString( dih.getTagName() ) ) : ( getCleanName( dih.getItemStack() ) ) );
     }
 
     /**

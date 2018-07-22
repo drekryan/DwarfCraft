@@ -113,6 +113,7 @@ public class DwarfEffect
             mCreature = EntityType.valueOf( record.getString( "OriginMaterial" ) );
         }
         mResult = plugin.getUtil().getDwarfItemHolder( record, "OutputMaterial" );
+        
         mRequireTool = record.getBool( "RequireTool" );
         mFloorResult = record.getBool( "Floor" );
 
@@ -256,12 +257,12 @@ public class DwarfEffect
 
     public Material getInitiatorMaterial()
     {
-        return ( mInitiator.getItemStack() == null ? null : mInitiator.getItemStack().getType() );
+        return ( mInitiator == null ? null : mInitiator.getItemStack() == null ? null : mInitiator.getItemStack().getType() );
     }
 
     public Material getOutputMaterial()
     {
-        return ( mResult.getItemStack() == null ? null : mResult.getItemStack().getType() );
+        return ( mResult == null ? null : mResult.getItemStack() == null ? null : mResult.getItemStack().getType() );
     }
 
     public DwarfItemHolder getInitiator()

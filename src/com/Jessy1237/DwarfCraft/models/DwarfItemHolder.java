@@ -14,11 +14,13 @@ public class DwarfItemHolder
 
     private Set<Material> mats;
     private Tag<Material> tag;
+    private String tagName;
 
-    public DwarfItemHolder( Set<Material> mats, Tag<Material> tag )
+    public DwarfItemHolder( Set<Material> mats, Tag<Material> tag, String tagName )
     {
         this.tag = tag;
         this.mats = mats;
+        this.tagName = tagName;
 
         if ( tag != null )
         {
@@ -38,11 +40,16 @@ public class DwarfItemHolder
 
     public ItemStack getItemStack()
     {
-        return new ItemStack( mats.iterator().next() );
+        return mats.isEmpty() ? null : new ItemStack( mats.iterator().next() );
     }
 
     public Tag<Material> getTag()
     {
         return tag;
+    }
+
+    public String getTagName()
+    {
+        return tagName;
     }
 }

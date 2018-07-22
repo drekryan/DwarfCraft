@@ -1,11 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft;
@@ -103,10 +98,10 @@ public class PlaceHolderParser
         if ( effect.getEffectType() == DwarfEffectType.SMELT )
         {
             List<Recipe> recipes = plugin.getServer().getRecipesFor( effect.getInitiator().getItemStack() );
-            if (recipes.iterator().hasNext() && recipes.iterator().next() instanceof FurnaceRecipe )
+            if ( recipes.iterator().hasNext() && recipes.iterator().next() instanceof FurnaceRecipe )
             {
                 FurnaceRecipe recipe = ( FurnaceRecipe ) recipes.iterator().next();
-                initiator = recipe.getInput().toString();
+                initiator = plugin.getUtil().getCleanName( recipe.getInput() );
             }
             else
             {
