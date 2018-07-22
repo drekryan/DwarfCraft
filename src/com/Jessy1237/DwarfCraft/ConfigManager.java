@@ -760,14 +760,15 @@ public final class ConfigManager
      */
     private Set<Material> getMaterials( CSVRecord item, String name )
     {
-        Set<Material> mats = new HashSet<Material>();
+        Set<Material> mats = new HashSet<>();
 
         if ( item.getString( name ).startsWith( "#" ) )
         {
-            Tag<Material> tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+            Tag<Material> tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
 
-            if ( tag == null )
-                tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( item.getString( name ).substring( 1 ).toLowerCase() ), Material.class );
+            if ( tag == null ) {
+                tag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft(item.getString(name).substring(1).toLowerCase()), Material.class);
+            }
 
             if ( tag != null )
                 mats = tag.getValues();
