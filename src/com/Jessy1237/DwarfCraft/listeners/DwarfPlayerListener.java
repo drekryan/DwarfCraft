@@ -1,6 +1,7 @@
 package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
@@ -64,8 +65,18 @@ public class DwarfPlayerListener implements Listener
         if ( plugin.getConfigManager().sendGreeting )
             plugin.getOut().welcome( dwarfPlayer );
 
+        // Spawn tutorial book on first join
         if ( !event.getPlayer().hasPlayedBefore() && plugin.getConfigManager().spawnTutorialBook )
-            new CommandTutorial( plugin ).execute( event.getPlayer(), "", new String[] { "" } );
+        {
+            DwarfPlayer dcPlayer = plugin.getDataManager().find( event.getPlayer() );
+
+            // Add Written Book to Players Inventory
+            CommandTutorial commandTutorial = new CommandTutorial( plugin );
+            HashMap<Integer, ItemStack> overflow = dcPlayer.getPlayer().getInventory().addItem( commandTutorial.createTutorialBook( dcPlayer ) );
+            commandTutorial.dropBookIfInventoryFull( dcPlayer.getPlayer(), overflow );
+
+            plugin.getLogger().log( Level.INFO, event.getPlayer().getDisplayName() + " is new to the server! Spawning DwarfCraft Tutorial Book..." );
+        }
 
         if ( dwarfPlayer.isDwarfCraftDev() ) {
             plugin.getServer().getScheduler().runTaskLater( plugin, new AuraSpawnTask( plugin ), 10 );

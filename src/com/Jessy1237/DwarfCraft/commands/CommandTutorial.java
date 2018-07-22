@@ -93,7 +93,7 @@ public class CommandTutorial extends Command
         }
     }
 
-    private ItemStack createTutorialBook( DwarfPlayer dwarfPlayer )
+    public ItemStack createTutorialBook( DwarfPlayer dwarfPlayer )
     {
         // Create a new Written Book
         ItemStack book = new ItemStack( Material.WRITTEN_BOOK );
@@ -172,7 +172,7 @@ public class CommandTutorial extends Command
         return false;
     }
 
-    private void dropBookIfInventoryFull( Player player, HashMap<Integer, ItemStack> overflowStacks )
+    public void dropBookIfInventoryFull( Player player, HashMap<Integer, ItemStack> overflowStacks )
     {
         if ( !overflowStacks.isEmpty() )
         {
