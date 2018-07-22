@@ -263,7 +263,6 @@ public class DwarfPlayer
                 highestSkill = s.getLevel();
             if ( s.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
                 playerLevel += s.getLevel() - plugin.getConfigManager().getRaceLevelLimit();
-            ;
         }
         if ( playerLevel == plugin.getConfigManager().getRaceLevelLimit() )
             playerLevel = highestSkill;

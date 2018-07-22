@@ -32,8 +32,7 @@ public class DwarfVehicle
         if ( that instanceof Vehicle )
         {
             Vehicle vec = ( Vehicle ) that;
-            if ( vec.getEntityId() == vehicle.getEntityId() )
-                return true;
+            return vec.getEntityId() == vehicle.getEntityId();
         }
         return false;
     }

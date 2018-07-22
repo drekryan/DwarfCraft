@@ -294,13 +294,13 @@ public class DwarfInventoryListener implements Listener
     @EventHandler( priority = EventPriority.NORMAL )
     public void onInventoryCloseEvent( InventoryCloseEvent event )
     {
-        DwarfGUI dwarfGUI = dwarfGUIs.get( ( Player ) event.getPlayer() );
+        DwarfGUI dwarfGUI = dwarfGUIs.get( event.getPlayer() );
 
         if ( dwarfGUI == null )
             return;
 
         dwarfGUI.remove();
-        dwarfGUIs.remove( ( Player ) event.getPlayer() );
+        dwarfGUIs.remove( event.getPlayer() );
     }
 
     public void addDwarfGUI( Player player, DwarfGUI gui )
@@ -317,7 +317,7 @@ public class DwarfInventoryListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getWhoClicked().getWorld() ) )
             return;
 
-        DwarfGUI dwarfGUI = dwarfGUIs.get( ( Player ) event.getWhoClicked() );
+        DwarfGUI dwarfGUI = dwarfGUIs.get( event.getWhoClicked() );
         if ( dwarfGUI != null )
         {
             if ( dwarfGUI.getInventory().equals( event.getInventory() ) )

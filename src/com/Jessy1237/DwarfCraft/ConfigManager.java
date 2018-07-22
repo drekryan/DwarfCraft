@@ -1,6 +1,11 @@
 /*
- * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
- * Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft;
@@ -16,6 +21,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -81,7 +87,7 @@ public final class ConfigManager
 
         try
         {
-            if ( !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readWorldFile() || !readRacesFile() )
+            if ( !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readRacesFile() )
             {
                 plugin.getUtil().consoleLog( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
@@ -177,7 +183,7 @@ public final class ConfigManager
             }
 
             // Supporting Data Files
-            String[] mfiles = { "skills.csv", "effects.csv", "messages.config", "dwarfcraft.db", "world-blacklist.config", "races.yml" };
+            String[] mfiles = { "skills.csv", "effects.csv", "messages.config", "dwarfcraft.db", "races.yml" };
             for ( String mfile : mfiles )
             {
                 File file = new File( root, mfile );
@@ -239,61 +245,16 @@ public final class ConfigManager
         hardcorePenalty = config.getBoolean( "Hardcore Race Change Penalty" );
         spawnTutorialBook = config.getBoolean( "Spawn Tutorial Book" );
 
+        List<String> worldStrings = config.getStringList( "Disabled Worlds" );
+        for ( String world : worldStrings )
+            worlds.add( Bukkit.getServer().getWorld( world ) );
+
         clearCommands();
 
         skillLevelCommands.addAll( config.getStringList( "Skill Level Commands" ) );
         skillMasteryCommands.addAll( config.getStringList( "Skill Mastery Commands" ) );
         skillMaxCapeCommands.addAll( config.getStringList( "Skill Max Cape Commands" ) );
 
-        return true;
-    }
-
-    @SuppressWarnings( "resource" )
-    private boolean readWorldFile()
-    {
-        plugin.getUtil().consoleLog( Level.INFO, "Reading world blacklist file: " + ChatColor.AQUA + configDirectory + "world-blacklist.config" );
-
-        FileReader fr;
-        try
-        {
-            fr = new FileReader( configDirectory + "world-blacklist.config" );
-            BufferedReader br = new BufferedReader( fr );
-            String line = br.readLine();
-            while ( line != null )
-            {
-                if ( line.length() == 0 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-                if ( line.charAt( 0 ) == '#' )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-                String[] theline = line.split( "-" );
-                if ( theline.length > 2 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                if ( theline[0].equalsIgnoreCase( " " ) )
-                    worlds.add( Bukkit.getServer().getWorld( theline[1].trim() ) );
-
-                line = br.readLine();
-            }
-        }
-        catch ( FileNotFoundException e )
-        {
-            e.printStackTrace();
-            return false;
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-            return false;
-        }
         return true;
     }
 

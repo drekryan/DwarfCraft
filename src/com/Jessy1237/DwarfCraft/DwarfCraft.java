@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -75,6 +76,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private HashMap<String, Command> opCommands = new HashMap<>();
     public boolean isAuraActive = false;
 
+    private boolean isDeveloperBuild = true;
     public static int debugMessagesThreshold = 10;
 
     public NPCRegistry getNPCRegistry()
@@ -169,17 +171,14 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( sender instanceof Player )
         {
-            if ( type.equals( "op" ) )
+            switch ( type )
             {
-                return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() );
-            }
-            else if ( type.equals( "norm" ) )
-            {
-                return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() );
-            }
-            else if ( type.equals( "all" ) )
-            {
-                return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() );
+                case "op":
+                    return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() );
+                case "norm":
+                    return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() );
+                case "all":
+                    return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() );
             }
         }
 
@@ -231,7 +230,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     @Override
     public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
     {
-        Command cmd = null;
+        Command cmd;
         String name = command.getName();
         boolean hasNorm = checkPermission( sender, name, "norm" );
         boolean hasOp = checkPermission( sender, name, "op" );
@@ -245,7 +244,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             {
                 if ( args.length == 0 )
                 {
-                    cmd = new CommandHelp( this );
+                    new CommandHelp( this );
                 }
                 else
                 {
@@ -345,6 +344,15 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     {
         PluginManager pm = getServer().getPluginManager();
 
+        // We are not backwards compatible
+        if ( !Bukkit.getBukkitVersion().startsWith( "1.13" ) )
+        {
+            getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() +
+                    " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
+            pm.disablePlugin( this );
+            return;
+        }
+
         if ( pm.getPlugin( "Vault" ) == null || !pm.getPlugin( "Vault" ).isEnabled() )
         {
             getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Vault!" );
@@ -392,15 +400,10 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         placeHolderParser = new PlaceHolderParser( this );
 
         pm.registerEvents( playerListener, this );
-
         pm.registerEvents( entityListener, this );
-
         pm.registerEvents( blockListener, this );
-
         pm.registerEvents( vehicleListener, this );
-
         pm.registerEvents( inventoryListener, this );
-
         pm.registerEvents( dwarfListener, this );
 
         // Creates the citizen trait for the DwarfTrainers
@@ -438,5 +441,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         if ( isEnabled() ) initCommands();
 
         getUtil().consoleLog( Level.INFO, ChatColor.GREEN + getDescription().getName() + " " + getDescription().getVersion() + " is enabled!" );
+
+        if ( isDeveloperBuild )
+            getUtil().consoleLog( Level.SEVERE, "*** WARNING: This is a development build. Please keep backups and update frequently." );
     }
 }

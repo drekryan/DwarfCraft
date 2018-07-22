@@ -117,7 +117,7 @@ public abstract class DwarfGUI
 
                 int index = section.lastIndexOf( ' ' );
                 section = section.substring( 0, index++ );
-                leftOver = leftOver.substring( index, leftOver.length() );
+                leftOver = leftOver.substring( index );
             }
             else
             {

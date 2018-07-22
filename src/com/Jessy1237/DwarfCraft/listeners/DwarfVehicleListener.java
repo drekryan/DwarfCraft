@@ -33,9 +33,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfVehicleListener implements Listener
 {
     private final DwarfCraft plugin;

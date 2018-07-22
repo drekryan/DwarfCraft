@@ -25,15 +25,19 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 
+import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
 
 public class DataManager
@@ -88,14 +92,17 @@ public class DataManager
 
     public boolean checkTrainersInChunk( Chunk chunk )
     {
-        for ( Iterator<Map.Entry<Integer, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext(); )
+        for ( Map.Entry<Integer, DwarfTrainer> pairs : trainerList.entrySet() )
         {
-            Map.Entry<Integer, DwarfTrainer> pairs = i.next();
             DwarfTrainer d = ( pairs.getValue() );
             if ( Math.abs( chunk.getX() - d.getLocation().getBlock().getChunk().getX() ) > 1 )
+            {
                 continue;
+            }
             if ( Math.abs( chunk.getZ() - d.getLocation().getBlock().getChunk().getZ() ) > 1 )
+            {
                 continue;
+            }
             return true;
         }
         return false;
@@ -155,8 +162,8 @@ public class DataManager
             {
                 plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
-                HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
-                HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
+                HashMap<UUID, String> dcplayers = new HashMap<>();
+                HashMap<UUID, Integer> ids = new HashMap<>();
 
                 try
                 {
@@ -201,8 +208,8 @@ public class DataManager
             {
                 plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
-                HashMap<UUID, String> dcplayers = new HashMap<UUID, String>();
-                HashMap<UUID, Integer> ids = new HashMap<UUID, Integer>();
+                HashMap<UUID, String> dcplayers = new HashMap<>();
+                HashMap<UUID, Integer> ids = new HashMap<>();
 
                 try
                 {
@@ -243,29 +250,28 @@ public class DataManager
                 rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'trainers';" );
                 if ( rs.next() )
                 {
-                    plugin.getLogger().log( Level.INFO, "Transfering Trainer DB to citizens  (may lag a little wait for completion message)." );
+                    plugin.getLogger().log( Level.INFO, "Transferring Trainer DB to citizens  (may lag a little wait for completion message)." );
 
                     rs = statement.executeQuery( "select * from trainers;" );
 
                     while ( rs.next() )
                     {
-                        //TODO 1.13: Renable when Citizens is working on 1.13
-//                        AbstractNPC npc1;
-//                        if ( rs.getString( "type" ).equalsIgnoreCase( "PLAYER" ) )
-//                        {
-//                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
-//                        }
-//                        else
-//                        {
-//                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
-//                        }
-//                        npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
-//                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
-//                        npc1.setProtected( true );
+                        AbstractNPC npc1;
+                        if ( rs.getString( "type" ).equalsIgnoreCase( "PLAYER" ) )
+                        {
+                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
+                        }
+                        else
+                        {
+                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
+                        }
+                        npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
+                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
+                        npc1.setProtected( true );
                     }
                 }
                 statement.execute( "DROP TABLE trainers" );
-                plugin.getLogger().log( Level.INFO, "Finished Transfering the Trainers DB." );
+                plugin.getLogger().log( Level.INFO, "Finished Transferring the Trainers DB." );
             }
             catch ( Exception e )
             {
