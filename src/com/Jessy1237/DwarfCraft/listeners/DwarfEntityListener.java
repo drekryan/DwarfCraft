@@ -1,11 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
- * DwarfCraft is an RPG plugin that allows players to improve their characters
- * skills and capabilities through training, not experience.
- *
- * Authors: Jessy1237 and Drekryan
- * Original Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
+ * Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft.listeners;
@@ -15,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -222,7 +217,7 @@ public class DwarfEntityListener implements Listener
         }
 
         boolean isPVP = false;
-        DwarfPlayer attacker;
+        DwarfPlayer attacker = null;
 
         if ( victim instanceof Player )
         {
@@ -292,7 +287,8 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String
+                                .format( "DC6: PVE %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
 
@@ -311,7 +307,8 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String
+                                .format( "DC6: PVP %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
             }
@@ -471,8 +468,7 @@ public class DwarfEntityListener implements Listener
                         {
                             ItemStack output = effect.getResult( killer );
 
-                            //TODO 1.13: do other color wools need to be special cased here?
-                            if ( deadThing instanceof Sheep && output.getType() == Material.WHITE_WOOL )
+                            if ( deadThing instanceof Sheep && Tag.WOOL.getValues().contains( output.getType() ) )
                                 output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
@@ -480,9 +476,9 @@ public class DwarfEntityListener implements Listener
                                 plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
                             }
 
-                            if ( !changed )
+                            if (!changed)
                             {
-                                items.addAll( Arrays.asList( normal ) );
+                                items.addAll(Arrays.asList(normal));
                             }
 
                             if ( output.getAmount() > 0 )
@@ -501,8 +497,7 @@ public class DwarfEntityListener implements Listener
                         {
                             ItemStack output = effect.getResult( killer );
 
-                            //TODO 1.13: do other color wools need to be special cased here?
-                            if ( deadThing instanceof Sheep && output.getType() == Material.WHITE_WOOL )
+                            if ( deadThing instanceof Sheep && Tag.WOOL.getValues().contains( output.getType() ) )
                                 output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
@@ -528,7 +523,7 @@ public class DwarfEntityListener implements Listener
                                         }
                                     }
                                 }
-                                else if ( !changed )
+                                else if (!changed)
                                 {
                                     items.add( i );
                                 }
@@ -557,8 +552,8 @@ public class DwarfEntityListener implements Listener
             }
             if ( !changed )
             { // If there was no skill for this type of entity,
-              // just give the normal drop.
-                items.addAll( Arrays.asList( normal ) );
+                // just give the normal drop.
+                items.addAll(Arrays.asList(normal));
             }
         }
 
