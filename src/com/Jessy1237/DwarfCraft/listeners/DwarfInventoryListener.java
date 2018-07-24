@@ -141,7 +141,7 @@ public class DwarfInventoryListener implements Listener
             // Make sure they aren't duping when repairing tools
             if ( plugin.getUtil().isTool( toCraft.getType() ) )
             {
-                CraftingInventory ci = ( CraftingInventory ) event.getInventory();
+                CraftingInventory ci = ( CraftingInventory ) event.getClickedInventory();
                 if ( ci.getRecipe() instanceof ShapelessRecipe )
                 {
                     ShapelessRecipe r = ( ShapelessRecipe ) ci.getRecipe();
@@ -242,8 +242,6 @@ public class DwarfInventoryListener implements Listener
                                             if ( item.getType() == toCraft.getType() )
                                             {
                                                 toCraft.setAmount( item.getAmount() );
-                                                if ( output.getDurability() != 0 )
-                                                    toCraft.setDurability( output.getDurability() );
                                             }
                                             else
                                             {
@@ -320,16 +318,16 @@ public class DwarfInventoryListener implements Listener
         DwarfGUI dwarfGUI = dwarfGUIs.get( event.getWhoClicked() );
         if ( dwarfGUI != null )
         {
-            if ( dwarfGUI.getInventory().equals( event.getInventory() ) )
+            if ( dwarfGUI.getInventory().equals( event.getClickedInventory() ) )
             {
                 event.setCancelled( true );
                 dwarfGUI.click( event );
             }
         }
 
-        if ( event.getInventory() != null && event.getSlotType() == SlotType.RESULT )
+        if ( event.getClickedInventory() != null && event.getSlotType() == SlotType.RESULT )
         {
-            switch ( event.getInventory().getType() )
+            switch ( event.getClickedInventory().getType() )
             {
                 case CRAFTING:
                     handleCrafting( event );
@@ -342,7 +340,7 @@ public class DwarfInventoryListener implements Listener
             }
         }
 
-        if ( event.getSlotType() == SlotType.CRAFTING && ( event.isLeftClick() || event.isShiftClick() ) && event.getInventory().getHolder() instanceof BrewingStand )
+        if ( event.getSlotType() == SlotType.CRAFTING && ( event.isLeftClick() || event.isShiftClick() ) && event.getClickedInventory().getHolder() instanceof BrewingStand )
         {
             DwarfPlayer player = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
             HashMap<Integer, DwarfSkill> skills = player.getSkills();

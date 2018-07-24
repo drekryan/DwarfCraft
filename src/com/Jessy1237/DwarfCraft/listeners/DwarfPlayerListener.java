@@ -205,7 +205,6 @@ public class DwarfPlayerListener implements Listener
         }
     }
 
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onPlayerShearEntityEvent( PlayerShearEntityEvent event )
     {
@@ -234,7 +233,7 @@ public class DwarfPlayerListener implements Listener
 
                                 ItemStack item = e.getResult( dwarfPlayer, e.getOutputMaterial() );
 
-                                DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getType(), 2, sheep.getColor().getWoolData() ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getEquipment().getItemInMainHand() );
+                                DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getType(), 2 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getEquipment().getItemInMainHand() );
                                 plugin.getServer().getPluginManager().callEvent( ev );
 
                                 if ( ev.isCancelled() )

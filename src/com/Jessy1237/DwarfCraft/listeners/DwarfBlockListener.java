@@ -118,18 +118,13 @@ public class DwarfBlockListener implements Listener
         }
     }
 
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.HIGH )
     public void onBlockBreak( BlockBreakEvent event )
     {
-        if ( !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
+        if ( event.isCancelled() || event.getPlayer().getGameMode() == GameMode.CREATIVE || !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
+        {
             return;
-
-        if ( event.isCancelled() )
-            return;
-
-        if ( event.getPlayer().getGameMode() == GameMode.CREATIVE )
-            return;
+        }
 
         DwarfPlayer player = plugin.getDataManager().find( event.getPlayer() );
         HashMap<Integer, DwarfSkill> skills = player.getSkills();
@@ -138,9 +133,6 @@ public class DwarfBlockListener implements Listener
         Block block = event.getBlock();
         Location loc = event.getBlock().getLocation();
         Material blockMat = event.getBlock().getType();
-
-        // TODO:Remove this in 1.13
-        short meta = ( short ) event.getBlock().getData();
 
         boolean blockDropChange = false;
         for ( DwarfSkill s : skills.values() )
@@ -153,25 +145,6 @@ public class DwarfBlockListener implements Listener
                     if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) )
                     {
                         return;
-                    }
-
-                    // Crops special line:
-                    if ( effect.getInitiatorMaterial() == Material.WHEAT || effect.getInitiatorMaterial() == Material.CARROT || effect.getInitiatorMaterial() == Material.POTATO )
-                    {
-                        if ( meta != 7 )
-                            return;
-                    }
-
-                    if ( effect.getInitiatorMaterial() == Material.COCOA )
-                    {
-                        if ( meta < 8 )
-                            return;
-                    }
-
-                    if ( effect.getInitiatorMaterial() == Material.NETHER_WART )
-                    {
-                        if ( meta != 3 )
-                            return;
                     }
 
                     // Checks for cactus/sugar cane blocks above the one
@@ -210,7 +183,6 @@ public class DwarfBlockListener implements Listener
                             }
                         }
 
-                        // TODO 1.13 Verify how silk touch is supposed to work in DwarfCraft especially on Gold and Iron Ore.
                         if ( tool.containsEnchantment( Enchantment.SILK_TOUCH ) )
                         {
                             // If enabled in the config, silk touch block
@@ -222,31 +194,15 @@ public class DwarfBlockListener implements Listener
                                 switch ( block.getType() )
                                 {
                                     case STONE:
-                                        item1 = new ItemStack( Material.STONE, 1 );
-                                        break;
                                     case DIAMOND_ORE:
-                                        item1 = new ItemStack( Material.DIAMOND_ORE, 1 );
-                                        break;
                                     case EMERALD_ORE:
-                                        item1 = new ItemStack( Material.EMERALD_ORE, 1 );
-                                        break;
                                     case NETHER_QUARTZ_ORE:
-                                        item1 = new ItemStack( Material.NETHER_QUARTZ_ORE, 1 );
-                                        break;
                                     case COAL_ORE:
-                                        item1 = new ItemStack( Material.COAL_ORE, 1 );
-                                        break;
                                     case REDSTONE_ORE:
-                                        item1 = new ItemStack( Material.REDSTONE_ORE, 1 );
-                                        break;
                                     case GLOWSTONE:
-                                        item1 = new ItemStack( Material.GLOWSTONE, 1 );
-                                        break;
                                     case GRASS:
-                                        item1 = new ItemStack( Material.GRASS, 1 );
-                                        break;
                                     case LAPIS_ORE:
-                                        item1 = new ItemStack( Material.LAPIS_ORE, 1 );
+                                        item1 = new ItemStack( block.getType(), 1 );
                                         break;
                                     default:
                                         break;
@@ -257,31 +213,15 @@ public class DwarfBlockListener implements Listener
                                 switch ( block.getType() )
                                 {
                                     case STONE:
-                                        item = new ItemStack( Material.STONE, 1 );
-                                        break;
                                     case DIAMOND_ORE:
-                                        item = new ItemStack( Material.DIAMOND_ORE, 1 );
-                                        break;
                                     case EMERALD_ORE:
-                                        item = new ItemStack( Material.EMERALD_ORE, 1 );
-                                        break;
                                     case NETHER_QUARTZ_ORE:
-                                        item = new ItemStack( Material.NETHER_QUARTZ_ORE, 1 );
-                                        break;
                                     case COAL_ORE:
-                                        item = new ItemStack( Material.COAL_ORE, 1 );
-                                        break;
                                     case REDSTONE_ORE:
-                                        item = new ItemStack( Material.REDSTONE_ORE, 1 );
-                                        break;
                                     case GLOWSTONE:
-                                        item = new ItemStack( Material.GLOWSTONE, 1 );
-                                        break;
                                     case GRASS:
-                                        item = new ItemStack( Material.GRASS, 1 );
-                                        break;
                                     case LAPIS_ORE:
-                                        item = new ItemStack( Material.LAPIS_ORE, 1 );
+                                        item = new ItemStack( block.getType(), 1 );
                                         break;
                                     default:
                                         break;
@@ -376,8 +316,8 @@ public class DwarfBlockListener implements Listener
                         {
                             plugin.getConsumer().queueBlockBreak( Actor.actorFromEntity( event.getPlayer() ), event.getBlock().getState() );
                         }
-                        blockDropChange = true;
 
+                        blockDropChange = true;
                     }
                 }
             }

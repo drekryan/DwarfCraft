@@ -12,6 +12,7 @@ package com.Jessy1237.DwarfCraft;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.Recipe;
@@ -21,57 +22,54 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-import me.clip.placeholderapi.external.EZPlaceholderHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-@SuppressWarnings( "deprecation" )
-public class PlaceHolderParser
+public class PlaceholderParser
 {
 
     private DwarfCraft plugin;
-    private PlaceholderHook placeholderHook;
 
-    public PlaceHolderParser( DwarfCraft plugin )
+    public PlaceholderParser( DwarfCraft plugin )
     {
         this.plugin = plugin;
     }
 
     public enum PlaceHolder
     {
-        COLON( "%colon%" ),
-        EFFECT_AMOUNT( "%effectamount%" ),
-        EFFECT_AMOUNT_DIG( "%effectamountdig%" ),
-        EFFECT_AMOUNT_FOOD( "%effectamountfood%" ),
-        EFFECT_AMOUNT_FOOD_ORIGINAL( "%originalfoodlevel%" ),
-        EFFECT_AMOUNT_HIGH( "%effectamounthigh%" ),
-        EFFECT_AMOUNT_INT( "%effectamountint%" ),
-        EFFECT_AMOUNT_LOW( "%effectamountlow%" ),
-        EFFECT_AMOUNT_MINOR( "%minoramount%" ),
-        EFFECT_AMOUNT_NORMAL( "%normallevel%" ),
-        EFFECT_CREATURE_NAME( "%creaturename%" ),
-        EFFECT_DAMAGE( "%effectdamage%" ),
-        EFFECT_DAMAGE_BOW( "%effectbowdamage%" ),
-        EFFECT_DAMAGE_TAKEN( "%effecttakedamage%" ),
-        EFFECT_ID( "%effectid%" ),
-        EFFECT_INITIATOR( "%initiator%" ),
-        EFFECT_OUTPUT( "%output%" ),
-        EFFECT_TOOL_TYPE( "%tooltype%" ),
-        EFFECT_LEVEL_COLOR( "%effectlevelcolor%" ),
-        ITEM_NAME( "%itemname%" ),
-        LEVEL( "%level%" ),
-        MAX_SKILL_LEVEL( "%maxskilllevel%" ),
-        PLAYER_LEVEL( "%playerlevel%" ),
-        PLAYER_NAME( "%playername%" ),
-        PLAYER_RACE( "%playerrace%" ),
-        RACE_LEVEL_LIMIT( "%racelevellimit%" ),
-        RACE_NAME( "%racename%" ),
-        SKILL_COST_AMOUNT( "%costamount%" ),
-        SKILL_DEPOSIT_AMOUNT( "%depositedamount%" ),
-        SKILL_ID( "%skillid%" ),
-        SKILL_TOTAL_COST( "%totalcost%" ),
-        SKILL_ITEM_TYPE( "%itemtype%" ),
-        SKILL_LEVEL( "%skilllevel%" ),
-        SKILL_LEVEL_NEXT( "%nextskilllevel%" ),
-        SKILL_NAME( "%skillname%" );
+        EFFECT_AMOUNT( "<effect.amount>" ),
+        EFFECT_AMOUNT_DIG( "<effect.amount.dig>" ),
+        EFFECT_AMOUNT_FOOD( "<effect.amount.food>" ),
+        EFFECT_AMOUNT_FOOD_ORIGINAL( "<effect.amount.food.original>" ),
+        EFFECT_AMOUNT_HIGH( "<effect.amount.high>" ),
+        EFFECT_AMOUNT_INT( "<effect.amount.int>" ),
+        EFFECT_AMOUNT_LOW( "<effect.amount.low>" ),
+        EFFECT_AMOUNT_MINOR( "<effect.minor.amount>" ),
+        EFFECT_AMOUNT_NORMAL( "<effect.normal.level>" ),
+        EFFECT_CREATURE_NAME( "<effect.creature.name>" ),
+        EFFECT_DAMAGE( "<effect.damage>" ),
+        EFFECT_DAMAGE_BOW( "<effect.damage.bow>" ),
+        EFFECT_DAMAGE_TAKEN( "<effect.damage.taken>" ),
+        EFFECT_ID( "<effect.id>" ),
+        EFFECT_INITIATOR( "<effect.initiator>" ),
+        EFFECT_OUTPUT( "<effect.output>" ),
+        EFFECT_TOOL_TYPE( "<effect.tool.type>" ),
+        EFFECT_LEVEL_COLOR( "<effect.level.color>" ),
+        ITEM_NAME( "<item.name>" ),
+        LEVEL( "<level>" ),
+        SKILL_MAX_LEVEL( "<skill.max.level>" ),
+        PLAYER_LEVEL( "<player.level>" ),
+        PLAYER_NAME( "<player.name>" ),
+        PLAYER_RACE( "<player.race>" ),
+        RACE_LEVEL_LIMIT( "<race.level.limit>" ),
+        RACE_NAME( "<race.name>" ),
+        SKILL_COST_AMOUNT( "<skill.cost.amount>" ),
+        SKILL_TOTAL_COST( "<skill.cost.total>" ),
+        SKILL_DEPOSIT_AMOUNT( "<skill.deposit.amount>" ),
+        SKILL_ID( "<skill.id>" ),
+        SKILL_ITEM_TYPE( "<skill.item.type>" ),
+        SKILL_LEVEL( "<skill.level>" ),
+        SKILL_LEVEL_NEXT( "<skill.level.next>" ),
+        SKILL_NAME( "<skill.name>" );
 
         PlaceHolder( String placeHolder )
         {
@@ -88,7 +86,7 @@ public class PlaceHolderParser
 
     public String generalParse( String text )
     {
-        return text.replaceAll( PlaceHolder.COLON.getPlaceHolder(), ":" ).replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ).replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() );
+        return text.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ).replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() );
     }
 
     public String parseByDwarfEffect( String text, DwarfEffect effect )
@@ -99,7 +97,7 @@ public class PlaceHolderParser
 
         String initiator = plugin.getUtil().getCleanName( effect.getInitiator() );
 
-        // TODO: use checkEquivalentBlocks to future proof the 1.13 changes
+        // TODO 1.13: use checkEquivalentBlocks to future proof the 1.13 changes? Why did we add this TODO here? what needs changing?
         if ( effect.getEffectType() == DwarfEffectType.SMELT )
         {
             List<Recipe> recipes = plugin.getServer().getRecipesFor( effect.getInitiator().getItemStack() );
@@ -158,7 +156,7 @@ public class PlaceHolderParser
     {
         // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
         int levelLimit = plugin.getUtil().getMaxLevelForSkill( dwarfPlayer, skill );
-        return parseByDwarfSkill( parseByDwarfPlayer( text.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + levelLimit ), dwarfPlayer ), skill );
+        return parseByDwarfSkill( parseByDwarfPlayer( text.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + levelLimit ), dwarfPlayer ), skill );
     }
 
     public String parseForTrainCosts( String text, int deposited, int costAmount, int totalCost, String itemType )
@@ -167,26 +165,37 @@ public class PlaceHolderParser
                 .replaceAll( PlaceHolder.SKILL_COST_AMOUNT.getPlaceHolder(), "" + costAmount ).replaceAll( PlaceHolder.ITEM_NAME.getPlaceHolder(), itemType ) );
     }
 
-    protected void hookAPI()
+    public class PlaceholderExpansionHook extends PlaceholderExpansion
     {
-        placeholderHook = new PlaceholderHook( plugin, "dwarfcraft" );
-        placeholderHook.hook();
-    }
-
-    public class PlaceholderHook extends EZPlaceholderHook
-    {
-        private DwarfCraft plugin;
-
-        public PlaceholderHook( DwarfCraft plugin, String identifier )
+        @Override
+        public boolean canRegister()
         {
-            super( plugin, identifier );
-            this.plugin = plugin;
+            return true;
+        }
+
+        @Override
+        public String getIdentifier()
+        {
+            return "DwarfCraft";
+        }
+
+        @Override
+        public String getAuthor()
+        {
+            return plugin.getDescription().getAuthors().toString();
+        }
+
+        @Override
+        public String getVersion()
+        {
+            DwarfCraft plugin = (DwarfCraft) Bukkit.getPluginManager().getPlugin( "DwarfCraft" );
+            return plugin.getDescription().getVersion();
         }
 
         @Override
         public String onPlaceholderRequest( Player player, String identifier )
         {
-            String out = generalParse( "%" + identifier + "%" );
+            String out = generalParse( "<" + identifier + ">" );
 
             DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
 

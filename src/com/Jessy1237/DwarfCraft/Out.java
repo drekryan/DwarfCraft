@@ -17,14 +17,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
+import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class Out
 {
     /*

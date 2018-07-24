@@ -29,7 +29,7 @@ import org.bukkit.projectiles.ProjectileSource;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
+import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
@@ -152,7 +152,7 @@ public class DwarfEntityListener implements Listener
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                        plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
                         return true;
                     }
 

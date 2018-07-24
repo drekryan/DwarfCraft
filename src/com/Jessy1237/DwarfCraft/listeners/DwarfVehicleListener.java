@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -138,43 +139,42 @@ public class DwarfVehicleListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getVehicle().getWorld() ) )
             return;
 
-        if ( event.getVehicle().getPassenger() == null )
-            return;
-        if ( !( event.getVehicle() instanceof Boat ) )
-            return;
-        if ( !( event.getVehicle().getPassenger() instanceof Player ) )
-            return;
-
-        DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getVehicle().getPassenger() );
-        double effectAmount = 1.0;
-        DwarfEffect effect = null;
-        for ( DwarfSkill s : dCPlayer.getSkills().values() )
+        for ( Entity passenger : event.getVehicle().getPassengers() )
         {
-            for ( DwarfEffect e : s.getEffects() )
+            if ( !( passenger instanceof Player ) || !( event.getVehicle() instanceof Boat ) )
+                return;
+
+            DwarfPlayer dCPlayer = plugin.getDataManager().find( (Player) passenger );
+            double effectAmount = 1.0;
+            DwarfEffect effect = null;
+            for ( DwarfSkill s : dCPlayer.getSkills().values() )
             {
-                if ( e.getEffectType() == DwarfEffectType.VEHICLEMOVE )
+                for ( DwarfEffect e : s.getEffects() )
                 {
-                    effect = e;
-                    effectAmount = e.getEffectAmount( dCPlayer );
+                    if ( e.getEffectType() == DwarfEffectType.VEHICLEMOVE )
+                    {
+                        effect = e;
+                        effectAmount = e.getEffectAmount( dCPlayer );
+                    }
                 }
             }
-        }
 
-        DwarfVehicle dv = plugin.getDataManager().getVehicle( event.getVehicle() );
-        if ( dv != null )
-        {
-            if ( !dv.changedSpeed() )
+            DwarfVehicle dv = plugin.getDataManager().getVehicle( event.getVehicle() );
+            if ( dv != null )
             {
-                Boat boat = ( Boat ) event.getVehicle();
-
-                // The original boat speed and altered boat speed are assigned
-                // to the damage variables
-                DwarfEffectEvent e = new DwarfEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
-                plugin.getServer().getPluginManager().callEvent( e );
-                if ( !e.isCancelled() )
+                if ( !dv.changedSpeed() )
                 {
-                    boat.setMaxSpeed( e.getAlteredDamage() );
-                    dv.speedChanged();
+                    Boat boat = ( Boat ) event.getVehicle();
+
+                    // The original boat speed and altered boat speed are assigned
+                    // to the damage variables
+                    DwarfEffectEvent e = new DwarfEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
+                    plugin.getServer().getPluginManager().callEvent( e );
+                    if ( !e.isCancelled() )
+                    {
+                        boat.setMaxSpeed( e.getAlteredDamage() );
+                        dv.speedChanged();
+                    }
                 }
             }
         }

@@ -68,7 +68,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private Out out;
     private Consumer consumer = null;
     private Util util;
-    private PlaceHolderParser placeHolderParser;
+    private PlaceholderParser placeHolderParser;
     private Permission perms = null;
     private Chat chat = null;
     private TraitInfo trainerTrait;
@@ -109,7 +109,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         return util;
     }
 
-    public PlaceHolderParser getPlaceHolderParser()
+    public PlaceholderParser getPlaceHolderParser()
     {
         return placeHolderParser;
     }
@@ -329,6 +329,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     {
         if ( getUtil() != null )
             getUtil().removePlayerPrefixes();
+
+        dm.dbFinalize();
     }
 
     /**
@@ -397,7 +399,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         out = new Out( this );
 
-        placeHolderParser = new PlaceHolderParser( this );
+        placeHolderParser = new PlaceholderParser( this );
 
         pm.registerEvents( playerListener, this );
         pm.registerEvents( entityListener, this );
@@ -434,7 +436,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( pm.getPlugin( "PlaceholderAPI" ) != null )
         {
-            placeHolderParser.hookAPI();
+            PlaceholderParser parser = new PlaceholderParser( this );
+            parser.new PlaceholderExpansionHook().register();
             getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into PlaceholderAPI!" );
         }
 

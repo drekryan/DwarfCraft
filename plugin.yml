@@ -1,6 +1,6 @@
 name: ${project.name}
 description: A skills and progression plugin for character development in RPG worlds.
-author: Jessy1237
+author: Jessy1237 and Drekryan
 main: com.Jessy1237.DwarfCraft.DwarfCraft
 version: ${project.version}
 api-version: 1.13

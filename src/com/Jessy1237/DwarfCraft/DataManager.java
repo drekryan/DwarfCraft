@@ -128,7 +128,7 @@ public class DataManager
     }
 
     @SuppressWarnings( "deprecation" )
-    protected void dbInitialize()
+    void dbInitialize()
     {
         try
         {
@@ -290,12 +290,10 @@ public class DataManager
         }
     }
 
-    @SuppressWarnings( "unused" )
-    private void dbFinalize()
+    void dbFinalize()
     {
         try
         {
-            mDBCon.commit();
             mDBCon.close();
             mDBCon = null;
         }

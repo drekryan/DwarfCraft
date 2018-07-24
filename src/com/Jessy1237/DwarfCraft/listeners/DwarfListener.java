@@ -16,7 +16,7 @@ import org.bukkit.event.Listener;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
+import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;

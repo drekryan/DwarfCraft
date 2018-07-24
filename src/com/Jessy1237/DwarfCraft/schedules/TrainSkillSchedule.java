@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
+import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
@@ -58,7 +58,7 @@ public class TrainSkillSchedule implements Runnable
 
             if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
             {
-                plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.maxSkillLevel.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }
@@ -99,7 +99,7 @@ public class TrainSkillSchedule implements Runnable
 
             if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
             {
-                plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.maxSkillLevel.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }
