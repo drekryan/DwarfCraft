@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -145,6 +146,14 @@ public class DwarfBlockListener implements Listener
                     if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) )
                     {
                         return;
+                    }
+
+                    //Checks for any ageable block to make sure we are only acting when it is fully aged
+                    if ( block.getBlockData() instanceof Ageable )
+                    {
+                        Ageable a = ( Ageable ) block.getBlockData();
+                        if ( a.getAge() != a.getMaximumAge() )
+                            return;
                     }
 
                     // Checks for cactus/sugar cane blocks above the one
