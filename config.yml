@@ -76,17 +76,17 @@ Disabled Worlds:
 
 #Commands to run on skill level up. These are run for racial and non-racial skills. These will not be run when the skill hits max level or when all skills hit max (see below)
 Skill Level Commands:
-#- say %playername% has leveled up %skillname% to level %skilllevel%
-- summon minecraft:fireworks_rocket %playerpos% {LifeTime:20}
+#- say <player.name> has leveled up <skill.name> to level <skill.level>
+- summon minecraft:fireworks_rocket <player.pos> {LifeTime:20}
 
 #Commands to run when the player has achieved the max level of a skill. By default level 5 for non-racial skills and level 30 for racial skills.
 #These override the previous level up commands and will be run instead.
 Skill Mastery Commands:
-- say %playername% has mastered %skillname%!
-- summon minecraft:fireworks_rocket %playerpos% {LifeTime:20}
+- say <player.name> has mastered <skill.name>!
+- summon minecraft:fireworks_rocket <player.pos> {LifeTime:20}
 
 #Commands to run on Max Cape. When the player maxes every non-racial and racial skill to the maximum possible level.
 #These override normal level up commands and Skill Mastery commands.
 Skill Max Cape Commands:
-- say %playername% has achieved skill mastery in every skill as a %racename%. Congratulations!
-- summon minecraft:fireworks_rocket %playerpos% {LifeTime:20}
+- say <player.name> has achieved skill mastery in every skill as a <race.name>. Congratulations!
+- summon minecraft:fireworks_rocket <player.pos> {LifeTime:20}

@@ -10,12 +10,9 @@
 
 package com.Jessy1237.DwarfCraft;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -87,7 +84,7 @@ public final class ConfigManager
 
         try
         {
-            if ( !readSkillsFile() || !readEffectsFile() || !readMessagesFile() || !readRacesFile() )
+            if ( !readSkillsFile() || !readEffectsFile() || !readLocaleFile() || !readRacesFile() )
             {
                 plugin.getUtil().consoleLog( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
@@ -174,7 +171,7 @@ public final class ConfigManager
             root.mkdirs();
         try
         {
-            // Main Plugin Configuration
+            // Create Main Config File
             plugin.saveDefaultConfig();
             if ( !readConfigFile() )
             {
@@ -182,8 +179,8 @@ public final class ConfigManager
                 plugin.getServer().getPluginManager().disablePlugin( plugin );
             }
 
-            // Supporting Data Files
-            String[] mfiles = { "skills.csv", "effects.csv", "messages.config", "dwarfcraft.db", "races.yml" };
+            // Create Data Files
+            String[] mfiles = { "skills.csv", "effects.csv", "dwarfcraft.db", "races.yml" };
             for ( String mfile : mfiles )
             {
                 File file = new File( root, mfile );
@@ -191,6 +188,22 @@ public final class ConfigManager
                 {
                     file.createNewFile();
                     CopyFile( "/default_files/" + mfile, file );
+                }
+            }
+
+            // Create locale directory and locale files
+            root = new File( path + "/locale" );
+            if ( !root.exists() )
+                root.mkdirs();
+
+            String[] localeFiles = { "en_US.yml" };
+            for ( String localeFile : localeFiles )
+            {
+                File file = new File( root, localeFile );
+                if ( !file.exists() )
+                {
+                    file.createNewFile();
+                    CopyFile( "/default_files/locale/" + localeFile, file );
                 }
             }
         }
@@ -349,365 +362,100 @@ public final class ConfigManager
         return true;
     }
 
-    private boolean readMessagesFile()
-    {
-        plugin.getUtil().consoleLog( Level.INFO, "Reading messages file: " + ChatColor.AQUA + configDirectory + "messages.config" );
+    private boolean readLocaleFile() {
+        plugin.getUtil().consoleLog(Level.INFO, "Reading locale file: " + ChatColor.AQUA + configDirectory + "locale" + File.separator + "en_US.yml");
 
-        // Loads the messages class after the config is read but before all the
-        // messages are read.
         new Messages();
-        try
+        FileConfiguration localeConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "locale", "en_US.yml"));
+
+        // Welcome Messages
+        Messages.welcomePrefix = localeConfig.getString("Welcome prefix");
+        Messages.welcome = localeConfig.getString("Welcome");
+        Messages.announcementMessage = localeConfig.getString("Announcement Message");
+
+        // Skillsheet Messages
+        Messages.skillSheetHeader = localeConfig.getString("Skillsheet.Header");
+        Messages.skillSheetSkillLine = localeConfig.getString("Skillsheet.Skill Line");
+        Messages.skillSheetUntrainedSkillHeader = localeConfig.getString("Skillsheet.Untrained Skill Header");
+        Messages.skillSheetUntrainedSkillLine = localeConfig.getString("Skillsheet.Untrained Skill Line");
+
+        // Skill Info Messages
+        Messages.skillInfoHeader = localeConfig.getString("Skill Info.Header");
+        Messages.skillInfoMinorHeader = localeConfig.getString("Skill Info.Subheader");
+        // SkillInfo EffectID Prefix
+        Messages.skillInfoMaxSkillLevel = localeConfig.getString("Skill Info.Max Skill Level");
+        Messages.skillInfoAtTrainerLevel = localeConfig.getString("Skill Info.Max Trainer Level");
+        Messages.skillInfoTrainCostHeader = localeConfig.getString("Skill Info.Train Cost Header");
+        Messages.skillInfoTrainCost = localeConfig.getString("Skill Info.Train Cost");
+        // EffectInfo prefix
+
+        // Race Messages
+        Messages.raceCheck = localeConfig.getString("Race Messages.Race Info");
+        Messages.adminRaceCheck = localeConfig.getString("Race Messages.Admin Race Info");
+        Messages.alreadyRace = localeConfig.getString("Race Messages.Already Race");
+        Messages.changedRace = localeConfig.getString("Race Messages.Changed Race");
+        Messages.confirmRace = localeConfig.getString("Race Messages.Confirm Race");
+        Messages.raceDoesNotExist = localeConfig.getString("Race Messages.Race Failed");
+
+        // Trainer Messages
+        Messages.chooseARace = localeConfig.getString("Trainer Messages.Choose Race");
+        Messages.trainSkillPrefix = localeConfig.getString("Trainer Messages.Train Skill Prefix");
+        Messages.raceDoesNotContainSkill = localeConfig.getString("Trainer Messages.Skill Blocked");
+        Messages.raceDoesNotSpecialize = localeConfig.getString("Trainer Messages.Non-Racial Skill");
+        Messages.maxSkillLevel = localeConfig.getString("Trainer Messages.Max Skill Level");
+        Messages.trainerMaxLevel = localeConfig.getString("Trainer Messages.Max Level");
+        Messages.trainerLevelTooHigh = localeConfig.getString("Trainer Messages.Level Too High");
+        Messages.noMoreItemNeeded = localeConfig.getString("Trainer Messages.No More Item Needed");
+        Messages.moreItemNeeded = localeConfig.getString("Trainer Messages.More Item Needed");
+        Messages.trainingSuccessful = localeConfig.getString("Trainer Messages.Training Successful");
+        Messages.depositSuccessful = localeConfig.getString("Trainer Messages.Deposit Successful");
+        Messages.trainerGUITitle = localeConfig.getString("Trainer Messages.GUI Title");
+        Messages.trainerOccupied = localeConfig.getString("Trainer Messages.Occupied");
+        Messages.trainerCooldown = localeConfig.getString("Trainer Messages.Cooldown");
+
+        // Effect Messages
+        Messages.describeGeneral = localeConfig.getString("Effect Descriptions.General");
+        Messages.describeLevelBlockdrop = localeConfig.getString("Effect Descriptions.Block Drop");
+        Messages.describeLevelMobdrop = localeConfig.getString("Effect Descriptions.Mob Drop");
+        Messages.describeLevelMobdropNoCreature = localeConfig.getString("Effect Descriptions.Mob Drop (no creature)");
+        Messages.describeLevelSwordDurability = localeConfig.getString("Effect Descriptions.Sword Durability");
+        Messages.describeLevelPVPDamage = localeConfig.getString("Effect Descriptions.PVP Damage");
+        Messages.describeLevelPVEDamage = localeConfig.getString("Effect Descriptions.PVE Damage");
+        Messages.describeLevelExplosionDamageMore = localeConfig.getString("Effect Descriptions.Explosion Damage (more)");
+        Messages.describeLevelExplosionDamageLess = localeConfig.getString("Effect Descriptions.Explosion Damage (less)");
+        Messages.describeLevelFireDamageMore = localeConfig.getString("Effect Descriptions.Fire Damage (more)");
+        Messages.describeLevelFireDamageLess = localeConfig.getString("Effect Descriptions.Fire Damage (less)");
+        Messages.describeLevelFallingDamageMore = localeConfig.getString("Effect Descriptions.Fall Damage (more)");
+        Messages.describeLevelFallingDamageLess = localeConfig.getString("Effect Descriptions.Fall Damage (less)");
+        Messages.describeLevelFallThreshold = localeConfig.getString("Effect Descriptions.Fall Threshold");
+        Messages.describeLevelPlowDurability = localeConfig.getString("Effect Descriptions.Hoe Durability");
+        Messages.describeLevelToolDurability = localeConfig.getString("Effect Descriptions.Tool Durability");
+        Messages.describeLevelRodDurability = localeConfig.getString("Effect Descriptions.Rod Durability");
+        Messages.describeLevelEat = localeConfig.getString("Effect Descriptions.Eat");
+        Messages.describeLevelCraft = localeConfig.getString("Effect Descriptions.Craft");
+        Messages.describeLevelPlow = localeConfig.getString("Effect Descriptions.Hoe");
+        Messages.describeLevelFish = localeConfig.getString("Effect Descriptions.Fish");
+        Messages.describeLevelBrew = localeConfig.getString("Effect Descriptions.Brew");
+        Messages.describeLevelDigTime = localeConfig.getString("Effect Descriptions.Dig Time");
+        Messages.describeLevelBowAttack = localeConfig.getString("Effect Descriptions.Bow Attack");
+        Messages.describeLevelVehicleDrop = localeConfig.getString("Effect Descriptions.Vehicle Drop");
+        Messages.describeLevelVehicleMove = localeConfig.getString("Effect Descriptions.Vehicle Move");
+        Messages.describeLevelSmelt = localeConfig.getString("Effect Descriptions.Smelt");
+        Messages.describeLevelShear = localeConfig.getString("Effect Descriptions.Shear");
+        Messages.effectLevelColorGreaterThanNormal = localeConfig.getString("Effect Descriptions.Level Color (greater)");
+        Messages.effectLevelColorEqualToNormal = localeConfig.getString("Effect Descriptions.Level Color (equal)");
+        Messages.effectLevelColorLessThanNormal = localeConfig.getString("Effect Descriptions.Level Color (less)");
+
+        List<String> tutorialPages = localeConfig.getStringList("Tutorial Pages");
+
+        // If there is at least one tutorial page, reset default messages and add custom messages
+        if (tutorialPages.size() > 0)
         {
-            FileReader fr = new FileReader( configDirectory + "messages.config" );
-            BufferedReader br = new BufferedReader( fr );
-
-            String line = br.readLine();
-            while ( line != null )
-            {
-                if ( line.length() == 0 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-                if ( line.charAt( 0 ) == '#' )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                if ( line.indexOf( ":" ) <= 0 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                String split[] = line.split( ":" );
-                if ( split.length != 2 )
-                {
-                    line = br.readLine();
-                    continue;
-                }
-
-                String name = split[0];
-                String message = split[1];
-
-                if ( message == null )
-                {
-                    plugin.getUtil().consoleLog( Level.WARNING, "Null Message: " + name + ", " + message );
-                }
-                else
-                {
-                    if ( !message.trim().equals( "" ) || !message.equals( null ) )
-                    {
-                        if ( name.equalsIgnoreCase( "Welcome prefix" ) )
-                            Messages.welcomePrefix = message;
-                        if ( name.equalsIgnoreCase( "Welcome" ) )
-                            Messages.welcome = message;
-                        if ( name.equalsIgnoreCase( "Announcement Message" ) )
-                            Messages.announcementMessage = message;
-                        if ( name.equalsIgnoreCase( "SkillSheet prefix" ) )
-                            Messages.skillSheetPrefix = message;
-                        if ( name.equalsIgnoreCase( "SkillSheet header" ) )
-                            Messages.skillSheetHeader = message;
-                        if ( name.equalsIgnoreCase( "SkillSheet skill line" ) )
-                            Messages.skillSheetSkillLine = message;
-                        if ( name.equalsIgnoreCase( "SkillSheet untrained skill header" ) )
-                            Messages.skillSheetUntrainedSkillHeader = message;
-                        if ( name.equalsIgnoreCase( "SkillSheet untrained skill line" ) )
-                            Messages.skillSheetUntrainedSkillLine = message;
-
-                        if ( name.equalsIgnoreCase( "SkillInfo header" ) )
-                            Messages.skillInfoHeader = message;
-                        if ( name.equalsIgnoreCase( "SkillInfo minor header" ) )
-                            Messages.skillInfoMinorHeader = message;
-                        if ( name.equalsIgnoreCase( "SkillInfo EffectID Prefix" ) )
-                            Messages.skillInfoEffectIDPrefix = message;
-                        if ( name.equalsIgnoreCase( "SkillInfo max skill level" ) )
-                            Messages.skillInfoMaxSkillLevel = message;
-                        if ( name.equalsIgnoreCase( "SkillInfo at trainer level" ) )
-                            Messages.skillInfoAtTrainerLevel = message;
-                        if ( name.equalsIgnoreCase( "SkillInfo train cost header" ) )
-                            Messages.skillInfoTrainCostHeader = message;
-                        if ( name.equalsIgnoreCase( "SkillInfo train cost" ) )
-                            Messages.skillInfoTrainCost = message;
-
-                        if ( name.equalsIgnoreCase( "EffectInfo prefix" ) )
-                            Messages.effectInfoPrefix = message;
-
-                        if ( name.equalsIgnoreCase( "Race check" ) )
-                            Messages.raceCheck = message;
-                        if ( name.equalsIgnoreCase( "Admin race check" ) )
-                            Messages.adminRaceCheck = message;
-                        if ( name.equalsIgnoreCase( "Already race" ) )
-                            Messages.alreadyRace = message;
-                        if ( name.equalsIgnoreCase( "Changed race" ) )
-                            Messages.changedRace = message;
-                        if ( name.equalsIgnoreCase( "Confirm race" ) )
-                            Messages.confirmRace = message;
-                        if ( name.equalsIgnoreCase( "Race does not exist" ) )
-                            Messages.raceDoesNotExist = message;
-
-                        if ( name.equalsIgnoreCase( "Choose a race" ) )
-                            Messages.chooseARace = message;
-                        if ( name.equalsIgnoreCase( "Train skill prefix" ) )
-                            Messages.trainSkillPrefix = message;
-                        if ( name.equalsIgnoreCase( "Race does not contain skill" ) )
-                            Messages.raceDoesNotContainSkill = message;
-                        if ( name.equalsIgnoreCase( "Race does not specialize" ) )
-                            Messages.raceDoesNotSpecialize = message;
-                        if ( name.equalsIgnoreCase( "Max skill level" ) )
-                            Messages.maxSkillLevel = message;
-                        if ( name.equalsIgnoreCase( "Trainer max level" ) )
-                            Messages.trainerMaxLevel = message;
-                        if ( name.equalsIgnoreCase( "Trainer level too high" ) )
-                            Messages.trainerLevelTooHigh = message;
-                        if ( name.equalsIgnoreCase( "No more item needed" ) )
-                            Messages.noMoreItemNeeded = message;
-                        if ( name.equalsIgnoreCase( "More item needed" ) )
-                            Messages.moreItemNeeded = message;
-                        if ( name.equalsIgnoreCase( "Training successful" ) )
-                            Messages.trainingSuccessful = message;
-                        if ( name.equalsIgnoreCase( "Deposit successful" ) )
-                            Messages.depositSuccessful = message;
-                        if ( name.equalsIgnoreCase( "Trainer GUI Title" ) )
-                            Messages.trainerGUITitle = message;
-                        if ( name.equalsIgnoreCase( "Trainer occupied" ) )
-                            Messages.trainerOccupied = message;
-                        if ( name.equalsIgnoreCase( "Trainer cooldown" ) )
-                            Messages.trainerCooldown = message;
-
-                        if ( name.equalsIgnoreCase( "Describe general" ) )
-                            Messages.describeGeneral = message;
-                        if ( name.equalsIgnoreCase( "Describe level blockdrop" ) )
-                            Messages.describeLevelBlockdrop = message;
-                        if ( name.equalsIgnoreCase( "Describe level mobdrop" ) )
-                            Messages.describeLevelMobdrop = message;
-                        if ( name.equalsIgnoreCase( "Describe level mobdrop no creature" ) )
-                            Messages.describeLevelMobdropNoCreature = message;
-                        if ( name.equalsIgnoreCase( "Describe level sword durability" ) )
-                            Messages.describeLevelSwordDurability = message;
-                        if ( name.equalsIgnoreCase( "Describe level pvp damage" ) )
-                            Messages.describeLevelPVPDamage = message;
-                        if ( name.equalsIgnoreCase( "Describe level pve damage" ) )
-                            Messages.describeLevelPVEDamage = message;
-                        if ( name.equalsIgnoreCase( "Describe level explosion damage more" ) )
-                            Messages.describeLevelExplosionDamageMore = message;
-                        if ( name.equalsIgnoreCase( "Describe level explosion damage less" ) )
-                            Messages.describeLevelExplosionDamageLess = message;
-                        if ( name.equalsIgnoreCase( "Describe level fire damage more" ) )
-                            Messages.describeLevelFireDamageMore = message;
-                        if ( name.equalsIgnoreCase( "Describe level fire damage less" ) )
-                            Messages.describeLevelFireDamageLess = message;
-                        if ( name.equalsIgnoreCase( "Describe level falling damage more" ) )
-                            Messages.describeLevelFallingDamageMore = message;
-                        if ( name.equalsIgnoreCase( "Describe level falling damage less" ) )
-                            Messages.describeLevelFallingDamageLess = message;
-                        if ( name.equalsIgnoreCase( "Describe level fall threshold" ) )
-                            Messages.describeLevelFallThreshold = message;
-                        if ( name.equalsIgnoreCase( "Describe level plow durability" ) )
-                            Messages.describeLevelPlowDurability = message;
-                        if ( name.equalsIgnoreCase( "Describe level tool durability" ) )
-                            Messages.describeLevelToolDurability = message;
-                        if ( name.equalsIgnoreCase( "Describe level rod durability" ) )
-                            Messages.describeLevelRodDurability = message;
-                        if ( name.equalsIgnoreCase( "Describe level eat" ) )
-                            Messages.describeLevelEat = message;
-                        if ( name.equalsIgnoreCase( "Describe level craft" ) )
-                            Messages.describeLevelCraft = message;
-                        if ( name.equalsIgnoreCase( "Describe level plow" ) )
-                            Messages.describeLevelPlow = message;
-                        if ( name.equalsIgnoreCase( "Describle level fish" ) )
-                            Messages.describeLevelFish = message;
-                        if ( name.equalsIgnoreCase( "Describe level brew" ) )
-                            Messages.describeLevelBrew = message;
-                        if ( name.equalsIgnoreCase( "Describe level dig time" ) )
-                            Messages.describeLevelDigTime = message;
-                        if ( name.equalsIgnoreCase( "Describe level bow attack" ) )
-                            Messages.describeLevelBowAttack = message;
-                        if ( name.equalsIgnoreCase( "Describe level vehicle drop" ) )
-                            Messages.describeLevelVehicleDrop = message;
-                        if ( name.equalsIgnoreCase( "Describe level vehicle move" ) )
-                            Messages.describeLevelVehicleMove = message;
-                        if ( name.equalsIgnoreCase( "Describe level smelt" ) )
-                            Messages.describeLevelSmelt = message;
-                        if ( name.equalsIgnoreCase( "Describe level shear" ) )
-                            Messages.describeLevelShear = message;
-                        if ( name.equalsIgnoreCase( "Effect level color greater than normal" ) )
-                            Messages.effectLevelColorGreaterThanNormal = message;
-                        if ( name.equalsIgnoreCase( "Effect level color equal to normal" ) )
-                            Messages.effectLevelColorEqualToNormal = message;
-                        if ( name.equalsIgnoreCase( "Effect level color less than normal" ) )
-                            Messages.effectLevelColorLessThanNormal = message;
-                        if ( name.equalsIgnoreCase( "Vanilla Race Message" ) )
-                            Messages.vanillaRace = message;
-                        if ( name.equalsIgnoreCase( "Tutorial Messages" ) )
-                        {
-                            ArrayList<String> tutorial = new ArrayList<String>();
-                            if ( br.readLine().equalsIgnoreCase( "<TUTORIAL>" ) )
-                            {
-                                StringBuffer sb = new StringBuffer();
-                                boolean foundEndTag = readTutorial( sb, br );
-
-                                if ( !foundEndTag )
-                                {
-                                    plugin.getUtil().consoleLog( Level.SEVERE, "Unable to find the ending Tutorial XML tag. Using default tutorial." );
-                                }
-                                else
-                                {
-                                    tutorial = parseTutorialPages( sb );
-                                }
-                            }
-                            else
-                            {
-                                plugin.getUtil().consoleLog( Level.SEVERE, "Unable to find the opening Tutorial XML tag. Using default tutorial." );
-                            }
-
-                            if ( !tutorial.isEmpty() )
-                                Messages.tutorial = tutorial;
-                        }
-                    }
-                    else
-                    {
-                        plugin.getUtil().consoleLog( Level.WARNING, "Null Message: " + name + ", " + message );
-                    }
-                }
-                line = br.readLine();
-            }
-
+            Messages.tutorial.clear();
+            Messages.tutorial.addAll(tutorialPages);
         }
-        catch ( FileNotFoundException fN )
-        {
-            fN.printStackTrace();
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
+
         return true;
-    }
-
-    /**
-     * Reads the tutorial from the buffered reader by character and inputs them into the string buffer
-     * 
-     * @param sb String buffer to fill
-     * @param br The reader that is reading the config
-     * @return True if the ending tutorial tag was found otherwise returns fails
-     * @throws IOException when br.read fails
-     */
-    private boolean readTutorial( StringBuffer sb, BufferedReader br ) throws IOException
-    {
-        boolean foundEndTag = false;
-        boolean possibleTag = false;
-        boolean backSlash = false;
-        char c = ( char ) br.read();
-        StringBuffer endTag = new StringBuffer();
-        while ( !foundEndTag && c != -1 )
-        {
-            if ( c == '<' )
-                possibleTag = true;
-
-            if ( backSlash )
-            {
-                checkSpecialChar( sb, br, c );
-                backSlash = false;
-                c = ( char ) br.read();
-            }
-
-            if ( c == '\\' )
-                backSlash = true;
-
-            if ( possibleTag )
-            {
-                endTag.append( c );
-            }
-            else if ( !backSlash )
-            {
-                sb.append( c );
-            }
-
-            if ( !"</TUTORIAL>".contains( endTag.toString() ) && possibleTag )
-            {
-                possibleTag = false;
-                sb.append( endTag );
-                endTag = new StringBuffer();
-            }
-            else if ( possibleTag && endTag.toString().equalsIgnoreCase( "</TUTORIAL>" ) )
-            {
-                foundEndTag = true;
-            }
-            c = ( char ) br.read();
-        }
-
-        return foundEndTag;
-    }
-
-    /**
-     * Checks to see if the next read char would be able to combine with a '\' to become a special char
-     * 
-     * @param sb The String Buffer to add the special char to
-     * @param br The buffered reader in which the text is being read from
-     * @param c The most recent char that has been read
-     * @throws IOException if br.read() fails
-     */
-    private void checkSpecialChar( StringBuffer sb, BufferedReader br, char c ) throws IOException
-    {
-        switch ( c )
-        {
-            case 'n':
-                sb.append( '\n' );
-                break;
-            case 'r':
-                sb.append( '\r' );
-                break;
-            case '"':
-                sb.append( '\"' );
-                break;
-            case '\\':
-                sb.append( '\\' );
-                checkSpecialChar( sb, br, ( char ) br.read() );
-                break;
-            default:
-                sb.append( "\\" + c );
-                break;
-        }
-    }
-
-    /**
-     * Parses the String Buffer into an array list containing separate pages
-     * 
-     * @param sb The string buffer containing all the characters read from the config
-     * @return An array list containing separate pages
-     */
-    private ArrayList<String> parseTutorialPages( StringBuffer sb )
-    {
-        ArrayList<String> tutorial = new ArrayList<String>();
-        String pages = sb.toString();
-        int numPages = 0;
-        while ( pages != null )
-        {
-            int startIndex = pages.indexOf( "<PAGE>", 0 );
-            int finalIndex = pages.indexOf( "</PAGE>", 0 );
-            if ( startIndex == -1 || finalIndex == -1 )
-            {
-                plugin.getUtil().consoleLog( Level.SEVERE, "Could not find the Page XML tags. Stopped adding tutorial pages after page number " + numPages );
-                break;
-            }
-
-            numPages++;
-
-            tutorial.add( pages.substring( startIndex + 6, finalIndex ) );
-
-            if ( finalIndex + 9 >= pages.length() )
-            {
-                pages = null;
-            }
-            else
-            {
-                pages = pages.substring( finalIndex + 8 );
-            }
-        }
-
-        return tutorial;
     }
 
     private boolean readSkillsFile()

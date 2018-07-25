@@ -172,10 +172,10 @@ public class Out
     {
         String message1;
         String message2 = "";
-        String prefix = Messages.skillSheetPrefix;
+        //String prefix = Messages.skillSheetPrefix;
 
         message1 = parseSkillSheet( Messages.skillSheetHeader, dCPlayer, null );
-        sendMessage( sender, message1, prefix );
+        sendMessage( sender, message1, "" );
 
         boolean odd = true;
         String untrainedSkills = plugin.getPlaceHolderParser().generalParse( Messages.skillSheetUntrainedSkillHeader );
@@ -213,15 +213,15 @@ public class Out
             message2 = message2.concat( interim );
             if ( odd )
             {
-                sendMessage( sender, message2, prefix );
+                sendMessage( sender, message2, "" );
                 message2 = "";
             }
 
         }
         if ( !message2.equals( "" ) )
-            sendMessage( sender, message2, prefix );
+            sendMessage( sender, message2, "" );
         if ( printFull )
-            sendMessage( sender, untrainedSkills, prefix );
+            sendMessage( sender, untrainedSkills, "" );
     }
 
     /**

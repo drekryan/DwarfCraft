@@ -410,7 +410,7 @@ public class DwarfPlayer
             {
                 String playerPosition = player.getLocation().getX() + " " + player.getLocation().getY() + " " + player.getLocation().getZ();
 
-                command = command.replaceAll( "%playerpos%", playerPosition ).replaceAll( "%world%", player.getWorld().getName() );
+                command = command.replaceAll( "<player.pos>", playerPosition ).replaceAll( "<world.name>", player.getWorld().getName() );
                 command = plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill( command, this, skill );
                 command = ChatColor.translateAlternateColorCodes( '&', command );
 
