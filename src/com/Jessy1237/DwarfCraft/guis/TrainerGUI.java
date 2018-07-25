@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -128,6 +128,7 @@ public class TrainerGUI extends DwarfGUI
             //Allows for the cancel option to fire without a delay
             if ( event.getCurrentItem().getType().equals( Material.BARRIER ) && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase( "Cancel" ) )
             {
+                player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
                 dwarfPlayer.getPlayer().closeInventory();
             }
             else
@@ -135,11 +136,13 @@ public class TrainerGUI extends DwarfGUI
                 long currentTime = System.currentTimeMillis();
                 if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
                 {
-                    plugin.getOut().sendMessage( event.getWhoClicked(), Messages.trainerCooldown );
+                    player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerCooldown ) ) );
+                    player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
                 }
                 else
                 {
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, event.getCurrentItem(), this ), 2 );
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
                 }
             }
         }

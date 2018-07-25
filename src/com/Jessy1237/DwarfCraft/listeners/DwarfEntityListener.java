@@ -1,6 +1,11 @@
 /*
- * Copyright (c) 2018. DwarfCraft is an RPG plugin that allows players to improve their characters skills and capabilities through training, not experience. Authors: Jessy1237 and Drekryan Original
- * Authors: smartaleq, LexManos and RCarretta
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
  */
 
 package com.Jessy1237.DwarfCraft.listeners;
@@ -10,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.Tag;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -119,7 +127,7 @@ public class DwarfEntityListener implements Listener
 
                 if ( trainer.isWaiting() )
                 {
-                    plugin.getOut().sendMessage( dwarfPlayer.getPlayer(), Messages.trainerOccupied );
+                    dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerOccupied ) ) );
                 }
                 else
                 {
@@ -127,44 +135,43 @@ public class DwarfEntityListener implements Listener
 
                     if ( skill == null )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill ) );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotContainSkill ) ) );
                         return true;
                     }
 
-                    String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
                     if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.chooseARace ) ) );
                         return true;
                     }
 
                     if ( dwarfPlayer.getRace().equalsIgnoreCase( "Vanilla" ) )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.vanillaRace );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.vanillaRace ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ) ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() >= trainer.getMaxSkill() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.trainerMaxLevel, tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerMaxLevel ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() < trainer.getMinSkill() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.trainerLevelTooHigh, tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerLevelTooHigh ) ) );
                         return true;
                     }
 

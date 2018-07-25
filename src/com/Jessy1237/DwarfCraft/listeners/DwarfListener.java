@@ -10,6 +10,8 @@
 
 package com.Jessy1237.DwarfCraft.listeners;
 
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,11 +44,13 @@ public class DwarfListener implements Listener
         {
             String name = plugin.getChat().getPlayerPrefix( player.getPlayer() ) + player.getPlayer().getName() + plugin.getChat().getPlayerSuffix( player.getPlayer() );
             String message = Messages.announcementMessage.replace( PlaceHolder.PLAYER_NAME.getPlaceHolder(), name ).replace( PlaceHolder.SKILL_NAME.getPlaceHolder(), skill.getDisplayName() ).replace( PlaceHolder.SKILL_LEVEL.getPlaceHolder(), "" + skill.getLevel() ).replace( PlaceHolder.LEVEL.getPlaceHolder(), "" + skill.getLevel() );
-            
+            player.getPlayer().playSound( player.getPlayer().getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 0.5f, 1.0f );
+
             plugin.getOut().sendBroadcast( message );
         }
     }
 
+    @EventHandler
     public void onDwarfEffectEvent( DwarfEffectEvent event )
     {
         DwarfPlayer player = event.getDwarfPlayer();

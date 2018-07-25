@@ -11,6 +11,8 @@
 package com.Jessy1237.DwarfCraft.schedules;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.inventory.ItemStack;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
@@ -52,6 +54,7 @@ public class TrainSkillSchedule implements Runnable
             if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
             {
                 plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
+                dCPlayer.getPlayer().playSound( dCPlayer.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.MASTER, 0.5f, 1.0f );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }
@@ -59,6 +62,7 @@ public class TrainSkillSchedule implements Runnable
             if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
             {
                 plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                dCPlayer.getPlayer().playSound(dCPlayer.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.MASTER, 0.5f, 1.0f );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }
@@ -66,6 +70,7 @@ public class TrainSkillSchedule implements Runnable
             if ( skill.getLevel() >= trainer.getMaxSkill() )
             {
                 plugin.getOut().sendMessage( dCPlayer.getPlayer(), Messages.trainerMaxLevel, tag );
+                dCPlayer.getPlayer().playSound(dCPlayer.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.MASTER, 0.5f, 1.0f );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }

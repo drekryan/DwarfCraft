@@ -72,6 +72,11 @@ public class DwarfEffectEvent extends Event implements Cancellable
         return handlers;
     }
 
+    public static HandlerList getHandlerList()
+    {
+        return handlers;
+    }
+
     public boolean isCancelled()
     {
         return cancelled;
