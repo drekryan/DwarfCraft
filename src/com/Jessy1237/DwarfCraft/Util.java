@@ -147,7 +147,7 @@ public class Util
                 mats = tag.getValues();
         }
         else
-        {
+        {   
             mats.add( parseItem( item.getString( name ) ).getType() );
         }
 

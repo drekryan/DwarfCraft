@@ -70,7 +70,7 @@ public class DwarfEffect
             mCreature = EntityType.valueOf( record.getString( "OriginMaterial" ) );
         }
         mResult = plugin.getUtil().getDwarfItemHolder( record, "OutputMaterial" );
-        
+
         mRequireTool = record.getBool( "RequireTool" );
         mFloorResult = record.getBool( "Floor" );
 
