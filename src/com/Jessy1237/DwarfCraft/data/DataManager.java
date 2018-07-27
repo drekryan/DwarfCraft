@@ -40,66 +40,44 @@ public class DataManager
     public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<>();
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
-    private final DBWrapperSQLite sqlLiteWrapper;
-    private final DBWrapperMySQL mySQLWrapper;
-    private boolean useMySQL;
+    private final DBWrapper dbWrapper;
 
     public DataManager( DwarfCraft plugin, ConfigManager cm )
     {
         this.plugin = plugin;
         this.configManager = cm;
-
-        sqlLiteWrapper = new DBWrapperSQLite( plugin, cm );
-        mySQLWrapper = new DBWrapperMySQL( plugin, cm );
-
-        this.useMySQL = configManager.useMySQL;
+        this.dbWrapper = DBWrapperFactory.createWrapper( configManager.dbType, plugin, cm );
     }
 
     public void dbInitialize()
     {
-        if ( useMySQL )
-            mySQLWrapper.dbInitialize();
-        else
-            sqlLiteWrapper.dbInitialize();
+        dbWrapper.dbInitialize();
     }
 
     public void dbFinalize()
     {
-        if ( useMySQL )
-            mySQLWrapper.dbFinalize();
-        else
-            sqlLiteWrapper.dbFinalize();
+        dbWrapper.dbFinalize();
     }
 
     public void createDwarfData( DwarfPlayer dCPlayer )
     {
-        if ( useMySQL )
-            mySQLWrapper.createDwarfData( dCPlayer );
-        else
-            sqlLiteWrapper.createDwarfData( dCPlayer );
+        dbWrapper.createDwarfData( dCPlayer );
     }
 
     public boolean checkDwarfData( DwarfPlayer player )
     {
-        if ( useMySQL )
-            return mySQLWrapper.checkDwarfData( player );
-        else
-            return sqlLiteWrapper.checkDwarfData( player );
+        return dbWrapper.checkDwarfData( player );
     }
 
     public boolean saveDwarfData( DwarfPlayer dwarfPlayer, DwarfSkill[] skills )
     {
-        if ( useMySQL )
-            return mySQLWrapper.saveDwarfData( dwarfPlayer, skills );
-        else
-            return sqlLiteWrapper.saveDwarfData( dwarfPlayer, skills );
+        return dbWrapper.saveDwarfData( dwarfPlayer, skills );
     }
 
     public void addVehicle( DwarfVehicle v )
     {
         vehicleMap.put( v.getVehicle().getEntityId(), v );
     }
-
 
     public boolean checkTrainersInChunk( Chunk chunk )
     {
@@ -166,7 +144,7 @@ public class DataManager
     public DwarfPlayer findOffline( UUID uuid )
     {
         DwarfPlayer dCPlayer = createDwarf( null );
-        if ( sqlLiteWrapper.checkDwarfData( dCPlayer, uuid ) )
+        if ( dbWrapper.checkDwarfData( dCPlayer, uuid ) )
             return dCPlayer;
         else
         {

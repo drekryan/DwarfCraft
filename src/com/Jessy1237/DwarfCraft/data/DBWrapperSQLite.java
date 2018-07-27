@@ -31,7 +31,7 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-class DBWrapperSQLite
+class DBWrapperSQLite implements DBWrapper
 {
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
@@ -44,7 +44,7 @@ class DBWrapperSQLite
     }
 
     @SuppressWarnings( "deprecation" )
-    protected void dbInitialize()
+    public void dbInitialize()
     {
         try
         {
@@ -230,7 +230,7 @@ class DBWrapperSQLite
         }
     }
 
-    void dbFinalize()
+    public void dbFinalize()
     {
         try
         {
@@ -270,7 +270,7 @@ class DBWrapperSQLite
      * @param player
      * @param uuid
      */
-    boolean checkDwarfData( DwarfPlayer player, UUID uuid )
+    public boolean checkDwarfData( DwarfPlayer player, UUID uuid )
     {
         try
         {

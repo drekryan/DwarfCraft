@@ -1,7 +1,7 @@
 #This is the default configuration setup for DwarfCraft
 
-#Use MySQL
-UseMySQL: false
+#Select the Database type to use. Currently only supports "sqlite" or "MySQL"
+Database Type: "sqlite"
 
 MySQL Hostname: "127.0.0.1"
 MySQL Port: 3306

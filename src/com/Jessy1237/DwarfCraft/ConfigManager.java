@@ -46,7 +46,7 @@ public final class ConfigManager
 
     private final String configDirectory;
 
-    public boolean useMySQL;
+    public String dbType;
     public String host;
     public int port;
     public String database;
@@ -247,7 +247,7 @@ public final class ConfigManager
 
         FileConfiguration config = plugin.getConfig();
 
-        useMySQL = config.getBoolean( "Use MySQL" );
+        dbType = config.getString( "Database Type" );
         host = config.getString( "MySQL Hostname" );
         port = config.getInt( "MySQL Port" );
         database = config.getString( "MySQL Database" );

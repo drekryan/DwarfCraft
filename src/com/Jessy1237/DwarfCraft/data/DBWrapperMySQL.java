@@ -15,7 +15,7 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-class DBWrapperMySQL
+class DBWrapperMySQL implements DBWrapper
 {
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
@@ -40,7 +40,7 @@ class DBWrapperMySQL
     }
 
     @SuppressWarnings( "deprecation" )
-    protected void dbInitialize()
+    public void dbInitialize()
     {
         try
         {
@@ -168,7 +168,7 @@ class DBWrapperMySQL
 
     private void buildDB()
     {
-        plugin.getLogger().log( Level.INFO, "Attempting to build database....");
+        plugin.getLogger().log( Level.INFO, "Attempting to build database...." );
 
         try
         {
@@ -183,7 +183,8 @@ class DBWrapperMySQL
 
             // Attempt to build tables if they cannot be found
             statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database + "`.`players` (`id` INT NOT NULL AUTO_INCREMENT, `uuid` TEXT,`race` TEXT,`raceMaster` TEXT,PRIMARY KEY (`id`)) ENGINE = InnoDB;" );
-            statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database + "`.`skills` ( `player` INT NOT NULL , `id` INT NOT NULL , `level` INT NOT NULL DEFAULT '0' , `deposit1` INT NOT NULL DEFAULT '0' , `deposit2` INT NOT NULL DEFAULT '0' , `deposit3` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`player`, `id`)) ENGINE = InnoDB;" );
+            statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database
+                    + "`.`skills` ( `player` INT NOT NULL , `id` INT NOT NULL , `level` INT NOT NULL DEFAULT '0' , `deposit1` INT NOT NULL DEFAULT '0' , `deposit2` INT NOT NULL DEFAULT '0' , `deposit3` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`player`, `id`)) ENGINE = InnoDB;" );
 
             rs.close();
         }
@@ -195,7 +196,7 @@ class DBWrapperMySQL
         }
     }
 
-    void dbFinalize()
+    public void dbFinalize()
     {
         try
         {
@@ -235,7 +236,7 @@ class DBWrapperMySQL
      * @param player
      * @param uuid
      */
-    boolean checkDwarfData( DwarfPlayer player, UUID uuid )
+    public boolean checkDwarfData( DwarfPlayer player, UUID uuid )
     {
         try
         {
