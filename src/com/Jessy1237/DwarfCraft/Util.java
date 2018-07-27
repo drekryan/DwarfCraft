@@ -147,7 +147,7 @@ public class Util
                 mats = tag.getValues();
         }
         else
-        {   
+        {
             mats.add( parseItem( item.getString( name ) ).getType() );
         }
 
@@ -211,7 +211,7 @@ public class Util
         String prefix = "";
         if ( !player.getRace().equalsIgnoreCase( "NULL" ) )
             prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f" );
+        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), race ) + "&f" );
     }
 
     public String getPlayerPrefix( String race )
@@ -220,7 +220,7 @@ public class Util
         String prefix = "";
         if ( !race.equalsIgnoreCase( "NULL" ) )
             prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f" );
+        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f" );
     }
 
     public String getPlayerPrefixOldColours( String race )
@@ -229,7 +229,7 @@ public class Util
         String prefix = "";
         if ( !race.equalsIgnoreCase( "NULL" ) )
             prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f";
+        return prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f";
     }
 
     public int getMaxLevelForSkill( DwarfPlayer dcPlayer, DwarfSkill skill )
@@ -322,12 +322,12 @@ public class Util
                             prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
                             plugin.getChat().setPlayerPrefix( player, prefix );
                         }
-
-                        if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                        {
-                            plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
-                        }
                     }
+                }
+
+                if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                {
+                    plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
                 }
             }
             else
