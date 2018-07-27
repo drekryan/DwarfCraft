@@ -207,6 +207,8 @@ public class Util
 
     public String getPlayerPrefix( DwarfPlayer player )
     {
+        if ( player.getRace().isEmpty() )
+            return "";
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
         String prefix = "";
         if ( !player.getRace().equalsIgnoreCase( "NULL" ) )
@@ -216,6 +218,7 @@ public class Util
 
     public String getPlayerPrefix( String race )
     {
+        if (race.isEmpty()) return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         String prefix = "";
         if ( !race.equalsIgnoreCase( "NULL" ) )
@@ -225,6 +228,8 @@ public class Util
 
     public String getPlayerPrefixOldColours( String race )
     {
+        if ( race.isEmpty() )
+            return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         String prefix = "";
         if ( !race.equalsIgnoreCase( "NULL" ) )

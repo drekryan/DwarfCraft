@@ -46,6 +46,13 @@ public final class ConfigManager
 
     private final String configDirectory;
 
+    public boolean useMySQL;
+    public String host;
+    public int port;
+    public String database;
+    public String username;
+    public String password;
+
     private String dbpath;
     private Integer trainDelay;
     private Integer announcementInterval;
@@ -239,6 +246,14 @@ public final class ConfigManager
         skillMaxCapeCommands = new ArrayList<>();
 
         FileConfiguration config = plugin.getConfig();
+
+        useMySQL = config.getBoolean( "Use MySQL" );
+        host = config.getString( "MySQL Hostname" );
+        port = config.getInt( "MySQL Port" );
+        database = config.getString( "MySQL Database" );
+        username = config.getString( "MySQL Username" );
+        password = config.getString( "MySQL Password" );
+
         dbpath = config.getString( "Database File Name" );
         DwarfCraft.debugMessagesThreshold = config.getInt( "Debug Level" );
         sendGreeting = config.getBoolean( "Send Login Greet" );
