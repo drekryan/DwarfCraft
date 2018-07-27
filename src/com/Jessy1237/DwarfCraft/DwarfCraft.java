@@ -25,18 +25,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.Jessy1237.DwarfCraft.commands.CommandCreate;
-import com.Jessy1237.DwarfCraft.commands.CommandDebug;
-import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandHelp;
-import com.Jessy1237.DwarfCraft.commands.CommandInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandList;
-import com.Jessy1237.DwarfCraft.commands.CommandRace;
-import com.Jessy1237.DwarfCraft.commands.CommandReload;
-import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
-import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandSkillSheet;
-import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
+import com.Jessy1237.DwarfCraft.commands.*;
 import com.Jessy1237.DwarfCraft.listeners.DwarfBlockListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfEntityListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfInventoryListener;
@@ -349,8 +338,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         // We are not backwards compatible
         if ( !Bukkit.getBukkitVersion().startsWith( "1.13" ) )
         {
-            getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() +
-                    " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
+            getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() + " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
             pm.disablePlugin( this );
             return;
         }
@@ -365,8 +353,12 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         try
         {
-            setupPermissions();
-            setupChat();
+            if ( setupPermissions() )
+                getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into a Vault permissions plugin!" );
+
+            if ( setupChat() )
+                getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into a Vault chat plugin!" );
+
         }
         catch ( Exception e )
         {
@@ -441,7 +433,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into PlaceholderAPI!" );
         }
 
-        if ( isEnabled() ) initCommands();
+        if ( isEnabled() )
+            initCommands();
 
         getUtil().consoleLog( Level.INFO, ChatColor.GREEN + getDescription().getName() + " " + getDescription().getVersion() + " is enabled!" );
 
