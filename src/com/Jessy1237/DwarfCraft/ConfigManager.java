@@ -166,7 +166,7 @@ public final class ConfigManager
         return null;
     }
 
-    protected String getDbPath()
+    public String getDbPath()
     {
         return configDirectory + dbpath;
     }

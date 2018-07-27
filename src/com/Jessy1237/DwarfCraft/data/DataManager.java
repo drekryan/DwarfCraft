@@ -8,7 +8,7 @@
  * Original Authors: smartaleq, LexManos and RCarretta
  */
 
-package com.Jessy1237.DwarfCraft;
+package com.Jessy1237.DwarfCraft.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +23,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
+import com.Jessy1237.DwarfCraft.ConfigManager;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
@@ -42,7 +44,7 @@ public class DataManager
     private final DBWrapperMySQL mySQLWrapper;
     private boolean useMySQL;
 
-    protected DataManager( DwarfCraft plugin, ConfigManager cm )
+    public DataManager( DwarfCraft plugin, ConfigManager cm )
     {
         this.plugin = plugin;
         this.configManager = cm;
@@ -53,7 +55,7 @@ public class DataManager
         this.useMySQL = configManager.useMySQL;
     }
 
-    void dbInitialize()
+    public void dbInitialize()
     {
         if ( useMySQL )
             mySQLWrapper.dbInitialize();
@@ -61,7 +63,7 @@ public class DataManager
             sqlLiteWrapper.dbInitialize();
     }
 
-    void dbFinalize()
+    public void dbFinalize()
     {
         if ( useMySQL )
             mySQLWrapper.dbFinalize();
@@ -161,7 +163,7 @@ public class DataManager
         return null;
     }
 
-    protected DwarfPlayer findOffline( UUID uuid )
+    public DwarfPlayer findOffline( UUID uuid )
     {
         DwarfPlayer dCPlayer = createDwarf( null );
         if ( sqlLiteWrapper.checkDwarfData( dCPlayer, uuid ) )
@@ -198,7 +200,7 @@ public class DataManager
     }
 
     @SuppressWarnings( "unlikely-arg-type" )
-    protected DwarfTrainer getTrainer( String str )
+    public DwarfTrainer getTrainer( String str )
     {
         return ( trainerList.get( str ) ); // can return null
     }

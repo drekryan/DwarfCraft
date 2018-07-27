@@ -1,4 +1,14 @@
-package com.Jessy1237.DwarfCraft;
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
+package com.Jessy1237.DwarfCraft.data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,59 +23,50 @@ import java.util.logging.Level;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
+import com.Jessy1237.DwarfCraft.ConfigManager;
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-class DBWrapperMySQL
+class DBWrapperSQLite
 {
     private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
 
-    private String host;
-    private int port;
-    private String database;
-    private String username;
-    private String password;
-
-    DBWrapperMySQL( DwarfCraft plugin, ConfigManager cm )
+    DBWrapperSQLite( DwarfCraft plugin, ConfigManager cm )
     {
         this.plugin = plugin;
         this.configManager = cm;
-
-        this.host = configManager.host;
-        this.port = configManager.port;
-        this.database = configManager.database;
-        this.username = configManager.username;
-        this.password = configManager.password;
     }
 
     @SuppressWarnings( "deprecation" )
-    void dbInitialize()
+    protected void dbInitialize()
     {
         try
         {
-            Class.forName( "com.mysql.jdbc.Driver" );
-            mDBCon = DriverManager.getConnection( "jdbc:mysql://" + host + ":" + port + "/" + database, username, password );
+            Class.forName( "org.sqlite.JDBC" );
+            mDBCon = DriverManager.getConnection( "jdbc:sqlite:" + configManager.getDbPath() );
             Statement statement = mDBCon.createStatement();
-            ResultSet rs = null;
+            ResultSet rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'players';" );
+            if ( !rs.next() )
+            {
+                buildDB();
+            }
 
-            // Ensure database is valid
-            buildDB();
-
-            // Ensure skill deposits exist
+            // check for update to skill deposits
             try
             {
                 rs = statement.executeQuery( "SELECT deposit1 FROM skills;" );
             }
             catch ( SQLException ex )
             {
-                statement.executeUpdate( "ALTER TABLE skills ADD COLUMN deposit1 INT DEFAULT 0;" );
-                statement.executeUpdate( "ALTER TABLE skills ADD COLUMN deposit2 INT DEFAULT 0;" );
-                statement.executeUpdate( "ALTER TABLE skills ADD COLUMN deposit3 INT DEFAULT 0;" );
+                statement.executeUpdate( "ALTER TABLE skills ADD COLUMN deposit1 NUMERIC DEFAULT 0;" );
+                statement.executeUpdate( "ALTER TABLE skills ADD COLUMN deposit2 NUMERIC DEFAULT 0;" );
+                statement.executeUpdate( "ALTER TABLE skills ADD COLUMN deposit3 NUMERIC DEFAULT 0;" );
             }
 
             // Adds the uuid arg to the player table
@@ -75,7 +76,7 @@ class DBWrapperMySQL
             }
             catch ( Exception e )
             {
-                plugin.getLogger().log( Level.INFO, "Converting Player Database..." );
+                plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
                 HashMap<UUID, String> dcplayers = new HashMap<>();
                 HashMap<UUID, Integer> ids = new HashMap<>();
@@ -97,12 +98,12 @@ class DBWrapperMySQL
                     e1.printStackTrace();
                 }
                 statement.executeUpdate( "DROP TABLE players" );
-                statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database + "`. `players` ( `id` INT NOT NULL AUTO_INCREMENT, `uuid` TEXT, `race` TEXT, `raceMaster` TEXT, PRIMARY KEY( `id` ))ENGINE = InnoDB;" );
+                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race, raceMaster );" );
                 for ( UUID uuid : dcplayers.keySet() )
                 {
                     if ( uuid != null )
                     {
-                        PreparedStatement prep = mDBCon.prepareStatement( "INSERT INTO players(id, uuid, race, raceMaster) values(?,?,?,?);" );
+                        PreparedStatement prep = mDBCon.prepareStatement( "insert into players(id, uuid, race, raceMaster) values(?,?,?,?);" );
                         prep.setInt( 1, ids.get( uuid ) );
                         prep.setString( 2, uuid.toString() );
                         prep.setString( 3, dcplayers.get( uuid ) );
@@ -111,7 +112,7 @@ class DBWrapperMySQL
                         prep.close();
                     }
                 }
-                plugin.getLogger().log( Level.INFO, "Successfully converted the players database..." );
+                plugin.getLogger().log( Level.INFO, "Finished Converting the Players DB." );
             }
 
             // Adds raceMaster arg to the player table
@@ -121,7 +122,7 @@ class DBWrapperMySQL
             }
             catch ( Exception e )
             {
-                plugin.getLogger().log( Level.INFO, "Converting player database..." );
+                plugin.getLogger().log( Level.INFO, "Converting Player DB (may lag a little wait for completion message)." );
                 mDBCon.setAutoCommit( false );
                 HashMap<UUID, String> dcplayers = new HashMap<>();
                 HashMap<UUID, Integer> ids = new HashMap<>();
@@ -143,7 +144,7 @@ class DBWrapperMySQL
                     e1.printStackTrace();
                 }
                 statement.executeUpdate( "DROP TABLE players" );
-                statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database + "`. `players` ( `id` INT NOT NULL AUTO_INCREMENT, `uuid` TEXT, `race` TEXT, `raceMaster` TEXT, PRIMARY KEY( `id` ))ENGINE = InnoDB" );
+                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race, raceMaster );" );
                 for ( UUID uuid : dcplayers.keySet() )
                 {
                     if ( uuid != null )
@@ -157,11 +158,42 @@ class DBWrapperMySQL
                         prep.close();
                     }
                 }
-                plugin.getLogger().log( Level.INFO, "Successfully converted the players database..." );
+                plugin.getLogger().log( Level.INFO, "Finished Converting the Players DB." );
             }
 
-            if ( rs != null )
-                rs.close();
+            try
+            {
+                rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'trainers';" );
+                if ( rs.next() )
+                {
+                    plugin.getLogger().log( Level.INFO, "Transferring Trainer DB to citizens  (may lag a little wait for completion message)." );
+
+                    rs = statement.executeQuery( "select * from trainers;" );
+
+                    while ( rs.next() )
+                    {
+                        AbstractNPC npc1;
+                        if ( rs.getString( "type" ).equalsIgnoreCase( "PLAYER" ) )
+                        {
+                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.PLAYER, UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
+                        }
+                        else
+                        {
+                            npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
+                        }
+                        npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
+                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
+                        npc1.setProtected( true );
+                    }
+                }
+                statement.execute( "DROP TABLE trainers" );
+                plugin.getLogger().log( Level.INFO, "Finished Transferring the Trainers DB." );
+            }
+            catch ( Exception e )
+            {
+                // NOOP
+            }
+            rs.close();
             mDBCon.setAutoCommit( true );
         }
         catch ( Exception e )
@@ -172,24 +204,23 @@ class DBWrapperMySQL
 
     private void buildDB()
     {
-        plugin.getLogger().log( Level.INFO, "Attempting to build database....");
-
         try
         {
             Statement statement = mDBCon.createStatement();
-
-            // Attempt to build database if it cannot be found
-            ResultSet rs = statement.executeQuery( "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" + database + "'" );
+            ResultSet rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'players';" );
             if ( !rs.next() )
             {
-                statement.executeQuery( "CREATE DATABASE IF NOT EXISTS '" + database + "'" );
+                statement.executeUpdate( "create table players ( id INTEGER PRIMARY KEY, uuid, race, raceMaster );" );
             }
-
-            // Attempt to build tables if they cannot be found
-            statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database + "`.`players` (`id` INT NOT NULL AUTO_INCREMENT, `uuid` TEXT,`race` TEXT,`raceMaster` TEXT,PRIMARY KEY (`id`)) ENGINE = InnoDB;" );
-            statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database + "`.`skills` ( `player` INT NOT NULL , `id` INT NOT NULL , `level` INT NOT NULL DEFAULT '0' , `deposit1` INT NOT NULL DEFAULT '0' , `deposit2` INT NOT NULL DEFAULT '0' , `deposit3` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`player`, `id`)) ENGINE = InnoDB;" );
-
             rs.close();
+
+            rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'skills';" );
+            if ( !rs.next() )
+            {
+                statement.executeUpdate( "CREATE TABLE 'skills' " + "  ( " + "    'player' INT, " + "    'id' int, " + "    'level' INT DEFAULT 0, " + "    'deposit1' INT DEFAULT 0, " + "    'deposit2' INT DEFAULT 0, " + "    'deposit3' INT DEFAULT 0, " + "    PRIMARY KEY ('player','id') " + "  );" );
+            }
+            rs.close();
+
         }
         catch ( SQLException e )
         {
