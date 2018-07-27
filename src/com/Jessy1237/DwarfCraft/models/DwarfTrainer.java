@@ -115,10 +115,10 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         for ( int i = 0; i < trainingCostsToLevel.size(); i++ )
         {
-            boolean isTag = skill.getItem( i ).getDwarfItemHolder().isTagged() && skill.getItem( i ).getDwarfItemHolder().getMaterials().contains( clickedItemStack.getType() );
-            if ( isTag || clickedItemStack.getType().equals( trainingCostsToLevel.get( i ).getType() ) )
+            boolean isTag = skill.getItem( i + 1 ).getDwarfItemHolder().isTagged() && skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials().contains( clickedItemStack.getType() );
+            if ( isTag || clickedItemStack.getType() == trainingCostsToLevel.get( i ).getType() )
             {
-                    deposited = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill )[1];
+                deposited = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill )[1];
                 break;
             }
         }
@@ -161,7 +161,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         for ( int i = 0; i < trainingCostsToLevel.size(); i++ )
         {
-                deposited = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill )[1];
+            deposited = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill )[1];
         }
 
         DwarfDepositEvent e = new DwarfDepositEvent( dCPlayer, this, skill );
@@ -201,7 +201,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         for ( int i = 0; i < trainingCostsToLevel.size(); i++ )
         {
-                hasMatsOrDeposits = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill );
+            hasMatsOrDeposits = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill );
         }
 
         DwarfLevelUpEvent e = null;
@@ -297,23 +297,26 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
      */
     private boolean containsItem( ItemStack costStack, Player player, DwarfSkill skill )
     {
-        for ( int i = 0; i < 3; i++ )
+        for ( int i = 1; i <= 3; i++ )
         {
             boolean isTag = skill.getItem( i ).getDwarfItemHolder().isTagged() && skill.getItem( i ).getDwarfItemHolder().getMaterials().contains( costStack.getType() );
             if ( isTag )
             {
                 Set<Material> matches = skill.getItem( i ).getDwarfItemHolder().getMaterials();
-                for ( Material mat : matches )
+                if ( matches.contains( costStack.getType() ) ) //Make sure we are checking only for the matching costStack types
                 {
-                    if ( player.getInventory().contains( mat ) )
+                    for ( Material mat : matches )
                     {
-                        return true;
+                        if ( player.getInventory().contains( mat ) )
+                        {
+                            return true;
+                        }
                     }
                 }
             }
             else
             {
-                if ( player.getInventory().contains( costStack ) )
+                if ( player.getInventory().contains( costStack.getType() ) )
                 {
                     return true;
                 }
@@ -338,7 +341,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         {
             if ( invStack == null )
                 continue;
-            if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+            if ( ( invStack.getType() == costStack.getType() && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
                     || ( mats.contains( costStack.getType() ) && mats.contains( invStack.getType() ) ) )
             {
                 int inv = invStack.getAmount();
