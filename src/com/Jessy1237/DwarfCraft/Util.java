@@ -211,9 +211,7 @@ public class Util
         if ( player.getRace().isEmpty() )
             return "";
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
-        String prefix = "";
-        if ( !player.getRace().equalsIgnoreCase( "NULL" ) )
-            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), race ) + "&f" );
     }
 
@@ -221,9 +219,7 @@ public class Util
     {
         if (race.isEmpty()) return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        String prefix = "";
-        if ( !race.equalsIgnoreCase( "NULL" ) )
-            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f" );
     }
 
@@ -232,9 +228,7 @@ public class Util
         if ( race.isEmpty() )
             return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        String prefix = "";
-        if ( !race.equalsIgnoreCase( "NULL" ) )
-            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f";
     }
 

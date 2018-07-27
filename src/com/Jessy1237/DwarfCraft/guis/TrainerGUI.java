@@ -36,6 +36,7 @@ public class TrainerGUI extends DwarfGUI
 {
     private DwarfTrainer trainer;
     public int timer;
+    public boolean timerValid = false;
 
     public TrainerGUI( DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dwarfPlayer )
     {
@@ -71,7 +72,11 @@ public class TrainerGUI extends DwarfGUI
                     {
                         costStack.setAmount( 1 );
                         addItem( null, lore, guiIndex, costStack );
-                        timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask(dwarfPlayer, skill, costStack, guiIndex, skill.getItem( i ).getDwarfItemHolder().getMaterials()), 10, 25 );
+                        if (!timerValid)
+                        {
+                            timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask( dwarfPlayer, skill, costStack, guiIndex, skill.getItem( i ).getDwarfItemHolder().getMaterials() ), 10, 25 );
+                            timerValid = true;
+                        }
                         guiIndex++;
                         break;
                     }
@@ -121,6 +126,8 @@ public class TrainerGUI extends DwarfGUI
 
             if ( trainer == null || dwarfPlayer.getPlayer() == null )
             {
+                Bukkit.getScheduler().cancelTask( timer );
+                timerValid = false;
                 player.closeInventory();
                 return;
             }
@@ -129,6 +136,8 @@ public class TrainerGUI extends DwarfGUI
             if ( event.getCurrentItem().getType().equals( Material.BARRIER ) && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase( "Cancel" ) )
             {
                 player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
+                Bukkit.getScheduler().cancelTask( timer );
+                timerValid = false;
                 dwarfPlayer.getPlayer().closeInventory();
             }
             else
@@ -209,6 +218,7 @@ public class TrainerGUI extends DwarfGUI
             if (player.getPlayer().getOpenInventory().getTopInventory().getType() == InventoryType.CRAFTING)
             {
                 Bukkit.getScheduler().cancelTask( timer );
+                timerValid = false;
                 return;
             }
 
