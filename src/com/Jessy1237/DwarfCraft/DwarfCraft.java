@@ -334,6 +334,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     public void onEnable( boolean reload )
     {
         PluginManager pm = getServer().getPluginManager();
+        util = new Util( this ); //Need to initialise Util earlier if going to use it in the enabling method
 
         // We are not backwards compatible
         if ( !Bukkit.getBukkitVersion().startsWith( "1.13" ) )
@@ -373,7 +374,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             pm.disablePlugin( this );
             return;
         }
-        util = new Util( this );
+
         cm = new ConfigManager( this, getDataFolder().getAbsolutePath() );
 
         if ( pm.getPlugin( "Citizens" ) == null || !pm.getPlugin( "Citizens" ).isEnabled() )
