@@ -273,8 +273,6 @@ public class DwarfEffect
 
     public boolean checkInitiator( Material mat )
     {
-        // TODO 1.13 Support Tags
-
         return mInitiator.isTagged() ? ( mInitiator.getMaterials().contains( mat ) ) : ( mInitiator.getItemStack().getType() == mat );
     }
 

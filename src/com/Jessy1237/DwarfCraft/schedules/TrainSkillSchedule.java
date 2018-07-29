@@ -10,7 +10,6 @@
 
 package com.Jessy1237.DwarfCraft.schedules;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -25,7 +24,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class TrainSkillSchedule implements Runnable
 {
@@ -48,7 +46,6 @@ public class TrainSkillSchedule implements Runnable
     @Override
     public void run()
     {
-
         DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
 
         if ( clickedItem.getType().equals( Material.LIGHT_BLUE_DYE ) || clickedItem.getType().equals( Material.LIME_DYE ) || clickedItem.getType().equals( Material.CACTUS_GREEN ))
@@ -56,7 +53,7 @@ public class TrainSkillSchedule implements Runnable
             // Checks if after a level up if any of the limitting constraints have changed. i.e. player may have levelled up past the trainers ability while the inventory was open
             if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
             {
-                dCPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) ) ) );
+                plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.CHAT, Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) );
                 dCPlayer.getPlayer().playSound( dCPlayer.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.MASTER, 0.5f, 1.0f );
                 dCPlayer.getPlayer().closeInventory();
                 return;
@@ -64,7 +61,7 @@ public class TrainSkillSchedule implements Runnable
 
             if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
             {
-                dCPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ) ) ) );
+                plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.CHAT, Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ) );
                 dCPlayer.getPlayer().playSound(dCPlayer.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.MASTER, 0.5f, 1.0f );
                 dCPlayer.getPlayer().closeInventory();
                 return;
@@ -72,7 +69,7 @@ public class TrainSkillSchedule implements Runnable
 
             if ( skill.getLevel() >= trainer.getMaxSkill() )
             {
-                dCPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerMaxLevel ) ) );
+                plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.CHAT, Messages.trainerMaxLevel );
                 dCPlayer.getPlayer().playSound(dCPlayer.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.MASTER, 0.5f, 1.0f );
                 dCPlayer.getPlayer().closeInventory();
                 return;
@@ -93,27 +90,36 @@ public class TrainSkillSchedule implements Runnable
                     trainer.depositAll( dCPlayer, trainerGUI );
                 }
             }
+
+            ItemStack guiItem;
+            guiItem = new ItemStack( Material.LIGHT_BLUE_DYE, 1 );
+            trainerGUI.addItem( "Deposit All", null, 12, guiItem );
+
+            guiItem = new ItemStack( Material.LIME_DYE, 1 );
+            trainerGUI.addItem( "Train Skill", null, 13, guiItem );
+
+            guiItem = new ItemStack( Material.CACTUS_GREEN, 1 );
+            trainerGUI.addItem( "Train & Deposit Skill", null, 14, guiItem );
         }
         else
         {
-
             // Checks if after a level up if any of the limiting constraints have changed. i.e. player may have leveled up past the trainers ability while the inventory was open
             if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
             {
-                dCPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) ) ) );
+                plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.ACTION_BAR, Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }
 
             if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
             {
-                dCPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ) ) ) );
+                plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.ACTION_BAR, Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ) );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }
             if ( skill.getLevel() >= trainer.getMaxSkill() )
             {
-                dCPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerMaxLevel ) ) );
+                plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.ACTION_BAR, Messages.trainerMaxLevel );
                 dCPlayer.getPlayer().closeInventory();
                 return;
             }

@@ -173,7 +173,7 @@ public class DwarfInventoryListener implements Listener
                                 held += i.getAmount();
                             }
 
-                            final ItemStack output = e.getResult( dCPlayer );
+                            final ItemStack output = e.getResult( dCPlayer, toCraft.getType() );
 
                             float modifier = ( float ) output.getAmount() / ( float ) toCraft.getAmount();
 
@@ -214,7 +214,6 @@ public class DwarfInventoryListener implements Listener
                 // space.
                 if ( isStackSumLegal( toCraft, toStore ) )
                 {
-
                     DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
 
                     for ( DwarfSkill s : dCPlayer.getSkills().values() )
@@ -223,8 +222,7 @@ public class DwarfInventoryListener implements Listener
                         {
                             if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType() ) )
                             {
-
-                                final ItemStack output = e.getResult( dCPlayer );
+                                final ItemStack output = e.getResult( dCPlayer, toCraft.getType() );
 
                                 DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { toCraft }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                                 plugin.getServer().getPluginManager().callEvent( ev );

@@ -29,9 +29,7 @@ import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public final class DwarfTrainer implements Comparable<DwarfTrainer>
 {
@@ -140,7 +138,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( deposited )
         {
-            player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.depositSuccessful ) ) );
+            plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.depositSuccessful );
             DwarfSkill[] dCSkills = { skill };
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
@@ -181,7 +179,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( deposited )
         {
-            player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.depositSuccessful ) ) );
+            plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.depositSuccessful );
             DwarfSkill[] dCSkills = { skill };
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
@@ -237,7 +235,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 }
                 else
                 {
-                    player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainingSuccessful ) ) );
+                    plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.trainingSuccessful );
                 }
             }
 
@@ -384,7 +382,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         // Checks if the trainer has already accepted the required item
         if ( costStack.getAmount() == 0 )
         {
-            player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.noMoreItemNeeded.replaceAll( "<item.name>", plugin.getUtil().getCleanName( costStack ) ) ) ) );
+            plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.noMoreItemNeeded.replaceAll( "<item.name>", plugin.getUtil().getCleanName( costStack ) ) );
         }
         else
         {
@@ -415,17 +413,17 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
             else
             {
                 hasMatsOrDeposits[0] = false;
-                player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) ) ) );
+                plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) );
                 return hasMatsOrDeposits;
             }
 
             if ( costStack.getAmount() == 0 )
             {
-                player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', plugin.getPlaceHolderParser().parseForTrainCosts( Messages.noMoreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) ) ) );
+                plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.noMoreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) );
             }
             else
             {
-                player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) ) ) );
+                plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) );
                 hasMatsOrDeposits[0] = false;
                 hasMatsOrDeposits[1] = true;
             }

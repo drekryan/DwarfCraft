@@ -46,7 +46,7 @@ public class CommandReload extends Command
 
             if ( sender instanceof Player )
                 plugin.getOut().sendMessage( sender, "&aReloading DwarfCraft..." );
-            plugin.getUtil().consoleLog( Level.FINE, "[DwarfCraft] Reloading..." );
+            plugin.getUtil().consoleLog( Level.FINE, "Reloading..." );
 
             plugin.getConfigManager().clearCommands();
             plugin.onDisable();
@@ -55,7 +55,7 @@ public class CommandReload extends Command
 
             if ( sender instanceof Player )
                 plugin.getOut().sendMessage( sender, "&aReload complete" );
-            plugin.getUtil().consoleLog( Level.FINE, "[DwarfCraft] Reload complete" );
+            plugin.getUtil().consoleLog( Level.FINE, "Reload complete" );
         }
         return true;
     }

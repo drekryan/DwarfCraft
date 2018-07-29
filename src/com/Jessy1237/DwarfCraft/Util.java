@@ -11,12 +11,14 @@
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
@@ -39,6 +41,8 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class Util
 {
@@ -83,6 +87,15 @@ public class Util
             return 4;
         else
             return -1;
+    }
+
+    public void sendPlayerMessage( DwarfPlayer dcPlayer, ChatMessageType type, String message )
+    {
+        sendPlayerMessage( dcPlayer.getPlayer(), type, message );
+    }
+
+    public void sendPlayerMessage( Player player, ChatMessageType type, String message ) {
+        player.spigot().sendMessage( type, new TextComponent( ChatColor.translateAlternateColorCodes( '&', message ) ) );
     }
 
     protected int msgLength( String str )
@@ -130,13 +143,40 @@ public class Util
      */
     public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
     {
-        Set<Material> mats = new HashSet<>();
+        Set mats = new HashSet<>();
         Tag<Material> tag = null;
         String tagName = "";
 
         if ( item.getString( name ).startsWith( "#" ) )
         {
             tagName = item.getString( name ).substring( 1 ).toLowerCase();
+
+            // Add missing vanilla wooden_fences tags
+            if ( tagName.equalsIgnoreCase( "wooden_fences" ) )
+            {
+                Material[] newMats = { Material.OAK_FENCE, Material.OAK_FENCE_GATE,
+                        Material.SPRUCE_FENCE, Material.SPRUCE_FENCE_GATE, Material.BIRCH_FENCE, Material.BIRCH_FENCE_GATE,
+                        Material.JUNGLE_FENCE, Material.JUNGLE_FENCE_GATE, Material.ACACIA_FENCE, Material.ACACIA_FENCE_GATE,
+                        Material.DARK_OAK_FENCE, Material.DARK_OAK_FENCE_GATE, Material.NETHER_BRICK_FENCE };
+
+                Tag fenceTag = new Tag()
+                {
+                    @Override public boolean isTagged( Keyed item )
+                    {
+                        return true;
+                    }
+
+                    @Override public Set getValues()
+                    {
+                        return new HashSet<>( Arrays.asList( newMats ) );
+                    }
+                };
+
+                mats = fenceTag.getValues();
+
+                return new DwarfItemHolder( mats, fenceTag, tagName );
+            }
+
             tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( tagName ), Material.class );
 
             if ( tag == null )
@@ -208,7 +248,7 @@ public class Util
 
     public String getPlayerPrefix( DwarfPlayer player )
     {
-        if ( player.getRace().isEmpty() )
+        if ( player.getRace() == null || player.getRace().isEmpty() )
             return "";
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
         String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
@@ -217,7 +257,7 @@ public class Util
 
     public String getPlayerPrefix( String race )
     {
-        if (race.isEmpty()) return "";
+        if ( race == null || race.isEmpty() ) return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f" );
@@ -225,8 +265,7 @@ public class Util
 
     public String getPlayerPrefixOldColours( String race )
     {
-        if ( race.isEmpty() )
-            return "";
+        if ( race == null || race.isEmpty() ) return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f";
@@ -323,11 +362,11 @@ public class Util
                             plugin.getChat().setPlayerPrefix( player, prefix );
                         }
                     }
-                }
 
-                if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                {
-                    plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
+                    if ( plugin.getChat() != null && !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                    {
+                        plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
+                    }
                 }
             }
             else

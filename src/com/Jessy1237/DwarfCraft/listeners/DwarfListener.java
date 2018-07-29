@@ -42,11 +42,20 @@ public class DwarfListener implements Listener
 
         if ( skill.getLevel() % plugin.getConfigManager().getAnnouncementInterval() == 0 && plugin.getConfigManager().announce )
         {
-            String name = plugin.getChat().getPlayerPrefix( player.getPlayer() ) + player.getPlayer().getName() + plugin.getChat().getPlayerSuffix( player.getPlayer() );
+            String prefix = plugin.getChat().getPlayerPrefix( player.getPlayer() );
+            String suffix = plugin.getChat().getPlayerSuffix( player.getPlayer() );
+            String name = player.getPlayer().getName();
+
+            if ( prefix != null )
+                name = prefix.concat( name );
+
+            if (suffix != null)
+                name = name.concat( suffix );
+
             String message = Messages.announcementMessage.replace( PlaceHolder.PLAYER_NAME.getPlaceHolder(), name ).replace( PlaceHolder.SKILL_NAME.getPlaceHolder(), skill.getDisplayName() ).replace( PlaceHolder.SKILL_LEVEL.getPlaceHolder(), "" + skill.getLevel() ).replace( PlaceHolder.LEVEL.getPlaceHolder(), "" + skill.getLevel() );
             player.getPlayer().playSound( player.getPlayer().getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 0.5f, 1.0f );
 
-            plugin.getOut().sendBroadcast( message );
+            plugin.getServer().broadcastMessage( message );
         }
     }
 

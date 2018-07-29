@@ -74,7 +74,7 @@ public abstract class DwarfGUI
      * @param guiIndex This the index of the item slot
      * @param item The item to be added as an option to the GUI
      */
-    protected void addItem( String name, ArrayList<String> lore, int guiIndex, ItemStack item )
+    public void addItem( String name, ArrayList<String> lore, int guiIndex, ItemStack item )
     {
         if ( inventory == null )
             return;

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -35,8 +34,8 @@ import com.Jessy1237.DwarfCraft.schedules.TrainSkillSchedule;
 public class TrainerGUI extends DwarfGUI
 {
     private DwarfTrainer trainer;
-    public int timer;
-    public boolean timerValid = false;
+    private int timer;
+    private boolean timerValid = false;
 
     public TrainerGUI( DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dwarfPlayer )
     {
@@ -142,16 +141,23 @@ public class TrainerGUI extends DwarfGUI
             }
             else
             {
+                ItemStack currentItem = event.getCurrentItem();
+                ItemStack guiItem = new ItemStack( Material.BARRIER, 1 );
+
                 long currentTime = System.currentTimeMillis();
-                if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
+                if ( trainer.getLastTrain() != 0 && ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
                 {
-                    player.spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerCooldown ) ) );
+                    plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.trainerCooldown );
                     player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
                 }
                 else
                 {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, event.getCurrentItem(), this ), 2 );
-                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
+                    addItem( "Cancel", null, 12, guiItem );
+                    addItem( "Cancel", null, 13, guiItem );
+                    addItem( "Cancel", null, 14, guiItem );
+
+                    player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, currentItem, this ) );
                 }
             }
         }
