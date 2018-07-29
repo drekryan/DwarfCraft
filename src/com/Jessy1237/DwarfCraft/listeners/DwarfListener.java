@@ -10,6 +10,7 @@
 
 package com.Jessy1237.DwarfCraft.listeners;
 
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.event.EventHandler;
@@ -56,6 +57,7 @@ public class DwarfListener implements Listener
             player.getPlayer().playSound( player.getPlayer().getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 0.5f, 1.0f );
 
             plugin.getServer().broadcastMessage( message );
+            player.getPlayer().getWorld().spawnParticle( Particle.ENCHANTMENT_TABLE, player.getPlayer().getLocation(), 100 );
         }
     }
 

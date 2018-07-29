@@ -340,8 +340,6 @@ public class Util
         if ( !dm.checkDwarfData( data ) )
         {
             dm.createDwarfData( data );
-            if ( plugin.getConfigManager().spawnTutorialBook )
-                new CommandTutorial( plugin ).execute( player, "", new String[] { "" } );
         }
 
         if ( plugin.isChatEnabled() )
