@@ -102,6 +102,7 @@ public class DwarfEntityListener implements Listener
             Player player = event.getClicker();
             DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
             DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+            if (skill == null) return false;
 
             if ( dCPlayer.getRace().equalsIgnoreCase( "" ) )
             {

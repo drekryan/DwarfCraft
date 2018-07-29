@@ -17,9 +17,13 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
@@ -30,7 +34,7 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 public class ListGUI extends DwarfGUI
 {
 
-    private ArrayList<DwarfTrainer[]> trainers = new ArrayList<DwarfTrainer[]>();
+    private ArrayList<DwarfTrainer[]> trainers = new ArrayList<>();
     private int page = 0; // TODO Support multiple pages
     private final int inventorySize = 54;
     private int numPages = 0;
@@ -104,26 +108,45 @@ public class ListGUI extends DwarfGUI
 
     private void initItems()
     {
-
         inventory.clear();
 
+        ItemStack head = new ItemStack( Material.PLAYER_HEAD, 1 );
+        SkullMeta meta = ( SkullMeta ) head.getItemMeta();
+
+        int guiIndex = 0;
         for ( int index = 0; index < trainers.get( page ).length; index++ )
         {
-            DwarfTrainer trainer = getTrainerAtSlot( index );
+            DwarfTrainer trainer = getTrainerAtSlot( guiIndex );
             DwarfSkill skill = dwarfPlayer.getSkill( trainer.getSkillTrained() );
+            if ( skill != null && skill.getDisplayName() != null )
+            {
+                ArrayList<String> lore = new ArrayList<>();
+                lore.add( ChatColor.GOLD + "Unique ID: " + ChatColor.RED + trainer.getUniqueId() );
+                lore.add( ChatColor.GOLD + "Skill: " + ChatColor.RED + skill.getDisplayName() );
+                lore.add( ChatColor.GOLD + "Min Level: " + ChatColor.WHITE + ( trainer.getMinSkill() == -1 ? 0 : trainer.getMinSkill() ) );
+                lore.add( ChatColor.GOLD + "Max Level: " + ChatColor.WHITE + trainer.getMaxSkill() );
+                lore.add( ChatColor.GOLD + "Loc: " + ChatColor.WHITE + trainer.getLocation().getBlockX() + ", " + trainer.getLocation().getBlockY() + ", " + trainer.getLocation().getBlockZ() );
+                lore.add( ChatColor.GOLD + "World: " + ChatColor.WHITE + trainer.getLocation().getWorld().getName() );
+                lore.add( "" );
+                lore.add( ChatColor.LIGHT_PURPLE + "Click to teleport to Trainer..." );
 
-            ArrayList<String> lore = new ArrayList<>();
-            lore.add( ChatColor.GOLD + "Unique ID: " + ChatColor.RED + trainer.getUniqueId() );
-            lore.add( ChatColor.GOLD + "Skill: " + ChatColor.RED + skill.getDisplayName() );
-            lore.add( ChatColor.GOLD + "Min Level: " + ChatColor.WHITE + ( trainer.getMinSkill() == -1 ? 0 : trainer.getMinSkill() ) );
-            lore.add( ChatColor.GOLD + "Max Level: " + ChatColor.WHITE + trainer.getMaxSkill() );
-            lore.add( ChatColor.GOLD + "Loc: " + ChatColor.WHITE + trainer.getLocation().getBlockX() + ", " + trainer.getLocation().getBlockY() + ", " + trainer.getLocation().getBlockZ() );
-            lore.add( ChatColor.GOLD + "World: " + ChatColor.WHITE + trainer.getLocation().getWorld().getName() );
-            lore.add( "" );
-            lore.add( ChatColor.LIGHT_PURPLE + "Click to teleport to Trainer..." );
+                if ( trainer.getEntity().getEntity().getType() == EntityType.PLAYER )
+                {
+                    meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( trainer.getName() ) );
+                }
+                else if ( trainer.getEntity().getEntity().getType() == EntityType.VILLAGER )
+                {
+                    meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( "MHF_Villager" ) );
+                }
+                else
+                {
+                    meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( "MHF_Steve" ) );
+                }
 
-            addItem( trainer.getName(), lore, index, new ItemStack( Material.PLAYER_HEAD, 1 ) );
-
+                head.setItemMeta( meta );
+                addItem( trainer.getName(), lore, guiIndex, head );
+                guiIndex++;
+            }
         }
 
         addItem( "Previous Page", null, 45, new ItemStack( Material.RED_STAINED_GLASS_PANE, 1 ) );
@@ -132,7 +155,7 @@ public class ListGUI extends DwarfGUI
 
     private void initTrainers()
     {
-        List<DwarfTrainer> sorted = new ArrayList<DwarfTrainer>( plugin.getDataManager().trainerList.values() );
+        List<DwarfTrainer> sorted = new ArrayList<>( plugin.getDataManager().trainerList.values() );
         Collections.sort( sorted );
 
         int num = 0;

@@ -168,8 +168,6 @@ class DBWrapperMySQL implements DBWrapper
 
     private void buildDB()
     {
-        plugin.getLogger().log( Level.INFO, "Attempting to build database...." );
-
         try
         {
             Statement statement = mDBCon.createStatement();
