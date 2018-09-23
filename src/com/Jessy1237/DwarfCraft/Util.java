@@ -30,7 +30,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
-import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
 import com.Jessy1237.DwarfCraft.data.DataManager;
 import com.Jessy1237.DwarfCraft.models.DwarfItemHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
@@ -94,7 +93,8 @@ public class Util
         sendPlayerMessage( dcPlayer.getPlayer(), type, message );
     }
 
-    public void sendPlayerMessage( Player player, ChatMessageType type, String message ) {
+    public void sendPlayerMessage( Player player, ChatMessageType type, String message )
+    {
         player.spigot().sendMessage( type, new TextComponent( ChatColor.translateAlternateColorCodes( '&', message ) ) );
     }
 
@@ -141,9 +141,10 @@ public class Util
      * @param name The name of the Item being found
      * @return A dwarf item holder but can return an empty dwarf item holder
      */
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
     public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
     {
-        Set mats = new HashSet<>();
+        Set<Material> mats = new HashSet<>();
         Tag<Material> tag = null;
         String tagName = "";
 
@@ -151,33 +152,22 @@ public class Util
         {
             tagName = item.getString( name ).substring( 1 ).toLowerCase();
 
-            // Add missing vanilla wooden_fences tags
+            // Add missing vanilla wooden_fences and raw_fishes tags
             if ( tagName.equalsIgnoreCase( "wooden_fences" ) )
             {
-                Material[] newMats = { Material.OAK_FENCE, Material.OAK_FENCE_GATE,
-                        Material.SPRUCE_FENCE, Material.SPRUCE_FENCE_GATE, Material.BIRCH_FENCE, Material.BIRCH_FENCE_GATE,
-                        Material.JUNGLE_FENCE, Material.JUNGLE_FENCE_GATE, Material.ACACIA_FENCE, Material.ACACIA_FENCE_GATE,
-                        Material.DARK_OAK_FENCE, Material.DARK_OAK_FENCE_GATE, Material.NETHER_BRICK_FENCE };
-
-                Tag fenceTag = new Tag()
-                {
-                    @Override public boolean isTagged( Keyed item )
-                    {
-                        return true;
-                    }
-
-                    @Override public Set getValues()
-                    {
-                        return new HashSet<>( Arrays.asList( newMats ) );
-                    }
-                };
-
-                mats = fenceTag.getValues();
-
-                return new DwarfItemHolder( mats, fenceTag, tagName );
+                Material[] newMats = { Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.ACACIA_FENCE, Material.DARK_OAK_FENCE };
+                tag = createDCTag( newMats );
+            }
+            else if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
+            {
+                Material[] newMats = { Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.ACACIA_FENCE, Material.DARK_OAK_FENCE };
+                tag = createDCTag( newMats );
             }
 
-            tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( tagName ), Material.class );
+            if ( tag == null )
+            {
+                tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( tagName ), Material.class );
+            }
 
             if ( tag == null )
             {
@@ -185,7 +175,9 @@ public class Util
             }
 
             if ( tag != null )
+            {
                 mats = tag.getValues();
+            }
         }
         else
         {
@@ -193,6 +185,27 @@ public class Util
         }
 
         return new DwarfItemHolder( mats, tag, tagName );
+    }
+
+    @SuppressWarnings( "rawtypes" )
+    private Tag createDCTag( Material[] newMats )
+    {
+        Tag tag = new Tag() {
+            @Override
+            public boolean isTagged( Keyed item )
+            {
+                Material mat = Material.matchMaterial( item.getKey().toString() );
+                return getValues().contains( mat );
+            }
+
+            @Override
+            public Set getValues()
+            {
+                return new HashSet<>( Arrays.asList( newMats ) );
+            }
+        };
+
+        return tag;
     }
 
     public ItemStack parseItem( String info )
@@ -257,7 +270,8 @@ public class Util
 
     public String getPlayerPrefix( String race )
     {
-        if ( race == null || race.isEmpty() ) return "";
+        if ( race == null || race.isEmpty() )
+            return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f" );
@@ -265,7 +279,8 @@ public class Util
 
     public String getPlayerPrefixOldColours( String race )
     {
-        if ( race == null || race.isEmpty() ) return "";
+        if ( race == null || race.isEmpty() )
+            return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
         String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
         return prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f";
