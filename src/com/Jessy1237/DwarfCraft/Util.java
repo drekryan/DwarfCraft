@@ -141,7 +141,7 @@ public class Util
      * @param name The name of the Item being found
      * @return A dwarf item holder but can return an empty dwarf item holder
      */
-    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    @SuppressWarnings( { "unchecked" } )
     public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
     {
         Set<Material> mats = new HashSet<>();

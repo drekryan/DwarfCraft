@@ -21,9 +21,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
@@ -106,6 +104,7 @@ public class ListGUI extends DwarfGUI
         }
     }
 
+    @SuppressWarnings( "deprecation" )
     private void initItems()
     {
         inventory.clear();
