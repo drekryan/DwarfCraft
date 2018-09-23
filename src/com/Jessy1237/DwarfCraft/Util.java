@@ -160,7 +160,7 @@ public class Util
             }
             else if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
             {
-                Material[] newMats = { Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.ACACIA_FENCE, Material.DARK_OAK_FENCE };
+                Material[] newMats = { Material.COD, Material.PUFFERFISH, Material.SALMON, Material.TROPICAL_FISH };
                 tag = createDCTag( newMats );
             }
 
@@ -440,14 +440,16 @@ public class Util
         CHORUS_FRUIT( Material.CHORUS_FRUIT, 4, 2.4f ),
         COOKED_CHICKEN( Material.COOKED_CHICKEN, 6, 7.2f ),
         COOKED_COD( Material.COOKED_COD, 5, 6f ),
-        COOKED_SALMON( Material.COOKED_SALMON, 5, 6f ),
+        COOKED_SALMON( Material.COOKED_SALMON, 6, 9.6f ),
         COOKED_MUTTON( Material.COOKED_MUTTON, 6, 9.6f ),
         COOKED_PORKCHOP( Material.COOKED_PORKCHOP, 8, 12.8f ),
         COOKED_RABBIT( Material.COOKED_RABBIT, 5, 6f ),
         COOKIE( Material.COOKIE, 2, 0.4f ),
+        DRIED_KELP( Material.DRIED_KELP, 1, 0.6f ),
         GOLDEN_APPLE( Material.GOLDEN_APPLE, 4, 9.6f ),
+        ENCHANTED_GOLDEN_APPLE( Material.ENCHANTED_GOLDEN_APPLE, 4, 9.6f ),
         GOLDEN_CARROT( Material.GOLDEN_CARROT, 6, 14.4f ),
-        MELON( Material.MELON, 2, 1.2f ),
+        MELON_SLICE( Material.MELON_SLICE , 2, 1.2f ),
         MUSHROOM_STEW( Material.MUSHROOM_STEW, 6, 7.2f ),
         POISONOUS_POTATO( Material.POISONOUS_POTATO, 2, 1.2f ),
         POTATO( Material.POTATO, 1, 0.6f ),
@@ -457,6 +459,8 @@ public class Util
         CHICKEN( Material.CHICKEN, 2, 1.2f ),
         COD( Material.COD, 2, 0.4f ),
         SALMON( Material.SALMON, 2, 0.4f ),
+        TROPICAL_FISH( Material.TROPICAL_FISH, 1, 0.2f ),
+        PUFFERFISH( Material.PUFFERFISH, 1, 0.2f ),
         MUTTON( Material.MUTTON, 2, 1.2f ),
         PORKCHOP( Material.PORKCHOP, 3, 1.8f ),
         RABBIT( Material.RABBIT, 2, 1.8f ),
