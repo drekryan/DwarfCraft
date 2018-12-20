@@ -66,7 +66,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private HashMap<String, Command> opCommands = new HashMap<>();
     public boolean isAuraActive = false;
 
-    private boolean isDeveloperBuild = true;
+    private boolean isDeveloperBuild = false;
     public static int debugMessagesThreshold = 10;
 
     public NPCRegistry getNPCRegistry()
@@ -317,9 +317,10 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     @Override
     public void onDisable()
     {
-        if ( getUtil() != null )
-            getUtil().removePlayerPrefixes();
+        if ( util != null )
+            util.removePlayerPrefixes();
 
+        if(dm != null)
         dm.dbFinalize();
     }
 
