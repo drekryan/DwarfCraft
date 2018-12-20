@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
@@ -64,7 +74,7 @@ public abstract class DwarfGUI
      * @param guiIndex This the index of the item slot
      * @param item The item to be added as an option to the GUI
      */
-    protected void addItem( String name, ArrayList<String> lore, int guiIndex, ItemStack item )
+    public void addItem( String name, ArrayList<String> lore, int guiIndex, ItemStack item )
     {
         if ( inventory == null )
             return;
@@ -107,7 +117,7 @@ public abstract class DwarfGUI
 
                 int index = section.lastIndexOf( ' ' );
                 section = section.substring( 0, index++ );
-                leftOver = leftOver.substring( index, leftOver.length() );
+                leftOver = leftOver.substring( index );
             }
             else
             {

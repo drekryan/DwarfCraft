@@ -1,9 +1,20 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,9 +34,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class CommandCreate extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
@@ -40,7 +48,7 @@ public class CommandCreate extends Command implements TabCompleter
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'create'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'create'" );
 
         if ( args.length == 0 || args[0].equals( null ) )
         {
@@ -141,7 +149,7 @@ public class CommandCreate extends Command implements TabCompleter
                 npc.getTrait( DwarfTrainerTrait.class ).onSpawn();
 
                 // Adding the trainer to DwarfCraft DB
-                DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
+                DwarfTrainer trainer = new DwarfTrainer( plugin, npc );
                 plugin.getDataManager().trainerList.put( npc.getId(), trainer );
             }
             catch ( CommandException e )
@@ -156,7 +164,7 @@ public class CommandCreate extends Command implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !plugin.isEnabled() )
             return null;
 
         ArrayList<String> matches = new ArrayList<>();

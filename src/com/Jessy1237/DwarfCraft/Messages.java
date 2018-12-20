@@ -1,10 +1,17 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public final class Messages
 {
 
@@ -51,68 +58,68 @@ public final class Messages
 
     // String messages loaded from messages.config
     public static String welcomePrefix = "&6[DwarfCraft] ";
-    public static String welcome = "&fWelcome, &9%playerrace% &6%playername%";
-    public static String skillSheetPrefix = "&6[&dSS&6] ";
-    public static String skillSheetHeader = "&6Skill Sheet for &9%playername% &6[&9%playerrace% &6- &6Lvl &3%playerlevel%&6]";
-    public static String skillSheetSkillLine = "&6[&3%skilllevel%&6] &b%skillname%";
-    public static String skillSheetUntrainedSkillHeader = "&6Untrained Skills%colon%";
-    public static String skillSheetUntrainedSkillLine = "|&7%skillname%&6| ";
-    public static String skillInfoHeader = "&6Skillinfo for &b%playername%&6 || &b%skillname%&6 [&b%skillid%&6] || Your level &3%skilllevel%/%maxskilllevel%";
-    public static String skillInfoMinorHeader = "&6[&5EffectID&6]&f------&6[Effect]&f------";
-    public static String skillInfoEffectIDPrefix = "&6[&5%effectid%&6] ";
+    public static String welcome = "&fWelcome, &9<player.race> &6<player.name>";
+    public static String announcementMessage = "<player.name> has just leveled <skill.name> to level <skill.level>!";
+    public static String skillSheetHeader = "&6Skillsheet for &9<player.name> &6[&9<player.race> &6- &6Lvl &3<player.level>&6]";
+    public static String skillSheetSkillLine = "&6[&3<skill.level>&6] &b<skill.name>";
+    public static String skillSheetUntrainedSkillHeader = "&6Untrained Skills:";
+    public static String skillSheetUntrainedSkillLine = "|&7<skill.name>&6| ";
+    public static String skillInfoHeader = "&6Skill Info for &b<player.name>&6 || &b<skill.name>&6 [&b<skill.id>&6] || Your level &3<skill.level>/<skill.max.level>";
+    public static String skillInfoMinorHeader = "&6[&5Effect ID&6]&f------&6[Effect]&f------";
+    public static String skillInfoEffectIDPrefix = "&6[&5<effect.id>&6] ";
     public static String skillInfoMaxSkillLevel = "&6---This skill is maximum level, no training available---";
     public static String skillInfoAtTrainerLevel = "&6---You're as skilled as me, you need a more advanced trainer!--";
-    public static String skillInfoTrainCostHeader = "&6---Train costs for level &3%nextskilllevel%";
-    public static String skillInfoTrainCost = " &6--  &2%depositedamount% of %totalcost% %itemtype%&6  --";
-    public static String effectInfoPrefix = "&6[&5%effectid%&6] ";
-    public static String raceCheck = "You are a %playerrace%";
-    public static String adminRaceCheck = "%playername% is a %playerrace%";
-    public static String alreadyRace = "You are already a %playerrace%";
-    public static String changedRace = "You are now a %racename%";
+    public static String skillInfoTrainCostHeader = "&6---Train costs for level &3<skill.level.next>";
+    public static String skillInfoTrainCost = " &6--  &2<skill.deposit.amount> of <skill.cost.total> <skill.item.type>&6  --";
+    public static String effectInfoPrefix = "&6[&5<effect.id>&6] ";
+    public static String raceCheck = "You are a <player.race>";
+    public static String adminRaceCheck = "<player.name> is a <player.race>";
+    public static String alreadyRace = "You are already a <player.race>";
+    public static String changedRace = "You are now a <race.name>";
     public static String confirmRace = "You need to confirm this command with confirm at the end. (Note: This will reset all their skills)";
-    public static String raceDoesNotExist = "The race %racename% doesn't exist";
+    public static String raceDoesNotExist = "The race <race.name> doesn't exist";
     public static String chooseARace = "&cPlease choose a race! Use /dc race";
-    public static String trainSkillPrefix = "&6[Train &b%skillid%&6] ";
+    public static String trainSkillPrefix = "&6[Train &b<skill.id>&6] ";
     public static String raceDoesNotContainSkill = "&cYour race doesn't have this skill!";
-    public static String raceDoesNotSpecialize = "&cYour race doesn't specialize in this skill! Max level is (%racelevellimit%)!";
-    public static String maxSkillLevel = "&cYour skill is max level (%maxskilllevel%)!";
+    public static String raceDoesNotSpecialize = "&cYour race doesn't specialize in this skill! Max level is (<race.level.limit>)!";
+    public static String maxSkillLevel = "&cYour skill is max level (<skill.max.level>)!";
     public static String trainerMaxLevel = "&cI can't teach you any more, find a higher level trainer";
     public static String trainerLevelTooHigh = "&cI can't teach a low level like you, find a lower level trainer";
-    public static String noMoreItemNeeded = "&aNo more &2%itemname% &ais needed";
-    public static String moreItemNeeded = "&cAn additional &2%costamount% %itemname% &cis required";
+    public static String noMoreItemNeeded = "&aNo more &2<item.name> &ais needed";
+    public static String moreItemNeeded = "&cAn additional &2<skill.cost.amount> <item.name> &cis required";
     public static String trainingSuccessful = "&6Training Successful!";
     public static String depositSuccessful = "&6Deposit Successful!";
-    public static String trainerGUITitle = "&8%skillname%&6 [&b%skillid%&6] || &3%skilllevel%/%maxskilllevel%";
+    public static String trainerGUITitle = "&8<skill.name>&6 [&b<skill.id>&6] || &3<skill.level>/<skill.max.level>";
     public static String trainerOccupied = "&6Please wait. I am talking to someone else.";
     public static String trainerCooldown = "&6Sorry, I need time to recuperate.";
-    public static String describeGeneral = "Effect Block Trigger: %initiator% Block Output: %output%. Effect value ranges from %effectamountlow% - %effectamounthigh% for levels 0 to 30. Non specialists have the effect %minoramount% , as if they were level %normallevel%. Tools affected: %tooltype%.";
-    public static String describeLevelBlockdrop = "&6Break a &2%initiator% &6and %effectlevelcolor%%effectamount% &2%output%&6 are created";
-    public static String describeLevelMobdrop = "&6%creaturename% drop about %effectlevelcolor%%effectamount% &2%output%";
-    public static String describeLevelMobdropNoCreature = "&6Enemies that drop &2%output% &6leave about %effectlevelcolor%%effectamount%&6";
-    public static String describeLevelSwordDurability = "&6Using &2%tooltype% &6removes about %effectlevelcolor%%effectamount% &6durability";
-    public static String describeLevelPVPDamage = "&6You do %effectlevelcolor%%effectdamage%&6% &6of normal &2%tooltype% &6damage when fighting players";
-    public static String describeLevelPVEDamage = "&6You do %effectlevelcolor%%effectdamage%&6% &6of normal &2%tooltype% &6damage when fighting mobs";
-    public static String describeLevelExplosionDamageMore = "&6You take %effectlevelcolor%%effecttakedamage%% more &6damage from explosions";
-    public static String describeLevelExplosionDamageLess = "&6You take %effectlevelcolor%%effecttakedamage%% less &6damage from explosions";
-    public static String describeLevelFireDamageMore = "&6You take %effectlevelcolor%%effecttakedamage%% more &6damage from fire";
-    public static String describeLevelFireDamageLess = "&6You take %effectlevelcolor%%effecttakedamage%% less &6damage from fire";
-    public static String describeLevelFallingDamageMore = "&6You take %effectlevelcolor%%effecttakedamage%%% more &6damage from falling";
-    public static String describeLevelFallingDamageLess = "&6You take %effectlevelcolor%%effecttakedamage%% less &6damage from falling";
-    public static String describeLevelFallThreshold = "&6Fall damage less than %effectlevelcolor%%effectamountint% &6does not affect you.";
-    public static String describeLevelPlowDurability = "&6Using &2%tooltype% &6removes about %effectlevelcolor%%effectamount% &6durability";
-    public static String describeLevelToolDurability = "&6Using &2%tooltype% &6removes about %effectlevelcolor%%effectamount% &6durability";
-    public static String describeLevelRodDurability = "&6Using &2%tooltype% &6removes about %effectlevelcolor%%effectamount% &6durability";
-    public static String describeLevelEat = "&6You gain %effectlevelcolor%%effectamountfood% &6Hunger instead of &e%originalfoodlevel%&6 when you eat &2%initiator%";
-    public static String describeLevelCraft = "&6You craft %effectlevelcolor%%.0%effectamount% &2%output% &6instead of &e%minoramount%";
-    public static String describeLevelPlow = "&6You gain %effectlevelcolor%%effectamount% &6seeds instead of &e%minoramount% &6when you plow grass";
-    public static String describeLevelFish = "&6You catch %effectlevelcolor%%effectamount% &6fish instead of &e%minoramount% &6when you fish";
-    public static String describeLevelBrew = "&6You brew %effectlevelcolor%%effectamount% &6potion(s) instead of &e%minoramount% &6when you're brewing potions";
-    public static String describeLevelDigTime = "&a%effectamountdig%%&6 of the time &2%tooltype% &6break &2%initiator% &6instantly";
-    public static String describeLevelBowAttack = "&6Your Arrows (Fully Charge Bow) do %effectlevelcolor%%effectbowdamage% &6hp damage (half hearts)";
-    public static String describeLevelVehicleDrop = "&6When you break a boat &6approx. %effectlevelcolor%%effectamount% &2%output%&6 are created";
-    public static String describeLevelVehicleMove = "&6Your boat travels %effectlevelcolor%%effecttakedamage%% &6faster than normal";
-    public static String describeLevelSmelt = "&6Smelt a &2%initiator% &6and %effectlevelcolor%%effectamount% &2%output%&6 are created as well";
-    public static String describeLevelShear = "&6Shear a %creaturename% and %effectlevelcolor%%effectamount% &6%output% are dropped instead of &e%minoramount%";
+    public static String describeGeneral = "Effect Block Trigger: <effect.initiator> Block Output: <effect.output>. Effect value ranges from <effect.amount.low> - <effect.amount.high> for levels 0 to 30. Non specialists have the effect <effect.minor.amount> , as if they were level <effect.normal.level>. Tools affected: <effect.tool.type>.";
+    public static String describeLevelBlockdrop = "&6Break a &2<effect.initiator> &6and <effect.level.color><effect.amount> &2<effect.output>&6 are created";
+    public static String describeLevelMobdrop = "&6<effect.creature.name> drop about <effect.level.color><effect.amount> &2<effect.output>";
+    public static String describeLevelMobdropNoCreature = "&6Enemies that drop &2<effect.output> &6leave about <effect.level.color><effect.amount>&6";
+    public static String describeLevelSwordDurability = "&6Using &2<effect.tool.type> &6removes about <effect.level.color><effect.amount> &6durability";
+    public static String describeLevelPVPDamage = "&6You do <effect.level.color><effect.damage>&6% &6of normal &2<effect.tool.type> &6damage when fighting players";
+    public static String describeLevelPVEDamage = "&6You do <effect.level.color><effect.damage>&6% &6of normal &2<effect.tool.type> &6damage when fighting mobs";
+    public static String describeLevelExplosionDamageMore = "&6You take <effect.level.color><effect.damage.taken>% more &6damage from explosions";
+    public static String describeLevelExplosionDamageLess = "&6You take <effect.level.color><effect.damage.taken>% less &6damage from explosions";
+    public static String describeLevelFireDamageMore = "&6You take <effect.level.color><effect.damage.taken>% more &6damage from fire";
+    public static String describeLevelFireDamageLess = "&6You take <effect.level.color><effect.damage.taken>% less &6damage from fire";
+    public static String describeLevelFallingDamageMore = "&6You take <effect.level.color><effect.damage.taken>% more &6damage from falling";
+    public static String describeLevelFallingDamageLess = "&6You take <effect.level.color><effect.damage.taken>% less &6damage from falling";
+    public static String describeLevelFallThreshold = "&6Fall damage less than <effect.level.color><effect.amount.int> &6does not affect you.";
+    public static String describeLevelPlowDurability = "&6Using &2<effect.tool.type> &6removes about <effect.level.color><effect.amount> &6durability";
+    public static String describeLevelToolDurability = "&6Using &2<effect.tool.type> &6removes about <effect.level.color><effect.amount> &6durability";
+    public static String describeLevelRodDurability = "&6Using &2<effect.tool.type> &6removes about <effect.level.color><effect.amount> &6durability";
+    public static String describeLevelEat = "&6You gain <effect.level.color><effect.amount.food> &6Hunger instead of &e<effect.amount.food.original>&6 when you eat &2<effect.initiator>";
+    public static String describeLevelCraft = "&6You craft <effect.level.color><effect.amount> &2<effect.output> &6instead of &e<effect.minor.amount>";
+    public static String describeLevelPlow = "&6You gain <effect.level.color><effect.amount> &6seeds instead of &e<effect.minor.amount> &6when you plow grass";
+    public static String describeLevelFish = "&6You catch <effect.level.color><effect.amount> &6fish instead of &e<effect.minor.amount> &6when you fish";
+    public static String describeLevelBrew = "&6You brew <effect.level.color><effect.amount> &6potion(s) instead of &e<effect.minor.amount> &6when you're brewing potions";
+    public static String describeLevelDigTime = "&a<effect.amount.dig>%&6 of the time &2<effect.tool.type> &6break &2<effect.initiator> &6instantly";
+    public static String describeLevelBowAttack = "&6Your Arrows (Fully Charge Bow) do <effect.level.color><effect.damage.bow> &6hp damage (half hearts)";
+    public static String describeLevelVehicleDrop = "&6When you break a boat &6approx. <effect.level.color><effect.amount> &2<effect.output>&6 are created";
+    public static String describeLevelVehicleMove = "&6Your boat travels <effect.level.color><effect.damage.taken>% &6faster than normal";
+    public static String describeLevelSmelt = "&6Smelt a &2<effect.initiator> &6and <effect.level.color><effect.amount> &2<effect.output>&6 are created as well";
+    public static String describeLevelShear = "&6Shear a <effect.creature.name> and <effect.level.color><effect.amount> &6<effect.output> are dropped instead of &e<effect.minor.amount>";
     public static String effectLevelColorGreaterThanNormal = "&a";
     public static String effectLevelColorEqualToNormal = "&e";
     public static String effectLevelColorLessThanNormal = "&c";

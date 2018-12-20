@@ -1,9 +1,20 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -11,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -38,9 +50,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
 import de.diddiz.LogBlock.Actor;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfBlockListener implements Listener
 {
     private final DwarfCraft plugin;
@@ -61,8 +70,8 @@ public class DwarfBlockListener implements Listener
 
             // Code to prevent water from normally breaking crops
             // Added due to players being able to bypass DC skill restrictions
-            if ( event.getToBlock().getType() == Material.CROPS || event.getToBlock().getType() == Material.POTATO || event.getToBlock().getType() == Material.CARROT || event.getToBlock().getType() == Material.SUGAR_CANE_BLOCK || event.getToBlock().getType() == Material.CACTUS
-                    || event.getToBlock().getType() == Material.COCOA || event.getToBlock().getType() == Material.NETHER_WARTS && ( event.getBlock().getType() == Material.WATER || event.getBlock().getType() == Material.STATIONARY_WATER ) )
+            if ( event.getToBlock().getType() == Material.WHEAT || event.getToBlock().getType() == Material.POTATO || event.getToBlock().getType() == Material.CARROT || event.getToBlock().getType() == Material.SUGAR_CANE || event.getToBlock().getType() == Material.CACTUS
+                    || event.getToBlock().getType() == Material.COCOA || event.getToBlock().getType() == Material.NETHER_WART && ( event.getBlock().getType() == Material.WATER || event.getBlock().getType() == Material.WATER ) )
             {
                 event.getToBlock().setType( Material.AIR, true );
                 event.setCancelled( true );
@@ -110,18 +119,13 @@ public class DwarfBlockListener implements Listener
         }
     }
 
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.HIGH )
     public void onBlockBreak( BlockBreakEvent event )
     {
-        if ( !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
+        if ( event.isCancelled() || event.getPlayer().getGameMode() == GameMode.CREATIVE || !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
+        {
             return;
-
-        if ( event.isCancelled() )
-            return;
-
-        if ( event.getPlayer().getGameMode() == GameMode.CREATIVE )
-            return;
+        }
 
         DwarfPlayer player = plugin.getDataManager().find( event.getPlayer() );
         HashMap<Integer, DwarfSkill> skills = player.getSkills();
@@ -131,51 +135,29 @@ public class DwarfBlockListener implements Listener
         Location loc = event.getBlock().getLocation();
         Material blockMat = event.getBlock().getType();
 
-        // TODO:Remove this in 1.13
-        short meta = ( short ) event.getBlock().getData();
-
-        // Changed illuminated redstone ore block id to normal redstone ore block id
-        // Probably remove this in 1.13
-        if ( blockMat == Material.GLOWING_REDSTONE_ORE )
-        {
-            blockMat = Material.REDSTONE_ORE;
-            block.setType( Material.REDSTONE_ORE );
-        }
-
         boolean blockDropChange = false;
         for ( DwarfSkill s : skills.values() )
         {
             for ( DwarfEffect effect : s.getEffects() )
             {
-                if ( ( effect.getEffectType() == DwarfEffectType.BLOCKDROP || effect.getEffectType() == DwarfEffectType.BLOCKDROPDUPE ) && effect.checkInitiator( blockMat, meta ) )
+                if ( ( effect.getEffectType() == DwarfEffectType.BLOCKDROP || effect.getEffectType() == DwarfEffectType.BLOCKDROPDUPE ) && effect.checkInitiator( blockMat ) )
                 {
                     // Check if the block was placed by a player and prevent additional drops if the effect type is not "BLOCKDROPDUPE"
-                    if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) ) {
+                    if ( effect.getEffectType() == DwarfEffectType.BLOCKDROP && event.getBlock().hasMetadata( "playerPlaced" ) )
+                    {
                         return;
                     }
 
-                    // Crops special line:
-                    if ( effect.getInitiatorMaterial() == Material.CROPS || effect.getInitiatorMaterial() == Material.CARROT || effect.getInitiatorMaterial() == Material.POTATO )
+                    //Checks for any ageable block to make sure we are only acting when it is fully aged
+                    if ( block.getBlockData() instanceof Ageable )
                     {
-                        if ( meta != 7 )
-                            return;
-                    }
-
-                    if ( effect.getInitiatorMaterial() == Material.COCOA )
-                    {
-                        if ( meta < 8 )
-                            return;
-                    }
-
-                    if ( effect.getInitiatorMaterial() == Material.NETHER_WARTS )
-                    {
-                        if ( meta != 3 )
+                        Ageable a = ( Ageable ) block.getBlockData();
+                        if ( a.getAge() != a.getMaximumAge() )
                             return;
                     }
 
                     // Checks for cactus/sugar cane blocks above the one
-                    // broken
-                    // to apply the dwarfcraft blocks in the block physics
+                    // broken to apply the dwarfcraft blocks in the block physics
                     // event.
                     if ( block.getType() == Material.CACTUS )
                     {
@@ -185,9 +167,9 @@ public class DwarfBlockListener implements Listener
                         }
                     }
 
-                    if ( block.getType() == Material.SUGAR_CANE_BLOCK )
+                    if ( block.getType() == Material.SUGAR_CANE )
                     {
-                        for ( int i = 1; block.getWorld().getBlockAt( block.getX(), block.getY() + i, block.getZ() ).getType() == Material.SUGAR_CANE_BLOCK; i++ )
+                        for ( int i = 1; block.getWorld().getBlockAt( block.getX(), block.getY() + i, block.getZ() ).getType() == Material.SUGAR_CANE; i++ )
                         {
                             crops.put( block.getWorld().getBlockAt( block.getX(), block.getY() + i, block.getZ() ), event.getPlayer() );
                         }
@@ -195,13 +177,12 @@ public class DwarfBlockListener implements Listener
 
                     if ( effect.checkTool( tool ) )
                     {
-                        ItemStack item = effect.getOutput( player, meta, blockMat );
+                        ItemStack item = effect.getResult( player, blockMat );
                         ItemStack item1 = null;
 
                         // Gives the 2% to drop poisonous potatoes when
-                        // potatoes
-                        // are broken
-                        if ( effect.getInitiatorMaterial() == Material.POTATO && item.getType() == Material.POTATO_ITEM )
+                        // potatoes are broken
+                        if ( effect.getInitiatorMaterial() == Material.POTATO && item.getType() == Material.POTATO )
                         {
                             Random r = new Random();
                             final int i = r.nextInt( 100 );
@@ -209,68 +190,6 @@ public class DwarfBlockListener implements Listener
                             {
                                 loc.getWorld().dropItem( loc, new ItemStack( Material.POISONOUS_POTATO, 1 ) );
                             }
-                        }
-
-                        // TODO:Remove in 1.13
-                        if ( item.getType() != Material.INK_SACK && item.getType() == blockMat && item.getType() != Material.SEEDS && blockMat != Material.CARROT && item.getType() != Material.CARROT_ITEM && blockMat != Material.POTATO && item.getType() != Material.POTATO_ITEM
-                                && blockMat != Material.NETHER_WARTS && item.getType() != Material.NETHER_STALK && blockMat != Material.DEAD_BUSH && blockMat != Material.DOUBLE_PLANT && blockMat != Material.CROPS && blockMat != Material.MELON_STEM && item.getType() != Material.MELON_SEEDS
-                                && blockMat != Material.PUMPKIN_STEM && item.getType() != Material.PUMPKIN_SEEDS && blockMat != Material.COCOA )
-                        {
-                            item.setDurability( meta );
-                        }
-                        else if ( item.getType() != Material.INK_SACK )
-                        {
-                            item.setDurability( new ItemStack( item.getType(), 1 ).getDurability() );
-                        }
-
-                        // Makes sure that the right blocks are dropped
-                        // according to metadata for sand and wood planks
-                        if ( block.getType() == Material.SAND || block.getType() == Material.WOOD )
-                        {
-                            item.setDurability( meta );
-                        }
-
-                        // Makes sure the correct log is dropped
-                        if ( event.getBlock().getType() == Material.LOG )
-                        {
-                            final ItemStack old = item;
-                            item = new ItemStack( Material.LOG, old.getAmount() );
-                            if ( block.getData() == 0 || block.getData() == 4 || block.getData() == 8 || block.getData() == 12 )
-                            {
-                                item.setDurability( ( short ) 0 );
-                            }
-                            if ( block.getData() == 1 || block.getData() == 5 || block.getData() == 9 || block.getData() == 13 )
-                            {
-                                item.setDurability( ( short ) 1 );
-                            }
-                            if ( block.getData() == 2 || block.getData() == 6 || block.getData() == 10 || block.getData() == 14 )
-                            {
-                                item.setDurability( ( short ) 2 );
-                            }
-                            if ( block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15 )
-                            {
-                                item.setDurability( ( short ) 3 );
-                            }
-                        }
-                        else if ( event.getBlock().getType() == Material.LOG_2 )
-                        {
-                            final ItemStack old = item;
-                            item = new ItemStack( Material.LOG_2, old.getAmount() );
-                            if ( block.getData() == 0 || block.getData() == 4 || block.getData() == 8 || block.getData() == 12 )
-                            {
-                                item.setDurability( ( short ) 0 );
-                            }
-                            if ( block.getData() == 1 || block.getData() == 5 || block.getData() == 9 || block.getData() == 13 )
-                            {
-                                item.setDurability( ( short ) 1 );
-                            }
-
-                        }
-
-                        // Makes sure that the right stone is dropped
-                        if ( block.getType() == Material.STONE && block.getData() != ( byte ) 0 )
-                        {
-                            return;
                         }
 
                         if ( tool.containsEnchantment( Enchantment.SILK_TOUCH ) )
@@ -284,31 +203,15 @@ public class DwarfBlockListener implements Listener
                                 switch ( block.getType() )
                                 {
                                     case STONE:
-                                        item1 = new ItemStack( Material.STONE, 1 );
-                                        break;
                                     case DIAMOND_ORE:
-                                        item1 = new ItemStack( Material.DIAMOND_ORE, 1 );
-                                        break;
                                     case EMERALD_ORE:
-                                        item1 = new ItemStack( Material.EMERALD_ORE, 1 );
-                                        break;
-                                    case QUARTZ_ORE:
-                                        item1 = new ItemStack( Material.QUARTZ_ORE, 1 );
-                                        break;
+                                    case NETHER_QUARTZ_ORE:
                                     case COAL_ORE:
-                                        item1 = new ItemStack( Material.COAL_ORE, 1 );
-                                        break;
                                     case REDSTONE_ORE:
-                                        item1 = new ItemStack( Material.REDSTONE_ORE, 1 );
-                                        break;
                                     case GLOWSTONE:
-                                        item1 = new ItemStack( Material.GLOWSTONE, 1 );
-                                        break;
                                     case GRASS:
-                                        item1 = new ItemStack( Material.GRASS, 1 );
-                                        break;
                                     case LAPIS_ORE:
-                                        item1 = new ItemStack( Material.LAPIS_ORE, 1 );
+                                        item1 = new ItemStack( block.getType(), 1 );
                                         break;
                                     default:
                                         break;
@@ -319,31 +222,15 @@ public class DwarfBlockListener implements Listener
                                 switch ( block.getType() )
                                 {
                                     case STONE:
-                                        item = new ItemStack( Material.STONE, 1 );
-                                        break;
                                     case DIAMOND_ORE:
-                                        item = new ItemStack( Material.DIAMOND_ORE, 1 );
-                                        break;
                                     case EMERALD_ORE:
-                                        item = new ItemStack( Material.EMERALD_ORE, 1 );
-                                        break;
-                                    case QUARTZ_ORE:
-                                        item = new ItemStack( Material.QUARTZ_ORE, 1 );
-                                        break;
+                                    case NETHER_QUARTZ_ORE:
                                     case COAL_ORE:
-                                        item = new ItemStack( Material.COAL_ORE, 1 );
-                                        break;
                                     case REDSTONE_ORE:
-                                        item = new ItemStack( Material.REDSTONE_ORE, 1 );
-                                        break;
                                     case GLOWSTONE:
-                                        item = new ItemStack( Material.GLOWSTONE, 1 );
-                                        break;
                                     case GRASS:
-                                        item = new ItemStack( Material.GRASS, 1 );
-                                        break;
                                     case LAPIS_ORE:
-                                        item = new ItemStack( Material.LAPIS_ORE, 1 );
+                                        item = new ItemStack( block.getType(), 1 );
                                         break;
                                     default:
                                         break;
@@ -354,7 +241,8 @@ public class DwarfBlockListener implements Listener
                         // Checks for Fortune tools and adds it to the
                         // Dwarfcraft drops
                         Material type = block.getType();
-                        if ( type == Material.DIAMOND_ORE || type == Material.COAL_ORE || type == Material.REDSTONE_ORE || type == Material.EMERALD_ORE || type == Material.QUARTZ_ORE || type == Material.GRASS || type == Material.STONE || type == Material.LAPIS_ORE || type == Material.GLOWSTONE )
+                        if ( type == Material.DIAMOND_ORE || type == Material.COAL_ORE || type == Material.REDSTONE_ORE || type == Material.EMERALD_ORE || type == Material.NETHER_QUARTZ_ORE || type == Material.GRASS || type == Material.STONE || type == Material.LAPIS_ORE
+                                || type == Material.GLOWSTONE )
                         {
                             if ( tool.containsEnchantment( Enchantment.LOOT_BONUS_BLOCKS ) )
                             {
@@ -416,7 +304,7 @@ public class DwarfBlockListener implements Listener
                             return;
 
                         if ( DwarfCraft.debugMessagesThreshold < 6 )
-                            System.out.println( "Debug: dropped " + item.toString() );
+                            plugin.getUtil().consoleLog( Level.FINE, "Debug: dropped " + item.toString() );
 
                         for ( ItemStack i : e.getAlteredItems() )
                         {
@@ -431,14 +319,14 @@ public class DwarfBlockListener implements Listener
 
                         if ( event.getExpToDrop() != 0 )
                         {
-                            ( ( ExperienceOrb ) loc.getWorld().spawn( loc, ExperienceOrb.class ) ).setExperience( event.getExpToDrop() );
+                            ( loc.getWorld().spawn( loc, ExperienceOrb.class ) ).setExperience( event.getExpToDrop() );
                         }
                         if ( plugin.getConsumer() != null )
                         {
                             plugin.getConsumer().queueBlockBreak( Actor.actorFromEntity( event.getPlayer() ), event.getBlock().getState() );
                         }
-                        blockDropChange = true;
 
+                        blockDropChange = true;
                     }
                 }
             }
@@ -469,8 +357,6 @@ public class DwarfBlockListener implements Listener
     /**
      * onBlockDamage used to accelerate how quickly blocks are destroyed. setDamage() not implemented yet
      */
-
-    @SuppressWarnings( "deprecation" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onBlockDamage( BlockDamageEvent event )
     {
@@ -487,25 +373,21 @@ public class DwarfBlockListener implements Listener
         // Effect Specific information
         ItemStack tool = player.getInventory().getItemInMainHand();
         Material mat = event.getBlock().getType();
-        short data = ( short ) event.getBlock().getData();
-
-        // if (event.getDamageLevel() != BlockDamageLevel.STARTED)
-        // return;
 
         for ( DwarfSkill s : skills.values() )
         {
             for ( DwarfEffect e : s.getEffects() )
             {
-                if ( e.getEffectType() == DwarfEffectType.DIGTIME && e.checkInitiator( mat, data ) && e.checkTool( tool ) )
+                if ( e.getEffectType() == DwarfEffectType.DIGTIME && e.checkInitiator( mat ) && e.checkTool( tool ) )
                 {
                     if ( DwarfCraft.debugMessagesThreshold < 2 )
-                        System.out.println( "DC2: started instamine check" );
+                        plugin.getUtil().consoleLog( Level.FINE, "DC2: started instamine check" );
 
                     if ( plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) ) == 0 )
                         return;
 
                     if ( DwarfCraft.debugMessagesThreshold < 3 )
-                        System.out.println( "DC3: Insta-mine occured. Block: " + mat );
+                        plugin.getUtil().consoleLog( Level.FINE, "DC3: Insta-mine occured. Block: " + mat );
 
                     DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, null, null, null, null, null, null, null, event.getBlock(), null );
                     plugin.getServer().getPluginManager().callEvent( ev );
@@ -537,7 +419,7 @@ public class DwarfBlockListener implements Listener
             if ( !plugin.getUtil().isWorldAllowed( event.getBlock().getWorld() ) )
                 return;
 
-            if ( event.getBlock().getType() == Material.CROPS || event.getBlock().getType() == Material.POTATO || event.getBlock().getType() == Material.CARROT )
+            if ( event.getBlock().getType() == Material.WHEAT || event.getBlock().getType() == Material.POTATO || event.getBlock().getType() == Material.CARROT )
             {
 
                 World world = event.getBlock().getWorld();
@@ -632,7 +514,7 @@ public class DwarfBlockListener implements Listener
                     }
                 }
             }
-            else if ( event.getBlock().getType() == Material.SUGAR_CANE_BLOCK )
+            else if ( event.getBlock().getType() == Material.SUGAR_CANE )
             {
                 World world = event.getBlock().getWorld();
                 Location loc = event.getBlock().getLocation();
@@ -640,7 +522,6 @@ public class DwarfBlockListener implements Listener
                 int y = loc.getBlockY();
                 int z = loc.getBlockZ();
 
-                boolean remove = false;
                 ArrayList<Block> removal = new ArrayList<Block>();
                 for ( Block b : crops.keySet() )
                 {
@@ -653,7 +534,7 @@ public class DwarfBlockListener implements Listener
                             {
                                 for ( DwarfEffect e : s.getEffects() )
                                 {
-                                    if ( e.getEffectType() == DwarfEffectType.BLOCKDROP && e.checkInitiator( new ItemStack( Material.SUGAR_CANE_BLOCK ) ) )
+                                    if ( e.getEffectType() == DwarfEffectType.BLOCKDROP && e.checkInitiator( new ItemStack( Material.SUGAR_CANE ) ) )
                                     {
                                         int amount = plugin.getUtil().randomAmount( e.getEffectAmount( dCPlayer ) );
                                         if ( amount != 0 )
@@ -697,11 +578,6 @@ public class DwarfBlockListener implements Listener
                         crops.remove( b );
                     }
                 }
-                if ( remove )
-                {
-                    event.getBlock().setType( Material.AIR, true );
-                    event.setCancelled( true );
-                }
             }
         }
     }
@@ -715,7 +591,7 @@ public class DwarfBlockListener implements Listener
             if ( !plugin.getUtil().isWorldAllowed( event.getBlock().getWorld() ) )
                 return;
 
-            Material[] mats = { Material.COCOA, Material.CACTUS, Material.CROPS, Material.POTATO, Material.CARROT, Material.NETHER_WARTS, Material.MELON_BLOCK, Material.SUGAR_CANE_BLOCK };
+            Material[] mats = { Material.COCOA, Material.CACTUS, Material.WHEAT, Material.POTATO, Material.CARROT, Material.NETHER_WART, Material.MELON, Material.SUGAR_CANE };
             if ( removeCrops( event.getBlocks(), mats ) )
                 event.setCancelled( true );
         }
@@ -730,7 +606,7 @@ public class DwarfBlockListener implements Listener
             if ( !plugin.getUtil().isWorldAllowed( event.getBlock().getWorld() ) )
                 return;
 
-            Material[] mats = { Material.COCOA, Material.CACTUS, Material.CROPS, Material.POTATO, Material.CARROT, Material.NETHER_WARTS, Material.MELON_BLOCK, Material.SUGAR_CANE_BLOCK };
+            Material[] mats = { Material.COCOA, Material.CACTUS, Material.WHEAT, Material.POTATO, Material.CARROT, Material.NETHER_WART, Material.MELON, Material.SUGAR_CANE };
             if ( removeCrops( event.getBlocks(), mats ) )
                 event.setCancelled( true );
         }
@@ -790,7 +666,7 @@ public class DwarfBlockListener implements Listener
 
         Material base = world.getBlockAt( x, y - 1, z ).getType();
 
-        return ( base == Material.SOIL );
+        return ( base == Material.FARMLAND );
     }
 
     private boolean checkCacti( World world, Location loc )
@@ -820,26 +696,23 @@ public class DwarfBlockListener implements Listener
         {
             case AIR:
             case WATER:
-            case STATIONARY_WATER:
             case LAVA:
-            case STATIONARY_LAVA:
-            case YELLOW_FLOWER:
-            case RED_ROSE:
+            case SUNFLOWER:
+            case RED_TULIP:
             case BROWN_MUSHROOM:
             case RED_MUSHROOM:
-            case SAPLING:
+            case OAK_SAPLING:
             case SUGAR_CANE:
             case FIRE:
             case STONE_BUTTON:
-            case DIODE_BLOCK_OFF:
-            case DIODE_BLOCK_ON:
+            case COMPARATOR:
+            case REPEATER:
             case LADDER:
             case LEVER:
-            case RAILS:
+            case RAIL:
             case REDSTONE_WIRE:
             case TORCH:
-            case REDSTONE_TORCH_ON:
-            case REDSTONE_TORCH_OFF:
+            case REDSTONE_TORCH:
             case SNOW:
             case POWERED_RAIL:
             case DETECTOR_RAIL:

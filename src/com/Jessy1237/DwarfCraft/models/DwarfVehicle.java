@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.models;
 
 import org.bukkit.entity.Vehicle;
@@ -22,8 +32,7 @@ public class DwarfVehicle
         if ( that instanceof Vehicle )
         {
             Vehicle vec = ( Vehicle ) that;
-            if ( vec.getEntityId() == vehicle.getEntityId() )
-                return true;
+            return vec.getEntityId() == vehicle.getEntityId();
         }
         return false;
     }

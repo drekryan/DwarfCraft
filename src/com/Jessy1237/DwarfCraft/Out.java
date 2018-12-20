@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.util.List;
@@ -7,14 +17,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
+import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class Out
 {
     /*
@@ -154,7 +161,7 @@ public class Out
             {
                 int totalCost = t.getAmount();
                 int deposited = t.getAmount() - r.getAmount();
-                sendMessage( sender, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.skillInfoTrainCost, deposited, r.getAmount(), totalCost, plugin.getUtil().getCleanName( r ) ) );
+                sendMessage( sender, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.skillInfoTrainCost, deposited, r.getAmount(), totalCost, plugin.getUtil().getCleanName( skill.getItem( i+1 ).getDwarfItemHolder() ) ) );
             }
 
         }
@@ -165,10 +172,10 @@ public class Out
     {
         String message1;
         String message2 = "";
-        String prefix = Messages.skillSheetPrefix;
+        //String prefix = Messages.skillSheetPrefix;
 
         message1 = parseSkillSheet( Messages.skillSheetHeader, dCPlayer, null );
-        sendMessage( sender, message1, prefix );
+        sendMessage( sender, message1, "" );
 
         boolean odd = true;
         String untrainedSkills = plugin.getPlaceHolderParser().generalParse( Messages.skillSheetUntrainedSkillHeader );
@@ -206,15 +213,15 @@ public class Out
             message2 = message2.concat( interim );
             if ( odd )
             {
-                sendMessage( sender, message2, prefix );
+                sendMessage( sender, message2, "" );
                 message2 = "";
             }
 
         }
         if ( !message2.equals( "" ) )
-            sendMessage( sender, message2, prefix );
+            sendMessage( sender, message2, "" );
         if ( printFull )
-            sendMessage( sender, untrainedSkills, prefix );
+            sendMessage( sender, untrainedSkills, "" );
     }
 
     /**

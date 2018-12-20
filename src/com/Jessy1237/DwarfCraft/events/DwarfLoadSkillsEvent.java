@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.events;
 
 import java.util.HashMap;
@@ -10,15 +20,10 @@ import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 public class DwarfLoadSkillsEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
-    private HashMap<Integer, DwarfSkill> skills = new HashMap<>();
+    private HashMap<Integer, DwarfSkill> skills;
 
     @Override
     public HandlerList getHandlers()
-    {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList()
     {
         return handlers;
     }
@@ -69,9 +74,8 @@ public class DwarfLoadSkillsEvent extends Event
      * 
      * @param skill A skill to be removed from the skills HashMap
      */
-    @SuppressWarnings( "unlikely-arg-type" )
     public void removeSkill( DwarfSkill skill )
     {
-        skills.remove( skill );
+        skills.remove( skill.getId() );
     }
 }

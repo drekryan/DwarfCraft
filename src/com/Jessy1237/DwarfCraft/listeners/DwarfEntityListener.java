@@ -1,9 +1,24 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.listeners;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
-import org.bukkit.Material;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
+import org.bukkit.Tag;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -22,7 +37,7 @@ import org.bukkit.projectiles.ProjectileSource;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
-import com.Jessy1237.DwarfCraft.PlaceHolderParser.PlaceHolder;
+import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
@@ -35,9 +50,6 @@ import com.Jessy1237.DwarfCraft.schedules.InitTrainerGUISchedule;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfEntityListener implements Listener
 {
     private final DwarfCraft plugin;
@@ -63,7 +75,7 @@ public class DwarfEntityListener implements Listener
         {
             if ( DwarfCraft.debugMessagesThreshold < -1 && !event.isCancelled() )
             {
-                System.out.println( "DC-1: Damage Event: " + event.getCause() );
+                plugin.getUtil().consoleLog( Level.FINE, "DC-1: Damage Event: " + event.getCause() );
             }
             onEntityDamagedByEnvirons( event );
 
@@ -87,21 +99,19 @@ public class DwarfEntityListener implements Listener
         DwarfTrainer trainer = plugin.getDataManager().getTrainer( event.getNPC() );
         if ( trainer != null )
         {
-            if ( event.getClicker() instanceof Player )
-            {
-                Player player = ( Player ) event.getClicker();
-                DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
-                DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
-                
-                if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
-                {
-                    plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
-                    return true;
-                }
-                
-                plugin.getOut().printSkillInfo( player, skill, dCPlayer, trainer.getMaxSkill() );
+            Player player = event.getClicker();
+            DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
+            DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
+            if (skill == null) return false;
 
+            if ( dCPlayer.getRace().equalsIgnoreCase( "" ) )
+            {
+                plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
+                return true;
             }
+
+            plugin.getOut().printSkillInfo( player, skill, dCPlayer, trainer.getMaxSkill() );
+
             return true;
         }
         return false;
@@ -118,7 +128,7 @@ public class DwarfEntityListener implements Listener
 
                 if ( trainer.isWaiting() )
                 {
-                    plugin.getOut().sendMessage( dwarfPlayer.getPlayer(), Messages.trainerOccupied );
+                    dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerOccupied ) ) );
                 }
                 else
                 {
@@ -126,44 +136,43 @@ public class DwarfEntityListener implements Listener
 
                     if ( skill == null )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotContainSkill, plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill ) );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotContainSkill ) ) );
                         return true;
                     }
 
-                    String tag = Messages.trainSkillPrefix.replaceAll( "%skillid%", "" + skill.getId() );
-                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.chooseARace ) ) );
                         return true;
                     }
 
                     if ( dwarfPlayer.getRace().equalsIgnoreCase( "Vanilla" ) )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.vanillaRace );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.vanillaRace ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ), tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.maxSkillLevel.replaceAll( PlaceHolder.MAX_SKILL_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ), tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ) ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() >= trainer.getMaxSkill() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.trainerMaxLevel, tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerMaxLevel ) ) );
                         return true;
                     }
 
                     if ( skill.getLevel() < trainer.getMinSkill() )
                     {
-                        plugin.getOut().sendMessage( event.getClicker(), Messages.trainerLevelTooHigh, tag );
+                        dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerLevelTooHigh ) ) );
                         return true;
                     }
 
@@ -206,12 +215,12 @@ public class DwarfEntityListener implements Listener
         {
             victim = ( LivingEntity ) event.getEntity();
             if ( DwarfCraft.debugMessagesThreshold < 0 )
-                System.out.println( "DC0: victim is living " );
+                plugin.getUtil().consoleLog( Level.FINE, "DC0: victim is living " );
         }
         else
         {
             if ( DwarfCraft.debugMessagesThreshold < 0 )
-                System.out.println( "DC0: victim is unliving " );
+                plugin.getUtil().consoleLog( Level.FINE, "DC0: victim is unliving " );
             return;
         }
 
@@ -222,7 +231,7 @@ public class DwarfEntityListener implements Listener
         {
             isPVP = true;
             if ( DwarfCraft.debugMessagesThreshold < 1 )
-                System.out.println( "DC1: EDBE is PVP" );
+                plugin.getUtil().consoleLog( Level.FINE, "DC1: EDBE is PVP" );
         }
 
         double damage = event.getDamage();
@@ -230,13 +239,12 @@ public class DwarfEntityListener implements Listener
         if ( damager instanceof Player )
         {
             attacker = plugin.getDataManager().find( ( Player ) damager );
-            assert ( ( Player ) event.getDamager() == attacker.getPlayer() );
-            assert ( attacker != null );
+            assert ( event.getDamager() == attacker.getPlayer() );
         }
         else
         {// EvP no effects, EvE no effects
             if ( DwarfCraft.debugMessagesThreshold < 4 )
-                System.out.println( String.format( "DC4: EVP %s attacked %s for %lf of %d\r\n", damager.getClass().getSimpleName(), victim.getClass().getSimpleName(), damage, hp ) );
+                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC4: EVP %s attacked %s for %f of %d\r\n", damager.getClass().getSimpleName(), victim.getClass().getSimpleName(), damage, hp ) );
             if ( !( event.getEntity() instanceof Player ) )
             {
                 event.setDamage( Origdamage );
@@ -287,7 +295,8 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        System.out.println( String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String
+                                .format( "DC6: PVE %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
 
@@ -306,7 +315,8 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        System.out.println( String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %lf dmg of %lf hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String
+                                .format( "DC6: PVP %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
             }
@@ -406,7 +416,7 @@ public class DwarfEntityListener implements Listener
                         if ( event.getDamage() <= e.getEffectAmount( dCPlayer ) )
                         {
                             if ( DwarfCraft.debugMessagesThreshold < 1 )
-                                System.out.println( "DC1: Damage less than fall threshold" );
+                                plugin.getUtil().consoleLog( Level.FINE, "DC1: Damage less than fall threshold" );
                             event.setCancelled( true );
                         }
                     }
@@ -425,7 +435,7 @@ public class DwarfEntityListener implements Listener
             }
             if ( DwarfCraft.debugMessagesThreshold < 1 )
             {
-                System.out.println( String.format( "DC1: environment damage type: %s base damage: %lf new damage: %.2lf\r\n", event.getCause(), event.getDamage(), damage ) );
+                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: environment damage type: %s base damage: %f new damage: %.2f\r\n", event.getCause(), event.getDamage(), damage ) );
             }
             event.setDamage( damage );
             if ( damage == 0 )
@@ -464,20 +474,19 @@ public class DwarfEntityListener implements Listener
                     {
                         if ( effect.checkMob( deadThing ) )
                         {
-                            ItemStack output = effect.getOutput( killer );
+                            ItemStack output = effect.getResult( killer );
 
-                            if ( deadThing instanceof Sheep && output.getType() == Material.WOOL )
+                            if ( deadThing instanceof Sheep && Tag.WOOL.getValues().contains( output.getType() ) )
                                 output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
                             {
-                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
+                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
                             }
 
-                            if ( changed == false )
+                            if (!changed)
                             {
-                                for ( ItemStack i : normal )
-                                    items.add( i );
+                                items.addAll(Arrays.asList(normal));
                             }
 
                             if ( output.getAmount() > 0 )
@@ -494,14 +503,14 @@ public class DwarfEntityListener implements Listener
                         }
                         else if ( effect.getCreature() == null )
                         {
-                            ItemStack output = effect.getOutput( killer );
+                            ItemStack output = effect.getResult( killer );
 
-                            if ( deadThing instanceof Sheep && output.getType() == Material.WOOL )
+                            if ( deadThing instanceof Sheep && Tag.WOOL.getValues().contains( output.getType() ) )
                                 output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
 
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
                             {
-                                System.out.println( String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
+                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
                             }
 
                             boolean added = false;
@@ -522,7 +531,7 @@ public class DwarfEntityListener implements Listener
                                         }
                                     }
                                 }
-                                else if ( changed == false )
+                                else if (!changed)
                                 {
                                     items.add( i );
                                 }
@@ -551,9 +560,8 @@ public class DwarfEntityListener implements Listener
             }
             if ( !changed )
             { // If there was no skill for this type of entity,
-              // just give the normal drop.
-                for ( ItemStack i : normal )
-                    items.add( i );
+                // just give the normal drop.
+                items.addAll(Arrays.asList(normal));
             }
         }
 

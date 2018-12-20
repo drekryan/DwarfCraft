@@ -1,40 +1,46 @@
 #This is the default configuration setup for DwarfCraft
 
+#Select the Database type to use. Currently only supports "sqlite" or "MySQL"
+Database Type: "sqlite"
+
+MySQL Hostname: "127.0.0.1"
+MySQL Port: 3306
+MySQL Database: "dwarfcraft"
+MySQL Username: "root"
+MySQL Password: ""
+
 #Manually set the DwarfCraft database to another database file, if you are using multiple sqlite plugins this should work.
-Database File Name: dwarfcraft.db
+Database File Name: "dwarfcraft.db"
 
 #Affects debug level on restart
 Debug Level: 7
 
 #If we should greet every player as they come online
-Send Login Greet: True
+Send Login Greet: true
 
 #Stop Cacti and other crops from being farmed through automation.
-Disable Farm Exploits: True
+Disable Farm Exploits: true
 
 #If we should prevent DwarfCraft from being activated in all worlds
-World Blacklist: False
+World Blacklist: false
 
 #This is the delay between each time a trainer can train a skill for any player. So if your trainer needs to "recuperate". Also allows some time for your server to recover from the training lag. (In Seconds).
 Train Delay: 2
 
 #If we should allow Silk Touch to take effect on DwarfCraft Drops, If false only vanilla items are dropped.
-Silk Touch: True
-
-#If true than blocks/items that are equivalent of each other will be treated as the same. i.e. all wool blocks will be seen as the same for checks on drops, same with logs, wood, fences, stained glass, most building blocks of same materials.
-Group Equivalent Building Blocks: True
+Silk Touch: true
 
 #The Default Race of DwarfCraft (Has to be a race from races.config)
-Default Race: 
+Default Race: ""
 
 #If we should have a vanilla race on the server
 Vanilla Race Enabled: false
 
-#If Dwarfcraft should add the race of the player as a prefix in their name
+#If DwarfCraft should add the race of the player as a prefix in their name
 Prefix Enabled: true
 
 #The prefix for the race of a player. The prefix must contain '%racename%' in it as that will be replaced by the actual players race ingame
-Prefix: [%racename%]
+Prefix: "[<race.name>]"
 
 #This is the Max Skill Level someone can level a skill for non-racial skills. Keeping this at level 5 is strongly recommended.
 Non-Racial Level Limit: 5
@@ -48,38 +54,39 @@ Announce Level Up: true
 #This is the interval of levels that the announcements go off for when a player successfully levels up a skill. i.e. If its set to 5 then at every 5 levels an announcement will go out.
 Announcement Interval: 5
 
-#This is the message that is broadcasted to every player when they successfully level up a skill.
-#'%playername%', '%skillname%' and '%skilllevel%' will be replaced.
-Announcement Message: %playername% has just leveled %skillname% to level %skilllevel%!
-
 #This decides how to sort the DwarfTrainers for the "/dc listtrainers" command. If true it will sort by Unique IDs otherwise if false it will sort by Name
 Sort DwarfTrainers by Unique ID: true
 
 #This decides the race change penalty.
 #Setting this to true, enables Hardcore mode when all skill levels are reset to 0 on race change
-#Setting this to false, enables Softcore mode where only skills greatre than the race level limit on non-racial skills will be reset
+#Setting this to false, enables Softcore mode where only skills greater than the race level limit on non-racial skills will be reset
 Hardcore Race Change Penalty: true
 
 #Whether or not to give the player the DwarfCraft tutorial book when they join the server for the first time.
 Spawn Tutorial Book: true
 
+#The worlds that you don't want DwarfCraft to be active in when 'World Blacklist' is set to 'true'.
+Disabled Worlds:
+# - world
+# - world_nether
+# - world_the_end
 
 
 ###### COMMANDS ######
 
 #Commands to run on skill level up. These are run for racial and non-racial skills. These will not be run when the skill hits max level or when all skills hit max (see below)
 Skill Level Commands:
-#- say %playername% has leveled up %skillname% to level %skilllevel%
-- summon minecraft:fireworks_rocket %playerpos% {LifeTime:20}
+#- say <player.name> has leveled up <skill.name> to level <skill.level>
+- summon minecraft:fireworks_rocket <player.pos> {LifeTime:20}
 
 #Commands to run when the player has achieved the max level of a skill. By default level 5 for non-racial skills and level 30 for racial skills.
 #These override the previous level up commands and will be run instead.
 Skill Mastery Commands:
-- say %playername% has mastered %skillname%!
-- summon minecraft:fireworks_rocket %playerpos% {LifeTime:20}
+- say <player.name> has mastered <skill.name>!
+- summon minecraft:fireworks_rocket <player.pos> {LifeTime:20}
 
 #Commands to run on Max Cape. When the player maxes every non-racial and racial skill to the maximum possible level.
 #These override normal level up commands and Skill Mastery commands.
 Skill Max Cape Commands:
-- say %playername% has achieved skill mastery in every skill as a %racename%. Congratulations!
-- summon minecraft:fireworks_rocket %playerpos% {LifeTime:20}
+- say <player.name> has achieved skill mastery in every skill as a <race.name>. Congratulations!
+- summon minecraft:fireworks_rocket <player.pos> {LifeTime:20}

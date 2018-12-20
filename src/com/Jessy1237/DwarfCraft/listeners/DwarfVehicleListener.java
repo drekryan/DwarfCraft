@@ -1,8 +1,21 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.listeners;
+
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,9 +34,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfVehicleListener implements Listener
 {
     private final DwarfCraft plugin;
@@ -62,16 +72,16 @@ public class DwarfVehicleListener implements Listener
                     {
                         if ( effect.getEffectType() == DwarfEffectType.VEHICLEDROP )
                         {
-                            ItemStack drop = effect.getOutput( dwarfPlayer );
+                            ItemStack drop = effect.getResult( dwarfPlayer );
 
-                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, effect, new ItemStack[] { new ItemStack( Material.BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, effect, new ItemStack[] { new ItemStack( Material.OAK_BOAT, 1 ) }, new ItemStack[] { drop }, null, null, null, null, event.getVehicle().getVehicle(), null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
                                 return;
 
                             if ( DwarfCraft.debugMessagesThreshold < 6 )
-                                System.out.println( "Debug: dropped " + drop.toString() );
+                                plugin.getUtil().consoleLog( Level.FINE, "Debug: dropped " + drop.toString() );
 
                             for ( ItemStack i : ev.getAlteredItems() )
                             {
@@ -108,7 +118,7 @@ public class DwarfVehicleListener implements Listener
             return;
         plugin.getDataManager().addVehicle( new DwarfVehicle( event.getVehicle() ) );
         if ( DwarfCraft.debugMessagesThreshold < 6 )
-            System.out.println( "DC6:Added DwarfVehicle to vehicleList" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC6:Added DwarfVehicle to vehicleList" );
     }
 
     @EventHandler( priority = EventPriority.NORMAL )
@@ -129,43 +139,42 @@ public class DwarfVehicleListener implements Listener
         if ( !plugin.getUtil().isWorldAllowed( event.getVehicle().getWorld() ) )
             return;
 
-        if ( event.getVehicle().getPassenger() == null )
-            return;
-        if ( !( event.getVehicle() instanceof Boat ) )
-            return;
-        if ( !( event.getVehicle().getPassenger() instanceof Player ) )
-            return;
-
-        DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) event.getVehicle().getPassenger() );
-        double effectAmount = 1.0;
-        DwarfEffect effect = null;
-        for ( DwarfSkill s : dCPlayer.getSkills().values() )
+        for ( Entity passenger : event.getVehicle().getPassengers() )
         {
-            for ( DwarfEffect e : s.getEffects() )
+            if ( !( passenger instanceof Player ) || !( event.getVehicle() instanceof Boat ) )
+                return;
+
+            DwarfPlayer dCPlayer = plugin.getDataManager().find( (Player) passenger );
+            double effectAmount = 1.0;
+            DwarfEffect effect = null;
+            for ( DwarfSkill s : dCPlayer.getSkills().values() )
             {
-                if ( e.getEffectType() == DwarfEffectType.VEHICLEMOVE )
+                for ( DwarfEffect e : s.getEffects() )
                 {
-                    effect = e;
-                    effectAmount = e.getEffectAmount( dCPlayer );
+                    if ( e.getEffectType() == DwarfEffectType.VEHICLEMOVE )
+                    {
+                        effect = e;
+                        effectAmount = e.getEffectAmount( dCPlayer );
+                    }
                 }
             }
-        }
 
-        DwarfVehicle dv = plugin.getDataManager().getVehicle( event.getVehicle() );
-        if ( dv != null )
-        {
-            if ( !dv.changedSpeed() )
+            DwarfVehicle dv = plugin.getDataManager().getVehicle( event.getVehicle() );
+            if ( dv != null )
             {
-                Boat boat = ( Boat ) event.getVehicle();
-
-                // The original boat speed and altered boat speed are assigned
-                // to the damage variables
-                DwarfEffectEvent e = new DwarfEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
-                plugin.getServer().getPluginManager().callEvent( e );
-                if ( !e.isCancelled() )
+                if ( !dv.changedSpeed() )
                 {
-                    boat.setMaxSpeed( e.getAlteredDamage() );
-                    dv.speedChanged();
+                    Boat boat = ( Boat ) event.getVehicle();
+
+                    // The original boat speed and altered boat speed are assigned
+                    // to the damage variables
+                    DwarfEffectEvent e = new DwarfEffectEvent( dCPlayer, effect, null, null, null, null, boat.getMaxSpeed(), boat.getMaxSpeed() * effectAmount, event.getVehicle(), null, null );
+                    plugin.getServer().getPluginManager().callEvent( e );
+                    if ( !e.isCancelled() )
+                    {
+                        boat.setMaxSpeed( e.getAlteredDamage() );
+                        dv.speedChanged();
+                    }
                 }
             }
         }

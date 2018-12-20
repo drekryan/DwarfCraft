@@ -1,9 +1,18 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.models;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -20,10 +29,8 @@ import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
+import net.md_5.bungee.api.ChatMessageType;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public final class DwarfTrainer implements Comparable<DwarfTrainer>
 {
     private AbstractNPC mEntity;
@@ -97,20 +104,20 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
     public void depositOne( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
     {
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
-        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        final int dep1 = skill.getDeposit( 1 ), dep2 = skill.getDeposit( 2 ), dep3 = skill.getDeposit( 3 );
         Player player = dCPlayer.getPlayer();
-        List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
-        List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
+        List<ItemStack> trainingCostsToLevel = dCPlayer.calculateTrainingCost( skill ).get( 0 );
 
         boolean deposited = false;
         final PlayerInventory oldInv = player.getInventory();
 
-        for ( ItemStack costStack : trainingCostsToLevel )
+        for ( int i = 0; i < trainingCostsToLevel.size(); i++ )
         {
-            if ( clickedItemStack.getType().equals( costStack.getType() ) )
+            boolean isTag = skill.getItem( i + 1 ).getDwarfItemHolder().isTagged() && skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials().contains( clickedItemStack.getType() );
+            if ( isTag || clickedItemStack.getType() == trainingCostsToLevel.get( i ).getType() )
             {
-                deposited = depositItem( costStack, dCPlayer, trainerGUI, skill, tag )[1];
+                deposited = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill )[1];
+                break;
             }
         }
 
@@ -119,9 +126,9 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( e.isCancelled() )
         {
-            skill.setDeposit1( dep1 );
-            skill.setDeposit2( dep2 );
-            skill.setDeposit3( dep3 );
+            skill.setDeposit( dep1, 1 );
+            skill.setDeposit( dep2, 2 );
+            skill.setDeposit( dep3, 3 );
 
             player.getInventory().setContents( oldInv.getContents() );
             player.getInventory().setExtraContents( oldInv.getExtraContents() );
@@ -131,29 +138,28 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( deposited )
         {
-            plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
-            DwarfSkill[] dCSkills = new DwarfSkill[1];
-            dCSkills[0] = skill;
+            plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.depositSuccessful );
+            DwarfSkill[] dCSkills = { skill };
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
     }
 
-    public void depositAll( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public void depositAll( DwarfPlayer dCPlayer, TrainerGUI trainerGUI )
     {
+        // TODO 1.13: Update method to support tags
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
-        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        final int dep1 = skill.getDeposit( 1 ), dep2 = skill.getDeposit( 2 ), dep3 = skill.getDeposit( 3 );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         final PlayerInventory oldInv = player.getInventory();
         boolean deposited = false;
 
-        for ( ItemStack costStack : trainingCostsToLevel )
+        for ( int i = 0; i < trainingCostsToLevel.size(); i++ )
         {
-            deposited = depositItem( costStack, dCPlayer, trainerGUI, skill, tag )[1];
+            deposited = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill )[1];
         }
 
         DwarfDepositEvent e = new DwarfDepositEvent( dCPlayer, this, skill );
@@ -161,9 +167,9 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( e.isCancelled() )
         {
-            skill.setDeposit1( dep1 );
-            skill.setDeposit2( dep2 );
-            skill.setDeposit3( dep3 );
+            skill.setDeposit( dep1, 1 );
+            skill.setDeposit( dep2, 2 );
+            skill.setDeposit( dep3, 3 );
 
             player.getInventory().setContents( oldInv.getContents() );
             player.getInventory().setExtraContents( oldInv.getExtraContents() );
@@ -173,38 +179,37 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
         if ( deposited )
         {
-            plugin.getOut().sendMessage( player, Messages.depositSuccessful, tag );
-            DwarfSkill[] dCSkills = new DwarfSkill[1];
-            dCSkills[0] = skill;
+            plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.depositSuccessful );
+            DwarfSkill[] dCSkills = { skill };
             plugin.getDataManager().saveDwarfData( dCPlayer, dCSkills );
             player.getWorld().playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f );
         }
     }
 
-    public boolean trainSkill( DwarfPlayer dCPlayer, ItemStack clickedItemStack, TrainerGUI trainerGUI )
+    public boolean trainSkill( DwarfPlayer dCPlayer, TrainerGUI trainerGUI )
     {
+        // TODO 1.13: Update method to support tags
         DwarfSkill skill = dCPlayer.getSkill( getSkillTrained() );
         Player player = dCPlayer.getPlayer();
         List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost( skill );
         List<ItemStack> trainingCostsToLevel = costs.get( 0 );
-        String tag = plugin.getPlaceHolderParser().parseByDwarfSkill( Messages.trainSkillPrefix, skill );
 
         final PlayerInventory oldInv = player.getInventory();
         boolean hasMatsOrDeposits[] = { true, false };
 
-        for ( ItemStack costStack : trainingCostsToLevel )
+        for ( int i = 0; i < trainingCostsToLevel.size(); i++ )
         {
-            hasMatsOrDeposits = depositItem( costStack, dCPlayer, trainerGUI, skill, tag );
+            hasMatsOrDeposits = depositItem( trainingCostsToLevel.get( i ), skill.getItem( i + 1 ).getDwarfItemHolder().getMaterials(), dCPlayer, trainerGUI, skill );
         }
 
         DwarfLevelUpEvent e = null;
-        final int dep1 = skill.getDeposit1(), dep2 = skill.getDeposit2(), dep3 = skill.getDeposit3();
+        final int dep1 = skill.getDeposit( 1 ), dep2 = skill.getDeposit( 2 ), dep3 = skill.getDeposit( 3 );
         if ( hasMatsOrDeposits[0] )
         {
             skill.setLevel( skill.getLevel() + 1 );
-            skill.setDeposit1( 0 );
-            skill.setDeposit2( 0 );
-            skill.setDeposit3( 0 );
+            skill.setDeposit( 0, 1 );
+            skill.setDeposit( 0, 2 );
+            skill.setDeposit( 0, 3 );
 
             e = new DwarfLevelUpEvent( dCPlayer, this, skill );
 
@@ -219,9 +224,9 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 if ( e.isCancelled() )
                 {
                     skill.setLevel( skill.getLevel() - 1 );
-                    skill.setDeposit1( dep1 );
-                    skill.setDeposit2( dep2 );
-                    skill.setDeposit3( dep3 );
+                    skill.setDeposit( dep1, 1 );
+                    skill.setDeposit( dep2, 2 );
+                    skill.setDeposit( dep3, 3 );
 
                     player.getInventory().setContents( oldInv.getContents() );
                     player.getInventory().setExtraContents( oldInv.getExtraContents() );
@@ -230,7 +235,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
                 }
                 else
                 {
-                    plugin.getOut().sendMessage( player, Messages.trainingSuccessful, tag );
+                    plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.trainingSuccessful );
                 }
             }
 
@@ -285,41 +290,37 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
      * 
      * @param costStack The cost stack to check against
      * @param player The player who is trying to skill up
+     * @param skill DwarfSkill to check against as items may be tags
      * @return true if the player contains enough of the item or its equivalents otherwise false
      */
-    private boolean containsItem( ItemStack costStack, Player player )
+    private boolean containsItem( ItemStack costStack, Player player, DwarfSkill skill )
     {
-
-        if ( player.getInventory().containsAtLeast( costStack, costStack.getAmount() ) )
+        for ( int i = 1; i <= 3; i++ )
         {
-            return true;
-        }
-
-        for ( ItemStack item : player.getInventory().getContents() )
-        {
-            if ( item == null )
-                continue;
-
-            if ( item.getType().equals( costStack.getType() ) )
-                return true;
-        }
-
-        ArrayList<Material> equivs = plugin.getUtil().checkEquivalentBuildBlocks( costStack.getType(), null );
-
-        if ( equivs != null )
-        {
-            for ( Material mat : equivs )
+            boolean isTag = skill.getItem( i ).getDwarfItemHolder().isTagged() && skill.getItem( i ).getDwarfItemHolder().getMaterials().contains( costStack.getType() );
+            if ( isTag )
             {
-                for ( ItemStack item : player.getInventory().getContents() )
+                Set<Material> matches = skill.getItem( i ).getDwarfItemHolder().getMaterials();
+                if ( matches.contains( costStack.getType() ) ) //Make sure we are checking only for the matching costStack types
                 {
-                    if ( item == null )
-                        continue;
-
-                    if ( item.getType() == mat )
-                        return true;
+                    for ( Material mat : matches )
+                    {
+                        if ( player.getInventory().contains( mat ) )
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if ( player.getInventory().contains( costStack.getType() ) )
+                {
+                    return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -328,17 +329,18 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
      * 
      * @param player The player to check the inventory
      * @param costStack The item to check against and remove
+     * @param mats The set of materials to check against
      * @return The amount of removed from the players inventory
      */
-    private int removeItem( Player player, ItemStack costStack, String tag )
+    private int removeItem( Player player, ItemStack costStack, Set<Material> mats )
     {
         int amountTaken = 0;
         for ( ItemStack invStack : player.getInventory().getContents() )
         {
             if ( invStack == null )
                 continue;
-            if ( ( invStack.getType().equals( costStack.getType() ) && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
-                    || plugin.getUtil().checkEquivalentBuildBlocks( invStack.getType(), costStack.getType() ) != null )
+            if ( ( invStack.getType() == costStack.getType() && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+                    || ( mats.contains( costStack.getType() ) && mats.contains( invStack.getType() ) ) )
             {
                 int inv = invStack.getAmount();
                 int cost = costStack.getAmount();
@@ -370,8 +372,9 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
      * @param skill The skill that is being deposited into
      * @return True for [0] if the player had enough of the required item otherwise [0] false and True for [1] if any items were deposited into the skill otherwise false for [1]
      */
-    private boolean[] depositItem( ItemStack costStack, DwarfPlayer dCPlayer, TrainerGUI trainerGUI, DwarfSkill skill, String tag )
+    private boolean[] depositItem( ItemStack costStack, Set<Material> mats, DwarfPlayer dCPlayer, TrainerGUI trainerGUI, DwarfSkill skill )
     {
+        // TODO 1.13: Update method to support tags
         boolean[] hasMatsOrDeposits = { true, false };
         final int origCost = costStack.getAmount();
         Player player = dCPlayer.getPlayer();
@@ -379,50 +382,48 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         // Checks if the trainer has already accepted the required item
         if ( costStack.getAmount() == 0 )
         {
-            plugin.getOut().sendMessage( player, Messages.noMoreItemNeeded.replaceAll( "%itemname%", plugin.getUtil().getCleanName( costStack ) ), tag );
+            plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.noMoreItemNeeded.replaceAll( "<item.name>", plugin.getUtil().getCleanName( costStack ) ) );
         }
         else
         {
-            if ( containsItem( costStack, player ) )
+            if ( containsItem( costStack, player, skill ) )
             {
 
-                int amountTaken = removeItem( player, costStack, tag );
+                int amountTaken = removeItem( player, costStack, mats );
 
                 // Settings true for items being deposited
                 if ( amountTaken > 0 )
                     hasMatsOrDeposits[1] = true;
 
-                // For now the method will only take the required amount otherwise it won't take any items
-                // TODO: separate out the methods for deposits (i.e. a specific item is clicked) and another for training the actual skill
                 trainerGUI.updateItem( costStack, origCost - amountTaken );
 
-                if ( costStack.getType().equals( skill.Item1.Item.getType() ) )
+                if ( skill.getItem( 1 ).getDwarfItemHolder().getMaterials().contains( costStack.getType() ) )
                 {
-                    skill.setDeposit1( skill.getDeposit1() + amountTaken );
+                    skill.setDeposit( skill.getDeposit( 1 ) + amountTaken, 1 );
                 }
-                else if ( costStack.getType().equals( skill.Item2.Item.getType() ) )
+                else if ( skill.getItem( 2 ).getDwarfItemHolder().getMaterials().contains( costStack.getType() ) )
                 {
-                    skill.setDeposit2( skill.getDeposit2() + amountTaken );
+                    skill.setDeposit( skill.getDeposit( 2 ) + amountTaken, 2 );
                 }
-                else if ( costStack.getType().equals( skill.Item3.Item.getType() ) )
+                else if ( skill.getItem( 3 ).getDwarfItemHolder().getMaterials().contains( costStack.getType() ) )
                 {
-                    skill.setDeposit3( skill.getDeposit3() + amountTaken );
+                    skill.setDeposit( skill.getDeposit( 3 ) + amountTaken, 3 );
                 }
             }
             else
             {
                 hasMatsOrDeposits[0] = false;
-                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) );
                 return hasMatsOrDeposits;
             }
 
             if ( costStack.getAmount() == 0 )
             {
-                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.noMoreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.noMoreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) );
             }
             else
             {
-                plugin.getOut().sendMessage( player, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ), tag );
+                plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.moreItemNeeded, 0, costStack.getAmount(), 0, plugin.getUtil().getCleanName( costStack ) ) );
                 hasMatsOrDeposits[0] = false;
                 hasMatsOrDeposits[1] = true;
             }

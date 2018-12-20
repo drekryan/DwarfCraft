@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
@@ -85,7 +95,7 @@ public class RaceGUI extends DwarfGUI
             {
                 dwarfPlayer.getPlayer().closeInventory();
             }
-            else if ( event.getCurrentItem().getType() == Material.INK_SACK && race != null && !race.equals( "" ) )
+            else if ( event.getCurrentItem().getType() == Material.LIME_DYE && race != null && !race.equals( "" ) )
             {
                 DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dwarfPlayer, plugin.getConfigManager().getRace( race.toLowerCase() ) );
                 plugin.getServer().getPluginManager().callEvent( e );
@@ -100,9 +110,9 @@ public class RaceGUI extends DwarfGUI
             else if ( event.getCurrentItem().getItemMeta().hasDisplayName() )
             {
                 race = event.getCurrentItem().getItemMeta().getDisplayName();
-                if ( !race.equals( ChatColor.RED + "WARNING" ) && race != null )
+                if ( !race.equals( ChatColor.RED + "WARNING" ) )
                 {
-                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
                     {
                         DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dwarfPlayer, plugin.getConfigManager().getRace( race.toLowerCase() ) );
                         plugin.getServer().getPluginManager().callEvent( e );
@@ -133,7 +143,7 @@ public class RaceGUI extends DwarfGUI
             addItem( "Cancel", null, i, new ItemStack( Material.BARRIER ) );
         }
 
-        addItem( "Confirm", null, ( this.inventorySize - 9 ) + 4, new ItemStack( Material.INK_SACK, 1, ( short ) 10 ) );
+        addItem( "Confirm", null, ( this.inventorySize - 9 ) + 4, new ItemStack( Material.LIME_DYE, 1 ) );
         dwarfPlayer.getPlayer().updateInventory();
     }
 }

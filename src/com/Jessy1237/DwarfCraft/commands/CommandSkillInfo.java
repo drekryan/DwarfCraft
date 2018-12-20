@@ -1,9 +1,20 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -20,9 +31,6 @@ import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class CommandSkillInfo extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
@@ -37,7 +45,7 @@ public class CommandSkillInfo extends Command implements TabCompleter
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'skillinfo'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'skillinfo'" );
 
         if ( args.length == 0 || args == null )
         {
@@ -81,7 +89,7 @@ public class CommandSkillInfo extends Command implements TabCompleter
                         skill = ( DwarfSkill ) outputList.get( 0 );
                         dwarfPlayer = plugin.getDataManager().find( ( Player ) sender );
 
-                        if ( dwarfPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                        if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
                         {
                             plugin.getOut().sendMessage( sender, Messages.chooseARace );
                             return true;
@@ -106,7 +114,7 @@ public class CommandSkillInfo extends Command implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !plugin.isEnabled() )
             return null;
 
         if ( args.length == 2 )

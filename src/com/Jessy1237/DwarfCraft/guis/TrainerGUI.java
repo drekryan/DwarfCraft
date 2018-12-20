@@ -1,12 +1,25 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.guis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import net.md_5.bungee.api.ChatMessageType;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -15,11 +28,14 @@ import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
 import com.Jessy1237.DwarfCraft.schedules.TrainSkillSchedule;
 
 public class TrainerGUI extends DwarfGUI
 {
     private DwarfTrainer trainer;
+    private int timer;
+    private boolean timerValid = false;
 
     public TrainerGUI( DwarfCraft plugin, DwarfTrainer trainer, DwarfPlayer dwarfPlayer )
     {
@@ -43,9 +59,34 @@ public class TrainerGUI extends DwarfGUI
         {
             ArrayList<String> lore = new ArrayList<>();
             lore.add( ChatColor.RED + "" + ( costStack.getAmount() != 0 ? "" + costStack.getAmount() + " needed to level" : "No more is required" ) );
-            costStack.setAmount( 1 );
-            addItem( null, lore, guiIndex, costStack );
-            guiIndex++;
+
+            for (int i = 1; i <= 3; i++)
+            {
+                DwarfTrainingItem item = skill.getItem( i );
+                if ( item == null || item.getDwarfItemHolder().getItemStack() == null || item.getDwarfItemHolder().getItemStack().getType() == Material.AIR ) continue;
+
+                if ( item.getDwarfItemHolder().isTagged() )
+                {
+                    if ( item.getDwarfItemHolder().getMaterials().contains( costStack.getType() ) )
+                    {
+                        costStack.setAmount( 1 );
+                        addItem( null, lore, guiIndex, costStack );
+                        if (!timerValid)
+                        {
+                            timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask( dwarfPlayer, skill, costStack, guiIndex, skill.getItem( i ).getDwarfItemHolder().getMaterials() ), 10, 25 );
+                            timerValid = true;
+                        }
+                        guiIndex++;
+                        break;
+                    }
+                }
+                else if ( item.getDwarfItemHolder().getItemStack().getType() == costStack.getType() )
+                {
+                    costStack.setAmount( 1 );
+                    addItem( null, lore, guiIndex, costStack );
+                    guiIndex++;
+                }
+            }
         }
 
         ItemStack guiItem;
@@ -55,13 +96,13 @@ public class TrainerGUI extends DwarfGUI
             addItem( "Cancel", null, 10 + ( i - 1 ), guiItem );
         }
 
-        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 12 );
+        guiItem = new ItemStack( Material.LIGHT_BLUE_DYE, 1 );
         addItem( "Deposit All", null, 12, guiItem );
 
-        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 10 );
+        guiItem = new ItemStack( Material.LIME_DYE, 1 );
         addItem( "Train Skill", null, 13, guiItem );
 
-        guiItem = new ItemStack( Material.INK_SACK, 1, ( short ) 2 );
+        guiItem = new ItemStack( Material.CACTUS_GREEN, 1 );
         addItem( "Train & Deposit Skill", null, 14, guiItem );
     }
 
@@ -84,6 +125,8 @@ public class TrainerGUI extends DwarfGUI
 
             if ( trainer == null || dwarfPlayer.getPlayer() == null )
             {
+                Bukkit.getScheduler().cancelTask( timer );
+                timerValid = false;
                 player.closeInventory();
                 return;
             }
@@ -91,18 +134,30 @@ public class TrainerGUI extends DwarfGUI
             //Allows for the cancel option to fire without a delay
             if ( event.getCurrentItem().getType().equals( Material.BARRIER ) && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase( "Cancel" ) )
             {
+                player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
+                Bukkit.getScheduler().cancelTask( timer );
+                timerValid = false;
                 dwarfPlayer.getPlayer().closeInventory();
             }
             else
             {
+                ItemStack currentItem = event.getCurrentItem();
+                ItemStack guiItem = new ItemStack( Material.BARRIER, 1 );
+
                 long currentTime = System.currentTimeMillis();
-                if ( ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
+                if ( trainer.getLastTrain() != 0 && ( currentTime - trainer.getLastTrain() ) < ( long ) ( plugin.getConfigManager().getTrainDelay() * 1000 ) )
                 {
-                    plugin.getOut().sendMessage( event.getWhoClicked(), Messages.trainerCooldown );
+                    plugin.getUtil().sendPlayerMessage( player, ChatMessageType.CHAT, Messages.trainerCooldown );
+                    player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
                 }
                 else
                 {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, event.getCurrentItem(), this ), 2 );
+                    addItem( "Cancel", null, 12, guiItem );
+                    addItem( "Cancel", null, 13, guiItem );
+                    addItem( "Cancel", null, 14, guiItem );
+
+                    player.playSound( player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 1.0f );
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new TrainSkillSchedule( plugin, trainer, dwarfPlayer, currentItem, this ) );
                 }
             }
         }
@@ -143,5 +198,80 @@ public class TrainerGUI extends DwarfGUI
         dwarfPlayer.getPlayer().closeInventory();
         this.inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), 18, plugin.getOut().parseColors( plugin.getPlaceHolderParser().parseByDwarfPlayerAndDwarfSkill( Messages.trainerGUITitle, dwarfPlayer, skill ) ) );
         plugin.getDwarfInventoryListener().addDwarfGUI( dwarfPlayer.getPlayer(), this );
+    }
+
+    class CycleSlotTask implements Runnable
+    {
+
+        private DwarfPlayer player;
+        private DwarfSkill skill;
+        private ItemStack itemStack;
+        private int index;
+        private Set<Material> mats;
+
+        CycleSlotTask( DwarfPlayer player, DwarfSkill skill, ItemStack stack, int index, Set<Material> mats )
+        {
+            this.player = player;
+            this.skill = skill;
+            this.itemStack = stack;
+            this.index = index;
+            this.mats = mats;
+        }
+
+        @Override
+        public void run()
+        {
+            if (player.getPlayer().getOpenInventory().getTopInventory().getType() == InventoryType.CRAFTING)
+            {
+                Bukkit.getScheduler().cancelTask( timer );
+                timerValid = false;
+                return;
+            }
+
+            int tagIndex = 0;
+            for ( Material mat : mats )
+            {
+                if ( mat.equals( itemStack.getType() ) )
+                {
+                    if ( (tagIndex + 1) >= mats.size() )
+                    {
+                        tagIndex = 0;
+                    }
+                    break;
+                }
+                tagIndex++;
+            }
+
+            Material newMat = (Material)mats.toArray()[tagIndex + 1];
+            ItemStack item = new ItemStack( newMat );
+            ItemMeta meta = item.getItemMeta();
+            itemStack = item;
+
+            List<List<ItemStack>> costs = player.calculateTrainingCost( skill );
+            List<ItemStack> trainingCostsToLevel = costs.get( 0 );
+            int amount = itemStack.getAmount();
+            for ( ItemStack costStack : trainingCostsToLevel )
+            {
+                if ( mats.contains( costStack.getType() ) )
+                {
+                    amount = costStack.getAmount();
+                }
+            }
+
+            ArrayList<String> lore = new ArrayList<>();
+            lore.add( ChatColor.RED + "" + ( amount != 0 ? "" + amount + " needed to level" : "No more is required" ) );
+
+            meta.setLore( lore );
+            meta.addItemFlags( ItemFlag.HIDE_ATTRIBUTES );
+            meta.addItemFlags( ItemFlag.HIDE_ENCHANTS );
+            meta.addItemFlags( ItemFlag.HIDE_DESTROYS );
+            meta.addItemFlags( ItemFlag.HIDE_PLACED_ON );
+            meta.addItemFlags( ItemFlag.HIDE_POTION_EFFECTS );
+            meta.addItemFlags( ItemFlag.HIDE_UNBREAKABLE );
+            item.setItemMeta( meta );
+
+            player.getPlayer().getOpenInventory().getTopInventory().setItem( index, item );
+        }
+
     }
 }

@@ -1,16 +1,37 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jbls.LexManos.CSV.CSVRecord;
 
-import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
+import com.Jessy1237.DwarfCraft.data.DataManager;
+import com.Jessy1237.DwarfCraft.models.DwarfItemHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
@@ -19,10 +40,9 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class Util
 {
 
@@ -31,6 +51,20 @@ public class Util
     public Util( DwarfCraft plugin )
     {
         this.plugin = plugin;
+    }
+
+    public void consoleLog( Level logLevel, String message )
+    {
+        ChatColor color = ChatColor.WHITE;
+
+        if ( logLevel == Level.SEVERE )
+            color = ChatColor.RED;
+        else if ( logLevel == Level.WARNING )
+            color = ChatColor.GOLD;
+        else if ( logLevel == Level.FINE )
+            color = ChatColor.LIGHT_PURPLE;
+
+        plugin.getServer().getConsoleSender().sendMessage( ChatColor.YELLOW + "[" + plugin.getName() + "] " + color + message );
     }
 
     // Stolen from nossr50
@@ -52,6 +86,16 @@ public class Util
             return 4;
         else
             return -1;
+    }
+
+    public void sendPlayerMessage( DwarfPlayer dcPlayer, ChatMessageType type, String message )
+    {
+        sendPlayerMessage( dcPlayer.getPlayer(), type, message );
+    }
+
+    public void sendPlayerMessage( Player player, ChatMessageType type, String message )
+    {
+        player.spigot().sendMessage( type, new TextComponent( ChatColor.translateAlternateColorCodes( '&', message ) ) );
     }
 
     protected int msgLength( String str )
@@ -90,290 +134,113 @@ public class Util
         return retval;
     }
 
+    /**
+     * Gets the DwarfItemHolder from the csv record item data.
+     * 
+     * @param item The CSVRecord being read from
+     * @param name The name of the Item being found
+     * @return A dwarf item holder but can return an empty dwarf item holder
+     */
+    @SuppressWarnings( { "unchecked" } )
+    public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
+    {
+        Set<Material> mats = new HashSet<>();
+        Tag<Material> tag = null;
+        String tagName = "";
+
+        if ( item.getString( name ).startsWith( "#" ) )
+        {
+            tagName = item.getString( name ).substring( 1 ).toLowerCase();
+
+            // Add missing vanilla wooden_fences and raw_fishes tags
+            if ( tagName.equalsIgnoreCase( "wooden_fences" ) )
+            {
+                Material[] newMats = { Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.ACACIA_FENCE, Material.DARK_OAK_FENCE };
+                tag = createDCTag( newMats );
+            }
+            else if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
+            {
+                Material[] newMats = { Material.COD, Material.PUFFERFISH, Material.SALMON, Material.TROPICAL_FISH };
+                tag = createDCTag( newMats );
+            }
+
+            if ( tag == null )
+            {
+                tag = Bukkit.getTag( Tag.REGISTRY_ITEMS, NamespacedKey.minecraft( tagName ), Material.class );
+            }
+
+            if ( tag == null )
+            {
+                tag = Bukkit.getTag( Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft( tagName ), Material.class );
+            }
+
+            if ( tag != null )
+            {
+                mats = tag.getValues();
+            }
+        }
+        else
+        {
+            mats.add( parseItem( item.getString( name ) ).getType() );
+        }
+
+        return new DwarfItemHolder( mats, tag, tagName );
+    }
+
+    @SuppressWarnings( "rawtypes" )
+    private Tag createDCTag( Material[] newMats )
+    {
+        Tag tag = new Tag() {
+            @Override
+            public boolean isTagged( Keyed item )
+            {
+                Material mat = Material.matchMaterial( item.getKey().toString() );
+                return getValues().contains( mat );
+            }
+
+            @Override
+            public Set getValues()
+            {
+                return new HashSet<>( Arrays.asList( newMats ) );
+            }
+        };
+
+        return tag;
+    }
+
     public ItemStack parseItem( String info )
     {
-        String[] pts = info.split( ":" );
-        int data = ( pts.length > 1 ? Integer.parseInt( pts[1] ) : 0 );
-        Material mat = Material.matchMaterial( pts[0] );
+        Material mat = Material.getMaterial( info );
         if ( mat == null )
         {
-            System.out.println( "DC ERROR: Could not parse material: " + info );
-            return null;
+            return new ItemStack( Material.AIR );
         }
-        ItemStack item1 = new ItemStack( mat );
-        item1.setDurability( ( short ) data );
-        return item1;
+        return new ItemStack( mat );
     }
 
     /**
-     * Gets the official clean name of the item as spigot names are a bit iffy.
+     * Gets the official clean name of the Item Holder
+     * 
+     * @param dih The DwarfItemHolder to get the clean name of
+     * @return A clean name for the Dwarf Item Holder
+     */
+    public String getCleanName( DwarfItemHolder dih )
+    {
+        return dih == null ? getCleanName( new ItemStack( Material.AIR ) ) : ( dih.isTagged() ? ( cleanEnumString( dih.getTagName() ) ) : ( getCleanName( dih.getItemStack() ) ) );
+    }
+
+    /**
+     * Gets the official clean name of the item
      * 
      * @param item The item to get the clean name of
-     * @return A clean name for the item if the item exists othewise returns 'NULL'
+     * @return A clean name for the item if the item exists, otherwise returns AIR
      */
     public String getCleanName( ItemStack item )
     {
         if ( item == null )
-            return "NULL";
-        switch ( item.getType() )
-        {
-            case SAPLING:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Sapling";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Oak Sapling";
-                    case 1:
-                        return "Spruce Sapling";
-                    case 2:
-                        return "Birch Sapling";
-                    case 3:
-                        return "Jungle Sapling";
-                    case 4:
-                        return "Acacia Sapling";
-                    case 5:
-                        return "Dark Oak Sapling";
-                    default:
-                        return "Sapling";
-                }
-            case SAND:
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Sand";
-                    case 1:
-                        return "Red Sand";
-                    default:
-                        return "Sand";
-                }
-            case RAW_FISH:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Raw Fish";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Raw Fish";
-                    case 1:
-                        return "Raw Salmon";
-                    case 2:
-                        return "Clownfish";
-                    case 3:
-                        return "Pufferfish";
-                    default:
-                        return "Raw Fish";
-                }
-
-            case LOG:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Log";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Oak Log";
-                    case 1:
-                        return "Spruce Log";
-                    case 2:
-                        return "Birch Log";
-                    case 3:
-                        return "Jungle Tree Log";
-                    default:
-                        return "Log";
-                }
-            case LOG_2:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Log";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Acacia Log";
-                    case 1:
-                        return "Dark Oak Log";
-                    default:
-                        return "Log";
-                }
-            case LEAVES:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Leaves";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Oak Leaves";
-                    case 1:
-                        return "Spruce Leaves";
-                    case 2:
-                        return "Birch Leaves";
-                    case 3:
-                        return "Jungle Tree Leaves";
-                    default:
-                        return "Leaves";
-                }
-            case LEAVES_2:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Leaves";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Acacia Leaves";
-                    case 1:
-                        return "Dark Oak Leaves";
-                    default:
-                        return "Leaves";
-                }
-            case WOOL:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Wool";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "White Wool";
-                    case 1:
-                        return "Orange Dye";
-                    case 2:
-                        return "Magenta Dye";
-                    case 3:
-                        return "Light Blue Dye";
-                    case 4:
-                        return "Dandelion Yellow";
-                    case 5:
-                        return "Lime Dye";
-                    case 6:
-                        return "Pink Dye";
-                    case 7:
-                        return "Gray Dye";
-                    case 8:
-                        return "Light Gray Dye";
-                    case 9:
-                        return "Cyan Dye";
-                    case 10:
-                        return "Purple Dye";
-                    case 11:
-                        return "Lapis Lazuli";
-                    case 12:
-                        return "Cocoa Beans";
-                    case 13:
-                        return "Cactus Green";
-                    case 14:
-                        return "Rose Red";
-                    case 15:
-                        return "Ink Sac";
-                    default:
-                        return String.format( "Unknown Dye(%d)", item.getDurability() );
-                }
-            case DOUBLE_STEP:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Slab";
-                switch ( item.getDurability() )
-                {
-                    case 15:
-                        return "Tile Quartz Double Slab";
-                    case 9:
-                        return "Smooth Sandstone Double Slab";
-                    case 8:
-                        return "Smooth Stone Double Slab";
-                    case 7:
-                        return "Quarts Double Slab";
-                    case 6:
-                        return "Nether Brick Double Slab";
-                    case 5:
-                        return "Stone Brick Double Slab";
-                    case 4:
-                        return "Brick Double Slab";
-                    case 3:
-                        return "Cobblestone Double Slab";
-                    case 2:
-                        return "Wooden Double Slab";
-                    case 1:
-                        return "Sandstone Double Slab";
-                    case 0:
-                        return "Stone Double Slab";
-                    default:
-                        return String.format( "Slab" );
-                }
-            case SUGAR_CANE_BLOCK:
-                return "Sugar Cane";
-            case CROPS:
-                switch ( item.getDurability() )
-                {
-                    case 7:
-                        return "Fully Grown Crops";
-                    default:
-                        return String.format( "Crop" );
-                }
-            case COAL:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Coal";
-                switch ( item.getDurability() )
-                {
-                    case 0:
-                        return "Coal";
-                    case 1:
-                        return "Charcoal";
-                    default:
-                        return "Coal";
-                }
-            case SULPHUR:
-                return "Gun Powder";
-            case NETHER_STALK:
-                return "Nether Wart";
-            case NETHER_WARTS:
-                return "Nether Wart";
-            case POTATO_ITEM:
-                return "Potato";
-            case POTATO:
-                return "Potato Crop";
-            case CARROT_ITEM:
-                return "Carrot";
-            case CARROT:
-                return "Carrot Crop";
-            case INK_SACK:
-                if ( checkEquivalentBuildBlocks( item.getType(), null ) != null )
-                    return "Dye";
-                switch ( item.getDurability() )
-                {
-                    case 15:
-                        return "Bone Meal";
-                    case 14:
-                        return "Orange Dye";
-                    case 13:
-                        return "Magenta Dye";
-                    case 12:
-                        return "Light Blue Dye";
-                    case 11:
-                        return "Dandelion Yellow";
-                    case 10:
-                        return "Lime Dye";
-                    case 9:
-                        return "Pink Dye";
-                    case 8:
-                        return "Gray Dye";
-                    case 7:
-                        return "Light Gray Dye";
-                    case 6:
-                        return "Cyan Dye";
-                    case 5:
-                        return "Purple Dye";
-                    case 4:
-                        return "Lapis Lazuli";
-                    case 3:
-                        return "Cocoa Beans";
-                    case 2:
-                        return "Cactus Green";
-                    case 1:
-                        return "Rose Red";
-                    case 0:
-                        return "Ink Sac";
-                    default:
-                        return String.format( "Unknown Dye(%d)", item.getDurability() );
-                }
-            default:
-                return cleanEnumString( item.getType().toString().replaceAll( "_", " " ) );
-        }
+            item = new ItemStack( Material.AIR );
+        return cleanEnumString( item.getType().toString() );
     }
-
-    // Checks the itemID to see if it is a tool. Excludes fishing rod and,
-    // flint
-    // and steel.
 
     /**
      * Checks the Material to see if it is a tool. Excludes fishing rod and, flint and steel.
@@ -383,70 +250,40 @@ public class Util
      */
     public boolean isTool( Material mat )
     {
-        if ( mat == Material.IRON_SPADE || mat == Material.IRON_AXE || mat == Material.IRON_PICKAXE || mat == Material.IRON_SWORD || mat == Material.WOOD_SWORD || mat == Material.WOOD_SPADE || mat == Material.WOOD_PICKAXE || mat == Material.WOOD_AXE || mat == Material.STONE_SWORD
-                || mat == Material.STONE_SPADE || mat == Material.STONE_PICKAXE || mat == Material.STONE_AXE || mat == Material.DIAMOND_SWORD || mat == Material.DIAMOND_SPADE || mat == Material.DIAMOND_PICKAXE || mat == Material.DIAMOND_AXE || mat == Material.GOLD_SWORD || mat == Material.GOLD_SPADE
-                || mat == Material.GOLD_PICKAXE || mat == Material.GOLD_AXE || mat == Material.WOOD_HOE || mat == Material.STONE_HOE || mat == Material.IRON_HOE || mat == Material.DIAMOND_HOE || mat == Material.GOLD_HOE || mat == Material.SHEARS )
+        if ( mat == Material.IRON_SHOVEL || mat == Material.IRON_AXE || mat == Material.IRON_PICKAXE || mat == Material.IRON_SWORD || mat == Material.WOODEN_SWORD || mat == Material.WOODEN_SHOVEL || mat == Material.WOODEN_PICKAXE || mat == Material.WOODEN_AXE || mat == Material.STONE_SWORD
+                || mat == Material.STONE_SHOVEL || mat == Material.STONE_PICKAXE || mat == Material.STONE_AXE || mat == Material.DIAMOND_SWORD || mat == Material.DIAMOND_SHOVEL || mat == Material.DIAMOND_PICKAXE || mat == Material.DIAMOND_AXE || mat == Material.GOLDEN_SWORD
+                || mat == Material.GOLDEN_SHOVEL || mat == Material.GOLDEN_PICKAXE || mat == Material.GOLDEN_AXE || mat == Material.WOODEN_HOE || mat == Material.STONE_HOE || mat == Material.IRON_HOE || mat == Material.DIAMOND_HOE || mat == Material.GOLDEN_HOE || mat == Material.SHEARS )
         {
             return true;
         }
         return false;
     }
 
-    /**
-     * Checks the supplied itemID and sees if it is equivalent to the comparable itemID. The equivalent blocks are set in a config file as a list.
-     * 
-     * @param mat The main Material to obtain the list of comparable Materials
-     * @param compareMat The Material to check if it is in the list of comparableMaterials
-     * @return A list of all the equivalent Materials if the comparableMaterial is equivalent to the Material. If the compareMat is null then the list of equivalent Materials to the main Material is
-     *         returned. Otherwise null is returned
-     */
-    public ArrayList<Material> checkEquivalentBuildBlocks( Material mat, Material compareMat )
-    {
-        if ( !plugin.getConfigManager().buildingblocks )
-            return null;
-
-        for ( ArrayList<Material> blocks : plugin.getConfigManager().getBlockGroups().values() )
-        {
-            if ( blocks != null && blocks.size() > 0 )
-            {
-                if ( blocks.contains( mat ) )
-                {
-                    if ( blocks.contains( compareMat ) || compareMat == null )
-                    {
-                        return blocks;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
     public String getPlayerPrefix( DwarfPlayer player )
     {
+        if ( player.getRace() == null || player.getRace().isEmpty() )
+            return "";
         String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
-        String prefix = "";
-        if ( !player.getRace().equalsIgnoreCase( "NULL" ) )
-            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", race ) + "&f" );
+        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), race ) + "&f" );
     }
 
     public String getPlayerPrefix( String race )
     {
+        if ( race == null || race.isEmpty() )
+            return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        String prefix = "";
-        if ( !race.equalsIgnoreCase( "NULL" ) )
-            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f" );
+        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f" );
     }
 
     public String getPlayerPrefixOldColours( String race )
     {
+        if ( race == null || race.isEmpty() )
+            return "";
         String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        String prefix = "";
-        if ( !race.equalsIgnoreCase( "NULL" ) )
-            prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return prefix + plugin.getConfigManager().getPrefix().replace( "%racename%", raceStr ) + "&f";
+        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
+        return prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f";
     }
 
     public int getMaxLevelForSkill( DwarfPlayer dcPlayer, DwarfSkill skill )
@@ -458,7 +295,7 @@ public class Util
             maxLevel = plugin.getConfigManager().getRaceLevelLimit();
         }
 
-        return  maxLevel;
+        return maxLevel;
     }
 
     public void removePlayerPrefixes()
@@ -537,11 +374,11 @@ public class Util
                             prefix = prefix.replace( plugin.getUtil().getPlayerPrefix( data ) + " ", "" );
                             plugin.getChat().setPlayerPrefix( player, prefix );
                         }
+                    }
 
-                        if ( !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
-                        {
-                            plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
-                        }
+                    if ( plugin.getChat() != null && !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
+                    {
+                        plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
                     }
                 }
             }
@@ -563,38 +400,16 @@ public class Util
 
     /**
      * Gets the clean name of the Entity.
-     * 
+     *
      * @param mCreature The creature to get the clean name of
-     * @return The clean name of the entity if the entity exists otherwise returns 'NULL'
+     * @return The clean name of the entity if the entity exists, otherwise returns an empty string
      */
     public String getCleanName( EntityType mCreature )
     {
         if ( mCreature == null )
-            return "NULL";
+            return "";
 
-        switch ( mCreature )
-        {
-            case MUSHROOM_COW:
-                return "Mooshroom";
-            case IRON_GOLEM:
-                return "Iron Golem";
-            case MAGMA_CUBE:
-                return "Magma Cube";
-            case ENDER_DRAGON:
-                return "Ender Dragon";
-            case WITHER_SKULL:
-                return "Wither Skull";
-            case PIG_ZOMBIE:
-                return "Pig Zombie";
-            case CAVE_SPIDER:
-                return "Cave Spider";
-            case WITHER:
-                return "Wither";
-            case OCELOT:
-                return "Ocelot";
-            default:
-                return cleanEnumString( mCreature.toString() );
-        }
+        return cleanEnumString( mCreature.toString() );
     }
 
     public String cleanEnumString( String enumStr )
@@ -620,31 +435,37 @@ public class Util
         BEETROOT_SOUP( Material.BEETROOT_SOUP, 6, 7.2f ),
         BREAD( Material.BREAD, 5, 6f ),
         CAKE( Material.CAKE, 2, 0.4f ),
-        CARROT( Material.CARROT_ITEM, 3, 3.6f ),
+        CARROT( Material.CARROT, 3, 3.6f ),
+        COOKED_BEEF( Material.COOKED_BEEF, 8, 12.8f ),
         CHORUS_FRUIT( Material.CHORUS_FRUIT, 4, 2.4f ),
         COOKED_CHICKEN( Material.COOKED_CHICKEN, 6, 7.2f ),
-        COOKED_FISH( Material.COOKED_FISH, 5, 6f ),
+        COOKED_COD( Material.COOKED_COD, 5, 6f ),
+        COOKED_SALMON( Material.COOKED_SALMON, 6, 9.6f ),
         COOKED_MUTTON( Material.COOKED_MUTTON, 6, 9.6f ),
-        COOKED_PORKCHOP( Material.GRILLED_PORK, 8, 12.8f ),
+        COOKED_PORKCHOP( Material.COOKED_PORKCHOP, 8, 12.8f ),
         COOKED_RABBIT( Material.COOKED_RABBIT, 5, 6f ),
         COOKIE( Material.COOKIE, 2, 0.4f ),
+        DRIED_KELP( Material.DRIED_KELP, 1, 0.6f ),
         GOLDEN_APPLE( Material.GOLDEN_APPLE, 4, 9.6f ),
+        ENCHANTED_GOLDEN_APPLE( Material.ENCHANTED_GOLDEN_APPLE, 4, 9.6f ),
         GOLDEN_CARROT( Material.GOLDEN_CARROT, 6, 14.4f ),
-        MELON( Material.MELON, 2, 1.2f ),
-        MUSHROOM_STEW( Material.MUSHROOM_SOUP, 6, 7.2f ),
+        MELON_SLICE( Material.MELON_SLICE , 2, 1.2f ),
+        MUSHROOM_STEW( Material.MUSHROOM_STEW, 6, 7.2f ),
         POISONOUS_POTATO( Material.POISONOUS_POTATO, 2, 1.2f ),
-        POTATO( Material.POTATO_ITEM, 1, 0.6f ),
+        POTATO( Material.POTATO, 1, 0.6f ),
         PUMPKIN_PIE( Material.PUMPKIN_PIE, 8, 4.8f ),
         RABBIT_STEW( Material.RABBIT_STEW, 10, 12f ),
-        RAW_BEEF( Material.RAW_BEEF, 3, 1.8f ),
-        RAW_CHICKEN( Material.RAW_CHICKEN, 2, 1.2f ),
-        RAW_FISH( Material.RAW_FISH, 2, 0.4f ),
-        RAW_MUTTON( Material.MUTTON, 2, 1.2f ),
-        RAW_PORKCHOP( Material.PORK, 3, 1.8f ),
-        RAW_RABBIT( Material.RABBIT, 2, 1.8f ),
+        BEEF( Material.BEEF, 3, 1.8f ),
+        CHICKEN( Material.CHICKEN, 2, 1.2f ),
+        COD( Material.COD, 2, 0.4f ),
+        SALMON( Material.SALMON, 2, 0.4f ),
+        TROPICAL_FISH( Material.TROPICAL_FISH, 1, 0.2f ),
+        PUFFERFISH( Material.PUFFERFISH, 1, 0.2f ),
+        MUTTON( Material.MUTTON, 2, 1.2f ),
+        PORKCHOP( Material.PORKCHOP, 3, 1.8f ),
+        RABBIT( Material.RABBIT, 2, 1.8f ),
         ROTTEN_FLESH( Material.ROTTEN_FLESH, 4, 0.8f ),
-        SPIDER_EYE( Material.SPIDER_EYE, 2, 3.2f ),
-        STEAK( Material.COOKED_BEEF, 8, 12.8f );
+        SPIDER_EYE( Material.SPIDER_EYE, 2, 3.2f );
 
         private int lvl;
         private Material mat;

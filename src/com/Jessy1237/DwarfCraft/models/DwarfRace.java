@@ -1,12 +1,19 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.models;
 
 import java.util.ArrayList;
 
 import org.bukkit.Material;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfRace
 {
 

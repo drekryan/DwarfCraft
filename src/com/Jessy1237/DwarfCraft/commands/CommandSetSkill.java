@@ -1,9 +1,20 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,9 +32,6 @@ import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class CommandSetSkill extends Command implements TabCompleter
 {
     private final DwarfCraft plugin;
@@ -38,7 +46,7 @@ public class CommandSetSkill extends Command implements TabCompleter
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
         if ( DwarfCraft.debugMessagesThreshold < 1 )
-            System.out.println( "DC1: started command 'setskill'" );
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'setskill'" );
 
         if ( args.length == 0 )
         {
@@ -107,9 +115,9 @@ public class CommandSetSkill extends Command implements TabCompleter
 
                         if ( !event.isCancelled() )
                         {
-                            s.setDeposit1( 0 );
-                            s.setDeposit2( 0 );
-                            s.setDeposit3( 0 );
+                            s.setDeposit( 0, 1 );
+                            s.setDeposit( 0, 2 );
+                            s.setDeposit( 0, 3 );
                             skills[i] = s;
                             i++;
                         }
@@ -132,9 +140,9 @@ public class CommandSetSkill extends Command implements TabCompleter
 
                     if ( !event.isCancelled() )
                     {
-                        skill.setDeposit1( 0 );
-                        skill.setDeposit2( 0 );
-                        skill.setDeposit3( 0 );
+                        skill.setDeposit( 0, 1 );
+                        skill.setDeposit( 0, 2 );
+                        skill.setDeposit( 0, 3 );
                         DwarfSkill[] skills = new DwarfSkill[1];
                         skills[0] = skill;
                         plugin.getOut().sendMessage(sender, "&b" + skill.getDisplayName() + " &eskill for player &9" + name + "&e has been set to level &3" + level);
@@ -159,7 +167,7 @@ public class CommandSetSkill extends Command implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender commandSender, Command command, String s, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !plugin.isEnabled() )
             return null;
 
         ArrayList<String> completions = new ArrayList<>();

@@ -1,12 +1,19 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.models;
 
 import java.util.List;
 
 import org.bukkit.Material;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class DwarfSkill implements Cloneable
 {
 
@@ -15,37 +22,35 @@ public class DwarfSkill implements Cloneable
     private int mLevel;
     private final List<DwarfEffect> mEffects;
     private final Material mHeldItem;
-    public final DwarfTrainingItem Item1;
-    public final DwarfTrainingItem Item2;
-    public final DwarfTrainingItem Item3;
-    private int deposit1;
-    private int deposit2;
-    private int deposit3;
+    private final DwarfTrainingItem mItem1, mItem2, mItem3;
+    private int mDeposit1, mDeposit2, mDeposit3;
 
     public DwarfSkill( int id, String displayName, int level, List<DwarfEffect> effects, DwarfTrainingItem item1, DwarfTrainingItem item2, DwarfTrainingItem item3, Material trainerHeldMaterial )
     {
         mID = id;
         mName = displayName;
 
-        Item1 = item1;
-        Item2 = item2;
-        Item3 = item3;
+        mItem1 = item1;
+        mItem2 = item2;
+        mItem3 = item3;
 
         mLevel = level;
         mEffects = effects;
         mHeldItem = trainerHeldMaterial;
     }
 
-    /**
-     * My attempt at making a cloneable class. Known issue: it does not clone the effects table or itemStack table. This is not a problem because effects are 100% final, and ItemStack is never
-     * modified.
-     */
     @Override
     public DwarfSkill clone()
     {
-
-        DwarfSkill newSkill = new DwarfSkill( mID, mName, mLevel, mEffects, Item1, Item2, Item3, mHeldItem );
-        return newSkill;
+        try
+        {
+            super.clone();
+        }
+        catch ( CloneNotSupportedException e )
+        {
+            e.printStackTrace();
+        }
+        return new DwarfSkill( mID, mName, mLevel, mEffects, mItem1, mItem2, mItem3, mHeldItem );
     }
 
     public String getDisplayName()
@@ -88,33 +93,33 @@ public class DwarfSkill implements Cloneable
         return mName.toUpperCase().replaceAll( " ", "_" );
     }
 
-    public void setDeposit1( int deposit1 )
+    public DwarfTrainingItem getItem( int itemId )
     {
-        this.deposit1 = deposit1;
+        if ( itemId == 3 )
+            return mItem3;
+        else if ( itemId == 2 )
+            return mItem2;
+        else
+            return mItem1;
     }
 
-    public int getDeposit1()
+    public int getDeposit( int depositId )
     {
-        return deposit1;
+        if ( depositId == 3 )
+            return mDeposit3;
+        else if ( depositId == 2 )
+            return mDeposit2;
+        else
+            return mDeposit1;
     }
 
-    public void setDeposit2( int deposit2 )
+    public void setDeposit( int amount, int depositId )
     {
-        this.deposit2 = deposit2;
-    }
-
-    public int getDeposit2()
-    {
-        return deposit2;
-    }
-
-    public void setDeposit3( int deposit3 )
-    {
-        this.deposit3 = deposit3;
-    }
-
-    public int getDeposit3()
-    {
-        return deposit3;
+        if ( depositId == 3 )
+            this.mDeposit3 = amount;
+        else if ( depositId == 2 )
+            this.mDeposit2 = amount;
+        else
+            this.mDeposit1 = amount;
     }
 }

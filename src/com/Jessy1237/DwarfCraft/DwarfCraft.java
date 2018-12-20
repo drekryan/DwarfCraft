@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
@@ -5,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,18 +25,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.Jessy1237.DwarfCraft.commands.CommandCreate;
-import com.Jessy1237.DwarfCraft.commands.CommandDebug;
-import com.Jessy1237.DwarfCraft.commands.CommandEffectInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandHelp;
-import com.Jessy1237.DwarfCraft.commands.CommandInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandList;
-import com.Jessy1237.DwarfCraft.commands.CommandRace;
-import com.Jessy1237.DwarfCraft.commands.CommandReload;
-import com.Jessy1237.DwarfCraft.commands.CommandSetSkill;
-import com.Jessy1237.DwarfCraft.commands.CommandSkillInfo;
-import com.Jessy1237.DwarfCraft.commands.CommandSkillSheet;
-import com.Jessy1237.DwarfCraft.commands.CommandTutorial;
+import com.Jessy1237.DwarfCraft.commands.*;
+import com.Jessy1237.DwarfCraft.data.DataManager;
 import com.Jessy1237.DwarfCraft.listeners.DwarfBlockListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfEntityListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfInventoryListener;
@@ -42,16 +43,6 @@ import net.citizensnpcs.api.trait.TraitInfo;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
-/**
- * DwarfCraft is a RPG-like plugin for minecraft (via Spigot) that allows players to improve their characters. Players may pay materials to a trainer to improve a skill level, which will provide
- * benefits such as increased weapon damage, decreased tool durability drop, increased drops from blocks or mobs, etc. Data used for this plugin comes from two places: On each load, a list of skills
- * and effects is pulled from flatfiles. Dwarf's skill levels (currently supports only sqlite)
- * 
- * @OriganlAuthor smartaleq
- * @OriginalAuthor RCarretta
- * @OriginalAuthor LexManos
- * @CurrentAuthor Jessy1237
- */
 public class DwarfCraft extends JavaPlugin implements TabCompleter
 {
 
@@ -67,7 +58,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private Out out;
     private Consumer consumer = null;
     private Util util;
-    private PlaceHolderParser placeHolderParser;
+    private PlaceholderParser placeHolderParser;
     private Permission perms = null;
     private Chat chat = null;
     private TraitInfo trainerTrait;
@@ -75,6 +66,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private HashMap<String, Command> opCommands = new HashMap<>();
     public boolean isAuraActive = false;
 
+    private boolean isDeveloperBuild = true;
     public static int debugMessagesThreshold = 10;
 
     public NPCRegistry getNPCRegistry()
@@ -107,7 +99,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         return util;
     }
 
-    public PlaceHolderParser getPlaceHolderParser()
+    public PlaceholderParser getPlaceHolderParser()
     {
         return placeHolderParser;
     }
@@ -169,17 +161,14 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         if ( sender instanceof Player )
         {
-            if ( type.equals( "op" ) )
+            switch ( type )
             {
-                return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() );
-            }
-            else if ( type.equals( "norm" ) )
-            {
-                return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() );
-            }
-            else if ( type.equals( "all" ) )
-            {
-                return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() );
+                case "op":
+                    return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() );
+                case "norm":
+                    return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() );
+                case "all":
+                    return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() );
             }
         }
 
@@ -231,7 +220,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     @Override
     public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
     {
-        Command cmd = null;
+        Command cmd;
         String name = command.getName();
         boolean hasNorm = checkPermission( sender, name, "norm" );
         boolean hasOp = checkPermission( sender, name, "op" );
@@ -239,13 +228,13 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         boolean isOp = false;
         String[] cArgs = new String[0];
 
-        if ( name.equalsIgnoreCase( "dwarfcraft" ) )
+        if ( name.equalsIgnoreCase( "dwarfcraft" ) && this.isEnabled() )
         {
             if ( hasNorm || hasAll )
             {
                 if ( args.length == 0 )
                 {
-                    cmd = new CommandHelp( this );
+                    new CommandHelp( this );
                 }
                 else
                 {
@@ -301,7 +290,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args )
     {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) )
+        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !this.isEnabled() )
             return null;
 
         List<String> matches = new ArrayList<>();
@@ -330,6 +319,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     {
         if ( getUtil() != null )
             getUtil().removePlayerPrefixes();
+
+        dm.dbFinalize();
     }
 
     /**
@@ -344,66 +335,73 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     public void onEnable( boolean reload )
     {
         PluginManager pm = getServer().getPluginManager();
+        util = new Util( this ); //Need to initialise Util earlier if going to use it in the enabling method
 
-        if ( pm.getPlugin( "Vault" ) == null || pm.getPlugin( "Vault" ).isEnabled() == false )
+        // We are not backwards compatible
+        if ( !Bukkit.getBukkitVersion().startsWith( "1.13" ) )
         {
-            getLogger().log( Level.WARNING, "Couldn't find Vault!" );
-            getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
+            getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() + " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
+            pm.disablePlugin( this );
+            return;
+        }
+
+        if ( pm.getPlugin( "Vault" ) == null || !pm.getPlugin( "Vault" ).isEnabled() )
+        {
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Vault!" );
+            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
             pm.disablePlugin( this );
             return;
         }
 
         try
         {
-            setupPermissions();
-            setupChat();
+            if ( setupPermissions() )
+                getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into a Vault permissions plugin!" );
+
+            if ( setupChat() )
+                getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into a Vault chat plugin!" );
+
         }
         catch ( Exception e )
         {
-            getLogger().log( Level.WARNING, "Unable to find a permissions plugin." );
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
 
         if ( !isPermissionEnabled() )
         {
-            getLogger().log( Level.WARNING, "Unable to find a permissions plugin." );
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
             pm.disablePlugin( this );
             return;
         }
 
-        pm.registerEvents( playerListener, this );
+        cm = new ConfigManager( this, getDataFolder().getAbsolutePath() );
 
-        pm.registerEvents( entityListener, this );
-
-        pm.registerEvents( blockListener, this );
-
-        pm.registerEvents( vehicleListener, this );
-
-        pm.registerEvents( inventoryListener, this );
-
-        pm.registerEvents( dwarfListener, this );
-
-        if ( pm.getPlugin( "Citizens" ) == null || pm.getPlugin( "Citizens" ).isEnabled() == false )
+        if ( pm.getPlugin( "Citizens" ) == null || !pm.getPlugin( "Citizens" ).isEnabled() )
         {
-            getLogger().log( Level.WARNING, "Couldn't find Citizens!" );
-            getLogger().log( Level.WARNING, "DwarfCraft now disabling..." );
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Citizens!" );
+            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
             pm.disablePlugin( this );
             return;
         }
-        getLogger().log( Level.INFO, "Hooked into Citizens!" );
-
+        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into Citizens!" );
         npcr = CitizensAPI.getNPCRegistry();
-        util = new Util( this );
-        cm = new ConfigManager( this, getDataFolder().getAbsolutePath(), "DwarfCraft.config" );
-        dm = new DataManager( this, cm );
 
+        dm = new DataManager( this, cm );
         dm.dbInitialize();
 
         out = new Out( this );
 
-        placeHolderParser = new PlaceHolderParser( this );
-        
+        placeHolderParser = new PlaceholderParser( this );
+
+        pm.registerEvents( playerListener, this );
+        pm.registerEvents( entityListener, this );
+        pm.registerEvents( blockListener, this );
+        pm.registerEvents( vehicleListener, this );
+        pm.registerEvents( inventoryListener, this );
+        pm.registerEvents( dwarfListener, this );
+
         // Creates the citizen trait for the DwarfTrainers
         if ( !reload )
         {
@@ -414,6 +412,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         {
             // Untested assumed to work
             util.reloadTrainers();
+            this.getConfigManager().clearCommands();
         }
 
         getUtil().removePlayerPrefixes();
@@ -426,25 +425,22 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         if ( pm.getPlugin( "LogBlock" ) != null )
         {
             consumer = ( ( LogBlock ) pm.getPlugin( "LogBlock" ) ).getConsumer();
-            getLogger().log( Level.INFO, "Hooked into LogBlock!" );
-        }
-        else
-        {
-            getLogger().log( Level.INFO, "Couldn't find LogBlock!" );
+            getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into LogBlock!" );
         }
 
         if ( pm.getPlugin( "PlaceholderAPI" ) != null )
         {
-            placeHolderParser.hookAPI();
-            getLogger().log( Level.INFO, "Hooked into PlaceholderAPI!" );
-        }
-        else
-        {
-            getLogger().log( Level.INFO, "Couldn't find PlaceholderAPI!" );
+            PlaceholderParser parser = new PlaceholderParser( this );
+            parser.new PlaceholderExpansionHook().register();
+            getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into PlaceholderAPI!" );
         }
 
-        initCommands();
+        if ( isEnabled() )
+            initCommands();
 
-        getLogger().log( Level.INFO, getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!" );
+        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + getDescription().getName() + " " + getDescription().getVersion() + " is enabled!" );
+
+        if ( isDeveloperBuild )
+            getUtil().consoleLog( Level.SEVERE, "*** WARNING: This is a development build. Please keep backups and update frequently." );
     }
 }

@@ -1,7 +1,18 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,9 +26,6 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public class CommandSkillSheet extends Command
 {
     private final DwarfCraft plugin;
@@ -31,13 +39,11 @@ public class CommandSkillSheet extends Command
     @Override
     public boolean execute( CommandSender sender, String commandLabel, String[] args )
     {
+        if ( DwarfCraft.debugMessagesThreshold < 1 )
+            plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'skillsheet'" );
+
         try
         {
-            if ( DwarfCraft.debugMessagesThreshold < 1 )
-                System.out.println( "DC1: started command 'skillsheet'" );
-
-            boolean printFull = false;
-
             if ( args.length == 0 && sender instanceof Player )
             {
                 DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) sender );
@@ -47,7 +53,7 @@ public class CommandSkillSheet extends Command
                     return true;
                 }
 
-                plugin.getOut().printSkillSheet( dCPlayer, sender, printFull );
+                plugin.getOut().printSkillSheet( dCPlayer, sender, false );
                 return true;
             }
             else if ( args.length == 0 )
@@ -62,8 +68,9 @@ public class CommandSkillSheet extends Command
             else
             {
                 CommandParser parser = new CommandParser( plugin, sender, args );
-                List<Object> desiredArguments = new ArrayList<Object>();
-                List<Object> outputList = null;
+                List<Object> desiredArguments = new ArrayList<>();
+                List<Object> outputList;
+                boolean printFull = false;
 
                 if ( args[0].equalsIgnoreCase( "-f" ) || args[0].equalsIgnoreCase( "full" ) )
                 {

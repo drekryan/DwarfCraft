@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * DwarfCraft is an RPG plugin that allows players to improve their characters
+ * skills and capabilities through training, not experience.
+ *
+ * Authors: Jessy1237 and Drekryan
+ * Original Authors: smartaleq, LexManos and RCarretta
+ */
+
 package com.Jessy1237.DwarfCraft;
 
 import java.util.ArrayList;
@@ -11,9 +21,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-/**
- * Original Authors: smartaleq, LexManos and RCarretta
- */
 public final class CommandParser
 {
     private final DwarfCraft plugin;
@@ -97,8 +104,10 @@ public final class CommandParser
         {
             String dwarf = input[argNumber];
             player = sender.getServer().getPlayer( dwarf );
+
             if ( player != null && player.isOnline() )
                 dCPlayer = plugin.getDataManager().find( player );
+
             else if ( player == null || !player.isOnline() )
             {
                 dCPlayer = plugin.getDataManager().findOffline( plugin.getServer().getOfflinePlayer( dwarf ).getUniqueId() );
