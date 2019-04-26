@@ -192,6 +192,11 @@ public class Util
     {
         Tag tag = new Tag() {
             @Override
+            public NamespacedKey getKey() {
+                return null; //TODO 1.14 Implement getKey
+            }
+
+            @Override
             public boolean isTagged( Keyed item )
             {
                 Material mat = Material.matchMaterial( item.getKey().toString() );

@@ -66,7 +66,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private HashMap<String, Command> opCommands = new HashMap<>();
     public boolean isAuraActive = false;
 
-    private boolean isDeveloperBuild = false;
+    private boolean isDeveloperBuild = true;
     public static int debugMessagesThreshold = 10;
 
     public NPCRegistry getNPCRegistry()
@@ -339,7 +339,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         util = new Util( this ); //Need to initialise Util earlier if going to use it in the enabling method
 
         // We are not backwards compatible
-        if ( !Bukkit.getBukkitVersion().startsWith( "1.13" ) )
+        if ( !Bukkit.getBukkitVersion().startsWith( "1.14" ) )
         {
             getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() + " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
             pm.disablePlugin( this );

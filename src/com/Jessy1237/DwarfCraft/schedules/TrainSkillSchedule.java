@@ -48,7 +48,7 @@ public class TrainSkillSchedule implements Runnable
     {
         DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
 
-        if ( clickedItem.getType().equals( Material.LIGHT_BLUE_DYE ) || clickedItem.getType().equals( Material.LIME_DYE ) || clickedItem.getType().equals( Material.CACTUS_GREEN ))
+        if ( clickedItem.getType().equals( Material.LIGHT_BLUE_DYE ) || clickedItem.getType().equals( Material.LIME_DYE ) || clickedItem.getType().equals( Material.GREEN_DYE ))
         {
             // Checks if after a level up if any of the limitting constraints have changed. i.e. player may have levelled up past the trainers ability while the inventory was open
             if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
@@ -83,7 +83,7 @@ public class TrainSkillSchedule implements Runnable
             {
                 trainer.trainSkill( dCPlayer, trainerGUI );
             }
-            else if ( clickedItem.getType() == Material.CACTUS_GREEN && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train & Deposit Skill" ) )
+            else if ( clickedItem.getType() == Material.GREEN_DYE && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase( "Train & Deposit Skill" ) )
             {
                 if ( trainer.trainSkill( dCPlayer, trainerGUI ) )
                 {
@@ -98,7 +98,7 @@ public class TrainSkillSchedule implements Runnable
             guiItem = new ItemStack( Material.LIME_DYE, 1 );
             trainerGUI.addItem( "Train Skill", null, 13, guiItem );
 
-            guiItem = new ItemStack( Material.CACTUS_GREEN, 1 );
+            guiItem = new ItemStack( Material.GREEN_DYE, 1 );
             trainerGUI.addItem( "Train & Deposit Skill", null, 14, guiItem );
         }
         else
