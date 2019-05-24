@@ -15,6 +15,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
@@ -95,20 +96,18 @@ public class PlaceholderParser
         if ( effect.getInitiatorMaterial() != null )
             origFoodLevel = String.format( "%.2f", ( ( double ) Util.FoodLevel.getLvl( effect.getInitiatorMaterial() ) ) / 2.0 );
 
-        String initiator = plugin.getUtil().getCleanName( effect.getInitiator() );
+        String initiator;
+        if ( effect.getCreature() != null ) {
+            initiator = plugin.getUtil().getCleanName( effect.getCreature() );
+        } else {
+            initiator = plugin.getUtil().getCleanName( effect.getInitiator() );
+            if (effect.getEffectType() == DwarfEffectType.SMELT) {
+                List<Recipe> recipes = plugin.getServer().getRecipesFor(new ItemStack(effect.getInitiatorMaterial()));
 
-        // TODO 1.13: use checkEquivalentBlocks to future proof the 1.13 changes? Why did we add this TODO here? what needs changing?
-        if ( effect.getEffectType() == DwarfEffectType.SMELT )
-        {
-            List<Recipe> recipes = plugin.getServer().getRecipesFor( effect.getInitiator().getItemStack() );
-            if ( recipes.iterator().hasNext() && recipes.iterator().next() instanceof FurnaceRecipe )
-            {
-                FurnaceRecipe recipe = ( FurnaceRecipe ) recipes.iterator().next();
-                initiator = plugin.getUtil().getCleanName( recipe.getInput() );
-            }
-            else
-            {
-                initiator = "";
+                if (!recipes.isEmpty() && recipes.get(0) instanceof FurnaceRecipe) {
+                    FurnaceRecipe recipe = (FurnaceRecipe) recipes.get(0);
+                    initiator = plugin.getUtil().getCleanName(recipe.getInput());
+                }
             }
         }
 
