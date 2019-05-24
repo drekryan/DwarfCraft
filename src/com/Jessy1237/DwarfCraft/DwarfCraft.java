@@ -164,11 +164,11 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             switch ( type )
             {
                 case "op":
-                    return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() );
+                    return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() ) || sender.isOp();
                 case "norm":
-                    return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() );
+                    return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() ) || sender.isOp();
                 case "all":
-                    return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() );
+                    return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() ) || sender.isOp();
             }
         }
 
