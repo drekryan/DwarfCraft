@@ -156,12 +156,12 @@ public class Util
             if ( tagName.equalsIgnoreCase( "wooden_fences" ) )
             {
                 Material[] newMats = { Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.ACACIA_FENCE, Material.DARK_OAK_FENCE };
-                tag = createDCTag( newMats );
+                tag = createDCTag( "wooden_fences", newMats );
             }
             else if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
             {
                 Material[] newMats = { Material.COD, Material.PUFFERFISH, Material.SALMON, Material.TROPICAL_FISH };
-                tag = createDCTag( newMats );
+                tag = createDCTag( "raw_fishes", newMats );
             }
 
             if ( tag == null )
@@ -187,13 +187,12 @@ public class Util
         return new DwarfItemHolder( mats, tag, tagName );
     }
 
-    @SuppressWarnings( "rawtypes" )
-    private Tag createDCTag( Material[] newMats )
+    private Tag createDCTag( String tagName, Material[] newMats )
     {
-        Tag tag = new Tag() {
+        return new Tag() {
             @Override
             public NamespacedKey getKey() {
-                return null; //TODO 1.14 Implement getKey
+                return NamespacedKey.minecraft( tagName );
             }
 
             @Override
@@ -209,8 +208,6 @@ public class Util
                 return new HashSet<>( Arrays.asList( newMats ) );
             }
         };
-
-        return tag;
     }
 
     public ItemStack parseItem( String info )
@@ -428,6 +425,9 @@ public class Util
             sb.append( word.substring( 0, 1 ).toUpperCase() + word.substring( 1 ) );
             sb.append( " " );
         }
+
+        if ( enumString.equals("fishes") ) return "Fish";
+        if ( enumString.equals("raw_fishes") ) return "Raw Fish";
 
         return sb.toString().trim();
     }

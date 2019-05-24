@@ -106,41 +106,10 @@ public class DwarfEffect
     }
 
     /**
-     * General description of a benefit including minimum and maximum benefit
-     * 
-     * @return
-     */
-    public String describeGeneral( DwarfPlayer dCPlayer )
-    {
-        String description;
-        String initiator = plugin.getUtil().getCleanName( mInitiator );
-        if ( initiator.equalsIgnoreCase( "AIR" ) )
-            initiator = "None";
-        String output = plugin.getUtil().getCleanName( mResult );
-        if ( output.equalsIgnoreCase( "AIR" ) )
-            output = "None";
-        double effectAmountLow = getEffectAmount( 0, dCPlayer );
-        double effectAmountHigh = getEffectAmount( plugin.getConfigManager().getMaxSkillLevel(), dCPlayer );
-        double minorAmount = getEffectAmount( -1, dCPlayer );
-        String toolType = toolType();
-
-        description = Messages.describeGeneral;
-        description = description.replaceAll( "%initiator%", initiator );
-        description = description.replaceAll( "%output%", output );
-        description = description.replaceAll( "%effectamountlow%", String.format( "%.2f", effectAmountLow ) );
-        description = description.replaceAll( "%effectamounthigh%", String.format( "%.2f", effectAmountHigh ) );
-        description = description.replaceAll( "%minoramount%", String.format( "%.2f", minorAmount ) );
-        description = description.replaceAll( "%normallevel%", "" + mNormalLevel );
-        description = description.replaceAll( "%tooltype%", toolType );
-
-        return description;
-    }
-
-    /**
      * Description of a skills effect at a given level
      * 
-     * @param dCPlayer
-     * @return
+     * @param dCPlayer the DwarfPlayer instance
+     * @return description of a skills effect at a given level
      */
     public String describeLevel( DwarfPlayer dCPlayer )
     {
@@ -163,8 +132,8 @@ public class DwarfEffect
     /**
      * Returns an effect Amount for a particular Dwarf
      * 
-     * @param dCPlayer
-     * @return
+     * @param dCPlayer the DwarfPlayer instance
+     * @return the effect amount
      */
     public double getEffectAmount( DwarfPlayer dCPlayer )
     {
@@ -276,11 +245,6 @@ public class DwarfEffect
         return mInitiator.isTagged() ? ( mInitiator.getMaterials().contains( mat ) ) : ( mInitiator.getItemStack().getType() == mat );
     }
 
-    /**
-     * Tool to string parser for effect descriptions
-     * 
-     * @return
-     */
     public String toolType()
     {
         for ( Material mat : mTools )
@@ -292,11 +256,11 @@ public class DwarfEffect
             if ( mat == Material.IRON_AXE )
                 return "axes";
             if ( mat == Material.WOODEN_PICKAXE )
-                return "pickaxes";
+                return "any pickaxe";
             if ( mat == Material.IRON_PICKAXE )
-                return "most picks";
+                return "most pickaxes";
             if ( mat == Material.DIAMOND_PICKAXE )
-                return "high picks";
+                return "diamond pickaxe";
             if ( mat == Material.IRON_SHOVEL )
                 return "shovels";
             if ( mat == Material.FISHING_ROD )

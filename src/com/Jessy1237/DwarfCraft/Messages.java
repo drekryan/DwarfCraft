@@ -110,10 +110,10 @@ public final class Messages
     public static String describeLevelToolDurability = "&6Using &2<effect.tool.type> &6removes about <effect.level.color><effect.amount> &6durability";
     public static String describeLevelRodDurability = "&6Using &2<effect.tool.type> &6removes about <effect.level.color><effect.amount> &6durability";
     public static String describeLevelEat = "&6You gain <effect.level.color><effect.amount.food> &6Hunger instead of &e<effect.amount.food.original>&6 when you eat &2<effect.initiator>";
-    public static String describeLevelCraft = "&6You craft <effect.level.color><effect.amount> &2<effect.output> &6instead of &e<effect.minor.amount>";
-    public static String describeLevelPlow = "&6You gain <effect.level.color><effect.amount> &6seeds instead of &e<effect.minor.amount> &6when you plow grass";
-    public static String describeLevelFish = "&6You catch <effect.level.color><effect.amount> &6fish instead of &e<effect.minor.amount> &6when you fish";
-    public static String describeLevelBrew = "&6You brew <effect.level.color><effect.amount> &6potion(s) instead of &e<effect.minor.amount> &6when you're brewing potions";
+    public static String describeLevelCraft = "&6You craft <effect.level.color><effect.amount> &2<effect.output>";
+    public static String describeLevelPlow = "&6You gain <effect.level.color><effect.amount> &6seeds &6when you hoe Grass";
+    public static String describeLevelFish = "&6You catch <effect.level.color><effect.amount> &6fish &6when you fish";
+    public static String describeLevelBrew = "&6You brew <effect.level.color><effect.amount> &6potion(s) &6when you're brewing potions";
     public static String describeLevelDigTime = "&a<effect.amount.dig>%&6 of the time &2<effect.tool.type> &6break &2<effect.initiator> &6instantly";
     public static String describeLevelBowAttack = "&6Your Arrows (Fully Charge Bow) do <effect.level.color><effect.damage.bow> &6hp damage (half hearts)";
     public static String describeLevelVehicleDrop = "&6When you break a boat &6approx. <effect.level.color><effect.amount> &2<effect.output>&6 are created";
