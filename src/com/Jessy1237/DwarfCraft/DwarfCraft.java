@@ -66,7 +66,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private HashMap<String, Command> opCommands = new HashMap<>();
     public boolean isAuraActive = false;
 
-    private boolean isDeveloperBuild = true;
     public static int debugMessagesThreshold = 10;
 
     public NPCRegistry getNPCRegistry()
@@ -339,7 +338,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         util = new Util( this ); //Need to initialise Util earlier if going to use it in the enabling method
 
         // We are not backwards compatible
-        if ( !Bukkit.getBukkitVersion().startsWith( "1.14" ) )
+        if ( getDescription().getAPIVersion() == null || !Bukkit.getBukkitVersion().startsWith( getDescription().getAPIVersion() ) )
         {
             getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() + " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
             pm.disablePlugin( this );
@@ -441,7 +440,8 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         getUtil().consoleLog( Level.INFO, ChatColor.GREEN + getDescription().getName() + " " + getDescription().getVersion() + " is enabled!" );
 
-        if ( isDeveloperBuild )
-            getUtil().consoleLog( Level.SEVERE, "*** WARNING: This is a development build. Please keep backups and update frequently." );
+        // Log warning if the build is a Snapshot/Development build
+        if ( this.getDescription().getVersion().contains("-SNAPSHOT") )
+            getUtil().consoleLog( Level.SEVERE, "*** WARNING: This is a development build. Please keep backups and update frequently. ***" );
     }
 }
