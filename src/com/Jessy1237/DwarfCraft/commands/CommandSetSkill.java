@@ -180,7 +180,7 @@ public class CommandSetSkill extends Command implements TabCompleter
             for ( Player player : plugin.getServer().getOnlinePlayers() )
             {
                 // Strip Colours from Display Names from silly plugins that add it to the Player Name instead of using prefixes
-                completions.add( ChatColor.stripColor( player.getDisplayName() ) );
+                completions.add( ChatColor.stripColor( player.getPlayerListName() ) );
             }
 
             return StringUtil.copyPartialMatches( args[1], completions, matches );
