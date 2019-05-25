@@ -238,7 +238,7 @@ public class DwarfPlayerListener implements Listener
             {
                 if ( e.getEffectType() == DwarfEffectType.SHEAR )
                 {
-                    if ( entity.getType() == EntityType.SHEEP && e.checkMob( entity ) )
+                    if ( entity.getType() == EntityType.SHEEP && ( entity.getType() == e.getCreature() ) )
                     {
                         Sheep sheep = ( Sheep ) entity;
                         if ( !sheep.isSheared() )
@@ -270,7 +270,7 @@ public class DwarfPlayerListener implements Listener
                             }
                         }
                     }
-                    else if ( entity.getType() == EntityType.MUSHROOM_COW && e.checkMob( entity ) )
+                    else if ( entity.getType() == EntityType.MUSHROOM_COW && ( entity.getType() == e.getCreature() ) )
                     {
                         MushroomCow mooshroom = ( MushroomCow ) entity;
                         if ( mooshroom.isAdult() )

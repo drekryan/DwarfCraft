@@ -472,7 +472,7 @@ public class DwarfEntityListener implements Listener
                 {
                     if ( effect.getEffectType() == DwarfEffectType.MOBDROP )
                     {
-                        if ( effect.checkMob( deadThing ) )
+                        if ( effect.getCreature() != null && ( deadThing.getType() == effect.getCreature() ) )
                         {
                             ItemStack output = effect.getResult( killer );
 
