@@ -234,21 +234,23 @@ public class DwarfEffect
         for ( Material mat : mTools )
         {
             if ( mat == Material.IRON_SWORD )
-                return "swords";
+                return "sword";
             if ( mat == Material.IRON_HOE )
-                return "hoes";
+                return "hoe";
             if ( mat == Material.IRON_AXE )
-                return "axes";
+                return "axe";
             if ( mat == Material.WOODEN_PICKAXE )
-                return "any pickaxe";
+                return "pickaxe";
             if ( mat == Material.IRON_PICKAXE )
                 return "most pickaxes";
             if ( mat == Material.DIAMOND_PICKAXE )
                 return "diamond pickaxe";
             if ( mat == Material.IRON_SHOVEL )
-                return "shovels";
+                return "shovel";
             if ( mat == Material.FISHING_ROD )
                 return "fishing rod";
+            if ( mat == Material.FLINT_AND_STEEL )
+                return "flint and steel";
         }
         return "any tool";
     }
