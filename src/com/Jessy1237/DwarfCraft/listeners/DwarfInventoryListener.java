@@ -66,7 +66,7 @@ public class DwarfInventoryListener implements Listener
             {
                 if ( e.getEffectType() == DwarfEffectType.SMELT && e.checkInitiator( result ) )
                 {
-                    final ItemStack output = e.getResult( dCPlayer, result.getType() );
+                    final ItemStack output = e.getResult( dCPlayer );
 
                     DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { result }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                     plugin.getServer().getPluginManager().callEvent( ev );
@@ -79,7 +79,7 @@ public class DwarfInventoryListener implements Listener
                         if ( item != null && item.getAmount() > 0 )
                         {
                             if ( item.getType() == result.getType() ) {
-                                int extraAmount = ( item.getAmount() * event.getItemAmount() ) - event.getItemAmount();
+                                int extraAmount = event.getItemAmount() - 1;
                                 int exp = ( event.getExpToDrop() * extraAmount );
 
                                 event.setExpToDrop( exp );
@@ -136,7 +136,7 @@ public class DwarfInventoryListener implements Listener
             {
                 if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( result.getType() ) )
                 {
-                    final ItemStack output = e.getResult( dCPlayer, result.getType() );
+                    final ItemStack output = e.getResult( dCPlayer );
                     int itemsChecked = 0;
                     int possibleCrafts = 1; // the number of possible crafting operations on a shift click craft
 

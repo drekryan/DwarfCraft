@@ -246,7 +246,7 @@ public class DwarfPlayerListener implements Listener
                             if ( sheep.isAdult() )
                             {
 
-                                ItemStack item = e.getResult( dwarfPlayer, e.getOutputMaterial() );
+                                ItemStack item = e.getResult( dwarfPlayer );
 
                                 DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, e, new ItemStack[] { new ItemStack( item.getType(), 2 ) }, new ItemStack[] { item }, null, null, null, null, entity, null, player.getEquipment().getItemInMainHand() );
                                 plugin.getServer().getPluginManager().callEvent( ev );

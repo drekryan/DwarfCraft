@@ -160,6 +160,10 @@ public class DwarfEffect
             plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
                     + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
         }
+
+        // If effect type is SMELT, force effectAmount to be 1.
+        if (mType == DwarfEffectType.SMELT) effectAmount = 1;
+
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
     }
 
@@ -195,30 +199,10 @@ public class DwarfEffect
 
     public ItemStack getResult( DwarfPlayer player )
     {
-        return getResult( player, Material.AIR );
-    }
-
-    public ItemStack getResult( DwarfPlayer player, Material oldMat )
-    {
         final int count = plugin.getUtil().randomAmount( getEffectAmount( player ) );
-        ItemStack item;
+        ItemStack item = mResult.getItemStack();
+        item.setAmount( count );
 
-        // TODO: Double check this method works
-        if ( oldMat == Material.AIR )
-        {
-            if ( mResult.getMaterials().contains( oldMat ) && mResult.isTagged() )
-            {
-                item = new ItemStack( oldMat, count );
-            }
-            else
-            {
-                item = new ItemStack( mResult.getMaterials().iterator().next(), count );
-            }
-        }
-        else
-        {
-            item = new ItemStack( oldMat, count );
-        }
         return item;
     }
 
