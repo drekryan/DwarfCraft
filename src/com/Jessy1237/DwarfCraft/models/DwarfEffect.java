@@ -301,6 +301,8 @@ public class DwarfEffect
                 return "shovels";
             if ( mat == Material.FISHING_ROD )
                 return "fishing rod";
+            if ( mat == Material.FLINT_AND_STEEL )
+                return "flint and steel";
         }
         return "any tool";
     }
