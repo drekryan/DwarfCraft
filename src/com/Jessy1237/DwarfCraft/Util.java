@@ -152,16 +152,21 @@ public class Util
         {
             tagName = item.getString( name ).substring( 1 ).toLowerCase();
 
-            // Add missing vanilla wooden_fences and raw_fishes tags
+            // Add missing vanilla wooden_fences, raw_fishes, and grass tags
             if ( tagName.equalsIgnoreCase( "wooden_fences" ) )
             {
                 Material[] newMats = { Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.ACACIA_FENCE, Material.DARK_OAK_FENCE };
-                tag = createDCTag( newMats );
+                tag = createDCTag( "wooden_fences", newMats );
             }
             else if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
             {
                 Material[] newMats = { Material.COD, Material.PUFFERFISH, Material.SALMON, Material.TROPICAL_FISH };
-                tag = createDCTag( newMats );
+                tag = createDCTag( "raw_fishes", newMats );
+            }
+            else if ( tagName.equalsIgnoreCase( "grass" ) )
+            {
+                Material[] newMats = { Material.DEAD_BUSH, Material.GRASS, Material.TALL_GRASS, Material.FERN, Material.LARGE_FERN };
+                tag = createDCTag( "grass", newMats );
             }
 
             if ( tag == null )
@@ -188,9 +193,15 @@ public class Util
     }
 
     @SuppressWarnings( "rawtypes" )
-    private Tag createDCTag( Material[] newMats )
+    private Tag createDCTag( String tagName, Material[] newMats )
     {
         Tag tag = new Tag() {
+            @Override
+            public NamespacedKey getKey()
+            {
+                return NamespacedKey.minecraft( tagName );
+            }
+
             @Override
             public boolean isTagged( Keyed item )
             {
