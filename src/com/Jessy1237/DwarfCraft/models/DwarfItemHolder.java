@@ -47,7 +47,7 @@ public class DwarfItemHolder
 
     public ItemStack getItemStack()
     {
-        return mats.isEmpty() ? null : new ItemStack( mats.iterator().next() );
+        return mats.isEmpty() ? new ItemStack( Material.AIR ) : new ItemStack( mats.iterator().next() );
     }
 
     public Tag<Material> getTag()

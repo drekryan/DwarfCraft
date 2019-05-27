@@ -232,24 +232,9 @@ public class DwarfEffect
     public ItemStack getResult( DwarfPlayer player, Material oldMat )
     {
         final int count = plugin.getUtil().randomAmount( getEffectAmount( player ) );
-        ItemStack item;
+        ItemStack item = mResult.getItemStack();
+        item.setAmount( count );
 
-        // TODO: Double check this method works
-        if ( oldMat == Material.AIR )
-        {
-            if ( mResult.getMaterials().contains( oldMat ) && mResult.isTagged() )
-            {
-                item = new ItemStack( oldMat, count );
-            }
-            else
-            {
-                item = new ItemStack( mResult.getMaterials().iterator().next(), count );
-            }
-        }
-        else
-        {
-            item = new ItemStack( oldMat, count );
-        }
         return item;
     }
 

@@ -177,7 +177,7 @@ public class DwarfBlockListener implements Listener
 
                     if ( effect.checkTool( tool ) )
                     {
-                        ItemStack item = effect.getResult( player, blockMat );
+                        ItemStack item = effect.getResult( player );
                         ItemStack item1 = null;
 
                         // Gives the 2% to drop poisonous potatoes when

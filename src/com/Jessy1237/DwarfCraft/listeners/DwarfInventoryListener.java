@@ -13,6 +13,7 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import co.kepler.fastcraft.craftgui.GUIFastCraft;
 import co.kepler.fastcraft.recipes.CraftingInvWrapper;
@@ -63,55 +64,53 @@ public class DwarfInventoryListener implements Listener
     @EventHandler( priority = EventPriority.NORMAL )
     public void onFurnaceExtractEvent( FurnaceExtractEvent event )
     {
-        if ( !plugin.getUtil().isWorldAllowed( event.getPlayer().getWorld() ) )
-            return;
-
         Player player = event.getPlayer();
         DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, DwarfSkill> skills = dCPlayer.getSkills();
-        ItemStack extract = new ItemStack( event.getItemType(), event.getItemAmount() );
+        ItemStack result = new ItemStack( event.getItemType(), event.getItemAmount() );
 
-        for ( DwarfSkill s : skills.values() )
+        if ( !plugin.getUtil().isWorldAllowed( player.getWorld() ) )
+            return;
+
+        for ( DwarfSkill s : dCPlayer.getSkills().values() )
         {
-            for ( DwarfEffect effect : s.getEffects() )
+            for ( DwarfEffect e : s.getEffects() )
             {
-                if ( effect.getEffectType() == DwarfEffectType.SMELT && effect.checkInitiator( extract ) )
+                if ( e.getEffectType() == DwarfEffectType.SMELT && e.checkInitiator( result ) )
                 {
+                    final ItemStack output = e.getResult( dCPlayer, result.getType() );
 
-                    int held = 0;
-                    for ( ItemStack i : player.getInventory().all( extract.getType() ).values() )
-                    {
-                        held += i.getAmount();
-                    }
-
-                    // This event fires after the item is added to inventory when shift clicked
-                    held -= extract.getAmount();
-
-                    ItemStack output = effect.getResult( dCPlayer );
-
-                    // All Furnace recipes make 1 result item by default
-                    float modifier = ( float ) ( output.getAmount() + 1 ) / 1.0f;
-
-                    ItemStack check = null;
-                    if ( extract.getType() != output.getType() )
-                        check = extract;
-
-                    DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, effect, new ItemStack[] { check != null ? new ItemStack( output.getType(), 0, output.getDurability() ) : extract }, new ItemStack[] { output }, null, null, null, null, null, event.getBlock().getState().getBlock(), null );
+                    DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { result }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                     plugin.getServer().getPluginManager().callEvent( ev );
 
                     if ( ev.isCancelled() )
                         return;
 
-                    player.setCanPickupItems( false );
                     for ( ItemStack item : ev.getAlteredItems() )
                     {
-                        if ( item != null )
+                        if ( item != null && item.getAmount() > 0 )
                         {
-                            if ( item.getAmount() > 0 )
+                            if ( item.getType() == result.getType() )
                             {
-                                int num = ( amountEffectsFired.get( player ) == null ? 0 : amountEffectsFired.get( player ) ) + 1;
-                                amountEffectsFired.put( player, num );
-                                plugin.getServer().getScheduler().runTaskLater( plugin, new ShiftClickTask( plugin, dCPlayer, item, check, held, modifier ), 5 );
+                                int extraAmount = ( item.getAmount() * event.getItemAmount() ) - event.getItemAmount();
+                                int exp = (event.getExpToDrop() / event.getItemAmount() );
+
+                                event.setExpToDrop( exp * ( event.getItemAmount() * extraAmount ) );
+
+                                HashMap<Integer, ItemStack> overflow = player.getInventory().addItem( new ItemStack( item.getType(), extraAmount ) );
+
+                                if ( !overflow.isEmpty() )
+                                {
+                                    for ( Map.Entry<Integer, ItemStack> overflowSet : overflow.entrySet() )
+                                    {
+                                        player.getWorld().dropItemNaturally( player.getLocation(), overflowSet.getValue() );
+                                    }
+                                }
+
+                                player.updateInventory();
+                            }
+                            else
+                            {
+                                player.getWorld().dropItemNaturally( player.getLocation(), item );
                             }
                         }
                     }
@@ -173,7 +172,7 @@ public class DwarfInventoryListener implements Listener
                                 held += i.getAmount();
                             }
 
-                            final ItemStack output = e.getResult( dCPlayer, toCraft.getType() );
+                            final ItemStack output = e.getResult( dCPlayer );
 
                             float modifier = ( float ) output.getAmount() / ( float ) toCraft.getAmount();
 
@@ -222,7 +221,7 @@ public class DwarfInventoryListener implements Listener
                         {
                             if ( e.getEffectType() == DwarfEffectType.CRAFT && e.checkInitiator( toCraft.getType() ) )
                             {
-                                final ItemStack output = e.getResult( dCPlayer, toCraft.getType() );
+                                final ItemStack output = e.getResult( dCPlayer );
 
                                 DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { toCraft }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                                 plugin.getServer().getPluginManager().callEvent( ev );
