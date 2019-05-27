@@ -78,20 +78,27 @@ public class DwarfInventoryListener implements Listener
                     {
                         if ( item != null && item.getAmount() > 0 )
                         {
-                            if ( item.getType() == result.getType() ) {
-                                int extraAmount = event.getItemAmount() - 1;
-                                int exp = ( event.getExpToDrop() * extraAmount );
+                            if ( item.getType() == result.getType() )
+                            {
+                                int extraAmount = ( item.getAmount() * event.getItemAmount() ) - event.getItemAmount();
+                                int exp = ( event.getExpToDrop() / event.getItemAmount() );
 
-                                event.setExpToDrop( exp );
+                                event.setExpToDrop( exp * ( event.getItemAmount() * extraAmount ) );
 
                                 HashMap<Integer, ItemStack> overflow = player.getInventory().addItem( new ItemStack( item.getType(), extraAmount ) );
 
-                                if ( !overflow.isEmpty() ) {
-                                    for ( Map.Entry<Integer, ItemStack> overflowSet : overflow.entrySet() ) {
+                                if ( !overflow.isEmpty() )
+                                {
+                                    for ( Map.Entry<Integer, ItemStack> overflowSet : overflow.entrySet() )
+                                    {
                                         player.getWorld().dropItemNaturally( player.getLocation(), overflowSet.getValue() );
                                     }
                                 }
-                            } else {
+
+                                player.updateInventory();
+                            }
+                            else
+                            {
                                 player.getWorld().dropItemNaturally( player.getLocation(), item );
                             }
                         }

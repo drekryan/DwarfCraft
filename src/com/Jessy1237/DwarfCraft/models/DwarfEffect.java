@@ -158,11 +158,8 @@ public class DwarfEffect
         if ( DwarfCraft.debugMessagesThreshold < 1 )
         {
             plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
-                    + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
+                    + "Exception: %s Exception Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
         }
-
-        // If effect type is SMELT, force effectAmount to be 1.
-        if (mType == DwarfEffectType.SMELT) effectAmount = 1;
 
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
     }

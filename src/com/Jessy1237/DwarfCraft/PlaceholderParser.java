@@ -132,6 +132,10 @@ public class PlaceholderParser
             minorAmountStr = String.format( "%.2f", minorAmount );
         }
 
+        if ( effect.getEffectType() == DwarfEffectType.SMELT && effectAmount <= 0 ) {
+            effectAmount = Math.max( 1.0, effectAmount );
+        }
+
         return parseByDwarfEffect( text.replaceAll( PlaceHolder.EFFECT_AMOUNT_DIG.getPlaceHolder(), String.format( "%.0f", +( effectAmount * 100 ) ) ).replaceAll( PlaceHolder.EFFECT_DAMAGE_BOW.getPlaceHolder(), String.format( "%.0f", ( effectAmount + 2 ) ) )
                 .replaceAll( PlaceHolder.EFFECT_AMOUNT_INT.getPlaceHolder(), "" + ( int ) effectAmount ).replaceAll( PlaceHolder.EFFECT_DAMAGE.getPlaceHolder(), "" + ( int ) ( effectAmount * 100 ) ).replaceAll( PlaceHolder.EFFECT_DAMAGE_TAKEN.getPlaceHolder(), "" + ( int ) ( effectAmount * 100 ) )
                 .replaceAll( PlaceHolder.EFFECT_LEVEL_COLOR.getPlaceHolder(), effectLevelColor ).replaceAll( PlaceHolder.EFFECT_AMOUNT_MINOR.getPlaceHolder(), minorAmountStr ).replaceAll( PlaceHolder.EFFECT_AMOUNT_FOOD.getPlaceHolder(), String.format( "%.2f", ( effectAmount / 2.0 ) ) )
