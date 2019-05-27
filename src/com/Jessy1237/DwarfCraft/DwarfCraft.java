@@ -396,16 +396,16 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
 
         placeHolderParser = new PlaceholderParser( this );
 
-        pm.registerEvents( playerListener, this );
-        pm.registerEvents( entityListener, this );
-        pm.registerEvents( blockListener, this );
-        pm.registerEvents( vehicleListener, this );
-        pm.registerEvents( inventoryListener, this );
-        pm.registerEvents( dwarfListener, this );
-
         // Creates the citizen trait for the DwarfTrainers
         if ( !reload )
         {
+            pm.registerEvents( playerListener, this );
+            pm.registerEvents( entityListener, this );
+            pm.registerEvents( blockListener, this );
+            pm.registerEvents( vehicleListener, this );
+            pm.registerEvents( inventoryListener, this );
+            pm.registerEvents( dwarfListener, this );
+
             trainerTrait = TraitInfo.create( DwarfTrainerTrait.class ).withName( "DwarfTrainer" );
             CitizensAPI.getTraitFactory().registerTrait( trainerTrait );
         }
