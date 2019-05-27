@@ -226,11 +226,6 @@ public class DwarfEffect
 
     public ItemStack getResult( DwarfPlayer player )
     {
-        return getResult( player, Material.AIR );
-    }
-
-    public ItemStack getResult( DwarfPlayer player, Material oldMat )
-    {
         final int count = plugin.getUtil().randomAmount( getEffectAmount( player ) );
         ItemStack item = mResult.getItemStack();
         item.setAmount( count );

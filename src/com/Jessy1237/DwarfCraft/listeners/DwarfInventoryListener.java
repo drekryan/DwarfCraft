@@ -77,7 +77,7 @@ public class DwarfInventoryListener implements Listener
             {
                 if ( e.getEffectType() == DwarfEffectType.SMELT && e.checkInitiator( result ) )
                 {
-                    final ItemStack output = e.getResult( dCPlayer, result.getType() );
+                    final ItemStack output = e.getResult( dCPlayer );
 
                     DwarfEffectEvent ev = new DwarfEffectEvent( dCPlayer, e, new ItemStack[] { result }, new ItemStack[] { output }, null, null, null, null, null, null, null );
                     plugin.getServer().getPluginManager().callEvent( ev );
