@@ -121,21 +121,21 @@ public class DwarfInventoryListener implements Listener
 
         // TODO 1.14 Do we still need to special case repairing of tools? Test this....
         // Make sure they aren't duping when repairing tools
-//        if ( plugin.getUtil().isTool( toCraft.getType() ) )
-//        {
-//            CraftingInventory ci = ( CraftingInventory ) event.getClickedInventory();
-//            if ( ci.getRecipe() instanceof ShapelessRecipe )
-//            {
-//                ShapelessRecipe r = ( ShapelessRecipe ) ci.getRecipe();
-//                for ( ItemStack i : r.getIngredientList() )
-//                {
-//                    if ( plugin.getUtil().isTool( i.getType() ) && toCraft.getType() == i.getType() )
-//                    {
-//                        return;
-//                    }
-//                }
-//            }
-//        }
+        //        if ( plugin.getUtil().isTool( toCraft.getType() ) )
+        //        {
+        //            CraftingInventory ci = ( CraftingInventory ) event.getClickedInventory();
+        //            if ( ci.getRecipe() instanceof ShapelessRecipe )
+        //            {
+        //                ShapelessRecipe r = ( ShapelessRecipe ) ci.getRecipe();
+        //                for ( ItemStack i : r.getIngredientList() )
+        //                {
+        //                    if ( plugin.getUtil().isTool( i.getType() ) && toCraft.getType() == i.getType() )
+        //                    {
+        //                        return;
+        //                    }
+        //                }
+        //            }
+        //        }
 
         for ( DwarfSkill s : dCPlayer.getSkills().values() )
         {
@@ -153,9 +153,12 @@ public class DwarfInventoryListener implements Listener
                     if ( ev.isCancelled() )
                         return;
 
-                    if ( isShiftClick ) {
-                        for ( ItemStack item : event.getInventory().getMatrix() ) {
-                            if ( item != null && !item.getType().equals( Material.AIR ) ) {
+                    if ( isShiftClick )
+                    {
+                        for ( ItemStack item : event.getInventory().getMatrix() )
+                        {
+                            if ( item != null && !item.getType().equals( Material.AIR ) )
+                            {
                                 if ( itemsChecked == 0 )
                                     possibleCrafts = item.getAmount();
                                 else
@@ -169,11 +172,13 @@ public class DwarfInventoryListener implements Listener
                     {
                         if ( item != null && item.getAmount() > 0 )
                         {
-                            if ( item.getType() == result.getType() ) {
+                            if ( item.getType() == result.getType() )
+                            {
                                 // If the craft is a shift click we need to cancel the crafting event and modify the
                                 // players inventory directly. Otherwise we modify the crafting result and allow the
                                 // craft to proceed as normal.
-                                if ( isShiftClick ) {
+                                if ( isShiftClick )
+                                {
                                     event.setCancelled( true );
                                     item.setAmount( item.getAmount() * possibleCrafts );
 
@@ -182,16 +187,22 @@ public class DwarfInventoryListener implements Listener
 
                                     // Check if there are any overflow items that couldn't fit in the players inventory
                                     // and drop them into the world at the players location.
-                                    if ( !overflow.isEmpty() ) {
-                                        for ( Map.Entry<Integer, ItemStack> overflowSet : overflow.entrySet() ) {
+                                    if ( !overflow.isEmpty() )
+                                    {
+                                        for ( Map.Entry<Integer, ItemStack> overflowSet : overflow.entrySet() )
+                                        {
                                             player.getWorld().dropItemNaturally( player.getLocation(), overflowSet.getValue() );
                                         }
                                     }
 
-                                } else {
+                                }
+                                else
+                                {
                                     event.getInventory().setResult( item );
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 player.getWorld().dropItemNaturally( player.getLocation(), item );
                             }
                         }
@@ -201,6 +212,7 @@ public class DwarfInventoryListener implements Listener
         }
     }
 
+    @SuppressWarnings( "unlikely-arg-type" )
     @EventHandler( priority = EventPriority.NORMAL )
     public void onBrewEvent( BrewEvent event )
     {
@@ -275,30 +287,35 @@ public class DwarfInventoryListener implements Listener
             {
                 for ( DwarfSkill s : skills.values() )
                 {
-                    for ( DwarfEffect effect : s.getEffects() ) {
-                        if ( effect.getEffectType() == DwarfEffectType.BREW && effect.checkInitiator(item) ) {
-                            int newAmount = (int) ( amount * effect.getEffectAmount( dwarfPlayer ) );
+                    for ( DwarfEffect effect : s.getEffects() )
+                    {
+                        if ( effect.getEffectType() == DwarfEffectType.BREW && effect.checkInitiator( item ) )
+                        {
+                            int newAmount = ( int ) ( amount * effect.getEffectAmount( dwarfPlayer ) );
 
                             ItemStack clickedStack = new ItemStack( item.getType(), newAmount );
                             clickedStack.setItemMeta( potionMeta );
 
-                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, effect, new ItemStack[]{item}, new ItemStack[]{ clickedStack }, null, null, null, null, null, block.getBlock(), null );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( dwarfPlayer, effect, new ItemStack[] { item }, new ItemStack[] { clickedStack }, null, null, null, null, null, block.getBlock(), null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
                                 return;
 
                             // Potions from DwarfEffect should still use fuel from the stand for gameplay reasons
-                            block.setFuelLevel( block.getFuelLevel() - (newAmount - 1) );
+                            block.setFuelLevel( block.getFuelLevel() - ( newAmount - 1 ) );
 
                             Player player = dwarfPlayer.getPlayer();
                             for ( ItemStack item1 : ev.getAlteredItems() )
                             {
-                                if ( item1 != null && item1.getAmount() > 0 ) {
-                                    if ( item1.getType() == item.getType() ) {
+                                if ( item1 != null && item1.getAmount() > 0 )
+                                {
+                                    if ( item1.getType() == item.getType() )
+                                    {
                                         ItemStack newItem = new ItemStack( item1.getType(), newAmount - 1 );
 
-                                        if ( item1.getType() != Material.POTION || item1.getType() != Material.SPLASH_POTION || item1.getType() != Material.LINGERING_POTION ) {
+                                        if ( item1.getType() != Material.POTION || item1.getType() != Material.SPLASH_POTION || item1.getType() != Material.LINGERING_POTION )
+                                        {
                                             newItem.setItemMeta( potionMeta );
                                         }
 
@@ -307,12 +324,16 @@ public class DwarfInventoryListener implements Listener
 
                                         // Check if there are any overflow items that couldn't fit in the players inventory
                                         // and drop them into the world at the players location.
-                                        if ( !overflow.isEmpty() ) {
-                                            for ( Map.Entry<Integer, ItemStack> overflowSet : overflow.entrySet() ) {
+                                        if ( !overflow.isEmpty() )
+                                        {
+                                            for ( Map.Entry<Integer, ItemStack> overflowSet : overflow.entrySet() )
+                                            {
                                                 player.getWorld().dropItemNaturally( player.getLocation(), overflowSet.getValue() );
                                             }
                                         }
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         player.getWorld().dropItemNaturally( player.getLocation(), item1 );
                                     }
                                 }
@@ -333,9 +354,13 @@ public class DwarfInventoryListener implements Listener
             ItemStack i = orig[n];
             if ( i != null )
             {
+                //TODO: Check potion item meta more thoroughly, maybe put back in something related to the new damageable item meta instead of the deprecated durability
                 if ( new1.contains( i ) && i.getType() == Material.POTION )
                 {
-                    if ( new1.getItem( n ).getDurability() == i.getDurability() )
+                    PotionMeta p1 = ( PotionMeta ) new1.getItem( n ).getItemMeta();
+                    PotionMeta p2 = ( PotionMeta ) i.getItemMeta();
+
+                    if ( p1.getCustomEffects().containsAll( p2.getCustomEffects() ) )
                     {
                         return true;
                     }

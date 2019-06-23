@@ -15,7 +15,9 @@ import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
@@ -291,9 +293,10 @@ public class DwarfEffect
     public void damageTool( DwarfPlayer player, int base, ItemStack tool, boolean negate )
     {
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
+        Damageable dmg = ( Damageable ) tool.getItemMeta();
 
         if ( DwarfCraft.debugMessagesThreshold < 2 )
-            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, tool.getDurability(), base, wear ) );
+            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, dmg.getDamage(), base, wear ) );
 
         // Some code taken from net.minecraft.server.ItemStack line 165.
         // Checks to see if damage should be skipped.
@@ -320,22 +323,22 @@ public class DwarfEffect
         if ( e.isCancelled() )
             return;
 
-        tool.setDurability( ( short ) ( tool.getDurability() + e.getAlteredDamage() - base ) );
+        dmg.setDamage( ( int ) ( dmg.getDamage() + e.getAlteredDamage() - base ) );
         // This may have the side effect of causing items to flicker when they
         // are about to break
         // If this becomes a issue, we need to cast to a CraftItemStack, then
         // make CraftItemStack.item public,
         // And call CraftItemStack.item.damage(-base, player.getPlayer());
 
-        if ( tool.getDurability() >= tool.getType().getMaxDurability() )
+        if ( dmg.getDamage() >= tool.getType().getMaxDurability() )
         {
-            if ( tool.getType() == Material.IRON_SWORD && tool.getDurability() < 250 )
+            if ( tool.getType() == Material.IRON_SWORD && dmg.getDamage() < 250 )
                 return;
 
             if ( tool.getAmount() > 1 )
             {
                 tool.setAmount( tool.getAmount() - 1 );
-                tool.setDurability( ( short ) -1 );
+                dmg.setDamage( ( short ) -1 );
             }
             else
             {
@@ -349,6 +352,8 @@ public class DwarfEffect
                 }
             }
         }
+
+        tool.setItemMeta( ( ItemMeta ) dmg );
     }
 
 }

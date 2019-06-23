@@ -21,6 +21,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
@@ -339,7 +340,11 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         {
             if ( invStack == null )
                 continue;
-            if ( ( invStack.getType() == costStack.getType() && ( invStack.getDurability() == costStack.getDurability() || ( plugin.getUtil().isTool( invStack.getType() ) && invStack.getDurability() == invStack.getType().getMaxDurability() ) ) )
+
+            Damageable dmgI = ( Damageable ) invStack.getItemMeta();
+            Damageable dmgC = ( Damageable ) costStack.getItemMeta();
+
+            if ( ( invStack.getType() == costStack.getType() && ( dmgI.getDamage() == dmgC.getDamage() || ( plugin.getUtil().isTool( invStack.getType() ) && dmgI.getDamage() == invStack.getType().getMaxDurability() ) ) )
                     || ( mats.contains( costStack.getType() ) && mats.contains( invStack.getType() ) ) )
             {
                 int inv = invStack.getAmount();
