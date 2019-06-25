@@ -13,7 +13,7 @@
 
     <properties>
         <!--    Minecraft Version    -->
-        <minecraft.version>1.14.2</minecraft.version>
+        <minecraft.version>1.14.3</minecraft.version>
         <plugin.api.version>1.14</plugin.api.version>
 
         <!--    Dependency Version    -->
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>${minecraft.version}-R0.1-SNAPSHOT</version>
+            <version>${minecraft.version}-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!--Citizens API-->
