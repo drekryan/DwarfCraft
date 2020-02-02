@@ -9,18 +9,17 @@
     <name>DwarfCraft</name>
     <packaging>jar</packaging>
 
-    <version>4.3-SNAPSHOT</version>
+    <version>4.4-SNAPSHOT</version>
 
     <properties>
         <!--    Minecraft Version    -->
-        <minecraft.version>1.14.3</minecraft.version>
-        <plugin.api.version>1.14</plugin.api.version>
+        <minecraft.version>1.15.2</minecraft.version>
+        <plugin.api.version>1.15</plugin.api.version>
 
         <!--    Dependency Version    -->
-        <citizens.version>2.0.25-SNAPSHOT</citizens.version>
+        <citizens.version>2.0.26-SNAPSHOT</citizens.version>
         <vault.version>1.7</vault.version>
-        <logblock.version>1.14.1-SNAPSHOT</logblock.version>
-        <pladeholderapi.version>2.10.2</pladeholderapi.version>
+        <placeholderapi.version>2.10.4</placeholderapi.version>
     </properties>
 
     <repositories>
@@ -37,10 +36,6 @@
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
-            <id>md_5-snapshots</id>
-            <url>http://repo.md-5.net/content/repositories/snapshots</url>
-        </repository>
-        <repository>
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
@@ -51,7 +46,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>${minecraft.version}-SNAPSHOT</version>
+            <version>${minecraft.version}-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!--Citizens API-->
@@ -68,24 +63,11 @@
             <version>${vault.version}</version>
             <scope>compile</scope>
         </dependency>
-        <!--LogBlock API-->
-        <dependency>
-            <groupId>de.diddiz</groupId>
-            <artifactId>logblock</artifactId>
-            <version>${logblock.version}</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>de.diddiz</groupId>
-                    <artifactId>questioner</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <!--Placeholder API-->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>${pladeholderapi.version}</version>
+            <version>${placeholderapi.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

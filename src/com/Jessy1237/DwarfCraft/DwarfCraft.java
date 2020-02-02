@@ -35,8 +35,6 @@ import com.Jessy1237.DwarfCraft.listeners.DwarfPlayerListener;
 import com.Jessy1237.DwarfCraft.listeners.DwarfVehicleListener;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
-import de.diddiz.LogBlock.Consumer;
-import de.diddiz.LogBlock.LogBlock;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -56,7 +54,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private ConfigManager cm;
     private DataManager dm;
     private Out out;
-    private Consumer consumer = null;
     private Util util;
     private PlaceholderParser placeHolderParser;
     private Permission perms = null;
@@ -86,11 +83,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     public Out getOut()
     {
         return out;
-    }
-
-    public Consumer getConsumer()
-    {
-        return consumer;
     }
 
     public Util getUtil()
@@ -420,12 +412,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         for ( Player player : getServer().getOnlinePlayers() )
         {
             getUtil().setPlayerPrefix( player );
-        }
-
-        if ( pm.getPlugin( "LogBlock" ) != null )
-        {
-            consumer = ( ( LogBlock ) pm.getPlugin( "LogBlock" ) ).getConsumer();
-            getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into LogBlock!" );
         }
 
         if ( pm.getPlugin( "PlaceholderAPI" ) != null )

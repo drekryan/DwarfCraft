@@ -48,8 +48,6 @@ import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-import de.diddiz.LogBlock.Actor;
-
 public class DwarfBlockListener implements Listener
 {
     private final DwarfCraft plugin;
@@ -320,10 +318,6 @@ public class DwarfBlockListener implements Listener
                         if ( event.getExpToDrop() != 0 )
                         {
                             ( loc.getWorld().spawn( loc, ExperienceOrb.class ) ).setExperience( event.getExpToDrop() );
-                        }
-                        if ( plugin.getConsumer() != null )
-                        {
-                            plugin.getConsumer().queueBlockBreak( Actor.actorFromEntity( event.getPlayer() ), event.getBlock().getState() );
                         }
 
                         blockDropChange = true;
