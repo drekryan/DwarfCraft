@@ -1,0 +1,90 @@
+{
+  "display_name": "Archer",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "ARROW",
+      "base": 4.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "MOBDROP",
+      "origin_material": "ZOMBIE",
+      "output_material": "FEATHER",
+      "base": 0.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 4,
+        "value": 1.5
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "MOBDROP",
+      "origin_material": "ZOMBIE",
+      "output_material": "ARROW",
+      "base": 0.0,
+      "min": 0,
+      "max": 8,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "BOWATTACK",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 2.75,
+      "min": 2,
+      "max": 7,
+      "step": 0.13,
+      "step_novice": 0.13,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 9,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "BOW"
+}

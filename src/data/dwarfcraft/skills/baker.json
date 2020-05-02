@@ -1,0 +1,126 @@
+{
+  "display_name": "Baker",
+  "race_specialization": [
+    "human"
+  ],
+  "training_items": [
+    {
+      "id": "CAKE",
+      "base": 1.0,
+      "max": 36
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "PUMPKIN_PIE",
+      "output_material": "PUMPKIN_PIE",
+      "base": 1.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "CAKE",
+      "output_material": "CAKE",
+      "base": 1.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "BREAD",
+      "output_material": "BREAD",
+      "base": 1.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "BAKED_POTATO",
+      "output_material": "BAKED_POTATO",
+      "base": 0.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "COOKIE",
+      "output_material": "COOKIE",
+      "base": 7.0,
+      "min": 0,
+      "max": 14,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "CAKE"
+}

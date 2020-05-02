@@ -10,32 +10,24 @@
 
 package com.Jessy1237.DwarfCraft;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Tag;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jbls.LexManos.CSV.CSVRecord;
 
 import com.Jessy1237.DwarfCraft.data.DataManager;
 import com.Jessy1237.DwarfCraft.models.DwarfItemHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfRace;
-import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
+import com.google.gson.JsonObject;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 import net.citizensnpcs.api.npc.NPC;
@@ -44,7 +36,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class Util
 {
-
     private DwarfCraft plugin;
 
     public Util( DwarfCraft plugin )
@@ -122,35 +113,24 @@ public class Util
             return ( int ) Math.ceil( input );
     }
 
-    protected String sanitize( String str )
-    {
-        String retval = "";
-        for ( int i = 0; i < str.length(); i++ )
-        {
-            if ( "abcdefghijlmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_".indexOf( str.charAt( i ) ) != -1 )
-                retval = retval + str.charAt( i );
-        }
-        return retval;
-    }
-
     /**
      * Gets the DwarfItemHolder from the csv record item data.
-     * 
-     * @param item The CSVRecord being read from
-     * @param name The name of the Item being found
+     *
+     * @param item The JsonObject being read from
      * @return A dwarf item holder but can return an empty dwarf item holder
      */
-    public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
+    @SuppressWarnings( { "unchecked" } )
+    public DwarfItemHolder getDwarfItemHolder( JsonObject item, String name )
     {
         Set<Material> mats = new HashSet<>();
         Tag<Material> tag = null;
         String tagName = "";
 
-        if ( item.getString( name ).startsWith( "#" ) )
+        if ( item.get( name ).getAsString().startsWith( "#" ) )
         {
-            tagName = item.getString( name ).substring( 1 ).toLowerCase();
+            tagName = item.get( name ).getAsString().substring( 1 ).toLowerCase();
 
-            // Add missing vanilla raw_fishes, and grass tags
+            // Add missing vanilla wooden_fences, raw_fishes, and grass tags
             if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
             {
                 Material[] newMats = { Material.COD, Material.PUFFERFISH, Material.SALMON, Material.TROPICAL_FISH };
@@ -179,16 +159,16 @@ public class Util
         }
         else
         {
-            mats.add( parseItem( item.getString( name ) ).getType() );
+            mats.add( parseItem( item.get( name ).getAsString() ).getType() );
         }
 
         return new DwarfItemHolder( mats, tag, tagName );
     }
 
-    private Tag<Material> createDCTag( String tagName, Material[] newMats )
+    @SuppressWarnings( "rawtypes" )
+    private Tag createDCTag( String tagName, Material[] newMats )
     {
-        return new Tag<Material>() {
-
+        Tag tag = new Tag() {
             @Override
             public NamespacedKey getKey()
             {
@@ -196,22 +176,27 @@ public class Util
             }
 
             @Override
-            public boolean isTagged( Material mat )
+            public boolean isTagged( Keyed item )
             {
+                Material mat = Material.matchMaterial( item.getKey().toString() );
                 return getValues().contains( mat );
             }
 
             @Override
-            public Set<Material> getValues()
+            public Set getValues()
             {
-                return new HashSet<Material>( Arrays.asList( newMats ) );
+                return new HashSet<>( Arrays.asList( newMats ) );
             }
         };
+
+        return tag;
     }
 
     public ItemStack parseItem( String info )
     {
         Material mat = Material.getMaterial( info );
+        checkMaterial( info, "" );
+
         if ( mat == null )
         {
             return new ItemStack( Material.AIR );
@@ -251,52 +236,19 @@ public class Util
      */
     public boolean isTool( Material mat )
     {
-        if ( mat == Material.IRON_SHOVEL || mat == Material.IRON_AXE || mat == Material.IRON_PICKAXE || mat == Material.IRON_SWORD || mat == Material.WOODEN_SWORD || mat == Material.WOODEN_SHOVEL || mat == Material.WOODEN_PICKAXE || mat == Material.WOODEN_AXE || mat == Material.STONE_SWORD
+        return mat == Material.IRON_SHOVEL || mat == Material.IRON_AXE || mat == Material.IRON_PICKAXE || mat == Material.IRON_SWORD || mat == Material.WOODEN_SWORD || mat == Material.WOODEN_SHOVEL || mat == Material.WOODEN_PICKAXE || mat == Material.WOODEN_AXE || mat == Material.STONE_SWORD
                 || mat == Material.STONE_SHOVEL || mat == Material.STONE_PICKAXE || mat == Material.STONE_AXE || mat == Material.DIAMOND_SWORD || mat == Material.DIAMOND_SHOVEL || mat == Material.DIAMOND_PICKAXE || mat == Material.DIAMOND_AXE || mat == Material.GOLDEN_SWORD
-                || mat == Material.GOLDEN_SHOVEL || mat == Material.GOLDEN_PICKAXE || mat == Material.GOLDEN_AXE || mat == Material.WOODEN_HOE || mat == Material.STONE_HOE || mat == Material.IRON_HOE || mat == Material.DIAMOND_HOE || mat == Material.GOLDEN_HOE || mat == Material.SHEARS )
-        {
-            return true;
-        }
-        return false;
+                || mat == Material.GOLDEN_SHOVEL || mat == Material.GOLDEN_PICKAXE || mat == Material.GOLDEN_AXE || mat == Material.WOODEN_HOE || mat == Material.STONE_HOE || mat == Material.IRON_HOE || mat == Material.DIAMOND_HOE || mat == Material.GOLDEN_HOE || mat == Material.SHEARS;
     }
 
     public String getPlayerPrefix( DwarfPlayer player )
     {
-        if ( player.getRace() == null || player.getRace().isEmpty() )
-            return "";
-        String race = player.getRace().substring( 0, 1 ).toUpperCase() + player.getRace().substring( 1 );
-        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), race ) + "&f" );
+        return plugin.getOut().parseColors( plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), player.getRace().getName() ) + "&f" );
     }
 
     public String getPlayerPrefix( String race )
     {
-        if ( race == null || race.isEmpty() )
-            return "";
-        String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return plugin.getOut().parseColors( prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f" );
-    }
-
-    public String getPlayerPrefixOldColours( String race )
-    {
-        if ( race == null || race.isEmpty() )
-            return "";
-        String raceStr = race.substring( 0, 1 ).toUpperCase() + race.substring( 1 );
-        String prefix = plugin.getConfigManager().getRace( race ).getPrefixColour();
-        return prefix + plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), raceStr ) + "&f";
-    }
-
-    public int getMaxLevelForSkill( DwarfPlayer dcPlayer, DwarfSkill skill )
-    {
-        int maxLevel = plugin.getConfigManager().getMaxSkillLevel();
-        ArrayList<Integer> skills = plugin.getConfigManager().getAllSkills( dcPlayer.getRace() );
-        if ( !skills.contains( skill.getId() ) )
-        {
-            maxLevel = plugin.getConfigManager().getRaceLevelLimit();
-        }
-
-        return maxLevel;
+        return plugin.getOut().parseColors( plugin.getConfigManager().getPrefix().replace( PlaceholderParser.PlaceHolder.RACE_NAME.getPlaceHolder(), race ) + "&f" );
     }
 
     public void removePlayerPrefixes()
@@ -315,7 +267,7 @@ public class Util
                     if ( w == null )
                         continue;
 
-                    for ( DwarfRace race : plugin.getConfigManager().getRaceList() )
+                    for ( DwarfRace race : plugin.getRaceManager().getAllRaces().values() )
                     {
                         if ( race == null )
                             continue;
@@ -333,38 +285,31 @@ public class Util
                             prefix = prefix.replace( getPlayerPrefix( raceStr ) + " ", "" );
                             plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
                         }
-
-                        while ( plugin.getChat().getPlayerPrefix( w.getName(), op ).contains( getPlayerPrefixOldColours( raceStr ) ) )
-                        {
-                            prefix = plugin.getChat().getPlayerPrefix( w.getName(), op );
-                            prefix = prefix.replace( getPlayerPrefixOldColours( raceStr ) + " ", "" );
-                            plugin.getChat().setPlayerPrefix( w.getName(), op, prefix );
-                        }
                     }
                 }
             }
         }
     }
-
+    
     public void setPlayerPrefix( Player player )
     {
         DataManager dm = plugin.getDataManager();
         DwarfPlayer data = dm.find( player );
-
+        
         if ( data == null )
             data = dm.createDwarf( player );
         if ( !dm.checkDwarfData( data ) )
         {
             dm.createDwarfData( data );
         }
-
+        
         if ( plugin.isChatEnabled() )
         {
             if ( plugin.getConfigManager().prefix )
             {
-
+                
                 String prefix = plugin.getChat().getPlayerPrefix( player );
-
+                
                 if ( prefix != null )
                 {
                     if ( !prefix.equals( "" ) )
@@ -376,7 +321,7 @@ public class Util
                             plugin.getChat().setPlayerPrefix( player, prefix );
                         }
                     }
-
+                    
                     if ( plugin.getChat() != null && !plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
                     {
                         plugin.getChat().setPlayerPrefix( player, plugin.getUtil().getPlayerPrefix( data ) + " " + plugin.getChat().getPlayerPrefix( player ) );
@@ -386,7 +331,7 @@ public class Util
             else
             {
                 String prefix = plugin.getChat().getPlayerPrefix( player );
-
+                
                 if ( prefix != null )
                     if ( !prefix.equals( "" ) )
                         while ( plugin.getChat().getPlayerPrefix( player ).contains( plugin.getUtil().getPlayerPrefix( data ) ) )
@@ -398,7 +343,7 @@ public class Util
             }
         }
     }
-
+    
     /**
      * Gets the clean name of the Entity.
      *
@@ -474,11 +419,11 @@ public class Util
         SPIDER_EYE( Material.SPIDER_EYE, 2, 3.2f ),
         SWEET_BERRIES( Material.SWEET_BERRIES, 2, 0.4f );
 
-        private int lvl;
-        private Material mat;
-        private float sat;
+        private final int lvl;
+        private final Material mat;
+        private final float sat;
 
-        private FoodLevel( Material mat, int lvl, float sat )
+        FoodLevel(Material mat, int lvl, float sat)
         {
             this.mat = mat;
             this.lvl = lvl;
@@ -576,5 +521,36 @@ public class Util
             }
 
         }
+    }
+
+    public void checkMaterial( String material, String skill_id )
+    {
+        material = material.replaceAll("\"", "");
+        if ( material.isEmpty() ) return;
+
+        // Ignore tag syntax. Ex. #GRASS
+        if (!material.contains("#")) {
+            Material mat = Material.getMaterial( material );
+            if (mat == null) {
+                if (!skill_id.isEmpty())
+                    plugin.getUtil().consoleLog( Level.WARNING, ChatColor.YELLOW + "Warning: Invalid material id '" + material + "' for skill " + skill_id );
+                else
+                    plugin.getUtil().consoleLog( Level.WARNING, ChatColor.YELLOW + "Warning: Invalid material id '" + material + "'" );
+            }
+        }
+    }
+
+    public void checkEntityType( String entityType, String skill_id )
+    {
+        EntityType type = null;
+
+        try {
+            type = EntityType.valueOf( entityType.trim() );
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+
+        if (type == null && !entityType.equals("AIR"))
+            plugin.getUtil().consoleLog( Level.WARNING, ChatColor.YELLOW + "Warning: Invalid entity type " + entityType + "' for skill " + skill_id );
     }
 }

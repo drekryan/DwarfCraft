@@ -10,30 +10,24 @@
 
 package com.Jessy1237.DwarfCraft.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
 
-import com.Jessy1237.DwarfCraft.DwarfCraft;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 
-public class CommandHelp extends Command implements TabCompleter
+public class CommandHelp extends DwarfCommand implements TabCompleter
 {
-    // A list of all supported DwarfCraft commands
-    private static final String[] COMMANDS = new String[] { "debug", "help", "tutorial", "info", "skillsheet", "skillinfo", "effectinfo", "race", "reload", "setskill", "create", "list" };
-
-    private final DwarfCraft plugin;
-
-    public CommandHelp( final DwarfCraft plugin )
+    public CommandHelp( final DwarfCraft plugin, String name )
     {
-        super( "dchelp" );
-        this.plugin = plugin;
+        super( plugin, name );
     }
 
     @Override
@@ -42,7 +36,8 @@ public class CommandHelp extends Command implements TabCompleter
         if ( DwarfCraft.debugMessagesThreshold < 1 )
             plugin.getUtil().consoleLog( Level.FINE, "DC1: started command 'dchelp'" );
 
-        sender.sendMessage( "Available Commands: " + String.join( ", ", COMMANDS ) );
+        Set<String> keys = plugin.getCommandManager().getAllCommands().keySet();
+        sender.sendMessage( "Available Commands: " + String.join( ", ", keys ) );
         return true;
     }
 
@@ -52,7 +47,8 @@ public class CommandHelp extends Command implements TabCompleter
         if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !plugin.isEnabled() )
             return null;
 
-        final List<String> completions = new ArrayList<>( Arrays.asList( COMMANDS ) );
+        Set<String> keys = plugin.getCommandManager().getAllCommands().keySet();
+        final List<String> completions = new ArrayList<>(keys);
         List<String> matches = new ArrayList<>();
 
         StringUtil.copyPartialMatches( args[0], completions, matches );

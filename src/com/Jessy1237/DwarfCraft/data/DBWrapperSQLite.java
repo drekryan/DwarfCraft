@@ -49,7 +49,7 @@ class DBWrapperSQLite implements DBWrapper
         try
         {
             Class.forName( "org.sqlite.JDBC" );
-            mDBCon = DriverManager.getConnection( "jdbc:sqlite:" + configManager.getDbPath() );
+            mDBCon = DriverManager.getConnection( "jdbc:sqlite:" + configManager.getDatabasePath() );
             Statement statement = mDBCon.createStatement();
             ResultSet rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'players';" );
             if ( !rs.next() )
@@ -182,7 +182,7 @@ class DBWrapperSQLite implements DBWrapper
                             npc1 = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( rs.getString( "type" ) ), UUID.randomUUID(), Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getString( "name" ) );
                         }
                         npc1.spawn( new Location( plugin.getServer().getWorld( rs.getString( "world" ) ), rs.getDouble( "x" ), rs.getDouble( "y" ), rs.getDouble( "z" ), rs.getFloat( "yaw" ), rs.getFloat( "pitch" ) ) );
-                        npc1.addTrait( new DwarfTrainerTrait( plugin, Integer.parseInt( rs.getString( "uniqueId" ) ), rs.getInt( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
+                        npc1.addTrait( new DwarfTrainerTrait( plugin, rs.getString( "skill" ), rs.getInt( "maxSkill" ), rs.getInt( "minSkill" ) ) );
                         npc1.setProtected( true );
                     }
                 }
@@ -217,7 +217,8 @@ class DBWrapperSQLite implements DBWrapper
             rs = statement.executeQuery( "select * from sqlite_master WHERE name = 'skills';" );
             if ( !rs.next() )
             {
-                statement.executeUpdate( "CREATE TABLE 'skills' " + "  ( " + "    'player' INT, " + "    'id' int, " + "    'level' INT DEFAULT 0, " + "    'deposit1' INT DEFAULT 0, " + "    'deposit2' INT DEFAULT 0, " + "    'deposit3' INT DEFAULT 0, " + "    PRIMARY KEY ('player','id') " + "  );" );
+                statement.executeUpdate( "CREATE TABLE 'skills' " + "  ( " + "    'player' INT, " + "    'id' TEXT, " + "    'level' INT DEFAULT 0, " + "    'deposit1' INT DEFAULT 0, " + "    'deposit2' INT DEFAULT 0, " + "    'deposit3' INT DEFAULT 0, " + "    PRIMARY KEY ('player','id') " + " "
+                        + " );" );
             }
             rs.close();
 
@@ -249,7 +250,7 @@ class DBWrapperSQLite implements DBWrapper
         {
             PreparedStatement prep = mDBCon.prepareStatement( "insert into players(uuid, race) values(?,?);" );
             prep.setString( 1, dCPlayer.getPlayer().getUniqueId().toString() );
-            prep.setString( 2, plugin.getConfigManager().getDefaultRace().trim() );
+            prep.setString( 2, plugin.getRaceManager().getDefaultRace().getId() );
             prep.execute();
             prep.close();
         }
@@ -294,7 +295,7 @@ class DBWrapperSQLite implements DBWrapper
 
             while ( rs.next() )
             {
-                int skillID = rs.getInt( "id" );
+                String skillID = rs.getString( "id" );
                 int level = rs.getInt( "level" );
                 DwarfSkill skill = player.getSkill( skillID );
                 if ( skill != null )
@@ -348,7 +349,7 @@ class DBWrapperSQLite implements DBWrapper
         try
         {
             PreparedStatement prep = mDBCon.prepareStatement( "UPDATE players SET race=? WHERE uuid=?;" );
-            prep.setString( 1, dwarfPlayer.getRace() );
+            prep.setString( 1, dwarfPlayer.getRace().getId() );
             prep.setString( 2, dwarfPlayer.getPlayer().getUniqueId().toString() );
             prep.execute();
             prep.close();
@@ -365,7 +366,7 @@ class DBWrapperSQLite implements DBWrapper
             for ( DwarfSkill skill : skills )
             {
                 prep.setInt( 1, id );
-                prep.setInt( 2, skill.getId() );
+                prep.setString( 2, skill.getId() );
                 prep.setInt( 3, skill.getLevel() );
                 prep.setInt( 4, skill.getDeposit( 1 ) );
                 prep.setInt( 5, skill.getDeposit( 2 ) );

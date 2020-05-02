@@ -1,0 +1,87 @@
+{
+  "display_name": "Survivalist",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "BROWN_MUSHROOM",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "RED_MUSHROOM",
+      "base": 1.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "EAT",
+      "origin_material": "PORKCHOP",
+      "output_material": "AIR",
+      "base": 2.0,
+      "min": 2,
+      "max": 8,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "EAT",
+      "origin_material": "MUSHROOM_STEW",
+      "output_material": "AIR",
+      "base": 5.0,
+      "min": 6,
+      "max": 20,
+      "step": 0.2,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "EAT",
+      "origin_material": "#RAW_FISHES",
+      "output_material": "AIR",
+      "base": 1.0,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "MUSHROOM_STEW"
+}

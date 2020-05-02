@@ -1,0 +1,38 @@
+{
+  "display_name": "Torch Maker",
+  "race_specialization": [
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "TORCH",
+      "base": 2.0,
+      "max": 256
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "TORCH",
+      "output_material": "TORCH",
+      "base": 1.0,
+      "min": 0,
+      "max": 10,
+      "step": 0.2,
+      "step_novice": 0.4,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "TORCH"
+}

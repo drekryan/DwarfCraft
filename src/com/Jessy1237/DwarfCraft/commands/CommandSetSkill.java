@@ -11,11 +11,12 @@
 package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,23 +24,18 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-import com.Jessy1237.DwarfCraft.CommandException;
-import com.Jessy1237.DwarfCraft.CommandException.Type;
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.commands.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfLevelUpEvent;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
-public class CommandSetSkill extends Command implements TabCompleter
+public class CommandSetSkill extends DwarfCommand implements TabCompleter
 {
-    private final DwarfCraft plugin;
-
-    public CommandSetSkill( final DwarfCraft plugin )
+    public CommandSetSkill( final DwarfCraft plugin, String name )
     {
-        super( "SetSkill" );
-        this.plugin = plugin;
+        super( plugin, name);
+        setDescription("Admin command to change a players skill level manually.");
     }
 
     @Override
@@ -50,11 +46,11 @@ public class CommandSetSkill extends Command implements TabCompleter
 
         if ( args.length == 0 )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Usage.SETSKILL.getUsage() );
+            plugin.getOut().sendMessage( sender, getUsage() );
         }
         else if ( args[0].equalsIgnoreCase( "?" ) )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Desc.SETSKILL.getDesc() );
+            plugin.getOut().sendMessage( sender, description );
         }
         else
         {
@@ -65,7 +61,7 @@ public class CommandSetSkill extends Command implements TabCompleter
                 List<Object> outputList;
 
                 DwarfPlayer dCPlayer = new DwarfPlayer( plugin, null );
-                DwarfSkill skill = new DwarfSkill( 0, null, 0, null, null, null, null, null );
+                DwarfSkill skill = new DwarfSkill( plugin,"", null, new LinkedHashMap<>(), 0, null, null, null, null, null );
                 int level = 0;
                 String name;
                 desiredArguments.add( dCPlayer );
@@ -157,7 +153,7 @@ public class CommandSetSkill extends Command implements TabCompleter
             catch ( CommandException e )
             {
                 e.describe( sender );
-                sender.sendMessage( CommandInformation.Usage.SETSKILL.getUsage() );
+                sender.sendMessage( getUsage() );
                 return false;
             }
         }
@@ -191,17 +187,20 @@ public class CommandSetSkill extends Command implements TabCompleter
             matches.clear();
 
             // Gets a list of all possible skill names
-            Collection<DwarfSkill> skills = plugin.getConfigManager().getAllSkills().values();
-
-            for ( DwarfSkill skill : skills )
-            {
-                String skillName = skill.getDisplayName().replaceAll( " ", "_" );
-                completions.add( skillName.toLowerCase() );
-            }
-
+            completions.addAll( plugin.getSkillManager().getAllSkills().keySet() );
             return StringUtil.copyPartialMatches( args[2], completions, matches );
         }
 
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getUsage() {
+        return "/dwarfcraft setskill <player_name> [skill_id or 'all'] [new_skill_level]";
+    }
+
+    @Override
+    public boolean isOp() {
+        return true;
     }
 }

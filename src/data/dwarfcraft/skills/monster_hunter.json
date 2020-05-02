@@ -1,0 +1,125 @@
+{
+  "display_name": "Monster Hunter",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "STRING",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "GUNPOWDER",
+      "base": 1.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "MOBDROP",
+      "origin_material": "AIR",
+      "output_material": "GUNPOWDER",
+      "base": 1.0,
+      "min": 0,
+      "max": 5,
+      "step": 0.15,
+      "step_novice": -0.05,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "MOBDROP",
+      "origin_material": "AIR",
+      "output_material": "ARROW",
+      "base": 1.25,
+      "min": 0,
+      "max": 8,
+      "step": 0.2,
+      "step_novice": -0.1,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "MOBDROP",
+      "origin_material": "AIR",
+      "output_material": "BONE",
+      "base": 1.25,
+      "min": 0,
+      "max": 8,
+      "step": 0.2,
+      "step_novice": -0.1,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "MOBDROP",
+      "origin_material": "AIR",
+      "output_material": "STRING",
+      "base": 1.0,
+      "min": 0,
+      "max": 5,
+      "step": 0.15,
+      "step_novice": -0.05,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    }
+  ],
+  "held_item": "STRING"
+}

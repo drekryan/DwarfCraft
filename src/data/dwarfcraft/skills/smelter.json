@@ -1,0 +1,109 @@
+{
+  "display_name": "Smelter",
+  "race_specialization": [
+    "human"
+  ],
+  "training_items": [
+    {
+      "id": "LAVA_BUCKET",
+      "base": 1.0,
+      "max": 100
+    },
+    {
+      "id": "COAL",
+      "base": 1.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "SMELT",
+      "origin_material": "IRON_INGOT",
+      "output_material": "IRON_INGOT",
+      "base": 0.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.16,
+      "step_novice": 0.04,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "GOLD_INGOT",
+      "output_material": "GOLD_INGOT",
+      "base": 0.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.16,
+      "step_novice": 0.04,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "IRON_INGOT",
+      "output_material": "STONE",
+      "base": 0.0,
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "step_novice": 0.05,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "GOLD_INGOT",
+      "output_material": "STONE",
+      "base": 0.0,
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "step_novice": 0.05,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "LAVA_BUCKET"
+}

@@ -15,18 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-import com.Jessy1237.DwarfCraft.CommandException;
-import com.Jessy1237.DwarfCraft.CommandException.Type;
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.commands.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
@@ -34,16 +31,14 @@ import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
-public class CommandTutorial extends Command
+public class CommandTutorial extends DwarfCommand
 {
-    private final DwarfCraft plugin;
-
     final int pageCharLimit = 256;
 
-    public CommandTutorial( final DwarfCraft plugin )
+    public CommandTutorial( final DwarfCraft plugin, String name )
     {
-        super( "Tutorial" );
-        this.plugin = plugin;
+        super( plugin, name );
+        setDescription("Gives the player the DwarfCraft Pocket Guide");
     }
 
     @Override
@@ -70,7 +65,7 @@ public class CommandTutorial extends Command
             }
             else if ( args[0].equalsIgnoreCase( "?" ) )
             {
-                plugin.getOut().sendMessage( sender, CommandInformation.Desc.TUTORIAL.getDesc() );
+                plugin.getOut().sendMessage( sender, description );
                 return true;
             }
             else
@@ -95,7 +90,7 @@ public class CommandTutorial extends Command
         catch ( CommandException e )
         {
             e.describe( sender );
-            sender.sendMessage( CommandInformation.Usage.TUTORIAL.getUsage() );
+            sender.sendMessage( getUsage() );
             return false;
         }
     }
@@ -144,7 +139,7 @@ public class CommandTutorial extends Command
 
                         int index = section.lastIndexOf( ' ' );
                         section = section.substring( 0, index++ );
-                        leftOver = leftOver.substring( index, leftOver.length() );
+                        leftOver = leftOver.substring( index);
                     }
                     else
                     {
@@ -187,5 +182,11 @@ public class CommandTutorial extends Command
                 return;
             player.getWorld().dropItem( player.getLocation(), overflowStacks.get( 0 ) );
         }
+    }
+
+    @Override
+    public String getUsage() {
+        return "/dwarfcraft tutorial \nExample: /dwarfcraft tutorial - Gives you the DwarfCraft Pocket Guide.\n" +
+                "Admin: /dwarfcraft tutorial <Player> - Gives the specified player the DwarfCraft Pocket Guide.";
     }
 }

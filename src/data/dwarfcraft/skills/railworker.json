@@ -1,0 +1,82 @@
+{
+  "display_name": "Railworker",
+  "race_specialization": [
+    "dwarf"
+  ],
+  "training_items": [
+    {
+      "id": "MINECART",
+      "base": 1.0,
+      "max": 36
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "RAIL",
+      "output_material": "RAIL",
+      "base": 13.5,
+      "min": 12,
+      "max": 40,
+      "step": 0.5,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "POWERED_RAIL",
+      "output_material": "POWERED_RAIL",
+      "base": 3.9,
+      "min": 12,
+      "max": 40,
+      "step": 0.5,
+      "step_novice": -0.1,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DETECTOR_RAIL",
+      "output_material": "DETECTOR_RAIL",
+      "base": 3.9,
+      "min": 12,
+      "max": 40,
+      "step": 0.5,
+      "step_novice": -0.1,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "MINECART"
+}

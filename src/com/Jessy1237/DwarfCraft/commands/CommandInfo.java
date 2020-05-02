@@ -12,19 +12,17 @@ package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.logging.Level;
 
-import org.bukkit.command.Command;
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.command.CommandSender;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
-public class CommandInfo extends Command
+public class CommandInfo extends DwarfCommand
 {
-    private final DwarfCraft plugin;
 
-    public CommandInfo( final DwarfCraft plugin )
+    public CommandInfo( final DwarfCraft plugin, String name )
     {
-        super( "Info" );
-        this.plugin = plugin;
+        super( plugin, name );
     }
 
     @Override

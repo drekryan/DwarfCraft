@@ -10,7 +10,7 @@
 
 package com.Jessy1237.DwarfCraft.events;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -20,15 +20,10 @@ import com.Jessy1237.DwarfCraft.models.DwarfRace;
 public class DwarfLoadRacesEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
-    private ArrayList<DwarfRace> races = new ArrayList<>();
+    private final HashMap<String, DwarfRace> races;
 
     @Override
     public HandlerList getHandlers()
-    {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList()
     {
         return handlers;
     }
@@ -38,7 +33,7 @@ public class DwarfLoadRacesEvent extends Event
      * 
      * @param races The races that are going to be loaded into the DwarfCraft memory
      */
-    public DwarfLoadRacesEvent( ArrayList<DwarfRace> races )
+    public DwarfLoadRacesEvent( HashMap<String, DwarfRace> races )
     {
         this.races = races;
     }
@@ -49,38 +44,8 @@ public class DwarfLoadRacesEvent extends Event
      * @return DwarfPlayer
      */
     @SuppressWarnings( "unchecked" )
-    public ArrayList<DwarfRace> getRaces()
+    public HashMap<String, DwarfRace> getRaces()
     {
-        return ( ArrayList<DwarfRace> ) races.clone();
-    }
-
-    /**
-     * Sets the races that will be stored in DwarfCraft memory.
-     * 
-     * @param races The races ArrayList to be loaded into the DwarfCraft memory
-     */
-    public void setRaces( ArrayList<DwarfRace> races )
-    {
-        this.races = races;
-    }
-
-    /**
-     * Adds a races to the race ArrayList that is stored in the DwarfCraft memory.
-     * 
-     * @param race A race to be added to the races ArrayList
-     */
-    public void addSkill( DwarfRace race )
-    {
-
-    }
-
-    /**
-     * Removes a race from the race ArrayList that is stored in the DwarfCraft memory.
-     * 
-     * @param race A race to be removed from the races ArrayList
-     */
-    public void removeSkill( DwarfRace race )
-    {
-        races.remove( race );
+        return ( HashMap<String, DwarfRace> ) races.clone();
     }
 }

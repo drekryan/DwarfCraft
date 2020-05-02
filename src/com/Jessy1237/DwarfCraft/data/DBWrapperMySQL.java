@@ -17,26 +17,24 @@ import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 
 class DBWrapperMySQL implements DBWrapper
 {
-    private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private Connection mDBCon;
 
-    private String host;
-    private int port;
-    private String database;
-    private String username;
-    private String password;
+    private final String host;
+    private final int port;
+    private final String database;
+    private final String username;
+    private final String password;
 
     DBWrapperMySQL( DwarfCraft plugin, ConfigManager cm )
     {
         this.plugin = plugin;
-        this.configManager = cm;
 
-        this.host = configManager.host;
-        this.port = configManager.port;
-        this.database = configManager.database;
-        this.username = configManager.username;
-        this.password = configManager.password;
+        this.host = cm.host;
+        this.port = cm.port;
+        this.database = cm.database;
+        this.username = cm.username;
+        this.password = cm.password;
     }
 
     @SuppressWarnings( "deprecation" )
@@ -182,7 +180,7 @@ class DBWrapperMySQL implements DBWrapper
             // Attempt to build tables if they cannot be found
             statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database + "`.`players` (`id` INT NOT NULL AUTO_INCREMENT, `uuid` TEXT,`race` TEXT,`raceMaster` TEXT,PRIMARY KEY (`id`)) ENGINE = InnoDB;" );
             statement.executeUpdate( "CREATE TABLE IF NOT EXISTS `" + database
-                    + "`.`skills` ( `player` INT NOT NULL , `id` INT NOT NULL , `level` INT NOT NULL DEFAULT '0' , `deposit1` INT NOT NULL DEFAULT '0' , `deposit2` INT NOT NULL DEFAULT '0' , `deposit3` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`player`, `id`)) ENGINE = InnoDB;" );
+                    + "`.`skills` ( `player` INT NOT NULL , `id` VARCHAR(260) NOT NULL , `level` INT NOT NULL DEFAULT '0' , `deposit1` INT NOT NULL DEFAULT '0' , `deposit2` INT NOT NULL DEFAULT '0' , `deposit3` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`player`, `id`)) ENGINE = InnoDB;" );
 
             rs.close();
         }
@@ -213,7 +211,7 @@ class DBWrapperMySQL implements DBWrapper
         {
             PreparedStatement prep = mDBCon.prepareStatement( "insert into players(uuid, race) values(?,?);" );
             prep.setString( 1, dCPlayer.getPlayer().getUniqueId().toString() );
-            prep.setString( 2, plugin.getConfigManager().getDefaultRace().trim() );
+            prep.setString( 2, plugin.getRaceManager().getDefaultRace().getId() );
             prep.execute();
             prep.close();
         }
@@ -258,7 +256,7 @@ class DBWrapperMySQL implements DBWrapper
 
             while ( rs.next() )
             {
-                int skillID = rs.getInt( "id" );
+                String skillID = rs.getString( "id" );
                 int level = rs.getInt( "level" );
                 DwarfSkill skill = player.getSkill( skillID );
                 if ( skill != null )
@@ -312,7 +310,7 @@ class DBWrapperMySQL implements DBWrapper
         try
         {
             PreparedStatement prep = mDBCon.prepareStatement( "UPDATE players SET race=? WHERE uuid=?;" );
-            prep.setString( 1, dwarfPlayer.getRace() );
+            prep.setString( 1, dwarfPlayer.getRace().getId() );
             prep.setString( 2, dwarfPlayer.getPlayer().getUniqueId().toString() );
             prep.execute();
             prep.close();
@@ -329,7 +327,7 @@ class DBWrapperMySQL implements DBWrapper
             for ( DwarfSkill skill : skills )
             {
                 prep.setInt( 1, id );
-                prep.setInt( 2, skill.getId() );
+                prep.setString( 2, skill.getId() );
                 prep.setInt( 3, skill.getLevel() );
                 prep.setInt( 4, skill.getDeposit( 1 ) );
                 prep.setInt( 5, skill.getDeposit( 2 ) );

@@ -271,7 +271,7 @@ public class DwarfInventoryListener implements Listener
         if ( event.getSlotType() == SlotType.CRAFTING && event.getSlot() < 3 && event.getSlot() >= 0 && event.getClickedInventory().getHolder() instanceof BrewingStand )
         {
             DwarfPlayer dwarfPlayer = plugin.getDataManager().find( ( Player ) event.getWhoClicked() );
-            HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
+            HashMap<String, DwarfSkill> skills = dwarfPlayer.getSkills();
             ItemStack item = event.getCurrentItem();
             final int amount = item.getAmount();
             BrewingStand block = ( BrewingStand ) event.getInventory().getHolder();

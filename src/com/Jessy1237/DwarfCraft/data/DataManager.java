@@ -10,6 +10,8 @@
 
 package com.Jessy1237.DwarfCraft.data;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,29 +30,46 @@ import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 import com.Jessy1237.DwarfCraft.models.DwarfVehicle;
 
 import net.citizensnpcs.api.npc.NPC;
 
 public class DataManager
 {
-
     List<DwarfPlayer> dwarves = new ArrayList<>();
     public HashMap<Integer, DwarfVehicle> vehicleMap = new HashMap<>();
     public HashMap<Integer, DwarfTrainer> trainerList = new HashMap<>();
-    private final ConfigManager configManager;
     private final DwarfCraft plugin;
     private final DBWrapper dbWrapper;
+    private final String type;
 
-    public DataManager( DwarfCraft plugin, ConfigManager cm )
+    public DataManager( DwarfCraft plugin, String type )
     {
         this.plugin = plugin;
-        this.configManager = cm;
-        this.dbWrapper = DBWrapperFactory.createWrapper( configManager.dbType, plugin, cm );
+        this.dbWrapper = DBWrapperFactory.createWrapper( plugin, type );
+        this.type = type;
     }
 
     public void dbInitialize()
     {
+        File database = new File( plugin.getDataFolder(), "dwarfcraft.db" );
+        if ( !database.exists() )
+        {
+            try
+            {
+                if ( !database.createNewFile() && type.equalsIgnoreCase( "sqlite" ) )
+                {
+                    plugin.getUtil().consoleLog( Level.SEVERE, "Failed to create database! Disabling..." );
+                    plugin.onDisable();
+                    return;
+                }
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
         dbWrapper.dbInitialize();
     }
 
@@ -100,8 +119,8 @@ public class DataManager
     public DwarfPlayer createDwarf( Player player )
     {
         DwarfPlayer newDwarf = new DwarfPlayer( plugin, player );
-        newDwarf.setRace( plugin.getConfigManager().getDefaultRace() );
-        newDwarf.setSkills( plugin.getConfigManager().getAllSkills() );
+        newDwarf.setRace( plugin.getRaceManager().getDefaultRace().getId() );
+        newDwarf.setSkills( plugin.getSkillManager().getAllSkills() );
 
         for ( DwarfSkill skill : newDwarf.getSkills().values() )
         {
@@ -155,6 +174,7 @@ public class DataManager
 
     public DwarfTrainer getTrainer( NPC npc )
     {
+        if ( !npc.hasTrait( DwarfTrainerTrait.class ) ) return null;
         for ( Iterator<Map.Entry<Integer, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext(); )
         {
             Map.Entry<Integer, DwarfTrainer> pairs = i.next();

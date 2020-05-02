@@ -1,0 +1,145 @@
+{
+  "display_name": "Ore Miner",
+  "race_specialization": [
+    "dwarf"
+  ],
+  "training_items": [
+    {
+      "id": "COAL",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "IRON_INGOT",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "GOLD_INGOT",
+      "base": 0.67,
+      "max": 128
+    }
+  ],
+  "effects": [
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "COAL_ORE",
+      "output_material": "COAL",
+      "base": 0.7,
+      "min": 0,
+      "max": 3,
+      "step": 0.06,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_PICKAXE",
+        "STONE_PICKAXE",
+        "IRON_PICKAXE",
+        "GOLDEN_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "IRON_ORE",
+      "output_material": "IRON_ORE",
+      "base": 0.7,
+      "min": 0,
+      "max": 6,
+      "step": 0.16,
+      "step_novice": -0.1,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "STONE_PICKAXE",
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "GOLD_ORE",
+      "output_material": "GOLD_ORE",
+      "base": 0.7,
+      "min": 0,
+      "max": 6,
+      "step": 0.16,
+      "step_novice": -0.1,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "GOLD_ORE",
+      "output_material": "GOLD_ORE",
+      "base": 0.7,
+      "min": 0,
+      "max": 1,
+      "step": 0.06,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "GOLD_ORE",
+      "output_material": "GOLD_INGOT",
+      "base": 0.7,
+      "min": 0,
+      "max": 6,
+      "step": 0.18,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    }
+  ],
+  "held_item": "COAL_ORE"
+}

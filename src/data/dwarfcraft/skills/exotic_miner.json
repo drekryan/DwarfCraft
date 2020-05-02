@@ -1,0 +1,118 @@
+{
+  "display_name": "Exotic Miner",
+  "race_specialization": [
+    "dwarf"
+  ],
+  "training_items": [
+    {
+      "id": "EMERALD",
+      "base": 1.0,
+      "max": 64
+    },
+    {
+      "id": "DIAMOND",
+      "base": 1.0,
+      "max": 64
+    },
+    {
+      "id": "REDSTONE",
+      "base": 2.0,
+      "max": 256
+    }
+  ],
+  "effects": [
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "DIAMOND_ORE",
+      "output_material": "DIAMOND",
+      "base": 1.0,
+      "min": 0,
+      "max": 4,
+      "step": 0.08,
+      "step_novice": -0.08,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 3,
+      "should_require_tool": true,
+      "tools": [
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "EMERALD_ORE",
+      "output_material": "EMERALD",
+      "base": 1.0,
+      "min": 0,
+      "max": 4,
+      "step": 0.08,
+      "step_novice": -0.08,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 3,
+      "should_require_tool": true,
+      "tools": [
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "REDSTONE_ORE",
+      "output_material": "REDSTONE",
+      "base": 3.0,
+      "min": 0,
+      "max": 15,
+      "step": 0.25,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "LAPIS_ORE",
+      "output_material": "LAPIS_LAZULI",
+      "base": 3.0,
+      "min": 0,
+      "max": 15,
+      "step": 0.325,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "IRON_PICKAXE",
+        "DIAMOND_PICKAXE"
+      ]
+    }
+  ],
+  "held_item": "DIAMOND_ORE"
+}

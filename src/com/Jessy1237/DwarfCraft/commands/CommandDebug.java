@@ -16,24 +16,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandException;
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
-public class CommandDebug extends Command implements TabCompleter
+public class CommandDebug extends DwarfCommand implements TabCompleter
 {
-    private final DwarfCraft plugin;
-
-    public CommandDebug( final DwarfCraft plugin )
+    public CommandDebug( final DwarfCraft plugin, String name )
     {
-        super( "Debug" );
-        this.plugin = plugin;
+        super( plugin, name );
+        setDescription("Sets the debug message threshold in console, from -10(everthing) to +10(critical only).");
     }
 
     @Override
@@ -41,11 +37,11 @@ public class CommandDebug extends Command implements TabCompleter
     {
         if ( args.length == 0 )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Usage.DEBUG.getUsage() );
+            plugin.getOut().sendMessage( sender, getUsage() );
         }
         else if ( args[0].equalsIgnoreCase( "?" ) )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Desc.DEBUG.getDesc() );
+            plugin.getOut().sendMessage( sender, description );
         }
         else
         {
@@ -70,7 +66,7 @@ public class CommandDebug extends Command implements TabCompleter
             catch ( CommandException e )
             {
                 e.describe( sender );
-                sender.sendMessage( CommandInformation.Usage.DEBUG.getUsage() );
+                sender.sendMessage( getUsage() );
                 return false;
             }
         }
@@ -96,5 +92,15 @@ public class CommandDebug extends Command implements TabCompleter
         }
 
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getUsage() {
+        return "/dc debug <debug level>\nExample: /dc debug 2 - sets the console debug printing threshold to 2";
+    }
+
+    @Override
+    public boolean isOp() {
+        return true;
     }
 }

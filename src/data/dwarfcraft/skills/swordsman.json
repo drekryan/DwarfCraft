@@ -1,0 +1,99 @@
+{
+  "display_name": "Swordsman",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "LEATHER",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "STRING",
+      "base": 1.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "SWORDDURABILITY",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 1.5,
+      "min": 0,
+      "max": 100,
+      "step": -0.03,
+      "step_novice": -0.03,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 15,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "PVEDAMAGE",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 0.75,
+      "min": 0,
+      "max": 100,
+      "step": 0.05,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "PVPDAMAGE",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 0.38,
+      "min": 0,
+      "max": 100,
+      "step": 0.03,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 25,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    }
+  ],
+  "held_item": "IRON_SWORD"
+}

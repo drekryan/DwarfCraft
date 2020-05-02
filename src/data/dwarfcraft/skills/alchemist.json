@@ -1,0 +1,60 @@
+{
+  "display_name": "Alchemist",
+  "race_specialization": [
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "NETHER_WART",
+      "base": 1.0,
+      "max": 288
+    }
+  ],
+  "effects": [
+    {
+      "type": "BREW",
+      "origin_material": "POTION",
+      "output_material": "POTION",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "NETHER_WART",
+      "output_material": "NETHER_WART",
+      "base": 1.5,
+      "min": 0,
+      "max": 100,
+      "step": 0.15,
+      "step_novice": -0.05,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "GLASS_BOTTLE"
+}

@@ -1,0 +1,60 @@
+{
+  "display_name": "Mason",
+  "race_specialization": [
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "#SLABS",
+      "base": 8.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "COBBLESTONE_STAIRS",
+      "output_material": "COBBLESTONE_STAIRS",
+      "base": 3.5,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "#SLABS",
+      "output_material": "#SLABS",
+      "base": 2.4,
+      "min": 0,
+      "max": 6,
+      "step": 0.13,
+      "step_novice": 0.59,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "STONE_SLAB"
+}

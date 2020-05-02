@@ -31,7 +31,7 @@ public class DwarfTrainerTrait extends Trait
     private DwarfCraft plugin;
     private Material mHeldItem;
     @Persist( required = true )
-    private int mSkillID;
+    private String mSkillID = "";
     @Persist( required = true )
     private int mMaxLevel;
     @Persist( required = true )
@@ -40,11 +40,11 @@ public class DwarfTrainerTrait extends Trait
     @Override
     public void load( DataKey key )
     {
-        if ( mSkillID == 0 )
-            this.mSkillID = key.getInt( "mSkillID" );
-        if ( mSkillID == 0 )
+        if ( mSkillID.equals( "" ) )
+            this.mSkillID = key.getString( "mSkillID" );
+        if ( mSkillID.equals( "" ) )
             this.mMaxLevel = key.getInt( "mMaxLevel" );
-        if ( mSkillID == 0 )
+        if ( mSkillID.equals( "" ) )
             this.mMinLevel = key.getInt( "mMinLevel" );
         loadHeldItem();
 
@@ -71,7 +71,7 @@ public class DwarfTrainerTrait extends Trait
         this.plugin = ( DwarfCraft ) Bukkit.getServer().getPluginManager().getPlugin( "DwarfCraft" );
     }
 
-    public DwarfTrainerTrait( DwarfCraft plugin, Integer ID, Integer skillID, Integer maxLevel, Integer minLevel )
+    public DwarfTrainerTrait( DwarfCraft plugin, String skillID, Integer maxLevel, Integer minLevel )
     {
         super( "DwarfTrainer" );
         this.plugin = plugin;
@@ -109,7 +109,7 @@ public class DwarfTrainerTrait extends Trait
         return this.mMinLevel;
     }
 
-    public int getSkillTrained()
+    public String getSkillTrained()
     {
         return this.mSkillID;
     }
@@ -124,7 +124,7 @@ public class DwarfTrainerTrait extends Trait
 
     public void loadHeldItem() {
         try {
-            this.mHeldItem = plugin.getConfigManager().getGenericSkill(getSkillTrained()).getTrainerHeldMaterial();
+            this.mHeldItem = plugin.getSkillManager().getSkill( this.mSkillID ).getTrainerHeldMaterial();
         }
         catch (NullPointerException e) {
             // NOP

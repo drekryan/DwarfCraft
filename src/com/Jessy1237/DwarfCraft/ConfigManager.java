@@ -11,33 +11,15 @@
 package com.Jessy1237.DwarfCraft;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jbls.LexManos.CSV.CSVReader;
-import org.jbls.LexManos.CSV.CSVRecord;
-
-import com.Jessy1237.DwarfCraft.events.DwarfLoadRacesEvent;
-import com.Jessy1237.DwarfCraft.events.DwarfLoadSkillsEvent;
-import com.Jessy1237.DwarfCraft.models.DwarfEffect;
-import com.Jessy1237.DwarfCraft.models.DwarfItemHolder;
-import com.Jessy1237.DwarfCraft.models.DwarfRace;
-import com.Jessy1237.DwarfCraft.models.DwarfSkill;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
 
 public final class ConfigManager
 {
@@ -62,12 +44,9 @@ public final class ConfigManager
     private Integer maxLevel;
     private Integer raceLevelLimit;
     private String prefixStr;
+    public String defaultRace;
 
-    private HashMap<Integer, DwarfSkill> skillsArray = new HashMap<>();
     public ArrayList<World> worlds = new ArrayList<>();
-
-    private ArrayList<DwarfRace> raceList = new ArrayList<>();
-    private String defaultRace;
 
     public boolean sendGreeting = false;
     public boolean disableCacti = true;
@@ -80,7 +59,6 @@ public final class ConfigManager
     public boolean hardcorePenalty = true;
     public boolean spawnTutorialBook = true;
 
-    @SuppressWarnings( "unchecked" )
     protected ConfigManager( DwarfCraft plugin, String directory )
     {
         this.plugin = plugin;
@@ -89,86 +67,16 @@ public final class ConfigManager
         configDirectory = directory;
         checkFiles( configDirectory );
 
-        try
+        if ( !readLocaleFile() )
         {
-            if ( !readSkillsFile() || !readEffectsFile() || !readLocaleFile() || !readRacesFile() )
-            {
-                plugin.getUtil().consoleLog( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
-                plugin.getServer().getPluginManager().disablePlugin( plugin );
-            }
-            else
-            {
-                // Runs the proceeding events after all the config files are
-                // read so that the skillArray is complete with effects
-                DwarfLoadSkillsEvent e = new DwarfLoadSkillsEvent( ( HashMap<Integer, DwarfSkill> ) skillsArray.clone() );
-                plugin.getServer().getPluginManager().callEvent( e );
-                skillsArray = e.getSkills();
-
-                DwarfLoadRacesEvent event = new DwarfLoadRacesEvent( ( ArrayList<DwarfRace> ) raceList.clone() );
-                plugin.getServer().getPluginManager().callEvent( event );
-                raceList = event.getRaces();
-
-            }
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
             plugin.getUtil().consoleLog( Level.SEVERE, "Failed to Enable DwarfCraft configs" );
             plugin.getServer().getPluginManager().disablePlugin( plugin );
         }
-
     }
 
-    public HashMap<Integer, DwarfSkill> getAllSkills()
+    public String getDatabasePath()
     {
-        HashMap<Integer, DwarfSkill> newSkillsArray = new HashMap<>();
-        for ( DwarfSkill s : skillsArray.values() )
-        {
-            if ( newSkillsArray.containsKey( s.getId() ) )
-                continue;
-            newSkillsArray.put( s.getId(), s.clone() );
-        }
-        return newSkillsArray;
-    }
-
-    public DwarfRace getRace( String Race )
-    {
-        for ( DwarfRace r : raceList )
-        {
-            if ( r != null )
-            {
-                if ( r.getName().equalsIgnoreCase( Race ) )
-                {
-                    return r;
-                }
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<Integer> getAllSkills( String Race )
-    {
-        DwarfRace r = getRace( Race );
-        if ( r != null )
-            return r.getSkills();
-        return null;
-    }
-
-    public DwarfSkill getGenericSkill( int skillId )
-    {
-
-        for ( DwarfSkill s : skillsArray.values() )
-        {
-            if ( s.getId() == skillId )
-                return s.clone();
-
-        }
-        return null;
-    }
-
-    public String getDbPath()
-    {
-        return configDirectory + dbpath;
+        return plugin.getDataFolder().getAbsolutePath() + "/dwarfcraft.db";
     }
 
     private void checkFiles( String path )
@@ -187,54 +95,15 @@ public final class ConfigManager
             }
 
             // Create Data Files
-            String[] mfiles = { "skills.csv", "effects.csv", "dwarfcraft.db", "races.yml" };
-            for ( String mfile : mfiles )
-            {
-                File file = new File( root, mfile );
-                if ( !file.exists() )
-                {
-                    file.createNewFile();
-                    CopyFile( "/default_files/" + mfile, file );
-                }
-            }
-
-            // Create locale directory and locale files
-            root = new File( path + "/locale" );
-            if ( !root.exists() )
-                root.mkdirs();
-
-            String[] localeFiles = { "en_US.yml" };
-            for ( String localeFile : localeFiles )
-            {
-                File file = new File( root, localeFile );
-                if ( !file.exists() )
-                {
-                    file.createNewFile();
-                    CopyFile( "/default_files/locale/" + localeFile, file );
-                }
-            }
+            File locale = new File( root + "/data/dwarfcraft/locale/", "en_US.yml" );
+            if ( !locale.exists() )
+                plugin.saveResource( "data/dwarfcraft/locale/en_US.yml", false );
         }
         catch ( Exception e )
         {
             plugin.getUtil().consoleLog( Level.SEVERE, "Could not verify files: " + e.toString() );
             e.printStackTrace();
         }
-    }
-
-    private void CopyFile( String name, File toFile ) throws Exception
-    {
-        InputStream ins = ConfigManager.class.getResourceAsStream( name );
-        OutputStream out = new FileOutputStream( toFile );
-
-        byte[] buf = new byte[1024];
-        int len;
-        while ( ( len = ins.read( buf ) ) > 0 )
-        {
-            out.write( buf, 0, len );
-        }
-        out.flush();
-        ins.close();
-        out.close();
     }
 
     private boolean readConfigFile()
@@ -286,103 +155,11 @@ public final class ConfigManager
         return true;
     }
 
-    private boolean readEffectsFile()
-    {
-        plugin.getUtil().consoleLog( Level.INFO, "Reading effects file: " + ChatColor.AQUA + configDirectory + "effects.csv" );
-        try
-        {
-            CSVReader csv = new CSVReader( configDirectory + "effects.csv" );
-            Iterator<CSVRecord> records = csv.getRecords();
-            while ( records.hasNext() )
-            {
-                CSVRecord item = records.next();
-                DwarfEffect effect = new DwarfEffect( item, plugin );
-                DwarfSkill skill = skillsArray.get( effect.getId() / 10 );
-                if ( skill != null )
-                {
-                    skill.getEffects().add( effect );
-                }
-            }
-            return true;
-        }
-        catch ( FileNotFoundException fN )
-        {
-            fN.printStackTrace();
-            return false;
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private boolean readRacesFile()
-    {
-        plugin.getUtil().consoleLog( Level.INFO, "Reading races file: " + ChatColor.AQUA + configDirectory + "races.yml" );
-
-        if ( vanilla )
-        {
-            raceList.add( new DwarfRace( "Vanilla", new ArrayList<>(), "The all around balanced race (vanilla).", Material.GRASS ) );
-            plugin.getUtil().consoleLog( Level.INFO, "Loaded vanilla race: Vanilla" );
-        }
-
-        FileConfiguration racesConfig = YamlConfiguration.loadConfiguration( new File( plugin.getDataFolder(), "races.yml" ) );
-        Set<String> raceNames = racesConfig.getKeys( false );
-
-        for ( String name : raceNames )
-        {
-            if ( name == null || name.equals( "" ) )
-                continue;
-
-            DwarfRace race = new DwarfRace( name );
-            String[] raceIds = racesConfig.getString( name + ".SkillIDs" ).trim().split( "," );
-            race.setSkills( new ArrayList<>() );
-
-            for ( String raceId : raceIds )
-                race.getSkills().add( Integer.parseInt( raceId.trim() ) );
-
-            if ( race.getSkills().size() <= 0 )
-                continue;
-
-            race.setDesc( racesConfig.getString( name + ".Description", "" ) );
-            race.setIcon( Material.matchMaterial( racesConfig.getString( name + ".Material Icon", "AIR" ) ) );
-            race.setPrefixColour( racesConfig.getString( name + ".Prefix Colour", "&f" ) );
-
-            if ( race.getIcon() == null || race.getIcon() == Material.AIR )
-                continue;
-
-            int maxAllowed = vanilla ? 44 : 45;
-            if ( raceList.size() < maxAllowed )
-            {
-                raceList.add( race );
-                plugin.getUtil().consoleLog( Level.INFO, "Loaded race: " + ChatColor.AQUA + race.getName() );
-            }
-            else
-            {
-                plugin.getUtil().consoleLog( Level.WARNING, "Did not load race: " + race.getName() + " as already at cap of " + maxAllowed + " races" );
-            }
-        }
-
-        if ( defaultRace == null )
-        {
-            defaultRace = "";
-        }
-        else
-        {
-            if ( !checkRace( defaultRace ) )
-                defaultRace = "";
-        }
-
-        return true;
-    }
-
     private boolean readLocaleFile()
     {
-        plugin.getUtil().consoleLog( Level.INFO, "Reading locale file: " + ChatColor.AQUA + configDirectory + "locale" + File.separator + "en_US.yml" );
+        plugin.getUtil().consoleLog( Level.INFO, "Reading locale file: " + ChatColor.AQUA + configDirectory + "data/dwarfcraft/locale/" + "en_US.yml" );
 
-        new Messages();
-        FileConfiguration localeConfig = YamlConfiguration.loadConfiguration( new File( plugin.getDataFolder() + File.separator + "locale", "en_US.yml" ) );
+        FileConfiguration localeConfig = YamlConfiguration.loadConfiguration( new File( plugin.getDataFolder() + "/data/dwarfcraft/locale/en_US.yml" ));
 
         // Welcome Messages
         Messages.welcomePrefix = localeConfig.getString( "Welcome prefix" );
@@ -472,67 +249,6 @@ public final class ConfigManager
         }
 
         return true;
-    }
-
-    private boolean readSkillsFile()
-    {
-        plugin.getUtil().consoleLog( Level.INFO, "Reading skills file: " + ChatColor.AQUA + configDirectory + "skills.csv" );
-        try
-        {
-            CSVReader csv = new CSVReader( configDirectory + "skills.csv" );
-            Iterator<CSVRecord> records = csv.getRecords();
-            while ( records.hasNext() )
-            {
-                CSVRecord item = records.next();
-                DwarfItemHolder dih1 = plugin.getUtil().getDwarfItemHolder( item, "Item1" );
-                DwarfItemHolder dih2 = plugin.getUtil().getDwarfItemHolder( item, "Item2" );
-                DwarfItemHolder dih3 = plugin.getUtil().getDwarfItemHolder( item, "Item3" );
-
-                if ( dih1.getMaterials().isEmpty() || dih1.getMaterials().isEmpty() || dih1.getMaterials().isEmpty() ) // Skip the Skill if the tag reading fails TODO: Improve the error msg
-                {
-                    plugin.getUtil().consoleLog( Level.INFO, "Skipping skill " + item.getString( "Name" + " as couldn't find one of the tags" ) );
-                    continue;
-                }
-
-                DwarfTrainingItem item1 = new DwarfTrainingItem( dih1, item.getDouble( "Item1Base" ), item.getInt( "Item1Max" ) );
-                DwarfTrainingItem item2 = new DwarfTrainingItem( dih2, item.getDouble( "Item2Base" ), item.getInt( "Item2Max" ) );
-                DwarfTrainingItem item3 = new DwarfTrainingItem( dih3, item.getDouble( "Item3Base" ), item.getInt( "Item3Max" ) );
-
-                DwarfSkill skill = new DwarfSkill( item.getInt( "ID" ), item.getString( "Name" ), 0, new ArrayList<>(), item1, item2, item3, Material.matchMaterial( item.getString( "Held" ) ) );
-                skillsArray.put( skill.getId(), skill );
-            }
-            return true;
-        }
-        catch ( Exception fN )
-        {
-            fN.printStackTrace();
-        }
-        return false;
-    }
-
-    public String getDefaultRace()
-    {
-        return defaultRace;
-    }
-
-    public ArrayList<DwarfRace> getRaceList()
-    {
-        return raceList;
-    }
-
-    public boolean checkRace( String name )
-    {
-        for ( DwarfRace r : raceList )
-        {
-            if ( r != null )
-            {
-                if ( r.getName().equalsIgnoreCase( name ) )
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public String getPrefix()

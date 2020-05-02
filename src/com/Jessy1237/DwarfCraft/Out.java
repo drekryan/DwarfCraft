@@ -10,6 +10,7 @@
 
 package com.Jessy1237.DwarfCraft;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -44,15 +45,6 @@ public class Out
         }
 
         return null;
-    }
-
-    public boolean effectInfo( CommandSender sender, DwarfPlayer dCPlayer, DwarfEffect effect )
-    {
-        String prefix = Messages.effectInfoPrefix;
-        prefix = prefix.replaceAll( PlaceHolder.EFFECT_ID.getPlaceHolder(), "" + effect.getId() );
-        sendMessage( sender, effect.describeLevel( dCPlayer ), prefix );
-        sendMessage( sender, Messages.describeGeneral, prefix );
-        return true;
     }
 
     public void info( CommandSender sender )
@@ -137,7 +129,7 @@ public class Out
         }
 
         // training lines
-        if ( skill.getLevel() >= plugin.getUtil().getMaxLevelForSkill( dCPlayer, skill ) )
+        if ( skill.getLevel() >= skill.getMaxLevel(dCPlayer) )
         {
             sendMessage( sender, Messages.skillInfoMaxSkillLevel );
             return true;
@@ -179,11 +171,15 @@ public class Out
 
         boolean odd = true;
         String untrainedSkills = plugin.getPlaceHolderParser().generalParse( Messages.skillSheetUntrainedSkillHeader );
-        for ( DwarfSkill s : dCPlayer.getSkills().values() )
+        String seperator = ChatColor.GOLD + " | ";
+        Iterator<DwarfSkill> iter = dCPlayer.getSkills().values().iterator();
+        while (iter.hasNext())
         {
+            DwarfSkill s = iter.next();
             if ( s.getLevel() == 0 )
             {
-                untrainedSkills = untrainedSkills.concat( parseSkillSheet( Messages.skillSheetUntrainedSkillLine, dCPlayer, s ) );
+                if (!iter.hasNext()) seperator = "";
+                untrainedSkills = untrainedSkills.concat( parseSkillSheet( Messages.skillSheetUntrainedSkillLine, dCPlayer, s ) ).concat(seperator);
                 continue;
             }
             odd = !odd;

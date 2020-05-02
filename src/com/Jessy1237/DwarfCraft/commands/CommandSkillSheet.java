@@ -14,26 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.bukkit.command.Command;
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandException;
-import com.Jessy1237.DwarfCraft.CommandException.Type;
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.commands.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 
-public class CommandSkillSheet extends Command
+public class CommandSkillSheet extends DwarfCommand
 {
-    private final DwarfCraft plugin;
-
-    public CommandSkillSheet( final DwarfCraft plugin )
+    public CommandSkillSheet( final DwarfCraft plugin, String name )
     {
-        super( "SkillSheet" );
-        this.plugin = plugin;
+        super( plugin, name );
+        setDescription("Displays a list of skills and levels for a Dwarf.");
     }
 
     @Override
@@ -47,7 +42,7 @@ public class CommandSkillSheet extends Command
             if ( args.length == 0 && sender instanceof Player )
             {
                 DwarfPlayer dCPlayer = plugin.getDataManager().find( ( Player ) sender );
-                if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                if ( dCPlayer.getRace().getId().equals( "" ) )
                 {
                     plugin.getOut().sendMessage( sender, Messages.chooseARace );
                     return true;
@@ -62,7 +57,7 @@ public class CommandSkillSheet extends Command
             }
             else if ( args[0].equalsIgnoreCase( "?" ) )
             {
-                plugin.getOut().sendMessage( sender, CommandInformation.Desc.SKILLSHEET.getDesc() );
+                plugin.getOut().sendMessage( sender, description );
                 return true;
             }
             else
@@ -104,7 +99,7 @@ public class CommandSkillSheet extends Command
                         throw dce;
                 }
 
-                if ( dCPlayer.getRace().equalsIgnoreCase( "NULL" ) )
+                if ( dCPlayer.getRace().getId().equals( "" ) )
                 {
                     plugin.getOut().sendMessage( sender, Messages.chooseARace );
                     return true;
@@ -116,8 +111,16 @@ public class CommandSkillSheet extends Command
         catch ( CommandException e )
         {
             e.describe( sender );
-            sender.sendMessage( CommandInformation.Usage.SKILLSHEET.getUsage() );
+            sender.sendMessage( getUsage() );
             return false;
         }
+    }
+
+    @Override
+    public String getUsage() {
+        return "Displays a list of current skills and levels" +
+                "\\n/dwarfcraft skillsheet (full/-f) (player_name)\\n" +
+                "Example: /dwarfcraft skillsheet smartaleq - Prints smartaleq's skillsheet" +
+                "\\nExample: /dwarfcraft ss -f - Prints your skillsheet including untrained skills";
     }
 }

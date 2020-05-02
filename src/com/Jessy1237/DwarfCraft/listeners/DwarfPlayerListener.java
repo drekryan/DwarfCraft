@@ -66,7 +66,7 @@ public class DwarfPlayerListener implements Listener
         plugin.getUtil().setPlayerPrefix( event.getPlayer() );
 
         DwarfPlayer dwarfPlayer = plugin.getDataManager().find( event.getPlayer() );
-        if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
+        if ( dwarfPlayer.getRace().getId().isEmpty() )
             plugin.getOut().sendMessage( dwarfPlayer.getPlayer(), Messages.chooseARace );
 
         if ( plugin.getConfigManager().sendGreeting )
@@ -78,7 +78,7 @@ public class DwarfPlayerListener implements Listener
             DwarfPlayer dcPlayer = plugin.getDataManager().find( event.getPlayer() );
 
             // Add Written Book to Players Inventory
-            CommandTutorial commandTutorial = new CommandTutorial( plugin );
+            CommandTutorial commandTutorial = new CommandTutorial( plugin, "tutorial" );
             HashMap<Integer, ItemStack> overflow = dcPlayer.getPlayer().getInventory().addItem( commandTutorial.createTutorialBook( dcPlayer ) );
             commandTutorial.dropBookIfInventoryFull( dcPlayer.getPlayer(), overflow );
 
@@ -103,7 +103,7 @@ public class DwarfPlayerListener implements Listener
 
         Player player = event.getPlayer();
         DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
+        HashMap<String, DwarfSkill> skills = dwarfPlayer.getSkills();
 
         // ItemStack item = player.getItemInHand(); Does this work the same as
         // below?
@@ -185,7 +185,7 @@ public class DwarfPlayerListener implements Listener
         ItemStack item = event.getItem();
         Material mat = item.getType();
         DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
+        HashMap<String, DwarfSkill> skills = dwarfPlayer.getSkills();
         int lvl = Util.FoodLevel.getLvl( mat );
         
         if ( lvl == 0 )
@@ -229,7 +229,7 @@ public class DwarfPlayerListener implements Listener
         Player player = event.getPlayer();
         Entity entity = event.getEntity();
         DwarfPlayer dwarfPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, DwarfSkill> skills = dwarfPlayer.getSkills();
+        HashMap<String, DwarfSkill> skills = dwarfPlayer.getSkills();
         boolean changed = false;
 
         for ( DwarfSkill s : skills.values() )

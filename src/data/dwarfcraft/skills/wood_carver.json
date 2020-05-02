@@ -1,0 +1,136 @@
+{
+  "display_name": "Wood Carver",
+  "race_specialization": [
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "WOODEN_SWORD",
+      "base": 1.0,
+      "max": 36
+    },
+    {
+      "id": "WOODEN_PICKAXE",
+      "base": 1.0,
+      "max": 36
+    },
+    {
+      "id": "WOODEN_AXE",
+      "base": 1.0,
+      "max": 36
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "WOODEN_SWORD",
+      "output_material": "WOODEN_SWORD",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "WOODEN_SHOVEL",
+      "output_material": "WOODEN_SHOVEL",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "WOODEN_PICKAXE",
+      "output_material": "WOODEN_PICKAXE",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "WOODEN_AXE",
+      "output_material": "WOODEN_AXE",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "WOODEN_HOE",
+      "output_material": "WOODEN_HOE",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "STICK"
+}

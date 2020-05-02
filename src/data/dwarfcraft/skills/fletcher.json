@@ -1,0 +1,48 @@
+{
+  "display_name": "Fletcher",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "FEATHER",
+      "base": 2.0,
+      "max": 1152
+    },
+    {
+      "id": "FLINT",
+      "base": 2.0,
+      "max": 1152
+    },
+    {
+      "id": "ARROW",
+      "base": 2.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "ARROW",
+      "output_material": "ARROW",
+      "base": 4.0,
+      "min": 4,
+      "max": 10,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "ARROW"
+}

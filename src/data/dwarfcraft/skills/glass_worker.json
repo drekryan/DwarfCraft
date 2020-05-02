@@ -1,0 +1,60 @@
+{
+  "display_name": "Glass Worker",
+  "race_specialization": [
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "GLASS",
+      "base": 2.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "BLOCKDROPDUPE",
+      "origin_material": "GLASS",
+      "output_material": "GLASS",
+      "base": 0.0,
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "GLASS",
+      "output_material": "GLASS",
+      "base": 0.0,
+      "min": 0,
+      "max": 6,
+      "step": 0.16,
+      "step_novice": 0.04,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "GLASS"
+}

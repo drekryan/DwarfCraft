@@ -1,0 +1,104 @@
+{
+  "display_name": "Dungeon Delver",
+  "race_specialization": [
+    "dwarf"
+  ],
+  "training_items": [
+    {
+      "id": "SADDLE",
+      "base": 1.0,
+      "max": 36
+    }
+  ],
+  "effects": [
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "SPAWNER",
+      "output_material": "LAPIS_BLOCK",
+      "base": 0.02,
+      "min": 0,
+      "max": 2,
+      "step": 0.04,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "SPAWNER",
+      "output_material": "GOLD_BLOCK",
+      "base": 0.02,
+      "min": 0,
+      "max": 2,
+      "step": 0.04,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "SPAWNER",
+      "output_material": "DIAMOND_BLOCK",
+      "base": 0.01,
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "SPAWNER",
+      "output_material": "IRON_BLOCK",
+      "base": 0.02,
+      "min": 0,
+      "max": 2,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "MOSSY_COBBLESTONE"
+}

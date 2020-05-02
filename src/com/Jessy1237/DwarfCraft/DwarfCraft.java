@@ -10,39 +10,41 @@
 
 package com.Jessy1237.DwarfCraft;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
+import com.Jessy1237.DwarfCraft.listeners.*;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.Jessy1237.DwarfCraft.commands.*;
-import com.Jessy1237.DwarfCraft.data.DataManager;
-import com.Jessy1237.DwarfCraft.listeners.DwarfBlockListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfEntityListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfInventoryListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfPlayerListener;
-import com.Jessy1237.DwarfCraft.listeners.DwarfVehicleListener;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
-
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.permission.Permission;
 
-public class DwarfCraft extends JavaPlugin implements TabCompleter
+import com.Jessy1237.DwarfCraft.commands.*;
+import com.Jessy1237.DwarfCraft.data.DataManager;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
+
+public class DwarfCraft extends JavaPlugin
 {
+    private PluginManager pm;
+    private NPCRegistry npc_registry;
+    private ConfigManager config_manager;
+    private DataManager data_manager;
+    private CommandManager command_manager;
+    private SkillManager skill_manager;
+    private RaceManager race_manager;
+    private Out out;
+    private Util util;
+    private PlaceholderParser placeHolderParser;
+    private Chat chat = null;
+    private TraitInfo trainerTrait;
+    public boolean isAuraActive = false;
+    public static int debugMessagesThreshold = 10;
 
     private final DwarfBlockListener blockListener = new DwarfBlockListener( this );
     private final DwarfPlayerListener playerListener = new DwarfPlayerListener( this );
@@ -50,34 +52,32 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
     private final DwarfVehicleListener vehicleListener = new DwarfVehicleListener( this );
     private final DwarfInventoryListener inventoryListener = new DwarfInventoryListener( this );
     private final DwarfListener dwarfListener = new DwarfListener( this );
-    private NPCRegistry npcr;
-    private ConfigManager cm;
-    private DataManager dm;
-    private Out out;
-    private Util util;
-    private PlaceholderParser placeHolderParser;
-    private Permission perms = null;
-    private Chat chat = null;
-    private TraitInfo trainerTrait;
-    private HashMap<String, Command> normCommands = new HashMap<>();
-    private HashMap<String, Command> opCommands = new HashMap<>();
-    public boolean isAuraActive = false;
-
-    public static int debugMessagesThreshold = 10;
 
     public NPCRegistry getNPCRegistry()
     {
-        return npcr;
+        return npc_registry;
     }
 
     public ConfigManager getConfigManager()
     {
-        return cm;
+        return config_manager;
     }
 
     public DataManager getDataManager()
     {
-        return dm;
+        return data_manager;
+    }
+
+    public CommandManager getCommandManager() { return command_manager; }
+
+    public SkillManager getSkillManager()
+    {
+        return skill_manager;
+    }
+
+    public RaceManager getRaceManager()
+    {
+        return race_manager;
     }
 
     public Out getOut()
@@ -105,24 +105,7 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         return inventoryListener;
     }
 
-    private boolean setupPermissions()
-    {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration( Permission.class );
-        perms = rsp.getProvider();
-        return perms != null;
-    }
-
-    private boolean isPermissionEnabled()
-    {
-        return perms != null;
-    }
-
-    public Permission getPermission()
-    {
-        return perms;
-    }
-
-    private boolean setupChat()
+    boolean setupChat()
     {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration( Chat.class );
         chat = rsp.getProvider();
@@ -144,175 +127,14 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         return trainerTrait;
     }
 
-    private boolean checkPermission( CommandSender sender, String name, String type )
-    {
-
-        if ( perms == null )
-            return false;
-
-        if ( sender instanceof Player )
-        {
-            switch ( type )
-            {
-                case "op":
-                    return perms.has( ( Player ) sender, ( "DwarfCraft.op." + name ).toLowerCase() ) || sender.isOp();
-                case "norm":
-                    return perms.has( ( Player ) sender, ( "DwarfCraft.norm." + name ).toLowerCase() ) || sender.isOp();
-                case "all":
-                    return perms.has( ( Player ) sender, "DwarfCraft.*".toLowerCase() ) || sender.isOp();
-            }
-        }
-
-        return true;
-    }
-
-    private Command getSubCommand( String name )
-    {
-        return ( normCommands.get( name ) == null ? opCommands.get( name ) : normCommands.get( name ) );
-    }
-
-    private void initCommands()
-    {
-        normCommands.put( "skillsheet", new CommandSkillSheet( this ) );
-        normCommands.put( "tutorial", new CommandTutorial( this ) );
-        normCommands.put( "info", new CommandInfo( this ) );
-        normCommands.put( "skillinfo", new CommandSkillInfo( this ) );
-        normCommands.put( "race", new CommandRace( this ) );
-        normCommands.put( "effectinfo", new CommandEffectInfo( this ) );
-        opCommands.put( "debug", new CommandDebug( this ) );
-        opCommands.put( "list", new CommandList( this ) );
-        opCommands.put( "setskill", new CommandSetSkill( this ) );
-        opCommands.put( "create", new CommandCreate( this ) );
-        opCommands.put( "reload", new CommandReload( this ) );
-    }
-
-    /**
-     * Allows companion plugins to add sub commands that require normal permissions
-     * 
-     * @param name The name of the command
-     * @param cmd An instance of the command
-     */
-    public void addNormCommand( String name, Command cmd )
-    {
-        normCommands.put( name, cmd );
-    }
-
-    /**
-     * Allows companion plugins to add sub commands that require admin permissions
-     * 
-     * @param name The name of the command
-     * @param cmd An instance of the command
-     */
-    public void addOpCommand( String name, Command cmd )
-    {
-        opCommands.put( name, cmd );
-    }
-
-    @Override
-    public boolean onCommand( CommandSender sender, Command command, String commandLabel, String[] args )
-    {
-        Command cmd;
-        String name = command.getName();
-        boolean hasNorm = checkPermission( sender, name, "norm" );
-        boolean hasOp = checkPermission( sender, name, "op" );
-        boolean hasAll = checkPermission( sender, name, "all" );
-        boolean isOp = false;
-        String[] cArgs = new String[0];
-
-        if ( name.equalsIgnoreCase( "dwarfcraft" ) && this.isEnabled() )
-        {
-            if ( hasNorm || hasAll )
-            {
-                if ( args.length == 0 )
-                {
-                    new CommandHelp( this );
-                }
-                else
-                {
-                    // Converts the variables to work with the old command method
-                    name = args[0].toLowerCase();
-                    cArgs = new String[args.length - 1];
-                    for ( int i = 1; i < args.length; i++ )
-                    {
-                        cArgs[i - 1] = args[i];
-                    }
-                    hasNorm = checkPermission( sender, name, "norm" );
-                    hasOp = checkPermission( sender, name, "op" );
-                    hasAll = checkPermission( sender, name, "all" );
-                }
-            }
-            else
-            {
-                sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
-                return true;
-            }
-        }
-        else
-        {
-            return false;
-        }
-
-        cmd = normCommands.get( name );
-        if ( cmd == null )
-        {
-            cmd = opCommands.get( name );
-            isOp = true;
-        }
-
-        if ( cmd == null )
-        {
-            cmd = new CommandHelp( this );
-            return cmd.execute( sender, commandLabel, cArgs );
-        }
-        else
-        {
-            if ( ( ( hasNorm || hasAll ) && !isOp ) || ( isOp && ( hasAll || hasOp ) ) )
-            {
-                return cmd.execute( sender, commandLabel, cArgs );
-            }
-            else
-            {
-                sender.sendMessage( ChatColor.DARK_RED + "You do not have permission to do that." );
-                return true;
-            }
-        }
-    }
-
-    @Override
-    public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args )
-    {
-        if ( !command.getName().equalsIgnoreCase( "dwarfcraft" ) || !this.isEnabled() )
-            return null;
-
-        List<String> matches = new ArrayList<>();
-
-        if ( args.length <= 1 || args[0].equalsIgnoreCase( "" ) )
-        {
-            matches = new CommandHelp( this ).onTabComplete( sender, command, alias, args );
-        }
-        else
-        {
-            Command cmd = getSubCommand( args[0].toLowerCase() );
-            if ( cmd != null )
-                if ( cmd instanceof TabCompleter )
-                    matches = ( ( TabCompleter ) cmd ).onTabComplete( sender, command, alias, args );
-
-        }
-
-        return matches;
-    }
-
     /**
      * Called upon disabling the plugin.
      */
     @Override
     public void onDisable()
     {
-        if ( util != null )
-            util.removePlayerPrefixes();
-
-        if(dm != null)
-        dm.dbFinalize();
+        if(data_manager != null)
+        data_manager.dbFinalize();
     }
 
     /**
@@ -324,65 +146,23 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         onEnable( false );
     }
 
-    public void onEnable( boolean reload )
-    {
-        PluginManager pm = getServer().getPluginManager();
+    public void onEnable( boolean reload ) {
+        pm = getServer().getPluginManager();
         util = new Util( this ); //Need to initialise Util earlier if going to use it in the enabling method
+        race_manager = new RaceManager( this );
+        skill_manager = new SkillManager( this );
 
-        // We are not backwards compatible
-        if ( getDescription().getAPIVersion() == null || !Bukkit.getBukkitVersion().startsWith( getDescription().getAPIVersion() ) )
-        {
-            getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() + " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
-            pm.disablePlugin( this );
-            return;
-        }
+        if ( !checkDependencies() ) onDisable();
 
-        if ( pm.getPlugin( "Vault" ) == null || !pm.getPlugin( "Vault" ).isEnabled() )
-        {
-            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Vault!" );
-            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
-            pm.disablePlugin( this );
-            return;
-        }
+        config_manager = new ConfigManager( this, getDataFolder().getAbsolutePath() );
+        Registration.init();
+        race_manager.init(); // Races must be loaded before skills for validation
+        skill_manager.init();
 
-        try
-        {
-            if ( setupPermissions() )
-                getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into a Vault permissions plugin!" );
+        data_manager = new DataManager( this, config_manager.dbType );
+        data_manager.dbInitialize();
 
-            if ( setupChat() )
-                getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into a Vault chat plugin!" );
-
-        }
-        catch ( Exception e )
-        {
-            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
-            pm.disablePlugin( this );
-            return;
-        }
-
-        if ( !isPermissionEnabled() )
-        {
-            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Unable to find a permissions plugin." );
-            pm.disablePlugin( this );
-            return;
-        }
-
-        cm = new ConfigManager( this, getDataFolder().getAbsolutePath() );
-
-        if ( pm.getPlugin( "Citizens" ) == null || !pm.getPlugin( "Citizens" ).isEnabled() )
-        {
-            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Citizens!" );
-            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
-            pm.disablePlugin( this );
-            return;
-        }
-        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into Citizens!" );
-        npcr = CitizensAPI.getNPCRegistry();
-
-        dm = new DataManager( this, cm );
-        dm.dbInitialize();
-
+        command_manager = new CommandManager( this );
         out = new Out( this );
 
         placeHolderParser = new PlaceholderParser( this );
@@ -402,17 +182,60 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         }
         else
         {
-            // Untested assumed to work
             util.reloadTrainers();
             this.getConfigManager().clearCommands();
         }
 
-        getUtil().removePlayerPrefixes();
+        getServer().getScheduler().runTaskAsynchronously( this, () -> {
+            getUtil().removePlayerPrefixes();
+            for (Player player : getServer().getOnlinePlayers()) {
+                getUtil().setPlayerPrefix(player);
+            }
+        });
 
-        for ( Player player : getServer().getOnlinePlayers() )
-        {
-            getUtil().setPlayerPrefix( player );
+        if ( isEnabled() ) {
+            Objects.requireNonNull(this.getCommand("dwarfcraft")).setExecutor( new DwarfCommandExecutor( this ) );
+            Objects.requireNonNull(this.getCommand("dwarfcraft")).setTabCompleter( new DwarfCommandExecutor( this ) );
+            command_manager.registerCommand( new CommandSkillSheet( this, "skillsheet" ) );
+            command_manager.registerCommand( new CommandTutorial( this, "tutorial" ) );
+            command_manager.registerCommand( new CommandInfo( this, "info" ) );
+            command_manager.registerCommand( new CommandSkill( this, "skill" ) );
+            command_manager.registerCommand( new CommandRace( this, "race" ) );
+            command_manager.registerCommand( new CommandHelp( this, "help" ) );
+            command_manager.registerCommand( new CommandDebug( this, "debug" ) );
+            command_manager.registerCommand( new CommandList( this, "list" ) );
+            command_manager.registerCommand( new CommandSetSkill( this, "setskill" ) );
+            command_manager.registerCommand( new CommandCreate( this, "create" ) );
+            command_manager.registerCommand( new CommandReload( this, "reload" ) );
         }
+
+        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + getDescription().getName() + " " + getDescription().getVersion() + " is enabled!" );
+
+        // Log warning if the build is a Snapshot/Development build
+        if ( this.getDescription().getVersion().contains("-SNAPSHOT") )
+            getUtil().consoleLog( Level.SEVERE, "*** WARNING: This is a development build. Please keep backups and update frequently. ***" );
+    }
+
+    private boolean checkDependencies() {
+        if ( pm.getPlugin( "Vault" ) == null || !pm.getPlugin( "Vault" ).isEnabled() )
+        {
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Vault!" );
+            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
+            return false;
+        }
+
+        if ( setupChat() )
+            getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into a Vault chat plugin!" );
+
+        if ( pm.getPlugin( "Citizens" ) == null || !pm.getPlugin( "Citizens" ).isEnabled() )
+        {
+            getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Citizens!" );
+            getUtil().consoleLog( Level.SEVERE, "Disabling DwarfCraft..." );
+            return false;
+        }
+
+        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into Citizens!" );
+        npc_registry = CitizensAPI.getNPCRegistry();
 
         if ( pm.getPlugin( "PlaceholderAPI" ) != null )
         {
@@ -421,13 +244,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
             getUtil().consoleLog( Level.INFO, ChatColor.GREEN + "Success! Hooked into PlaceholderAPI!" );
         }
 
-        if ( isEnabled() )
-            initCommands();
-
-        getUtil().consoleLog( Level.INFO, ChatColor.GREEN + getDescription().getName() + " " + getDescription().getVersion() + " is enabled!" );
-
-        // Log warning if the build is a Snapshot/Development build
-        if ( this.getDescription().getVersion().contains("-SNAPSHOT") )
-            getUtil().consoleLog( Level.SEVERE, "*** WARNING: This is a development build. Please keep backups and update frequently. ***" );
+        return true;
     }
 }

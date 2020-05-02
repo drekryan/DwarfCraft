@@ -20,7 +20,7 @@ import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 public class DwarfLoadSkillsEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
-    private HashMap<Integer, DwarfSkill> skills;
+    private HashMap<String, DwarfSkill> skills;
 
     @Override
     public HandlerList getHandlers()
@@ -33,7 +33,7 @@ public class DwarfLoadSkillsEvent extends Event
      * 
      * @param skills the skills that were loaded by DwarfCraft from the csv file. The key is the skill ID, the value is the skill.
      */
-    public DwarfLoadSkillsEvent( HashMap<Integer, DwarfSkill> skills )
+    public DwarfLoadSkillsEvent( HashMap<String, DwarfSkill> skills )
     {
         this.skills = skills;
     }
@@ -54,7 +54,7 @@ public class DwarfLoadSkillsEvent extends Event
      * 
      * @param skills The skills HashMap, The key is the skillID, the value is the DwarfSkill.
      */
-    public void setSkills( HashMap<Integer, DwarfSkill> skills )
+    public void setSkills( HashMap<String, DwarfSkill> skills )
     {
         this.skills = skills;
     }

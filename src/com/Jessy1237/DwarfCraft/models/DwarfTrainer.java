@@ -92,7 +92,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
         return mEntity.getName();
     }
 
-    public int getSkillTrained()
+    public String getSkillTrained()
     {
         return mEntity.getTrait( DwarfTrainerTrait.class ).getSkillTrained();
     }

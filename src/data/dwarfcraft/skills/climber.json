@@ -1,0 +1,60 @@
+{
+  "display_name": "Climber",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "PUMPKIN",
+      "base": 1.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "FALLDAMAGE",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 1.5,
+      "min": 0,
+      "max": 2,
+      "step": -0.03,
+      "step_novice": -0.07,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "FALLTHRESHOLD",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 0.0,
+      "min": 0,
+      "max": 15,
+      "step": 0.5,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "OAK_LADDER"
+}

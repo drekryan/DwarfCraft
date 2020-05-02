@@ -10,25 +10,30 @@
 
 package com.Jessy1237.DwarfCraft.models;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
 import org.bukkit.Material;
 
 public class DwarfSkill implements Cloneable
 {
-
-    private final int mID;
+    private final DwarfCraft plugin;
+    private final String mID;
     private final String mName;
+    private final LinkedHashMap<String, DwarfRace> mRaces;
     private int mLevel;
     private final List<DwarfEffect> mEffects;
     private final Material mHeldItem;
     private final DwarfTrainingItem mItem1, mItem2, mItem3;
     private int mDeposit1, mDeposit2, mDeposit3;
 
-    public DwarfSkill( int id, String displayName, int level, List<DwarfEffect> effects, DwarfTrainingItem item1, DwarfTrainingItem item2, DwarfTrainingItem item3, Material trainerHeldMaterial )
+    public DwarfSkill(final DwarfCraft plugin, String id, String displayName, LinkedHashMap<String, DwarfRace> races, int level, List<DwarfEffect> effects, DwarfTrainingItem item1, DwarfTrainingItem item2, DwarfTrainingItem item3, Material trainerHeldMaterial )
     {
+        this.plugin = plugin;
         mID = id;
         mName = displayName;
+        mRaces = races;
 
         mItem1 = item1;
         mItem2 = item2;
@@ -50,7 +55,7 @@ public class DwarfSkill implements Cloneable
         {
             e.printStackTrace();
         }
-        return new DwarfSkill( mID, mName, mLevel, mEffects, mItem1, mItem2, mItem3, mHeldItem );
+        return new DwarfSkill( plugin, mID, mName, mRaces, mLevel, mEffects, mItem1, mItem2, mItem3, mHeldItem );
     }
 
     public String getDisplayName()
@@ -58,12 +63,17 @@ public class DwarfSkill implements Cloneable
         return mName;
     }
 
+    public LinkedHashMap<String, DwarfRace> getRaces()
+    {
+        return mRaces;
+    }
+
     public List<DwarfEffect> getEffects()
     {
         return mEffects;
     }
 
-    public int getId()
+    public String getId()
     {
         return mID;
     }
@@ -90,7 +100,7 @@ public class DwarfSkill implements Cloneable
     public String toString()
     {
         if ( mName == null ) return "";
-        return mName.toUpperCase().replaceAll( " ", "_" );
+        return mName.toLowerCase().replaceAll( " ", "_" );
     }
 
     public DwarfTrainingItem getItem( int itemId )
@@ -121,5 +131,16 @@ public class DwarfSkill implements Cloneable
             this.mDeposit2 = amount;
         else
             this.mDeposit1 = amount;
+    }
+
+    public boolean doesSpecialize( DwarfRace race ) {
+        return this.mRaces.containsValue( race );
+    }
+
+    public int getMaxLevel( DwarfPlayer dcPlayer )
+    {
+        int maxLevel = plugin.getConfigManager().getMaxSkillLevel();
+        int raceLevel = plugin.getConfigManager().getRaceLevelLimit();
+        return doesSpecialize(dcPlayer.getRace() ) ? maxLevel : raceLevel;
     }
 }

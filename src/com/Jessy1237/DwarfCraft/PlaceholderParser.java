@@ -50,7 +50,6 @@ public class PlaceholderParser
         EFFECT_DAMAGE( "<effect.damage>" ),
         EFFECT_DAMAGE_BOW( "<effect.damage.bow>" ),
         EFFECT_DAMAGE_TAKEN( "<effect.damage.taken>" ),
-        EFFECT_ID( "<effect.id>" ),
         EFFECT_INITIATOR( "<effect.initiator>" ),
         EFFECT_OUTPUT( "<effect.output>" ),
         EFFECT_TOOL_TYPE( "<effect.tool.type>" ),
@@ -112,13 +111,13 @@ public class PlaceholderParser
         }
 
         return generalParse( text.replaceAll( PlaceHolder.EFFECT_AMOUNT_FOOD_ORIGINAL.getPlaceHolder(), origFoodLevel ).replaceAll( PlaceHolder.EFFECT_INITIATOR.getPlaceHolder(), initiator ).replaceAll( PlaceHolder.EFFECT_OUTPUT.getPlaceHolder(), plugin.getUtil().getCleanName( effect.getResult() ) )
-                .replaceAll( PlaceHolder.EFFECT_TOOL_TYPE.getPlaceHolder(), effect.toolType() ).replaceAll( PlaceHolder.EFFECT_AMOUNT_NORMAL.getPlaceHolder(), "" + effect.getNormalLevel() ).replaceAll( PlaceHolder.EFFECT_ID.getPlaceHolder(), "" + effect.getId() ) );
+                .replaceAll( PlaceHolder.EFFECT_TOOL_TYPE.getPlaceHolder(), effect.toolType() ).replaceAll( PlaceHolder.EFFECT_AMOUNT_NORMAL.getPlaceHolder(), "" + effect.getNormalLevel() ) );
     }
 
     public String parseByDwarfPlayerAndDwarfEffect( String text, DwarfPlayer dwarfPlayer, DwarfEffect effect )
     {
         double effectAmount = effect.getEffectAmount( dwarfPlayer );
-        String effectLevelColor = effect.effectLevelColor( dwarfPlayer.getSkill( effect ).getLevel() );
+        String effectLevelColor = effect.effectLevelColor( dwarfPlayer.getSkill( effect.getSkillId() ).getLevel() );
         double minorAmount = effect.getEffectAmount( effect.getNormalLevel(), null );
         String minorAmountStr;
         double effectAmountLow = effect.getEffectAmount( 0, dwarfPlayer );
@@ -152,13 +151,13 @@ public class PlaceholderParser
     public String parseByDwarfPlayer( String text, DwarfPlayer dwarfPlayer )
     {
         return generalParse( text.replaceAll( PlaceHolder.PLAYER_LEVEL.getPlaceHolder(), "" + dwarfPlayer.getDwarfLevel() ).replaceAll( PlaceHolder.PLAYER_NAME.getPlaceHolder(), dwarfPlayer.getPlayer().getDisplayName() )
-                .replaceAll( PlaceHolder.PLAYER_RACE.getPlaceHolder(), dwarfPlayer.getRace() ) );
+                .replaceAll( PlaceHolder.PLAYER_RACE.getPlaceHolder(), dwarfPlayer.getRace().getName() ) );
     }
 
     public String parseByDwarfPlayerAndDwarfSkill( String text, DwarfPlayer dwarfPlayer, DwarfSkill skill )
     {
         // Calculate max level limit for skill. Checks to see if the players race specializes in the skill to see if skill should be locked to level cap.
-        int levelLimit = plugin.getUtil().getMaxLevelForSkill( dwarfPlayer, skill );
+        int levelLimit = skill.getMaxLevel( dwarfPlayer );
         return parseByDwarfSkill( parseByDwarfPlayer( text.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + levelLimit ), dwarfPlayer ), skill );
     }
 
