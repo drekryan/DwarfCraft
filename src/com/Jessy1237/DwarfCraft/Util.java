@@ -18,7 +18,6 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
@@ -141,7 +140,6 @@ public class Util
      * @param name The name of the Item being found
      * @return A dwarf item holder but can return an empty dwarf item holder
      */
-    @SuppressWarnings( { "unchecked" } )
     public DwarfItemHolder getDwarfItemHolder( CSVRecord item, String name )
     {
         Set<Material> mats = new HashSet<>();
@@ -152,13 +150,8 @@ public class Util
         {
             tagName = item.getString( name ).substring( 1 ).toLowerCase();
 
-            // Add missing vanilla wooden_fences, raw_fishes, and grass tags
-            if ( tagName.equalsIgnoreCase( "wooden_fences" ) )
-            {
-                Material[] newMats = { Material.OAK_FENCE, Material.SPRUCE_FENCE, Material.BIRCH_FENCE, Material.JUNGLE_FENCE, Material.ACACIA_FENCE, Material.DARK_OAK_FENCE };
-                tag = createDCTag( "wooden_fences", newMats );
-            }
-            else if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
+            // Add missing vanilla raw_fishes, and grass tags
+            if ( tagName.equalsIgnoreCase( "raw_fishes" ) )
             {
                 Material[] newMats = { Material.COD, Material.PUFFERFISH, Material.SALMON, Material.TROPICAL_FISH };
                 tag = createDCTag( "raw_fishes", newMats );
@@ -192,10 +185,10 @@ public class Util
         return new DwarfItemHolder( mats, tag, tagName );
     }
 
-    @SuppressWarnings( "rawtypes" )
-    private Tag createDCTag( String tagName, Material[] newMats )
+    private Tag<Material> createDCTag( String tagName, Material[] newMats )
     {
-        Tag tag = new Tag() {
+        return new Tag<Material>() {
+
             @Override
             public NamespacedKey getKey()
             {
@@ -203,20 +196,17 @@ public class Util
             }
 
             @Override
-            public boolean isTagged( Keyed item )
+            public boolean isTagged( Material mat )
             {
-                Material mat = Material.matchMaterial( item.getKey().toString() );
                 return getValues().contains( mat );
             }
 
             @Override
-            public Set getValues()
+            public Set<Material> getValues()
             {
-                return new HashSet<>( Arrays.asList( newMats ) );
+                return new HashSet<Material>( Arrays.asList( newMats ) );
             }
         };
-
-        return tag;
     }
 
     public ItemStack parseItem( String info )
@@ -435,6 +425,11 @@ public class Util
             sb.append( " " );
         }
 
+        if ( enumString.equals( "fishes" ) )
+            return "Fish";
+        if ( enumString.equals( "raw_fishes" ) )
+            return "Raw Fish";
+
         return sb.toString().trim();
     }
 
@@ -460,7 +455,7 @@ public class Util
         GOLDEN_APPLE( Material.GOLDEN_APPLE, 4, 9.6f ),
         ENCHANTED_GOLDEN_APPLE( Material.ENCHANTED_GOLDEN_APPLE, 4, 9.6f ),
         GOLDEN_CARROT( Material.GOLDEN_CARROT, 6, 14.4f ),
-        MELON_SLICE( Material.MELON_SLICE , 2, 1.2f ),
+        MELON_SLICE( Material.MELON_SLICE, 2, 1.2f ),
         MUSHROOM_STEW( Material.MUSHROOM_STEW, 6, 7.2f ),
         POISONOUS_POTATO( Material.POISONOUS_POTATO, 2, 1.2f ),
         POTATO( Material.POTATO, 1, 0.6f ),
@@ -476,7 +471,8 @@ public class Util
         PORKCHOP( Material.PORKCHOP, 3, 1.8f ),
         RABBIT( Material.RABBIT, 2, 1.8f ),
         ROTTEN_FLESH( Material.ROTTEN_FLESH, 4, 0.8f ),
-        SPIDER_EYE( Material.SPIDER_EYE, 2, 3.2f );
+        SPIDER_EYE( Material.SPIDER_EYE, 2, 3.2f ),
+        SWEET_BERRIES( Material.SWEET_BERRIES, 2, 0.4f );
 
         private int lvl;
         private Material mat;

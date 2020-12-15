@@ -102,7 +102,7 @@ public class TrainerGUI extends DwarfGUI
         guiItem = new ItemStack( Material.LIME_DYE, 1 );
         addItem( "Train Skill", null, 13, guiItem );
 
-        guiItem = new ItemStack( Material.CACTUS_GREEN, 1 );
+        guiItem = new ItemStack( Material.GREEN_DYE, 1 );
         addItem( "Train & Deposit Skill", null, 14, guiItem );
     }
 

@@ -10,15 +10,13 @@
 
 package com.Jessy1237.DwarfCraft.listeners;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.ChatColor;
-import org.bukkit.Tag;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -61,8 +59,7 @@ public class DwarfEntityListener implements Listener
         killMap = new HashMap<>();
     }
 
-    @EventHandler( priority = EventPriority.HIGH )
-    public void onEntityDamage( EntityDamageEvent event )
+    @EventHandler( priority = EventPriority.HIGH ) public void onEntityDamage( EntityDamageEvent event )
     {
         if ( !plugin.getUtil().isWorldAllowed( event.getEntity().getWorld() ) )
             return;
@@ -102,7 +99,8 @@ public class DwarfEntityListener implements Listener
             Player player = event.getClicker();
             DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
             DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
-            if (skill == null) return false;
+            if ( skill == null )
+                return false;
 
             if ( dCPlayer.getRace().equalsIgnoreCase( "" ) )
             {
@@ -295,8 +293,7 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        plugin.getUtil().consoleLog( Level.FINE, String
-                                .format( "DC6: PVE %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
 
@@ -315,8 +312,7 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        plugin.getUtil().consoleLog( Level.FINE, String
-                                .format( "DC6: PVP %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
                     }
                 }
             }
@@ -443,129 +439,82 @@ public class DwarfEntityListener implements Listener
         }
     }
 
-    @EventHandler( priority = EventPriority.LOW )
-    public void onEntityDeath( EntityDeathEvent event )
+    @EventHandler( priority = EventPriority.LOW ) public void onEntityDeath( EntityDeathEvent event )
     {
         if ( !plugin.getUtil().isWorldAllowed( event.getEntity().getWorld() ) )
             return;
 
-        Entity deadThing = event.getEntity();
-        if ( deadThing instanceof Player )
+        Entity entity = event.getEntity();
+        if ( entity instanceof Player )
             return;
 
-        boolean changed = false;
-
-        if ( killMap.containsKey( deadThing ) )
+        if ( killMap.containsKey( entity ) )
         {
-
-            List<ItemStack> items = event.getDrops();
-
-            ItemStack[] normal = new ItemStack[items.size()];
-            items.toArray( normal );
-
-            items.clear();
-
-            DwarfPlayer killer = killMap.get( deadThing );
+            DwarfPlayer killer = killMap.get( entity );
             for ( DwarfSkill skill : killer.getSkills().values() )
             {
                 for ( DwarfEffect effect : skill.getEffects() )
                 {
                     if ( effect.getEffectType() == DwarfEffectType.MOBDROP )
                     {
-                        if ( effect.checkMob( deadThing ) )
+                        ItemStack result = effect.getResult( killer );
+
+                        // In the event that no initiator creature is given,
+                        // check all drops to see if they match an effects result
+                        // and modify the drop amount.
+                        if ( effect.getCreature() == null )
                         {
-                            ItemStack output = effect.getResult( killer );
-
-                            if ( deadThing instanceof Sheep && Tag.WOOL.getValues().contains( output.getType() ) )
-                                output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
-
-                            if ( DwarfCraft.debugMessagesThreshold < 5 )
+                            int index = 0;
+                            for ( ItemStack drop : event.getDrops() )
                             {
-                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
-                            }
-
-                            if (!changed)
-                            {
-                                items.addAll(Arrays.asList(normal));
-                            }
-
-                            if ( output.getAmount() > 0 )
-                            {
-                                for ( ItemStack i : normal )
+                                if ( ( effect.getResult().isTagged() && effect.getResult().getMaterials().contains( drop.getType() ) || effect.getResult().getItemStack().getType() == drop.getType() ) )
                                 {
-                                    if ( i.getType() == output.getType() )
-                                        items.remove( i );
-                                }
-                                items.add( output );
-                            }
-
-                            changed = true;
-                        }
-                        else if ( effect.getCreature() == null )
-                        {
-                            ItemStack output = effect.getResult( killer );
-
-                            if ( deadThing instanceof Sheep && Tag.WOOL.getValues().contains( output.getType() ) )
-                                output.setDurability( ( short ) ( ( Sheep ) deadThing ).getColor().ordinal() );
-
-                            if ( DwarfCraft.debugMessagesThreshold < 5 )
-                            {
-                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), output.getType().name() ) );
-                            }
-
-                            boolean added = false;
-                            for ( ItemStack i : normal )
-                            {
-                                if ( i.getType() == output.getType() )
-                                {
-                                    if ( !added )
+                                    if ( DwarfCraft.debugMessagesThreshold < 5 )
                                     {
-                                        if ( output.getAmount() > 0 )
-                                        {
-                                            while ( items.contains( i ) )
-                                            {
-                                                items.remove( i );
-                                            }
-                                            items.add( output );
-                                            added = true;
-                                        }
+                                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", entity.getClass().getSimpleName(), effect.getId(), result.getAmount(), result.getType().name() ) );
                                     }
+
+                                    DwarfEffectEvent ev = new DwarfEffectEvent( killer, effect, new ItemStack[] { drop }, new ItemStack[] { result }, null, null, null, null, entity, null, null );
+                                    plugin.getServer().getPluginManager().callEvent( ev );
+
+                                    if ( !ev.isCancelled() )
+                                        event.getDrops().get( index ).setAmount( result.getAmount() );
                                 }
-                                else if (!changed)
-                                {
-                                    items.add( i );
-                                }
+                                index++;
                             }
-                            changed = true;
                         }
-                        if ( changed )
+                        else if ( ( effect.getCreature() != null && ( entity.getType() == effect.getCreature() ) ) )
                         {
-                            DwarfEffectEvent ev = new DwarfEffectEvent( killer, effect, normal, items.toArray( new ItemStack[items.size()] ).clone(), null, null, null, null, deadThing, null, null );
+                            if ( DwarfCraft.debugMessagesThreshold < 5 )
+                            {
+                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", entity.getClass().getSimpleName(), effect.getId(), result.getAmount(), result.getType().name() ) );
+                            }
+
+                            ItemStack[] original = event.getDrops().toArray( new ItemStack[0] );
+                            DwarfEffectEvent ev = new DwarfEffectEvent( killer, effect, original, new ItemStack[] { result }, null, null, null, null, entity, null, null );
                             plugin.getServer().getPluginManager().callEvent( ev );
 
                             if ( ev.isCancelled() )
                                 return;
 
-                            items.clear();
-                            for ( ItemStack item : ev.getAlteredItems() )
+                            event.getDrops().clear();
+                            if ( entity instanceof Sheep )
                             {
-                                if ( item != null )
-                                {
-                                    items.add( item );
-                                }
+                                ItemStack item = effect.getResult( killer );
+                                item.setType( original[0].getType() );
+                                event.getDrops().add( item );
+                            }
+                            else
+                            {
+                                event.getDrops().add( effect.getResult( killer ) );
                             }
                         }
                     }
                 }
             }
-            if ( !changed )
-            { // If there was no skill for this type of entity,
-                // just give the normal drop.
-                items.addAll(Arrays.asList(normal));
-            }
         }
 
-        killMap.remove( deadThing );
+        killMap.remove( entity );
     }
 
     public void onNPCLeftClickEvent( NPCLeftClickEvent event )

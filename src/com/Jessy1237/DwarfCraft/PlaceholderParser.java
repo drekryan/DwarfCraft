@@ -97,21 +97,16 @@ public class PlaceholderParser
             origFoodLevel = String.format( "%.2f", ( ( double ) Util.FoodLevel.getLvl( effect.getInitiatorMaterial() ) ) / 2.0 );
 
         String initiator;
-        if ( effect.getCreature() != null )
-        {
+        if ( effect.getCreature() != null ) {
             initiator = plugin.getUtil().getCleanName( effect.getCreature() );
-        }
-        else
-        {
+        } else {
             initiator = plugin.getUtil().getCleanName( effect.getInitiator() );
-            if ( effect.getEffectType() == DwarfEffectType.SMELT )
-            {
-                List<Recipe> recipes = plugin.getServer().getRecipesFor( new ItemStack( effect.getInitiatorMaterial() ) );
+            if (effect.getEffectType() == DwarfEffectType.SMELT) {
+                List<Recipe> recipes = plugin.getServer().getRecipesFor(new ItemStack(effect.getInitiatorMaterial()));
 
-                if ( !recipes.isEmpty() && recipes.get( 0 ) instanceof FurnaceRecipe )
-                {
-                    FurnaceRecipe recipe = ( FurnaceRecipe ) recipes.get( 0 );
-                    initiator = plugin.getUtil().getCleanName( recipe.getInput() );
+                if (!recipes.isEmpty() && recipes.get(0) instanceof FurnaceRecipe) {
+                    FurnaceRecipe recipe = (FurnaceRecipe) recipes.get(0);
+                    initiator = plugin.getUtil().getCleanName(recipe.getInput());
                 }
             }
         }
@@ -137,8 +132,8 @@ public class PlaceholderParser
             minorAmountStr = String.format( "%.2f", minorAmount );
         }
 
-        if (effect.getEffectType() == DwarfEffectType.SMELT && effectAmount <= 0) {
-            effectAmount = Math.max (1.0, effectAmount);
+        if ( effect.getEffectType() == DwarfEffectType.SMELT && effectAmount <= 0 ) {
+            effectAmount = Math.max( 1.0, effectAmount );
         }
 
         return parseByDwarfEffect( text.replaceAll( PlaceHolder.EFFECT_AMOUNT_DIG.getPlaceHolder(), String.format( "%.0f", +( effectAmount * 100 ) ) ).replaceAll( PlaceHolder.EFFECT_DAMAGE_BOW.getPlaceHolder(), String.format( "%.0f", ( effectAmount + 2 ) ) )

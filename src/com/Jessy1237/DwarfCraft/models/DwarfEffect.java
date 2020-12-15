@@ -15,7 +15,9 @@ import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
@@ -106,41 +108,10 @@ public class DwarfEffect
     }
 
     /**
-     * General description of a benefit including minimum and maximum benefit
-     * 
-     * @return
-     */
-    public String describeGeneral( DwarfPlayer dCPlayer )
-    {
-        String description;
-        String initiator = plugin.getUtil().getCleanName( mInitiator );
-        if ( initiator.equalsIgnoreCase( "AIR" ) )
-            initiator = "None";
-        String output = plugin.getUtil().getCleanName( mResult );
-        if ( output.equalsIgnoreCase( "AIR" ) )
-            output = "None";
-        double effectAmountLow = getEffectAmount( 0, dCPlayer );
-        double effectAmountHigh = getEffectAmount( plugin.getConfigManager().getMaxSkillLevel(), dCPlayer );
-        double minorAmount = getEffectAmount( -1, dCPlayer );
-        String toolType = toolType();
-
-        description = Messages.describeGeneral;
-        description = description.replaceAll( "%initiator%", initiator );
-        description = description.replaceAll( "%output%", output );
-        description = description.replaceAll( "%effectamountlow%", String.format( "%.2f", effectAmountLow ) );
-        description = description.replaceAll( "%effectamounthigh%", String.format( "%.2f", effectAmountHigh ) );
-        description = description.replaceAll( "%minoramount%", String.format( "%.2f", minorAmount ) );
-        description = description.replaceAll( "%normallevel%", "" + mNormalLevel );
-        description = description.replaceAll( "%tooltype%", toolType );
-
-        return description;
-    }
-
-    /**
      * Description of a skills effect at a given level
      * 
-     * @param dCPlayer
-     * @return
+     * @param dCPlayer the DwarfPlayer instance
+     * @return description of a skills effect at a given level
      */
     public String describeLevel( DwarfPlayer dCPlayer )
     {
@@ -163,8 +134,8 @@ public class DwarfEffect
     /**
      * Returns an effect Amount for a particular Dwarf
      * 
-     * @param dCPlayer
-     * @return
+     * @param dCPlayer the DwarfPlayer instance
+     * @return the effect amount
      */
     public double getEffectAmount( DwarfPlayer dCPlayer )
     {
@@ -189,8 +160,9 @@ public class DwarfEffect
         if ( DwarfCraft.debugMessagesThreshold < 1 )
         {
             plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
-                    + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
+                    + "Exception: %s Exception Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
         }
+
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
     }
 
@@ -256,141 +228,30 @@ public class DwarfEffect
         return mInitiator.isTagged() ? ( mInitiator.getMaterials().contains( mat ) ) : ( mInitiator.getItemStack().getType() == mat );
     }
 
-    /**
-     * Tool to string parser for effect descriptions
-     * 
-     * @return
-     */
     public String toolType()
     {
         for ( Material mat : mTools )
         {
             if ( mat == Material.IRON_SWORD )
-                return "swords";
+                return "sword";
             if ( mat == Material.IRON_HOE )
-                return "hoes";
+                return "hoe";
             if ( mat == Material.IRON_AXE )
-                return "axes";
+                return "axe";
             if ( mat == Material.WOODEN_PICKAXE )
-                return "pickaxes";
+                return "pickaxe";
             if ( mat == Material.IRON_PICKAXE )
-                return "most picks";
+                return "most pickaxes";
             if ( mat == Material.DIAMOND_PICKAXE )
-                return "high picks";
+                return "diamond pickaxe";
             if ( mat == Material.IRON_SHOVEL )
-                return "shovels";
+                return "shovel";
             if ( mat == Material.FISHING_ROD )
                 return "fishing rod";
             if ( mat == Material.FLINT_AND_STEEL )
                 return "flint and steel";
         }
         return "any tool";
-    }
-
-    public boolean checkMob( Entity entity )
-    {
-        if ( mCreature == null )
-            return false;
-
-        switch ( mCreature )
-        {
-            case CHICKEN:
-                return ( entity instanceof Chicken );
-            case COW:
-                return ( entity instanceof Cow );
-            case CREEPER:
-                return ( entity instanceof Creeper );
-            case GHAST:
-                return ( entity instanceof Ghast );
-            case GIANT:
-                return ( entity instanceof Giant );
-            case PIG:
-                return ( entity instanceof Pig );
-            case PIG_ZOMBIE:
-                return ( entity instanceof PigZombie );
-            case SHEEP:
-                return ( entity instanceof Sheep );
-            case SKELETON:
-                return ( entity instanceof Skeleton );
-            case SLIME:
-                return ( entity instanceof Slime );
-            case SPIDER:
-                return ( entity instanceof Spider );
-            case SQUID:
-                return ( entity instanceof Squid );
-            case ZOMBIE:
-                return ( entity instanceof Zombie ) && !( entity instanceof PigZombie );
-            case WOLF:
-                return ( entity instanceof Wolf );
-            case MUSHROOM_COW:
-                return ( entity instanceof MushroomCow );
-            case SILVERFISH:
-                return ( entity instanceof Silverfish );
-            case ENDERMAN:
-                return ( entity instanceof Enderman );
-            case VILLAGER:
-                return ( entity instanceof Villager );
-            case BLAZE:
-                return ( entity instanceof Blaze );
-            case MAGMA_CUBE:
-                return ( entity instanceof MagmaCube );
-            case CAVE_SPIDER:
-                return ( entity instanceof CaveSpider );
-            case SNOWMAN:
-                return ( entity instanceof Snowman );
-            case ENDER_DRAGON:
-                return ( entity instanceof EnderDragon );
-            case OCELOT:
-                return ( entity instanceof Ocelot );
-            case WITHER:
-                return ( entity instanceof Wither );
-            case IRON_GOLEM:
-                return ( entity instanceof IronGolem );
-            case BAT:
-                return ( entity instanceof Bat );
-            case RABBIT:
-                return ( entity instanceof Rabbit );
-            case GUARDIAN:
-                return ( entity instanceof Guardian );
-            case HORSE:
-                return ( entity instanceof Horse );
-            case ENDERMITE:
-                return ( entity instanceof Endermite );
-            case WITCH:
-                return ( entity instanceof Witch );
-            case POLAR_BEAR:
-                return ( entity instanceof PolarBear );
-            case SHULKER:
-                return ( entity instanceof Shulker );
-            case DONKEY:
-                return ( entity instanceof Donkey );
-            case MULE:
-                return ( entity instanceof Mule );
-            case LLAMA:
-                return ( entity instanceof Llama );
-            case HUSK:
-                return ( entity instanceof Husk );
-            case SKELETON_HORSE:
-                return ( entity instanceof SkeletonHorse );
-            case ELDER_GUARDIAN:
-                return ( entity instanceof ElderGuardian );
-            case EVOKER:
-                return ( entity instanceof Evoker );
-            case STRAY:
-                return ( entity instanceof Stray );
-            case ZOMBIE_VILLAGER:
-                return ( entity instanceof ZombieVillager );
-            case VEX:
-                return ( entity instanceof Vex );
-            case VINDICATOR:
-                return ( entity instanceof Vindicator );
-            case ILLUSIONER:
-                return ( entity instanceof Illusioner );
-            case PARROT:
-                return ( entity instanceof Parrot );
-            default:
-                return false;
-        }
     }
 
     public EntityType getCreature()
@@ -432,9 +293,10 @@ public class DwarfEffect
     public void damageTool( DwarfPlayer player, int base, ItemStack tool, boolean negate )
     {
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
+        Damageable dmg = ( Damageable ) tool.getItemMeta();
 
         if ( DwarfCraft.debugMessagesThreshold < 2 )
-            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, tool.getDurability(), base, wear ) );
+            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, dmg.getDamage(), base, wear ) );
 
         // Some code taken from net.minecraft.server.ItemStack line 165.
         // Checks to see if damage should be skipped.
@@ -461,22 +323,22 @@ public class DwarfEffect
         if ( e.isCancelled() )
             return;
 
-        tool.setDurability( ( short ) ( tool.getDurability() + e.getAlteredDamage() - base ) );
+        dmg.setDamage( ( int ) ( dmg.getDamage() + e.getAlteredDamage() - base ) );
         // This may have the side effect of causing items to flicker when they
         // are about to break
         // If this becomes a issue, we need to cast to a CraftItemStack, then
         // make CraftItemStack.item public,
         // And call CraftItemStack.item.damage(-base, player.getPlayer());
 
-        if ( tool.getDurability() >= tool.getType().getMaxDurability() )
+        if ( dmg.getDamage() >= tool.getType().getMaxDurability() )
         {
-            if ( tool.getType() == Material.IRON_SWORD && tool.getDurability() < 250 )
+            if ( tool.getType() == Material.IRON_SWORD && dmg.getDamage() < 250 )
                 return;
 
             if ( tool.getAmount() > 1 )
             {
                 tool.setAmount( tool.getAmount() - 1 );
-                tool.setDurability( ( short ) -1 );
+                dmg.setDamage( ( short ) -1 );
             }
             else
             {
@@ -490,6 +352,8 @@ public class DwarfEffect
                 }
             }
         }
+
+        tool.setItemMeta( ( ItemMeta ) dmg );
     }
 
 }

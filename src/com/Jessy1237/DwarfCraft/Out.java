@@ -49,9 +49,9 @@ public class Out
     public boolean effectInfo( CommandSender sender, DwarfPlayer dCPlayer, DwarfEffect effect )
     {
         String prefix = Messages.effectInfoPrefix;
-        prefix = prefix.replaceAll( "%effectid%", "" + effect.getId() );
+        prefix = prefix.replaceAll( PlaceHolder.EFFECT_ID.getPlaceHolder(), "" + effect.getId() );
         sendMessage( sender, effect.describeLevel( dCPlayer ), prefix );
-        sendMessage( sender, effect.describeGeneral( dCPlayer ), prefix );
+        sendMessage( sender, Messages.describeGeneral, prefix );
         return true;
     }
 
