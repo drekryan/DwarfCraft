@@ -329,14 +329,6 @@ public class DwarfCraft extends JavaPlugin implements TabCompleter
         PluginManager pm = getServer().getPluginManager();
         util = new Util( this ); //Need to initialise Util earlier if going to use it in the enabling method
 
-        // We are not backwards compatible
-        if ( getDescription().getAPIVersion() == null || !Bukkit.getBukkitVersion().startsWith( getDescription().getAPIVersion() ) )
-        {
-            getUtil().consoleLog( Level.SEVERE, getDescription().getName() + " " + getDescription().getVersion() + " is not compatible with Minecraft " + Bukkit.getBukkitVersion() + ". Please try a different version of DwarfCraft." );
-            pm.disablePlugin( this );
-            return;
-        }
-
         if ( pm.getPlugin( "Vault" ) == null || !pm.getPlugin( "Vault" ).isEnabled() )
         {
             getUtil().consoleLog( Level.SEVERE, "Something went wrong! Couldn't find Vault!" );
