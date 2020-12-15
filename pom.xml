@@ -12,11 +12,11 @@
 
     <properties>
         <!--    Minecraft Version    -->
-        <minecraft.version>1.15.2</minecraft.version>
-        <plugin.api.version>1.15</plugin.api.version>
+        <minecraft.version>1.16.4</minecraft.version>
+        <plugin.api.version>1.16</plugin.api.version>
 
         <!--    Dependency Version    -->
-        <citizens.version>2.0.26-SNAPSHOT</citizens.version>
+        <citizens.version>2.0.27-SNAPSHOT</citizens.version>
         <vault.version>1.7</vault.version>
         <placeholderapi.version>2.10.4</placeholderapi.version>
     </properties>
