@@ -4,11 +4,9 @@ about: An issue with the performance of this plugin, such as abnormal lag.
 
 ---
 
-<!--Thanks in advance for this issue, you're awesome! Please fill in the following template and make sure your title clear and concisely summarizes the issue.-->
-
 #### Issue type:
 
-- :snail: Performance issue
+- :snail: Performance Issue
 
 ____
 

@@ -1,14 +1,10 @@
 ---
 name: "🐛 Bug report"
 about: If something is not working as expected or crashes
+assignees: drekryan
+labels: Bug
 
 ---
-
-<!--
-A NOTE FROM THE DWARFCRAFT DEVELOPERS,
-THANK YOU so much for your interest in DwarfCraft. You help us continually improve DwarfCraft to build a fun experience for RPG servers. We absolutely love RPG servers and are happy you considered DwarfCraft for your server. You are most likely on this page because you ran into an issue where DwarfCraft isn't doing what you expected. We apologize for that and we hope we can make things better for you. Please follow the instructions below carefully to help us, help you. It's important we can get through issues as quickly as possible. The more times they bounce back between you and us the longer they take to get fixed. We have outlined below what we expect for a clear and concise bug report. Please do your best not to omit any details as your issue may be automatically closed due to lack of information.
-Thanks again for using DwarfCraft <3
--->
 
 #### Issue type:
 
