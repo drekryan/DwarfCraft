@@ -52,6 +52,14 @@ hs_err_pid*
 
 ## Plugin-specific files:
 
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
 # IntelliJ IDEA IDE
 *.iml
 
