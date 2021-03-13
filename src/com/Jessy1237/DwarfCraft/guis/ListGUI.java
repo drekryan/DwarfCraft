@@ -45,7 +45,6 @@ public class ListGUI extends DwarfGUI
     @Override
     public void init()
     {
-
         initTrainers();
         inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), inventorySize, "Trainers List" );
         initItems();
@@ -129,17 +128,16 @@ public class ListGUI extends DwarfGUI
                 lore.add( "" );
                 lore.add( ChatColor.LIGHT_PURPLE + "Click to teleport to Trainer..." );
 
-                if ( trainer.getEntity().getEntity().getType() == EntityType.PLAYER )
-                {
-                    meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( trainer.getName() ) );
-                }
-                else if ( trainer.getEntity().getEntity().getType() == EntityType.VILLAGER )
-                {
-                    meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( "MHF_Villager" ) );
-                }
-                else
-                {
-                    meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( "MHF_Steve" ) );
+                meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( "MHF_Steve" ) );
+                if ( trainer.getEntity().isSpawned() ) {
+                    if ( trainer.getEntity().getEntity().getType() == EntityType.PLAYER )
+                    {
+                        meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( trainer.getName() ) );
+                    }
+                    else if ( trainer.getEntity().getEntity().getType() == EntityType.VILLAGER )
+                    {
+                        meta.setOwningPlayer( plugin.getServer().getOfflinePlayer( "MHF_Villager" ) );
+                    }
                 }
 
                 head.setItemMeta( meta );
