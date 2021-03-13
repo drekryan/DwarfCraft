@@ -149,7 +149,7 @@ class SkillReader
             max = json.get( "max" ).getAsInt();
         } else {
             // If element couldn't be found return a empty DwarfTrainingItem
-            item_holder = new DwarfItemHolder( new HashSet<>( Collections.singleton( Material.AIR ) ), null, "" );
+            item_holder = new DwarfItemHolder( plugin, new HashSet<>( Collections.singleton( Material.AIR ) ), null, "" );
             base = 0;
             max = 0;
             return new DwarfTrainingItem( item_holder, base, max );

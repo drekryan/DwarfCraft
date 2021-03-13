@@ -22,6 +22,7 @@ import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.models.DwarfEffect;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
+import com.Jessy1237.DwarfCraft.models.DwarfTrainingItem;
 
 public class Out
 {
@@ -153,7 +154,8 @@ public class Out
             {
                 int totalCost = t.getAmount();
                 int deposited = t.getAmount() - r.getAmount();
-                sendMessage( sender, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.skillInfoTrainCost, deposited, r.getAmount(), totalCost, plugin.getUtil().getCleanName( skill.getItem( i+1 ).getDwarfItemHolder() ) ) );
+                DwarfTrainingItem trainingItem = skill.getItem( i+1 );
+                sendMessage( sender, plugin.getPlaceHolderParser().parseForTrainCosts( Messages.skillInfoTrainCost, deposited, r.getAmount(), totalCost, trainingItem.getDwarfItemHolder().getMaterialString() ) );
             }
 
         }

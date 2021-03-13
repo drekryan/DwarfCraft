@@ -162,7 +162,7 @@ public class Util
             mats.add( parseItem( item.get( name ).getAsString() ).getType() );
         }
 
-        return new DwarfItemHolder( mats, tag, tagName );
+        return new DwarfItemHolder( plugin, mats, tag, tagName );
     }
 
     @SuppressWarnings( "rawtypes" )

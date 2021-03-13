@@ -12,19 +12,22 @@ package com.Jessy1237.DwarfCraft.models;
 
 import java.util.Set;
 
+import com.Jessy1237.DwarfCraft.DwarfCraft;
+
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 
 public class DwarfItemHolder
 {
-
+    private final DwarfCraft plugin;
     private Set<Material> mats;
-    private Tag<Material> tag;
-    private String tagName;
+    private final Tag<Material> tag;
+    private final String tagName;
 
-    public DwarfItemHolder( Set<Material> mats, Tag<Material> tag, String tagName )
+    public DwarfItemHolder( DwarfCraft plugin, Set<Material> mats, Tag<Material> tag, String tagName )
     {
+        this.plugin = plugin;
         this.tag = tag;
         this.mats = mats;
         this.tagName = tagName;
@@ -43,6 +46,17 @@ public class DwarfItemHolder
     public Set<Material> getMaterials()
     {
         return mats;
+    }
+
+    public String getMaterialString()
+    {
+        StringBuilder builder = new StringBuilder("");
+        int index = 0;
+        for ( Material mat : mats ) {
+            builder.append( plugin.getUtil().getCleanName( new ItemStack(mat) ) );
+            if ( index++ < mats.size() - 1 ) builder.append(" OR ");
+        }
+        return builder.toString();
     }
 
     public ItemStack getItemStack()

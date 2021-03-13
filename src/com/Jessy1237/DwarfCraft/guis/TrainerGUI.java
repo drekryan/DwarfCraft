@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,6 +21,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import net.md_5.bungee.api.ChatMessageType;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
@@ -73,7 +74,7 @@ public class TrainerGUI extends DwarfGUI
                         addItem( null, lore, guiIndex, costStack );
                         if (!timerValid)
                         {
-                            timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask( dwarfPlayer, skill, costStack, guiIndex, skill.getItem( i ).getDwarfItemHolder().getMaterials() ), 10, 25 );
+                            timer = Bukkit.getScheduler().scheduleSyncRepeatingTask( plugin, new CycleSlotTask( dwarfPlayer, skill, guiIndex, skill.getItem( i ).getDwarfItemHolder().getMaterials() ), 10, 25 );
                             timerValid = true;
                         }
                         guiIndex++;
@@ -208,12 +209,12 @@ public class TrainerGUI extends DwarfGUI
         private ItemStack itemStack;
         private int index;
         private Set<Material> mats;
+        private int tagIndex = 0;
 
-        CycleSlotTask( DwarfPlayer player, DwarfSkill skill, ItemStack stack, int index, Set<Material> mats )
+        CycleSlotTask( DwarfPlayer player, DwarfSkill skill, int index, Set<Material> mats )
         {
             this.player = player;
             this.skill = skill;
-            this.itemStack = stack;
             this.index = index;
             this.mats = mats;
         }
@@ -228,21 +229,19 @@ public class TrainerGUI extends DwarfGUI
                 return;
             }
 
-            int tagIndex = 0;
-            for ( Material mat : mats )
-            {
-                if ( mat.equals( itemStack.getType() ) )
-                {
-                    if ( (tagIndex + 1) >= mats.size() )
-                    {
-                        tagIndex = 0;
-                    }
-                    break;
+            List<Material> matsList = new ArrayList<Material>();
+            matsList.addAll(mats);
+
+            Material newMat;
+            if (matsList.size() > 1) {
+                if (tagIndex >= matsList.size() ) {
+                    tagIndex = 0;
                 }
-                tagIndex++;
+                newMat = matsList.get(tagIndex++);
+            } else {
+                newMat = matsList.get(0);
             }
 
-            Material newMat = (Material)mats.toArray()[tagIndex + 1];
             ItemStack item = new ItemStack( newMat );
             ItemMeta meta = item.getItemMeta();
             itemStack = item;
