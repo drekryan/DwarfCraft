@@ -126,7 +126,7 @@ public class DwarfBlockListener implements Listener
         }
 
         DwarfPlayer player = plugin.getDataManager().find( event.getPlayer() );
-        HashMap<Integer, DwarfSkill> skills = player.getSkills();
+        HashMap<String, DwarfSkill> skills = player.getSkills();
 
         ItemStack tool = player.getPlayer().getInventory().getItemInMainHand();
         Block block = event.getBlock();
@@ -326,7 +326,7 @@ public class DwarfBlockListener implements Listener
             }
         }
 
-        if ( tool != null && tool.getType().getMaxDurability() > 0 )
+        if ( tool.getType().getMaxDurability() > 0 )
         {
             for ( DwarfSkill s : skills.values() )
             {
@@ -362,7 +362,7 @@ public class DwarfBlockListener implements Listener
 
         Player player = event.getPlayer();
         DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
-        HashMap<Integer, DwarfSkill> skills = dCPlayer.getSkills();
+        HashMap<String, DwarfSkill> skills = dCPlayer.getSkills();
 
         // Effect Specific information
         ItemStack tool = player.getInventory().getItemInMainHand();

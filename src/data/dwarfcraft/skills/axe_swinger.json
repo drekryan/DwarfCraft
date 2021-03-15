@@ -1,0 +1,73 @@
+{
+  "display_name": "Axe Swinger",
+  "race_specialization": [
+    "dwarf"
+  ],
+  "training_items": [
+    {
+      "id": "ROTTEN_FLESH",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "STRING",
+      "base": 1.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "PVEDAMAGE",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 0.75,
+      "min": 0,
+      "max": 100,
+      "step": 0.05,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_AXE",
+        "STONE_AXE",
+        "IRON_AXE",
+        "GOLDEN_AXE",
+        "DIAMOND_AXE"
+      ]
+    },
+    {
+      "type": "PVPDAMAGE",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 0.38,
+      "min": 0,
+      "max": 100,
+      "step": 0.03,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 25,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_AXE",
+        "STONE_AXE",
+        "IRON_AXE",
+        "GOLDEN_AXE",
+        "DIAMOND_AXE"
+      ]
+    }
+  ],
+  "held_item": "DIAMOND_AXE"
+}

@@ -12,21 +12,18 @@ package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.logging.Level;
 
-import org.bukkit.command.Command;
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandInformation;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
-public class CommandReload extends Command
+public class CommandReload extends DwarfCommand
 {
-    private final DwarfCraft plugin;
-
-    public CommandReload( final DwarfCraft plugin )
+    public CommandReload( final DwarfCraft plugin, String name )
     {
-        super( "DCReload" );
-        this.plugin = plugin;
+        super( plugin, name );
+        setDescription("Reloads the DwarfCraft plugin.");
     }
 
     @Override
@@ -36,7 +33,7 @@ public class CommandReload extends Command
         {
             if ( args[0].equalsIgnoreCase( "?" ) )
             {
-                plugin.getOut().sendMessage( sender, CommandInformation.Desc.RELOAD.getDesc() );
+                plugin.getOut().sendMessage( sender, description );
             }
         }
         else
@@ -57,6 +54,16 @@ public class CommandReload extends Command
                 plugin.getOut().sendMessage( sender, "&aReload complete" );
             plugin.getUtil().consoleLog( Level.FINE, "Reload complete" );
         }
+        return true;
+    }
+
+    @Override
+    public String getUsage() {
+        return "/dwarfcraft reload";
+    }
+
+    @Override
+    public boolean isOp() {
         return true;
     }
 }

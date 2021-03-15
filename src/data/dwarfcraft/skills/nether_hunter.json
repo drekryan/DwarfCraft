@@ -1,0 +1,116 @@
+{
+  "display_name": "Nether Hunter",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "BLAZE_ROD",
+      "base": 1.0,
+      "max": 288
+    }
+  ],
+  "effects": [
+    {
+      "type": "MOBDROP",
+      "origin_material": "BLAZE",
+      "output_material": "BLAZE_ROD",
+      "base": 0.4,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": -0.08,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "MOBDROP",
+      "origin_material": "GHAST",
+      "output_material": "GHAST_TEAR",
+      "base": 0.4,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": -0.08,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "MOBDROP",
+      "origin_material": "MAGMA_CUBE",
+      "output_material": "MAGMA_CREAM",
+      "base": 0.4,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": -0.08,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    },
+    {
+      "type": "MOBDROP",
+      "origin_material": "ZOMBIFIED_PIGLIN",
+      "output_material": "GOLD_NUGGET",
+      "base": 0.4,
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": -0.08,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SWORD",
+        "STONE_SWORD",
+        "IRON_SWORD",
+        "GOLDEN_SWORD",
+        "DIAMOND_SWORD"
+      ]
+    }
+  ],
+  "held_item": "BLAZE_ROD"
+}

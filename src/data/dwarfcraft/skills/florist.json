@@ -1,0 +1,65 @@
+{
+  "display_name": "Florist",
+  "race_specialization": [
+    "human"
+  ],
+  "training_items": [
+    {
+      "id": "SUNFLOWER",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "RED_TULIP",
+      "base": 1.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "SUNFLOWER",
+      "output_material": "SUNFLOWER",
+      "base": 0.95,
+      "min": 0,
+      "max": 2,
+      "step": 0.02,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "RED_TULIP",
+      "output_material": "RED_TULIP",
+      "base": 0.95,
+      "min": 0,
+      "max": 2,
+      "step": 0.02,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "RED_TULIP"
+}

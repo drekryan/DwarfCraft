@@ -12,10 +12,12 @@ package com.Jessy1237.DwarfCraft.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -23,10 +25,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-import com.Jessy1237.DwarfCraft.CommandException;
-import com.Jessy1237.DwarfCraft.CommandException.Type;
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.commands.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.models.DwarfSkill;
 import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
@@ -34,14 +33,12 @@ import com.Jessy1237.DwarfCraft.models.DwarfTrainerTrait;
 
 import net.citizensnpcs.api.npc.AbstractNPC;
 
-public class CommandCreate extends Command implements TabCompleter
+public class CommandCreate extends DwarfCommand implements TabCompleter
 {
-    private final DwarfCraft plugin;
-
-    public CommandCreate( final DwarfCraft plugin )
+    public CommandCreate( final DwarfCraft plugin, String name )
     {
-        super( "Create" );
-        this.plugin = plugin;
+        super( plugin, name );
+        setDescription("Creates a new trainer where you are standing.");
     }
 
     @Override
@@ -52,11 +49,11 @@ public class CommandCreate extends Command implements TabCompleter
 
         if ( args.length == 0 || args[0].equals( null ) )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Usage.CREATE.getUsage() );
+            plugin.getOut().sendMessage( sender, getUsage() );
         }
         else if ( args[0].equalsIgnoreCase( "?" ) )
         {
-            plugin.getOut().sendMessage( sender, CommandInformation.Desc.CREATE.getDesc() );
+            plugin.getOut().sendMessage( sender, description );
         }
         else
         {
@@ -68,7 +65,7 @@ public class CommandCreate extends Command implements TabCompleter
 
                 String uniqueId = "UniqueIdAdd";
                 String name = "Name";
-                DwarfSkill skill = new DwarfSkill( 0, null, 0, null, null, null, null, null );
+                DwarfSkill skill = new DwarfSkill( plugin, "", null, new LinkedHashMap<>(),0, null, null, null, null, null );
                 Integer maxSkill = 1;
                 Integer minSkill = 1;
                 String type = "Type";
@@ -141,7 +138,7 @@ public class CommandCreate extends Command implements TabCompleter
                     npc = ( AbstractNPC ) plugin.getNPCRegistry().createNPC( EntityType.valueOf( type ), UUID.randomUUID(), uid, name );
                 }
 
-                npc.addTrait( new DwarfTrainerTrait( plugin, uid, skill.getId(), maxSkill, minSkill ) );
+                npc.addTrait( new DwarfTrainerTrait( plugin, skill.getId(), maxSkill, minSkill ) );
                 npc.setProtected( true );
                 npc.spawn( p.getLocation() );
 
@@ -155,7 +152,7 @@ public class CommandCreate extends Command implements TabCompleter
             catch ( CommandException e )
             {
                 e.describe( sender );
-                sender.sendMessage( CommandInformation.Usage.CREATE.getUsage() );
+                sender.sendMessage( getUsage() );
             }
         }
         return true;
@@ -175,7 +172,7 @@ public class CommandCreate extends Command implements TabCompleter
                 completions.clear();
 
                 // Gets a list of all possible skill names
-                Collection<DwarfSkill> skills = plugin.getConfigManager().getAllSkills().values();
+                Collection<DwarfSkill> skills = plugin.getSkillManager().getAllSkills().values();
 
                 for ( DwarfSkill skill : skills )
                 {
@@ -207,5 +204,15 @@ public class CommandCreate extends Command implements TabCompleter
                 matches.add( "" );
                 return matches;
         }
+    }
+
+    @Override
+    public boolean isOp() {
+        return true;
+    }
+
+    @Override
+    public String getUsage() {
+        return "/dwarfcraft create <id> <display_name> <skill_id> <max_level> <min_level> <entity_type>";
     }
 }

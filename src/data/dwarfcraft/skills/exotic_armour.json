@@ -1,0 +1,198 @@
+{
+  "display_name": "Exotic Armour",
+  "race_specialization": [
+    "elf",
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "DIAMOND_CHESTPLATE",
+      "base": 1.0,
+      "max": 36
+    },
+    {
+      "id": "GOLDEN_HELMET",
+      "base": 1.0,
+      "max": 36
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_HELMET",
+      "output_material": "DIAMOND_HELMET",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_CHESTPLATE",
+      "output_material": "DIAMOND_CHESTPLATE",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_LEGGINGS",
+      "output_material": "DIAMOND_LEGGINGS",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_BOOTS",
+      "output_material": "DIAMOND_BOOTS",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "GOLDEN_HELMET",
+      "output_material": "GOLDEN_HELMET",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "GOLDEN_CHESTPLATE",
+      "output_material": "GOLDEN_CHESTPLATE",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "GOLDEN_LEGGINGS",
+      "output_material": "GOLDEN_LEGGINGS",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "GOLDEN_BOOTS",
+      "output_material": "GOLDEN_BOOTS",
+      "base": 1.0,
+      "min": 0,
+      "max": 3,
+      "step": 0.07,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "DIAMOND_CHESTPLATE"
+}

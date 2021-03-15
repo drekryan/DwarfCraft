@@ -39,7 +39,7 @@ Vanilla Race Enabled: false
 #If DwarfCraft should add the race of the player as a prefix in their name
 Prefix Enabled: true
 
-#The prefix for the race of a player. The prefix must contain '%racename%' in it as that will be replaced by the actual players race ingame
+#The prefix for the race of a player. The prefix must contain '<racename>' in it as that will be replaced by the actual players race ingame
 Prefix: "[<race.name>]"
 
 #This is the Max Skill Level someone can level a skill for non-racial skills. Keeping this at level 5 is strongly recommended.

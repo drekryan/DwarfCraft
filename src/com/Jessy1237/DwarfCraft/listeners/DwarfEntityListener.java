@@ -13,16 +13,8 @@ package com.Jessy1237.DwarfCraft.listeners;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,25 +25,23 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.PlaceholderParser.PlaceHolder;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
 import com.Jessy1237.DwarfCraft.guis.TrainerGUI;
-import com.Jessy1237.DwarfCraft.models.DwarfEffect;
-import com.Jessy1237.DwarfCraft.models.DwarfEffectType;
-import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
-import com.Jessy1237.DwarfCraft.models.DwarfSkill;
-import com.Jessy1237.DwarfCraft.models.DwarfTrainer;
+import com.Jessy1237.DwarfCraft.models.*;
 import com.Jessy1237.DwarfCraft.schedules.InitTrainerGUISchedule;
-
-import net.citizensnpcs.api.event.NPCLeftClickEvent;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class DwarfEntityListener implements Listener
 {
     private final DwarfCraft plugin;
-    private HashMap<Entity, DwarfPlayer> killMap;
+    private final HashMap<Entity, DwarfPlayer> killMap;
 
     public DwarfEntityListener( DwarfCraft plugin )
     {
@@ -59,7 +49,8 @@ public class DwarfEntityListener implements Listener
         killMap = new HashMap<>();
     }
 
-    @EventHandler( priority = EventPriority.HIGH ) public void onEntityDamage( EntityDamageEvent event )
+    @EventHandler( priority = EventPriority.HIGH )
+    public void onEntityDamage( EntityDamageEvent event )
     {
         if ( !plugin.getUtil().isWorldAllowed( event.getEntity().getWorld() ) )
             return;
@@ -91,7 +82,8 @@ public class DwarfEntityListener implements Listener
         }
     }
 
-    private boolean checkTrainerLeftClick( NPCLeftClickEvent event )
+    private
+    void checkTrainerLeftClick( NPCLeftClickEvent event )
     {
         DwarfTrainer trainer = plugin.getDataManager().getTrainer( event.getNPC() );
         if ( trainer != null )
@@ -99,23 +91,21 @@ public class DwarfEntityListener implements Listener
             Player player = event.getClicker();
             DwarfPlayer dCPlayer = plugin.getDataManager().find( player );
             DwarfSkill skill = dCPlayer.getSkill( trainer.getSkillTrained() );
-            if ( skill == null )
-                return false;
+            if (skill == null) return;
 
-            if ( dCPlayer.getRace().equalsIgnoreCase( "" ) )
+            if ( dCPlayer.getRace().getId().equals( "" ) )
             {
                 plugin.getOut().sendMessage( event.getClicker(), Messages.chooseARace );
-                return true;
+                return;
             }
 
             plugin.getOut().printSkillInfo( player, skill, dCPlayer, trainer.getMaxSkill() );
 
-            return true;
         }
-        return false;
     }
 
-    private boolean checkDwarfTrainer( NPCRightClickEvent event )
+    private
+    void checkDwarfTrainer( NPCRightClickEvent event )
     {
         try
         {
@@ -135,43 +125,43 @@ public class DwarfEntityListener implements Listener
                     if ( skill == null )
                     {
                         dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotContainSkill ) ) );
-                        return true;
+                        return;
                     }
 
-                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
+                    if ( dwarfPlayer.getRace().getId().equals( "" ) )
                     {
                         dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.chooseARace ) ) );
-                        return true;
+                        return;
                     }
 
-                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "Vanilla" ) )
+                    if ( dwarfPlayer.getRace().getId().equalsIgnoreCase( "vanilla" ) )
                     {
                         dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.vanillaRace ) ) );
-                        return true;
+                        return;
                     }
 
-                    if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dwarfPlayer.getRace() ).contains( skill.getId() ) )
+                    if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !skill.doesSpecialize( dwarfPlayer.getRace() ) )
                     {
                         dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) ) ) );
-                        return true;
+                        return;
                     }
 
                     if ( skill.getLevel() >= plugin.getConfigManager().getMaxSkillLevel() )
                     {
                         dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.maxSkillLevel.replaceAll( PlaceHolder.SKILL_MAX_LEVEL.getPlaceHolder(), "" + plugin.getConfigManager().getMaxSkillLevel() ) ) ) );
-                        return true;
+                        return;
                     }
 
                     if ( skill.getLevel() >= trainer.getMaxSkill() )
                     {
                         dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerMaxLevel ) ) );
-                        return true;
+                        return;
                     }
 
                     if ( skill.getLevel() < trainer.getMinSkill() )
                     {
                         dwarfPlayer.getPlayer().spigot().sendMessage( ChatMessageType.ACTION_BAR, new TextComponent( ChatColor.translateAlternateColorCodes( '&', Messages.trainerLevelTooHigh ) ) );
-                        return true;
+                        return;
                     }
 
                     trainer.setWait( true );
@@ -179,14 +169,12 @@ public class DwarfEntityListener implements Listener
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, new InitTrainerGUISchedule( plugin, trainerGUI ), 1 );
                 }
 
-                return true;
             }
         }
         catch ( Exception e )
         {
             e.printStackTrace();
         }
-        return false;
     }
 
     public void onEntityAttack( EntityDamageByEntityEvent event )
@@ -223,7 +211,7 @@ public class DwarfEntityListener implements Listener
         }
 
         boolean isPVP = false;
-        DwarfPlayer attacker = null;
+        DwarfPlayer attacker;
 
         if ( victim instanceof Player )
         {
@@ -253,13 +241,13 @@ public class DwarfEntityListener implements Listener
         // Need to test PlayerInteractEvent to see if it is called before this
         // event to add player and which item was used to attack this entity.
         ItemStack tool = attacker.getPlayer().getInventory().getItemInMainHand();
-        HashMap<Integer, DwarfSkill> skills = attacker.getSkills();
+        HashMap<String, DwarfSkill> skills = attacker.getSkills();
 
         for ( DwarfSkill s : skills.values() )
         {
             for ( DwarfEffect e : s.getEffects() )
             {
-                if ( tool != null && tool.getType().getMaxDurability() > 0 )
+                if ( tool.getType().getMaxDurability() > 0 )
                 {
                     if ( e.getEffectType() == DwarfEffectType.SWORDDURABILITY && e.checkTool( tool ) )
                         e.damageTool( attacker, 1, tool );
@@ -293,7 +281,7 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVE %s attacked %s for %.2f of %d doing %f dmg of %f hp", attacker.getPlayer().getName(), victim.getClass().getSimpleName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp ) );
                     }
                 }
 
@@ -312,7 +300,8 @@ public class DwarfEntityListener implements Listener
                     event.setDamage( ev.getAlteredDamage() );
                     if ( DwarfCraft.debugMessagesThreshold < 6 )
                     {
-                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC6: PVP %s attacked %s for %.2f of %d doing %f dmg of %f hp" + " effect called: %d", attacker.getPlayer().getName(), ( ( Player ) victim ).getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp, e.getId() ) );
+                        plugin.getUtil().consoleLog( Level.FINE, String
+                                .format( "DC6: PVP %s attacked %s for %.2f of %d doing %f dmg of %f hp", attacker.getPlayer().getName(), victim.getName(), e.getEffectAmount( attacker ), event.getDamage(), damage, hp) );
                     }
                 }
             }
@@ -439,7 +428,8 @@ public class DwarfEntityListener implements Listener
         }
     }
 
-    @EventHandler( priority = EventPriority.LOW ) public void onEntityDeath( EntityDeathEvent event )
+    @EventHandler( priority = EventPriority.LOW )
+    public void onEntityDeath( EntityDeathEvent event )
     {
         if ( !plugin.getUtil().isWorldAllowed( event.getEntity().getWorld() ) )
             return;
@@ -471,7 +461,7 @@ public class DwarfEntityListener implements Listener
                                 {
                                     if ( DwarfCraft.debugMessagesThreshold < 5 )
                                     {
-                                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", entity.getClass().getSimpleName(), effect.getId(), result.getAmount(), result.getType().name() ) );
+                                        plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s created %d of %s\r\n", entity.getClass().getSimpleName(), result.getAmount(), result.getType().name() ) );
                                     }
 
                                     DwarfEffectEvent ev = new DwarfEffectEvent( killer, effect, new ItemStack[] { drop }, new ItemStack[] { result }, null, null, null, null, entity, null, null );
@@ -487,7 +477,7 @@ public class DwarfEntityListener implements Listener
                         {
                             if ( DwarfCraft.debugMessagesThreshold < 5 )
                             {
-                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s effect called: %d created %d of %s\r\n", entity.getClass().getSimpleName(), effect.getId(), result.getAmount(), result.getType().name() ) );
+                                plugin.getUtil().consoleLog( Level.FINE, String.format( "DC5: killed a %s created %d of %s\r\n", entity.getClass().getSimpleName(), result.getAmount(), result.getType().name() ) );
                             }
 
                             ItemStack[] original = event.getDrops().toArray( new ItemStack[0] );

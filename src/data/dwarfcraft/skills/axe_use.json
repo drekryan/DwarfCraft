@@ -1,0 +1,42 @@
+{
+  "display_name": "Axe Use",
+  "race_specialization": [
+    "human"
+  ],
+  "training_items": [
+    {
+      "id": "#LOGS",
+      "base": 8.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "TOOLDURABILITY",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 1.2,
+      "min": 0,
+      "max": 100,
+      "step": -0.03,
+      "step_novice": -0.01,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_AXE",
+        "STONE_AXE",
+        "IRON_AXE",
+        "GOLDEN_AXE",
+        "DIAMOND_AXE"
+      ]
+    }
+  ],
+  "held_item": "IRON_AXE"
+}

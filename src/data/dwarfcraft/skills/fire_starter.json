@@ -1,0 +1,60 @@
+{
+  "display_name": "Fire Starter",
+  "race_specialization": [
+    "elf"
+  ],
+  "training_items": [
+    {
+      "id": "FLINT_AND_STEEL",
+      "base": 1.0,
+      "max": 36
+    }
+  ],
+  "effects": [
+    {
+      "type": "TOOLDURABILITY",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 1.2,
+      "min": 0,
+      "max": 2,
+      "step": -0.04,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": true,
+      "tools": [
+        "FLINT_AND_STEEL"
+      ]
+    },
+    {
+      "type": "FIREDAMAGE",
+      "origin_material": "AIR",
+      "output_material": "AIR",
+      "base": 1.25,
+      "min": 0,
+      "max": 2,
+      "step": -0.05,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "FLINT_AND_STEEL"
+}

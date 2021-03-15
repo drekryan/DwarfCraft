@@ -1,0 +1,136 @@
+{
+  "display_name": "Diamond Forger",
+  "race_specialization": [
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "DIAMOND_SWORD",
+      "base": 1.0,
+      "max": 36
+    },
+    {
+      "id": "DIAMOND_PICKAXE",
+      "base": 1.0,
+      "max": 36
+    },
+    {
+      "id": "DIAMOND_AXE",
+      "base": 1.0,
+      "max": 36
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_SWORD",
+      "output_material": "DIAMOND_SWORD",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_SHOVEL",
+      "output_material": "DIAMOND_SHOVEL",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_PICKAXE",
+      "output_material": "DIAMOND_PICKAXE",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_AXE",
+      "output_material": "DIAMOND_AXE",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "DIAMOND_HOE",
+      "output_material": "DIAMOND_HOE",
+      "base": 1.0,
+      "min": 0,
+      "max": 7,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "DIAMOND"
+}

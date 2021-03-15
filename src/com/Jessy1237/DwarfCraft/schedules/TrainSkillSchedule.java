@@ -51,7 +51,7 @@ public class TrainSkillSchedule implements Runnable
         if ( clickedItem.getType().equals( Material.LIGHT_BLUE_DYE ) || clickedItem.getType().equals( Material.LIME_DYE ) || clickedItem.getType().equals( Material.GREEN_DYE ))
         {
             // Checks if after a level up if any of the limitting constraints have changed. i.e. player may have levelled up past the trainers ability while the inventory was open
-            if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
+            if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !skill.doesSpecialize( dCPlayer.getRace() ) )
             {
                 plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.CHAT, Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) );
                 dCPlayer.getPlayer().playSound( dCPlayer.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.MASTER, 0.5f, 1.0f );
@@ -104,7 +104,7 @@ public class TrainSkillSchedule implements Runnable
         else
         {
             // Checks if after a level up if any of the limiting constraints have changed. i.e. player may have leveled up past the trainers ability while the inventory was open
-            if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( skill.getId() ) )
+            if ( skill.getLevel() >= plugin.getConfigManager().getRaceLevelLimit() && !skill.doesSpecialize( dCPlayer.getRace() ) )
             {
                 plugin.getUtil().sendPlayerMessage( dCPlayer, ChatMessageType.ACTION_BAR, Messages.raceDoesNotSpecialize.replaceAll( PlaceHolder.RACE_LEVEL_LIMIT.getPlaceHolder(), "" + plugin.getConfigManager().getRaceLevelLimit() ) );
                 dCPlayer.getPlayer().closeInventory();

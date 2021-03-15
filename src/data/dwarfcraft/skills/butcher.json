@@ -1,0 +1,158 @@
+{
+  "display_name": "Butcher",
+  "race_specialization": [
+    "human"
+  ],
+  "training_items": [
+    {
+      "id": "COOKED_PORKCHOP",
+      "base": 1.0,
+      "max": 864
+    },
+    {
+      "id": "COOKED_BEEF",
+      "base": 1.0,
+      "max": 864
+    },
+    {
+      "id": "COOKED_COD",
+      "base": 1.0,
+      "max": 864
+    }
+  ],
+  "effects": [
+    {
+      "type": "SMELT",
+      "origin_material": "COOKED_PORKCHOP",
+      "output_material": "COOKED_PORKCHOP",
+      "base": 1.0,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "COOKED_BEEF",
+      "output_material": "COOKED_BEEF",
+      "base": 1.0,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "#FISHES",
+      "output_material": "#FISHES",
+      "base": 1.0,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "COOKED_CHICKEN",
+      "output_material": "COOKED_CHICKEN",
+      "base": 1.0,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "COOKED_RABBIT",
+      "output_material": "COOKED_RABBIT",
+      "base": 1.0,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "SMELT",
+      "origin_material": "COOKED_MUTTON",
+      "output_material": "COOKED_MUTTON",
+      "base": 1.0,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "step_novice": 0.1,
+      "should_floor": false,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "COOKED_PORKCHOP"
+}

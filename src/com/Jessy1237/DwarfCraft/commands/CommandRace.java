@@ -14,28 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.Jessy1237.DwarfCraft.models.DwarfCommand;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Jessy1237.DwarfCraft.CommandException;
-import com.Jessy1237.DwarfCraft.CommandException.Type;
-import com.Jessy1237.DwarfCraft.CommandInformation;
-import com.Jessy1237.DwarfCraft.CommandParser;
+import com.Jessy1237.DwarfCraft.commands.CommandException.Type;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.events.DwarfRaceChangeEvent;
 import com.Jessy1237.DwarfCraft.guis.RaceGUI;
 import com.Jessy1237.DwarfCraft.models.DwarfPlayer;
 
-public class CommandRace extends Command
+public class CommandRace extends DwarfCommand
 {
-    private final DwarfCraft plugin;
-
-    public CommandRace( final DwarfCraft plugin )
+    public CommandRace( final DwarfCraft plugin, String name )
     {
-        super( "Race" );
-        this.plugin = plugin;
+        super( plugin, name );
+        setDescription("Displays the DwarfCraft Race GUI which displays a players race information, or changes it.");
     }
 
     @Override
@@ -57,11 +53,6 @@ public class CommandRace extends Command
             {
                 throw new CommandException( plugin, Type.CONSOLECANNOTUSE );
             }
-            else if ( args[0].equalsIgnoreCase( "?" ) )
-            {
-                plugin.getOut().sendMessage( sender, CommandInformation.Desc.RACE.getDesc() );
-                return true;
-            }
             else
             {
                 CommandParser parser = new CommandParser( plugin, sender, args );
@@ -73,7 +64,7 @@ public class CommandRace extends Command
                 boolean confirm = false;
                 desiredArguments.add( dCPlayer );
                 desiredArguments.add( "Name" );
-                desiredArguments.add( new Boolean( false ) );
+                desiredArguments.add( false );
 
                 try
                 {
@@ -112,9 +103,9 @@ public class CommandRace extends Command
                         confirm = ( ( Boolean ) outputList.get( 1 ) );
                         dCPlayer = plugin.getDataManager().find( ( Player ) sender );
 
-                        if ( plugin.getConfigManager().checkRace( newRace ) )
+                        if ( plugin.getRaceManager().raceExists( newRace ) )
                         {
-                            if ( plugin.getPermission().has( sender, "dwarfcraft.norm.race." + newRace.toLowerCase() ) )
+                            if ( plugin.getCommandManager().getPermission().has( sender, "dwarfcraft.norm.race." + newRace.toLowerCase() ) )
                             {
                                 race( newRace, confirm, dCPlayer, sender );
                                 return true;
@@ -135,9 +126,10 @@ public class CommandRace extends Command
                         throw dce;
                 }
 
-                if ( !( sender instanceof Player ) || plugin.getPermission().has( sender, "dwarfcraft.op.race" ) )
+                Permission perms = plugin.getCommandManager().getPermission();
+                if ( !( sender instanceof Player ) || perms.has( sender, "dwarfcraft.op.race" ) )
                 {
-                    if ( plugin.getConfigManager().checkRace( newRace ) )
+                    if ( plugin.getRaceManager().raceExists( newRace ) )
                     {
                         race( newRace, confirm, dCPlayer, sender );
                     }
@@ -157,7 +149,7 @@ public class CommandRace extends Command
         catch ( CommandException e )
         {
             e.describe( sender );
-            sender.sendMessage( CommandInformation.Usage.RACE.getUsage() );
+            sender.sendMessage( getUsage() );
             return false;
         }
         return true;
@@ -165,7 +157,7 @@ public class CommandRace extends Command
 
     private void race( String newRace, boolean confirm, DwarfPlayer dCPlayer, CommandSender sender )
     {
-        if ( dCPlayer.getRace() == newRace )
+        if ( dCPlayer.getRace().getId().equals( newRace ) )
         {
             plugin.getOut().alreadyRace( sender, dCPlayer, newRace );
         }
@@ -173,14 +165,14 @@ public class CommandRace extends Command
         {
             if ( confirm )
             {
-                if ( plugin.getConfigManager().getRace( newRace ) != null )
+                if ( plugin.getRaceManager().getRace( newRace ) != null )
                 {
-                    DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dCPlayer, plugin.getConfigManager().getRace( newRace ) );
+                    DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dCPlayer, plugin.getRaceManager().getRace( newRace ) );
                     plugin.getServer().getPluginManager().callEvent( e );
 
                     if ( !e.isCancelled() )
                     {
-                        plugin.getOut().changedRace( sender, dCPlayer, plugin.getConfigManager().getRace( e.getRace().getName() ).getName() );
+                        plugin.getOut().changedRace( sender, dCPlayer, plugin.getRaceManager().getRace( e.getRace().getName() ).getName() );
                         dCPlayer.changeRace( e.getRace().getName() );
                     }
                 }
@@ -190,5 +182,13 @@ public class CommandRace extends Command
                 plugin.getOut().confirmRace( sender, dCPlayer, newRace );
             }
         }
+    }
+
+    @Override
+    public String getUsage() {
+        return "/dwarfcraft race \\nExample: /dwarfcraft race - Displays the DwarfCraft Race GUI which displays a" +
+                " players race information, or changes it.\\nAdmin: /dwarfcraft race <Player> <racename> <confirm> - " +
+                "Alters another player's race, use confirm. \\n " +
+                "Admin: /dwarfcraft race <player> - shows a players race.\" ),";
     }
 }

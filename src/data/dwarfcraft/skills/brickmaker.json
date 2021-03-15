@@ -1,0 +1,43 @@
+{
+  "display_name": "Brickmaker",
+  "race_specialization": [
+    "human"
+  ],
+  "training_items": [
+    {
+      "id": "BRICK",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "BRICKS",
+      "base": 1.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "BRICK",
+      "output_material": "BRICK",
+      "base": 1.5,
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": true,
+      "exception": {
+        "low": 0,
+        "high": 5,
+        "value": 1.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "BRICK"
+}

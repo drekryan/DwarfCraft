@@ -1,0 +1,94 @@
+{
+  "display_name": "Gravel Digger",
+  "race_specialization": [
+    "dwarf"
+  ],
+  "training_items": [
+    {
+      "id": "GRAVEL",
+      "base": 12.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "DIGTIME",
+      "origin_material": "GRAVEL",
+      "output_material": "AIR",
+      "base": 0.0,
+      "min": 0,
+      "max": 0,
+      "step": 0.01,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 0,
+      "should_require_tool": true,
+      "tools": [
+        "WOODEN_SHOVEL",
+        "STONE_SHOVEL",
+        "IRON_SHOVEL",
+        "GOLDEN_SHOVEL",
+        "DIAMOND_SHOVEL"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "GRAVEL",
+      "output_material": "GRAVEL",
+      "base": 0.94,
+      "min": 0,
+      "max": 1,
+      "step": -0.01,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        "WOODEN_SHOVEL",
+        "STONE_SHOVEL",
+        "IRON_SHOVEL",
+        "GOLDEN_SHOVEL",
+        "DIAMOND_SHOVEL"
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "GRAVEL",
+      "output_material": "FLINT",
+      "base": 0.06,
+      "min": 0,
+      "max": 100,
+      "step": 0.02,
+      "step_novice": -0.01,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        "WOODEN_SHOVEL",
+        "STONE_SHOVEL",
+        "IRON_SHOVEL",
+        "GOLDEN_SHOVEL",
+        "DIAMOND_SHOVEL"
+      ]
+    }
+  ],
+  "held_item": "GRAVEL"
+}

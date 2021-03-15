@@ -16,22 +16,24 @@ import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
-import org.jbls.LexManos.CSV.CSVRecord;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 import com.Jessy1237.DwarfCraft.Messages;
 import com.Jessy1237.DwarfCraft.events.DwarfEffectEvent;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class DwarfEffect
 {
     private DwarfCraft plugin;
-    private int mID;
+    private String skill_id;
     private double mBase;
-    private double mLevelIncrease;
-    private double mLevelIncreaseNovice;
+    private double mStep;
+    private double mStepNovice;
     private double mMin, mMax;
     private boolean mException;
     private double mExceptionLow;
@@ -47,64 +49,64 @@ public class DwarfEffect
 
     private EntityType mCreature;
 
-    public DwarfEffect( CSVRecord record, DwarfCraft plugin )
+    public DwarfEffect( JsonElement element, String skill_id, DwarfCraft plugin )
     {
-        if ( record == null )
+        if ( element == null )
             return;
-        mID = record.getInt( "ID" );
-        mBase = record.getDouble( "BaseValue" );
-        mLevelIncrease = record.getDouble( "LevelIncrease" );
-        mLevelIncreaseNovice = record.getDouble( "LevelIncreaseNovice" );
-        mMin = record.getDouble( "Min" );
-        mMax = record.getDouble( "Max" );
-        mException = record.getBool( "Exception" );
-        mExceptionLow = record.getInt( "ExceptionLow" );
-        mExceptionHigh = record.getInt( "ExceptionHigh" );
-        mExceptionValue = record.getDouble( "ExceptionValue" );
-        mNormalLevel = record.getInt( "NormalLevel" );
-        mType = DwarfEffectType.getEffectType( record.getString( "Type" ) );
-        if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR || record.getString( "OriginMaterial" ).equalsIgnoreCase( "AIR" ) )
+
+        JsonObject json = element.getAsJsonObject();
+        this.skill_id = skill_id;
+        mBase = json.get( "base" ).getAsDouble();
+        mStep = json.get( "step" ).getAsDouble();
+        mStepNovice = json.get( "step_novice" ).getAsDouble();
+        mMin = json.get( "min" ).getAsInt();
+        mMax = json.get( "max" ).getAsInt();
+        mException = json.get( "should_use_exception" ).getAsBoolean();
+
+        JsonObject exceptionObj = json.get( "exception" ).getAsJsonObject();
+        mExceptionLow = exceptionObj.get( "low" ).getAsInt();
+        mExceptionHigh = exceptionObj.get( "high" ).getAsInt();
+        mExceptionValue = exceptionObj.get( "value" ).getAsDouble();
+
+        mNormalLevel = json.get( "normal_level" ).getAsInt();
+        mType = DwarfEffectType.getEffectType( json.get( "type" ).getAsString() );
+        if ( mType != DwarfEffectType.MOBDROP && mType != DwarfEffectType.SHEAR || json.get( "origin_material" ).getAsString().equalsIgnoreCase( "AIR" ) )
         {
-            mInitiator = plugin.getUtil().getDwarfItemHolder( record, "OriginMaterial" );
+            mInitiator = plugin.getUtil().getDwarfItemHolder( json, "origin_material" );
         }
         else
         {
-            mCreature = EntityType.valueOf( record.getString( "OriginMaterial" ) );
+            plugin.getUtil().checkEntityType( json.get( "origin_material" ).getAsString(), skill_id );
+            mCreature = EntityType.valueOf( json.get( "origin_material" ).getAsString() );
         }
-        mResult = plugin.getUtil().getDwarfItemHolder( record, "OutputMaterial" );
+        mResult = plugin.getUtil().getDwarfItemHolder( json, "output_material" );
 
-        mRequireTool = record.getBool( "RequireTool" );
-        mFloorResult = record.getBool( "Floor" );
+        mRequireTool = json.get( "should_require_tool" ).getAsBoolean();
+        mFloorResult = json.get( "should_floor" ).getAsBoolean();
 
-        if ( record.getString( "Tools" ).isEmpty() )
+        if ( json.get( "tools" ).getAsJsonArray().size() <= 0 )
             mTools = new Material[0];
         else
         {
-            String[] stools = record.getString( "Tools" ).split( " " );
-            mTools = new Material[stools.length];
-            for ( int x = 0; x < stools.length; x++ )
-            {
-                Material mat = Material.getMaterial( stools[x] );
-                if ( mat != null )
-                    mTools[x] = mat;
+            JsonArray toolsArray = json.get( "tools" ).getAsJsonArray();
+            mTools = new Material[toolsArray.size()];
+            if (toolsArray.size() > 0) {
+                for (int x = 0; x < toolsArray.size(); x++) {
+                    String material = toolsArray.get(x).toString().trim();
+                    plugin.getUtil().checkMaterial( material, skill_id );
+                    Material mat = Material.matchMaterial(material);
+                    if (mat != null)
+                        mTools[x] = mat;
+                }
             }
         }
 
         this.plugin = plugin;
     }
 
-    @Override
-    public boolean equals( Object o )
-    {
-        boolean equals = false;
-
-        if ( o instanceof DwarfEffect )
-        {
-            DwarfEffect e = ( DwarfEffect ) o;
-            equals = e.getId() == getId();
-        }
-
-        return equals;
+    public
+    String getSkillId() {
+        return this.skill_id;
     }
 
     /**
@@ -139,28 +141,27 @@ public class DwarfEffect
      */
     public double getEffectAmount( DwarfPlayer dCPlayer )
     {
-        return getEffectAmount( dCPlayer.getSkillLevel( this.mID / 10 ), dCPlayer );
+        return getEffectAmount( dCPlayer.getSkillLevel( this.skill_id ), dCPlayer );
     }
 
-    @SuppressWarnings( "unlikely-arg-type" )
     public double getEffectAmount( int skillLevel, DwarfPlayer dCPlayer )
     {
         double effectAmount = mBase;
         if ( skillLevel == -1 )
             skillLevel = mNormalLevel;
-        effectAmount += skillLevel * mLevelIncrease;
-        effectAmount += Math.min( skillLevel, 5 ) * mLevelIncreaseNovice;
+        effectAmount += skillLevel * mStep;
+        effectAmount += Math.min( skillLevel, 5 ) * mStepNovice;
         effectAmount = Math.min( effectAmount, mMax );
         effectAmount = Math.max( effectAmount, mMin );
 
         if ( dCPlayer != null )
-            if ( mException && skillLevel <= mExceptionHigh && skillLevel >= mExceptionLow && !( skillLevel == plugin.getConfigManager().getRaceLevelLimit() && plugin.getConfigManager().getAllSkills( dCPlayer.getRace() ).contains( plugin.getConfigManager().getAllSkills().get( mID / 10 ) ) ) )
+            if ( mException && skillLevel <= mExceptionHigh && skillLevel >= mExceptionLow && !( skillLevel == plugin.getConfigManager().getRaceLevelLimit() && !plugin.getSkillManager().getSkill( this.skill_id ).doesSpecialize( dCPlayer.getRace() ) ) )
                 effectAmount = mExceptionValue;
 
         if ( DwarfCraft.debugMessagesThreshold < 1 )
         {
-            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
-                    + "Exception: %s Exception Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
+            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC1: GetEffectAmmount Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f "
+                    + "Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s", skillLevel, mBase, mStep, mStepNovice, mMax, mMin, mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult ) );
         }
 
         return ( mFloorResult ? Math.floor( effectAmount ) : effectAmount );
@@ -169,11 +170,6 @@ public class DwarfEffect
     public DwarfEffectType getEffectType()
     {
         return mType;
-    }
-
-    public int getId()
-    {
-        return mID;
     }
 
     public Material getInitiatorMaterial()
@@ -254,6 +250,112 @@ public class DwarfEffect
         return "any tool";
     }
 
+    public boolean checkMob( Entity entity )
+    {
+        if ( mCreature == null )
+            return false;
+
+        switch ( mCreature )
+        {
+            case CHICKEN:
+                return ( entity instanceof Chicken );
+            case COW:
+                return ( entity instanceof Cow );
+            case CREEPER:
+                return ( entity instanceof Creeper );
+            case GHAST:
+                return ( entity instanceof Ghast );
+            case GIANT:
+                return ( entity instanceof Giant );
+            case PIG:
+                return ( entity instanceof Pig );
+            case PIG_ZOMBIE:
+                return ( entity instanceof PigZombie );
+            case SHEEP:
+                return ( entity instanceof Sheep );
+            case SKELETON:
+                return ( entity instanceof Skeleton );
+            case SLIME:
+                return ( entity instanceof Slime );
+            case SPIDER:
+                return ( entity instanceof Spider );
+            case SQUID:
+                return ( entity instanceof Squid );
+            case ZOMBIE:
+                return ( entity instanceof Zombie ) && !( entity instanceof PigZombie );
+            case WOLF:
+                return ( entity instanceof Wolf );
+            case MUSHROOM_COW:
+                return ( entity instanceof MushroomCow );
+            case SILVERFISH:
+                return ( entity instanceof Silverfish );
+            case ENDERMAN:
+                return ( entity instanceof Enderman );
+            case VILLAGER:
+                return ( entity instanceof Villager );
+            case BLAZE:
+                return ( entity instanceof Blaze );
+            case MAGMA_CUBE:
+                return ( entity instanceof MagmaCube );
+            case CAVE_SPIDER:
+                return ( entity instanceof CaveSpider );
+            case SNOWMAN:
+                return ( entity instanceof Snowman );
+            case ENDER_DRAGON:
+                return ( entity instanceof EnderDragon );
+            case OCELOT:
+                return ( entity instanceof Ocelot );
+            case WITHER:
+                return ( entity instanceof Wither );
+            case IRON_GOLEM:
+                return ( entity instanceof IronGolem );
+            case BAT:
+                return ( entity instanceof Bat );
+            case RABBIT:
+                return ( entity instanceof Rabbit );
+            case GUARDIAN:
+                return ( entity instanceof Guardian );
+            case HORSE:
+                return ( entity instanceof Horse );
+            case ENDERMITE:
+                return ( entity instanceof Endermite );
+            case WITCH:
+                return ( entity instanceof Witch );
+            case POLAR_BEAR:
+                return ( entity instanceof PolarBear );
+            case SHULKER:
+                return ( entity instanceof Shulker );
+            case DONKEY:
+                return ( entity instanceof Donkey );
+            case MULE:
+                return ( entity instanceof Mule );
+            case LLAMA:
+                return ( entity instanceof Llama );
+            case HUSK:
+                return ( entity instanceof Husk );
+            case SKELETON_HORSE:
+                return ( entity instanceof SkeletonHorse );
+            case ELDER_GUARDIAN:
+                return ( entity instanceof ElderGuardian );
+            case EVOKER:
+                return ( entity instanceof Evoker );
+            case STRAY:
+                return ( entity instanceof Stray );
+            case ZOMBIE_VILLAGER:
+                return ( entity instanceof ZombieVillager );
+            case VEX:
+                return ( entity instanceof Vex );
+            case VINDICATOR:
+                return ( entity instanceof Vindicator );
+            case ILLUSIONER:
+                return ( entity instanceof Illusioner );
+            case PARROT:
+                return ( entity instanceof Parrot );
+            default:
+                return false;
+        }
+    }
+
     public EntityType getCreature()
     {
         return mCreature;
@@ -279,24 +381,19 @@ public class DwarfEffect
         return false;
     }
 
-    @Override
-    public String toString()
-    {
-        return Integer.toString( mID );
-    }
-
     public void damageTool( DwarfPlayer player, int base, ItemStack tool )
     {
         damageTool( player, base, tool, true );
     }
 
-    public void damageTool( DwarfPlayer player, int base, ItemStack tool, boolean negate )
+    @SuppressWarnings( "deprecation" )
+    public
+    void damageTool( DwarfPlayer player, int base, ItemStack tool, boolean negate )
     {
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
         Damageable dmg = ( Damageable ) tool.getItemMeta();
 
-        if ( DwarfCraft.debugMessagesThreshold < 2 )
-            plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), mID, dmg.getDamage(), base, wear ) );
+        if ( DwarfCraft.debugMessagesThreshold < 2 ) plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), tool.getDurability(), base, wear ) );
 
         // Some code taken from net.minecraft.server.ItemStack line 165.
         // Checks to see if damage should be skipped.
@@ -312,33 +409,30 @@ public class DwarfEffect
 
         base = ( negate ? base : 0 );
 
-        if ( wear == base )
-            return; // This is normal wear, skip everything and let MC handle
-                    // it
-                    // internally.
+        if ( wear == base ) return; // This is normal wear, skip everything and let MC handle
+        // it
+        // internally.
 
         DwarfEffectEvent e = new DwarfEffectEvent( player, this, null, null, null, null, ( double ) base, ( double ) wear, null, null, tool );
         plugin.getServer().getPluginManager().callEvent( e );
 
-        if ( e.isCancelled() )
-            return;
+        if ( e.isCancelled() ) return;
 
-        dmg.setDamage( ( int ) ( dmg.getDamage() + e.getAlteredDamage() - base ) );
+        tool.setDurability( ( short ) ( tool.getDurability() + e.getAlteredDamage() - base ) );
         // This may have the side effect of causing items to flicker when they
         // are about to break
         // If this becomes a issue, we need to cast to a CraftItemStack, then
         // make CraftItemStack.item public,
         // And call CraftItemStack.item.damage(-base, player.getPlayer());
 
-        if ( dmg.getDamage() >= tool.getType().getMaxDurability() )
+        if ( tool.getDurability() >= tool.getType().getMaxDurability() )
         {
-            if ( tool.getType() == Material.IRON_SWORD && dmg.getDamage() < 250 )
-                return;
+            if ( tool.getType() == Material.IRON_SWORD && tool.getDurability() < 250 ) return;
 
             if ( tool.getAmount() > 1 )
             {
                 tool.setAmount( tool.getAmount() - 1 );
-                dmg.setDamage( ( short ) -1 );
+                tool.setDurability( ( short ) -1 );
             }
             else
             {
@@ -352,8 +446,6 @@ public class DwarfEffect
                 }
             }
         }
-
-        tool.setItemMeta( ( ItemMeta ) dmg );
     }
 
 }

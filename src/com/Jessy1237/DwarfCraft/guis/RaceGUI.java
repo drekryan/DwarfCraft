@@ -35,7 +35,7 @@ public class RaceGUI extends DwarfGUI
     @Override
     public void init()
     {
-        int numRaces = plugin.getConfigManager().getRaceList().size();
+        int numRaces = plugin.getRaceManager().count();
         if ( numRaces > 0 )
         {
             if ( numRaces > 45 )
@@ -44,10 +44,10 @@ public class RaceGUI extends DwarfGUI
             this.inventorySize = ( numRows * 9 ) + 9;
         }
 
-        DwarfRace playerRace = plugin.getConfigManager().getRace( dwarfPlayer.getRace().toLowerCase() );
-        if ( playerRace != null )
+        DwarfRace playerRace = dwarfPlayer.getRace();
+        if ( playerRace != null && !playerRace.getId().isEmpty() )
         {
-            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), this.inventorySize, "Change Race || Currently: " + plugin.getOut().parseColors( playerRace.getPrefixColour() ) + dwarfPlayer.getRace() );
+            inventory = plugin.getServer().createInventory( dwarfPlayer.getPlayer(), this.inventorySize, "Change Race || Currently: " + plugin.getOut().parseColors( playerRace.getPrefixColour() ) + dwarfPlayer.getRace().getName() );
         }
         else
         {
@@ -56,15 +56,15 @@ public class RaceGUI extends DwarfGUI
 
         inventory.clear();
         int i = 0;
-        for ( DwarfRace race : plugin.getConfigManager().getRaceList() )
+        for ( DwarfRace race : plugin.getRaceManager().getAllRaces().values() )
         {
-            if ( !plugin.getPermission().has( dwarfPlayer.getPlayer(), "dwarfcraft.norm.race." + race.getName().toLowerCase() ) )
+            if ( !plugin.getCommandManager().getPermission().has( dwarfPlayer.getPlayer(), "dwarfcraft.norm.race." + race.getName().toLowerCase() ) )
                 continue;
 
             ItemStack item = new ItemStack( race.getIcon() );
             ArrayList<String> lore = new ArrayList<>();
             lore.add( ChatColor.GOLD + "Description:" );
-            lore.addAll( parseStringToLore( race.getDesc(), "" + ChatColor.WHITE ) );
+            lore.addAll( parseStringToLore( race.getDescription(), "" + ChatColor.WHITE ) );
             lore.add( "" );
             lore.add( ChatColor.LIGHT_PURPLE + "Left click to change to " + race.getName() );
             addItem( race.getName(), lore, i++, item );
@@ -97,7 +97,7 @@ public class RaceGUI extends DwarfGUI
             }
             else if ( event.getCurrentItem().getType() == Material.LIME_DYE && race != null && !race.equals( "" ) )
             {
-                DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dwarfPlayer, plugin.getConfigManager().getRace( race.toLowerCase() ) );
+                DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dwarfPlayer, plugin.getRaceManager().getRace( race.toLowerCase() ) );
                 plugin.getServer().getPluginManager().callEvent( e );
 
                 if ( !e.isCancelled() )
@@ -112,9 +112,9 @@ public class RaceGUI extends DwarfGUI
                 race = event.getCurrentItem().getItemMeta().getDisplayName();
                 if ( !race.equals( ChatColor.RED + "WARNING" ) )
                 {
-                    if ( dwarfPlayer.getRace().equalsIgnoreCase( "" ) )
+                    if ( dwarfPlayer.getRace() == null )
                     {
-                        DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dwarfPlayer, plugin.getConfigManager().getRace( race.toLowerCase() ) );
+                        DwarfRaceChangeEvent e = new DwarfRaceChangeEvent( dwarfPlayer, plugin.getRaceManager().getRace( race.toLowerCase() ) );
                         plugin.getServer().getPluginManager().callEvent( e );
 
                         if ( !e.isCancelled() )

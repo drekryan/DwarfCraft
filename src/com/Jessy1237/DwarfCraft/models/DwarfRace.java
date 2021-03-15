@@ -10,31 +10,49 @@
 
 package com.Jessy1237.DwarfCraft.models;
 
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 
-public class DwarfRace
+public class DwarfRace implements Cloneable
 {
-
+    private final String mId;
     private final String mName;
-    private ArrayList<Integer> skills;
-    private String Desc;
-    private String prefixColour;
-    private Material icon;
+    private String mDescription;
+    private String mPrefixColour;
+    private Material mIcon;
 
-    public DwarfRace( String name )
+    public DwarfRace( String id, String name )
     {
+        this.mId = id;
         this.mName = name;
+        this.mPrefixColour = "&f";
     }
 
-    public DwarfRace( String name, final ArrayList<Integer> skills, String Desc, Material icon )
+    public DwarfRace( String id, String name, String description, Material icon )
     {
+        this.mId = id;
         this.mName = name;
-        this.Desc = Desc;
-        this.skills = skills;
-        prefixColour = "&f";
-        this.icon = icon;
+        this.mDescription = description;
+        this.mPrefixColour = "&f";
+        this.mIcon = icon;
+    }
+
+    @Override
+    public DwarfRace clone()
+    {
+        try
+        {
+            super.clone();
+        }
+        catch ( CloneNotSupportedException e )
+        {
+            e.printStackTrace();
+        }
+        return new DwarfRace( mId, mName, mDescription, mIcon);
+    }
+
+    public String getId()
+    {
+        return mId;
     }
 
     public String getName()
@@ -42,43 +60,33 @@ public class DwarfRace
         return mName;
     }
 
-    public ArrayList<Integer> getSkills()
+    public String getDescription()
     {
-        return this.skills;
-    }
-
-    public String getDesc()
-    {
-        return this.Desc;
+        return this.mDescription;
     }
 
     public String getPrefixColour()
     {
-        return prefixColour;
-    }
-
-    public void setSkills( ArrayList<Integer> skills )
-    {
-        this.skills = skills;
-    }
-
-    public void setDesc( String Desc )
-    {
-        this.Desc = Desc;
-    }
-
-    public void setPrefixColour( String prefixColour )
-    {
-        this.prefixColour = prefixColour;
+        return this.mPrefixColour;
     }
 
     public Material getIcon()
     {
-        return icon;
+        return this.mIcon;
+    }
+
+    public void setDescription( String description )
+    {
+        this.mDescription = description;
+    }
+
+    public void setPrefixColour( String prefixColour )
+    {
+        this.mPrefixColour = prefixColour;
     }
 
     public void setIcon( Material icon )
     {
-        this.icon = icon;
+        this.mIcon = icon;
     }
 }

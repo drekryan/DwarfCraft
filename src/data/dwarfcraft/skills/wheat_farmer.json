@@ -1,0 +1,65 @@
+{
+  "display_name": "Wheat Farmer",
+  "race_specialization": [
+    "human"
+  ],
+  "training_items": [
+    {
+      "id": "WHEAT",
+      "base": 1.0,
+      "max": 1152
+    },
+    {
+      "id": "WHEAT_SEEDS",
+      "base": 1.0,
+      "max": 1152
+    }
+  ],
+  "effects": [
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "WHEAT",
+      "output_material": "WHEAT_SEEDS",
+      "base": 0.25,
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "BLOCKDROP",
+      "origin_material": "WHEAT",
+      "output_material": "WHEAT",
+      "base": 0.2,
+      "min": 0,
+      "max": 100,
+      "step": 0.2,
+      "step_novice": 0.0,
+      "should_floor": false,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 30,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "WHEAT_SEEDS"
+}

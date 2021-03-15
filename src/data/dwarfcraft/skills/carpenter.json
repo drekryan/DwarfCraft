@@ -1,0 +1,60 @@
+{
+  "display_name": "Carpenter",
+  "race_specialization": [
+    "gnome"
+  ],
+  "training_items": [
+    {
+      "id": "#LOGS",
+      "base": 8.0,
+      "max": 2304
+    }
+  ],
+  "effects": [
+    {
+      "type": "CRAFT",
+      "origin_material": "#PLANKS",
+      "output_material": "#PLANKS",
+      "base": 3.3,
+      "min": 0,
+      "max": 7,
+      "step": 0.14,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    },
+    {
+      "type": "CRAFT",
+      "origin_material": "STICK",
+      "output_material": "STICK",
+      "base": 3.5,
+      "min": 0,
+      "max": 7,
+      "step": 0.1,
+      "step_novice": 0.0,
+      "should_floor": true,
+      "should_use_exception": false,
+      "exception": {
+        "low": 0,
+        "high": 0,
+        "value": 0.0
+      },
+      "normal_level": 5,
+      "should_require_tool": false,
+      "tools": [
+        ""
+      ]
+    }
+  ],
+  "held_item": "OAK_PLANKS"
+}
