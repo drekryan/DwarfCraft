@@ -69,7 +69,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
     protected Material getMaterial()
     {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).getMaterial();
+        return mEntity.getOrAddTrait( DwarfTrainerTrait.class ).getMaterial();
     }
 
     public World getWorld()
@@ -79,12 +79,12 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
     public int getMaxSkill()
     {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).getMaxSkill();
+        return mEntity.getOrAddTrait( DwarfTrainerTrait.class ).getMaxSkill();
     }
 
     public Integer getMinSkill()
     {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).getMinSkill();
+        return mEntity.getOrAddTrait( DwarfTrainerTrait.class ).getMinSkill();
     }
 
     public String getName()
@@ -94,7 +94,7 @@ public final class DwarfTrainer implements Comparable<DwarfTrainer>
 
     public String getSkillTrained()
     {
-        return mEntity.getTrait( DwarfTrainerTrait.class ).getSkillTrained();
+        return mEntity.getOrAddTrait( DwarfTrainerTrait.class ).getSkillTrained();
     }
 
     public int getUniqueId()

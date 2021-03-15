@@ -15,7 +15,6 @@ import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -391,7 +390,6 @@ public class DwarfEffect
     void damageTool( DwarfPlayer player, int base, ItemStack tool, boolean negate )
     {
         short wear = ( short ) ( plugin.getUtil().randomAmount( getEffectAmount( player ) ) * base );
-        Damageable dmg = ( Damageable ) tool.getItemMeta();
 
         if ( DwarfCraft.debugMessagesThreshold < 2 ) plugin.getUtil().consoleLog( Level.FINE, String.format( "DC2: Affected durability of a \"%s\" - Old: %d Base: %d Wear: %d", plugin.getUtil().getCleanName( tool ), tool.getDurability(), base, wear ) );
 

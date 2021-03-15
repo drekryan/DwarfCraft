@@ -49,6 +49,7 @@ public class CommandManager {
         return perms != null;
     }
 
+    @SuppressWarnings("unused")
     private boolean isPermissionEnabled()
     {
         return perms != null;

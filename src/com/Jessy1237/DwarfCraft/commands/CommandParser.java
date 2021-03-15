@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.Jessy1237.DwarfCraft.DwarfCraft;
-import com.Jessy1237.DwarfCraft.commands.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

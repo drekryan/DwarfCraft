@@ -512,7 +512,7 @@ public class Util
                         {
                             // Reruns the code that registers the CitizensNPC
                             // into DwarfCraft
-                            npc.getTrait( DwarfTrainerTrait.class ).loadHeldItem();
+                            npc.getOrAddTrait( DwarfTrainerTrait.class ).loadHeldItem();
                             DwarfTrainer trainer = new DwarfTrainer( plugin, ( AbstractNPC ) npc );
                             plugin.getDataManager().trainerList.put( npc.getId(), trainer );
                         }

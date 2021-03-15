@@ -116,7 +116,6 @@ class SkillReader
         }
     }
 
-    @SuppressWarnings( "unused" )
     private
     ArrayList<DwarfEffect> parseEffects( JsonObject object, String skill_id )
     {

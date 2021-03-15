@@ -1,6 +1,5 @@
 package com.Jessy1237.DwarfCraft.data;
 
-import com.Jessy1237.DwarfCraft.ConfigManager;
 import com.Jessy1237.DwarfCraft.DwarfCraft;
 
 public class DBWrapperFactory

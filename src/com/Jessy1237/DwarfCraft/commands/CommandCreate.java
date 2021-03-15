@@ -143,7 +143,7 @@ public class CommandCreate extends DwarfCommand implements TabCompleter
                 npc.spawn( p.getLocation() );
 
                 // Don't know why onSpawn doesn't work the first time but works if manually call it
-                npc.getTrait( DwarfTrainerTrait.class ).onSpawn();
+                npc.getOrAddTrait(DwarfTrainerTrait.class ).onSpawn();
 
                 // Adding the trainer to DwarfCraft DB
                 DwarfTrainer trainer = new DwarfTrainer( plugin, npc );

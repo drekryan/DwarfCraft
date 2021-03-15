@@ -35,7 +35,6 @@ public final class ConfigManager
     public String username;
     public String password;
 
-    private String dbpath;
     private Integer trainDelay;
     private Integer announcementInterval;
     private ArrayList<String> skillLevelCommands;
@@ -123,7 +122,7 @@ public final class ConfigManager
         username = config.getString( "MySQL Username" );
         password = config.getString( "MySQL Password" );
 
-        dbpath = config.getString( "Database File Name" );
+        config.getString( "Database File Name" );
         DwarfCraft.debugMessagesThreshold = config.getInt( "Debug Level" );
         sendGreeting = config.getBoolean( "Send Login Greet" );
         disableCacti = config.getBoolean( "Disable Farm Exploits" );

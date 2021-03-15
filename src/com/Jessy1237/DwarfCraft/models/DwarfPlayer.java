@@ -239,7 +239,8 @@ public class DwarfPlayer
     public void changeRace( String race )
     {
         final DwarfRace oldRace = this.race;
-        this.race = plugin.getRaceManager().getRace( race );
+        final DwarfRace newRace = plugin.getRaceManager().getRace( race );
+        this.race = newRace;
         DwarfSkill[] dCSkills = new DwarfSkill[skills.size()];
 
         int I = 0;
@@ -269,7 +270,7 @@ public class DwarfPlayer
                 }
                 else
                 {
-                    if ( !plugin.getSkillManager().getSkill( skill.getId() ).getRaces().containsValue( race ) && skill.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
+                    if ( !plugin.getSkillManager().getSkill( skill.getId() ).getRaces().containsValue( newRace ) && skill.getLevel() > plugin.getConfigManager().getRaceLevelLimit() )
                     {
                         skill.setLevel( plugin.getConfigManager().getRaceLevelLimit() );
                         skill.setDeposit( 0, 1 );
